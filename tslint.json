@@ -1,0 +1,15 @@
+{
+  "defaultSeverity": "warning",
+  "extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "rules": {
+    "prettier": true,
+    "interface-over-type-literal": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "interface-name": false
+  },
+  "linterOptions": {
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
+  }
+}
