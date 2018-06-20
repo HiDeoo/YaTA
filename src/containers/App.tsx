@@ -4,16 +4,18 @@ import { connect } from 'react-redux'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
-import Channel from 'Components/Channel'
 import Channels from 'Components/Channels'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Header from 'Components/Header'
 import Login from 'Components/Login'
 import Theme, { Colors } from 'Constants/theme'
+import Channel from 'Containers/Channel'
 import Settings from 'Containers/Settings'
+import { AppState } from 'Store/ducks/app'
 import { SettingsState } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
+import { getChannel } from 'Store/selectors/app'
 import { getTheme } from 'Store/selectors/settings'
 
 /**
@@ -60,7 +62,7 @@ class App extends React.Component<Props, State> {
 
     return (
       <FlexLayout vertical>
-        <Header toggleSettings={this.toggleSettings} isLoggedIn={isLoggedIn} />
+        <Header toggleSettings={this.toggleSettings} isLoggedIn={isLoggedIn} channel={this.props.channel} />
         <Settings visible={showSettings} toggle={this.toggleSettings} />
         <FlexContent>
           <Switch>
@@ -108,6 +110,7 @@ class App extends React.Component<Props, State> {
 const enhance = compose<Props, {}>(
   withRouter,
   connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
+    channel: getChannel(state),
     theme: getTheme(state),
   }))
 )
@@ -118,6 +121,7 @@ export default enhance(App)
  * React Props.
  */
 type StateProps = {
+  channel: AppState['channel']
   theme: SettingsState['theme']
 }
 
