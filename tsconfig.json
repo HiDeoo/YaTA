@@ -18,6 +18,7 @@
     "noUnusedLocals": true,
     "paths": {
       "Components/*": ["src/components/*"],
+      "Constants/*": ["src/constants/*"],
       "Containers/*": ["src/containers/*"],
       "Store": ["src/store/index.ts"],
       "Store/*": ["src/store/*"],

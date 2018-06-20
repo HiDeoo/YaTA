@@ -1,6 +1,6 @@
 import { ReducersMapObject } from 'redux'
 
-import app, { AppActions } from 'Store/ducks/app'
+import settings, { SettingsActions } from 'Store/ducks/settings'
 
 /**
  * Reducers.
@@ -9,7 +9,7 @@ import app, { AppActions } from 'Store/ducks/app'
  * @see https://github.com/reactjs/redux/pull/2773
  */
 const reducers: ReducersMapObject<ApplicationState, ApplicationActions | any> = {
-  app,
+  settings,
 }
 
 export default reducers
@@ -17,11 +17,11 @@ export default reducers
 /**
  * Application actions
  */
-type ApplicationActions = AppActions
+type ApplicationActions = SettingsActions
 
 /**
  * Application state.
  */
 export interface ApplicationState {
-  app: ReturnType<typeof app>
+  settings: ReturnType<typeof settings>
 }
