@@ -1,0 +1,20 @@
+{
+  "processors": ["stylelint-processor-styled-components"],
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-styled-components"
+  ],
+  "syntax": "scss",
+  "rules": {
+    "block-no-empty": null,
+    "declaration-colon-newline-after": null,
+    "declaration-empty-line-before": null,
+    "property-no-unknown": [true, {
+      "ignoreProperties": [
+        "user-drag"
+      ]
+    }],
+    "value-list-max-empty-lines": null,
+    "selector-list-comma-newline-after": "always-multi-line"
+  }
+}

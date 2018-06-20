@@ -1,16 +1,33 @@
-import { Button, Classes } from '@blueprintjs/core'
+import { Classes } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+import { compose } from 'recompose'
 
-import Theme from 'Constants/theme'
-import { SettingsState, toggleTheme } from 'Store/ducks/settings'
+import Channel from 'Components/Channel'
+import Channels from 'Components/Channels'
+import FlexContent from 'Components/FlexContent'
+import FlexLayout from 'Components/FlexLayout'
+import Header from 'Components/Header'
+import Login from 'Components/Login'
+import Theme, { Colors } from 'Constants/theme'
+import Settings from 'Containers/Settings'
+import { SettingsState } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getTheme } from 'Store/selectors/settings'
 
 /**
+ * React State.
+ */
+const initialState = { showSettings: false, isLoggedIn: true }
+type State = Readonly<typeof initialState>
+
+/**
  * App Component.
  */
-class App extends React.Component<Props> {
+class App extends React.Component<Props, State> {
+  public state: State = initialState
+
   /**
    * Lifecycle: componentDidMount.
    */
@@ -33,10 +50,26 @@ class App extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
+    const { showSettings, isLoggedIn } = this.state
+
+    if (!isLoggedIn && !this.isLoginPage()) {
+      return <Redirect to="/login" />
+    } else if (isLoggedIn && this.isLoginPage()) {
+      return <Redirect to="/" />
+    }
+
     return (
-      <div>
-        <Button onClick={this.props.toggleTheme}>{this.props.theme}</Button>
-      </div>
+      <FlexLayout vertical>
+        <Header toggleSettings={this.toggleSettings} isLoggedIn={isLoggedIn} />
+        <Settings visible={showSettings} toggle={this.toggleSettings} />
+        <FlexContent>
+          <Switch>
+            <Route exact path="/" component={Channels} />
+            <Route path="/login" component={Login} />
+            <Route path="/:channel" component={Channel} />
+          </Switch>
+        </FlexContent>
+      </FlexLayout>
     )
   }
 
@@ -46,18 +79,40 @@ class App extends React.Component<Props> {
   private installTheme() {
     if (this.props.theme === Theme.Dark) {
       document.body.classList.add(Classes.DARK)
+      document.body.style.backgroundColor = Colors.DarkBackground
     } else {
       document.body.classList.remove(Classes.DARK)
+      document.body.style.backgroundColor = Colors.LightBackground
     }
+  }
+
+  /**
+   * Toggles the settings panel.
+   */
+  private toggleSettings = () => {
+    this.setState(({ showSettings }) => ({ showSettings: !showSettings }))
+  }
+
+  /**
+   * Returns if the user is currently browsing the login page.
+   * @return `true` if on the login page.
+   */
+  private isLoginPage() {
+    return this.props.location.pathname === '/login'
   }
 }
 
-export default connect<StateProps, DispatchProps, {}, ApplicationState>(
-  (state) => ({
+/**
+ * Component enhancer.
+ */
+const enhance = compose<Props, {}>(
+  withRouter,
+  connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
     theme: getTheme(state),
-  }),
-  { toggleTheme }
-)(App)
+  }))
+)
+
+export default enhance(App)
 
 /**
  * React Props.
@@ -69,11 +124,11 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
-  toggleTheme: typeof toggleTheme
+type OwnProps = {
+  location: Location
 }
 
 /**
  * React Props.
  */
-type Props = StateProps & DispatchProps
+type Props = StateProps & OwnProps

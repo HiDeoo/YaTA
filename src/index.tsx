@@ -1,6 +1,7 @@
 import { FocusStyleManager } from '@blueprintjs/core'
 import * as React from 'react'
 import { render } from 'react-dom'
+import { injectGlobal } from 'styled-components'
 
 import Wrapper from 'Components/Wrapper'
 import configureStore, { StoreConfiguration } from 'Store'
@@ -8,6 +9,18 @@ import registerServiceWorker from './registerServiceWorker'
 
 import 'node_modules/@blueprintjs/core/lib/css/blueprint.css'
 import 'node_modules/normalize.css/normalize.css'
+
+/**
+ * Injects global CSS.
+ */
+injectGlobal`
+  html,
+  body,
+  .root {
+    height: 100%;
+    overflow-y: hidden;
+  }
+`
 
 /**
  * Renders the application while passing down the Redux store.
