@@ -14,4 +14,4 @@ const getSettingsState = (state: ApplicationState) => state.settings
  * @param  state - The Redux state.
  * @return The theme.
  */
-export const getTheme = createSelector([getSettingsState], (app) => app.theme)
+export const getTheme = createSelector([getSettingsState], (settings) => settings.theme)

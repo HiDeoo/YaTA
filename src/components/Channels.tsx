@@ -1,15 +1,6 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
-/**
- * Wrapper component.
- */
-const Wrapper = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-`
+import Center from 'Components/Center'
 
 /**
  * Channels Component.
@@ -20,6 +11,6 @@ export default class Channels extends React.Component {
    * @return Element to render.
    */
   public render() {
-    return <Wrapper>Channels</Wrapper>
+    return <Center>Channels</Center>
   }
 }

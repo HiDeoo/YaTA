@@ -1,8 +1,7 @@
 import { Classes } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 import Channels from 'Components/Channels'
 import FlexContent from 'Components/FlexContent'
@@ -10,18 +9,21 @@ import FlexLayout from 'Components/FlexLayout'
 import Header from 'Components/Header'
 import Login from 'Components/Login'
 import Theme, { Colors } from 'Constants/theme'
+import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Settings from 'Containers/Settings'
 import { AppState } from 'Store/ducks/app'
 import { SettingsState } from 'Store/ducks/settings'
+import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getTheme } from 'Store/selectors/settings'
+import { getIsLoggedIn } from 'Store/selectors/user'
 
 /**
  * React State.
  */
-const initialState = { showSettings: false, isLoggedIn: true }
+const initialState = { showSettings: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -52,21 +54,30 @@ class App extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { showSettings, isLoggedIn } = this.state
+    const { showSettings } = this.state
+    const { isLoggedIn } = this.props
 
-    if (!isLoggedIn && !this.isLoginPage()) {
+    const isLoggingIn = this.isLoginPage() || this.isAuthPage()
+
+    if (!isLoggedIn && !isLoggingIn) {
       return <Redirect to="/login" />
-    } else if (isLoggedIn && this.isLoginPage()) {
+    } else if (isLoggedIn && isLoggingIn) {
       return <Redirect to="/" />
     }
 
     return (
       <FlexLayout vertical>
-        <Header toggleSettings={this.toggleSettings} isLoggedIn={isLoggedIn} channel={this.props.channel} />
+        <Header
+          toggleSettings={this.toggleSettings}
+          isLoggedIn={isLoggedIn}
+          channel={this.props.channel}
+          logout={this.props.resetUser}
+        />
         <Settings visible={showSettings} toggle={this.toggleSettings} />
         <FlexContent>
           <Switch>
             <Route exact path="/" component={Channels} />
+            <Route path="/auth" component={Auth} />
             <Route path="/login" component={Login} />
             <Route path="/:channel" component={Channel} />
           </Switch>
@@ -102,27 +113,39 @@ class App extends React.Component<Props, State> {
   private isLoginPage() {
     return this.props.location.pathname === '/login'
   }
+
+  /**
+   * Returns if the user is currently browsing the auth page.
+   * @return `true` if on the auth page.
+   */
+  private isAuthPage() {
+    return this.props.location.pathname === '/auth'
+  }
 }
 
-/**
- * Component enhancer.
- */
-const enhance = compose<Props, {}>(
-  withRouter,
-  connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
+export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+  (state) => ({
     channel: getChannel(state),
+    isLoggedIn: getIsLoggedIn(state),
     theme: getTheme(state),
-  }))
-)
-
-export default enhance(App)
+  }),
+  { resetUser }
+)(App)
 
 /**
  * React Props.
  */
 type StateProps = {
   channel: AppState['channel']
+  isLoggedIn: ReturnType<typeof getIsLoggedIn>
   theme: SettingsState['theme']
+}
+
+/**
+ * React Props.
+ */
+type DispatchProps = {
+  resetUser: typeof resetUser
 }
 
 /**
@@ -135,4 +158,4 @@ type OwnProps = {
 /**
  * React Props.
  */
-type Props = StateProps & OwnProps
+type Props = StateProps & DispatchProps & OwnProps

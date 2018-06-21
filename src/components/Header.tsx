@@ -14,7 +14,7 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { channel, isLoggedIn, toggleSettings } = this.props
+    const { channel, isLoggedIn, logout, toggleSettings } = this.props
 
     const title = `${!_.isNil(channel) ? `${channel} - ` : ''}YaTA`
 
@@ -27,7 +27,8 @@ export default class Header extends React.Component<Props> {
           <NavbarHeading>{title}</NavbarHeading>
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-          <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal />
+          <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal title="Settings" />
+          {isLoggedIn && <Button onClick={logout} icon="log-out" minimal title="Log out" />}
         </NavbarGroup>
       </Navbar>
     )
@@ -41,4 +42,5 @@ type Props = {
   channel: AppState['channel']
   isLoggedIn: boolean
   toggleSettings: () => void
+  logout: () => void
 }

@@ -20,6 +20,7 @@
       "Components/*": ["src/components/*"],
       "Constants/*": ["src/constants/*"],
       "Containers/*": ["src/containers/*"],
+      "Libs/*": ["src/libs/*"],
       "Store": ["src/store/index.ts"],
       "Store/*": ["src/store/*"],
       "Utils/*": ["src/utils/*"]

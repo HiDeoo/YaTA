@@ -8,7 +8,7 @@ import reducers, { ApplicationState } from 'Store/reducers'
  * Combined & persisted reducers.
  */
 const persistedReducers = persistCombineReducers<ApplicationState>(
-  { key: 'YaTA:store', whitelist: ['settings'], storage },
+  { key: 'YaTA:store', whitelist: ['settings', 'user'], storage },
   reducers
 )
 
@@ -35,7 +35,7 @@ export default function configureStore(): StoreConfiguration {
  */
 export type StoreConfiguration = {
   store: Store<PersistedApplicationState>
-  persistor?: Persistor
+  persistor: Persistor
 }
 
 /**
