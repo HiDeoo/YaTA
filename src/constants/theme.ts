@@ -7,11 +7,12 @@ enum Theme {
 }
 
 /**
- * Themes related colors.
+ * Sizes related constants.
  */
-export const Colors = {
-  DarkBackground: '#293742',
-  LightBackground: '#F5F8FA',
+export const Sizes = {
+  Message: {
+    minHeight: 32,
+  },
 }
 
 export default Theme

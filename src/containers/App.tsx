@@ -1,4 +1,4 @@
-import { Classes } from '@blueprintjs/core'
+import { Classes, Colors } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
@@ -8,7 +8,7 @@ import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Header from 'Components/Header'
 import Login from 'Components/Login'
-import Theme, { Colors } from 'Constants/theme'
+import Theme from 'Constants/theme'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Settings from 'Containers/Settings'
@@ -92,10 +92,10 @@ class App extends React.Component<Props, State> {
   private installTheme() {
     if (this.props.theme === Theme.Dark) {
       document.body.classList.add(Classes.DARK)
-      document.body.style.backgroundColor = Colors.DarkBackground
+      document.body.style.backgroundColor = Colors.DARK_GRAY3
     } else {
       document.body.classList.remove(Classes.DARK)
-      document.body.style.backgroundColor = Colors.LightBackground
+      document.body.style.backgroundColor = Colors.LIGHT_GRAY5
     }
   }
 
