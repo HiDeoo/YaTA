@@ -1,8 +1,10 @@
 import { ReducersMapObject } from 'redux'
 
 import app, { AppActions } from 'Store/ducks/app'
+import messages, { MessagesActions } from 'Store/ducks/messages'
 import settings, { SettingsActions } from 'Store/ducks/settings'
 import user, { UserActions } from 'Store/ducks/user'
+import users, { UsersActions } from 'Store/ducks/users'
 
 /**
  * Reducers.
@@ -12,8 +14,10 @@ import user, { UserActions } from 'Store/ducks/user'
  */
 const reducers: ReducersMapObject<ApplicationState, ApplicationActions | any> = {
   app,
+  messages,
   settings,
   user,
+  users,
 }
 
 export default reducers
@@ -21,13 +25,15 @@ export default reducers
 /**
  * Application actions
  */
-type ApplicationActions = AppActions | UserActions | SettingsActions
+type ApplicationActions = AppActions | MessagesActions | UserActions | UsersActions | SettingsActions
 
 /**
  * Application state.
  */
 export interface ApplicationState {
   app: ReturnType<typeof app>
+  messages: ReturnType<typeof messages>
   user: ReturnType<typeof user>
+  users: ReturnType<typeof users>
   settings: ReturnType<typeof settings>
 }

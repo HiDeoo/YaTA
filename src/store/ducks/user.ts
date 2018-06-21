@@ -70,7 +70,7 @@ export const setTokens = (access: string, id: string) =>
 export const resetUser = () => createAction(Actions.RESET)
 
 /**
- * Settings actions.
+ * User actions.
  */
 export type UserActions = RehydrateAction | ReturnType<typeof setTokens> | ReturnType<typeof resetUser>
 

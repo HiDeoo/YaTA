@@ -3,21 +3,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
-import styled from 'styled-components'
 
+import Center from 'Components/Center'
+import ChatClient from 'Containers/ChatClient'
 import { AppState, setChannel } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
-
-/**
- * Wrapper component.
- */
-const Wrapper = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-`
 
 /**
  * Channel Component.
@@ -41,13 +32,18 @@ class Channel extends React.Component<Props> {
 
     if (_.isNil(channel)) {
       return (
-        <Wrapper>
+        <Center>
           <Spinner large />
-        </Wrapper>
+        </Center>
       )
     }
 
-    return <Wrapper>Channel {channel}</Wrapper>
+    return (
+      <>
+        <ChatClient />
+        <Center>Channel {channel}</Center>
+      </>
+    )
   }
 }
 

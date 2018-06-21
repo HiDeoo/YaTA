@@ -9,7 +9,10 @@
     "no-implicit-dependencies": false,
     "interface-name": false,
     "jsx-boolean-value": [true, "never"],
-    "no-unused-expression": [true, "allow-tagged-template"]
+    "no-unused-expression": [true, "allow-tagged-template"],
+    "variable-name": {
+      "options": ["ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"]
+    }
   },
   "linterOptions": {
     "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
