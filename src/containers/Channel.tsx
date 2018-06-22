@@ -6,13 +6,13 @@ import { match } from 'react-router'
 
 import Center from 'Components/Center'
 import ChatInput from 'Components/ChatInput'
-import ChatMessages from 'Components/ChatMessages'
+import ChatLogs from 'Components/ChatLogs'
 import FlexLayout from 'Components/FlexLayout'
 import ChatClient from 'Containers/ChatClient'
 import { AppState, setChannel } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
-import { getMessages } from 'Store/selectors/messages'
+import { getLogs } from 'Store/selectors/logs'
 
 /**
  * Channel Component.
@@ -32,7 +32,7 @@ class Channel extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { channel, messages } = this.props
+    const { channel, logs } = this.props
 
     if (_.isNil(channel)) {
       return (
@@ -45,7 +45,7 @@ class Channel extends React.Component<Props> {
     return (
       <FlexLayout vertical>
         <ChatClient />
-        <ChatMessages messages={messages} />
+        <ChatLogs logs={logs} />
         <ChatInput />
       </FlexLayout>
     )
@@ -55,7 +55,7 @@ class Channel extends React.Component<Props> {
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
-    messages: getMessages(state),
+    logs: getLogs(state),
   }),
   { setChannel }
 )(Channel)
@@ -65,7 +65,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  */
 type StateProps = {
   channel: AppState['channel']
-  messages: ReturnType<typeof getMessages>
+  logs: ReturnType<typeof getLogs>
 }
 
 /**

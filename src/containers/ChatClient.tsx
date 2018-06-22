@@ -4,9 +4,11 @@ import { connect } from 'react-redux'
 import tmi, { Client, UserState } from 'twitch-js'
 
 import Event from 'Constants/event'
-import Message, { MessageType } from 'Libs/Message'
+import LogType from 'Constants/logType'
+import Message from 'Libs/Message'
+import Notice from 'Libs/Notice'
 import { AppState } from 'Store/ducks/app'
-import { addMessage } from 'Store/ducks/messages'
+import { addLog } from 'Store/ducks/logs'
 import { addUserWithMessage } from 'Store/ducks/users'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
@@ -82,12 +84,26 @@ class ChatClient extends React.Component<Props> {
       if (!_.isNil(parsedMessage)) {
         const serializedMessage = parsedMessage.serialize()
 
-        this.props.addMessage(serializedMessage)
+        this.props.addLog(serializedMessage)
 
-        if (serializedMessage.type === MessageType.Chat || serializedMessage.type === MessageType.Action) {
+        if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
           this.props.addUserWithMessage(serializedMessage.user, serializedMessage.id)
         }
       }
+    })
+
+    this.client.on(Event.FollowersOnly, (_channel, enabled, _length) => {
+      const notice = new Notice(
+        enabled ? 'This room is in followers-only mode.' : 'This room is no longer in followers-only mode.',
+        Event.FollowersOnly
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
+    this.client.on(Event.Notice, (_channel, msgid, message) => {
+      console.log('notice ', msgid, message)
+      // TODO
     })
   }
 
@@ -102,8 +118,8 @@ class ChatClient extends React.Component<Props> {
     let parsedMessage: Message | null
 
     switch (userstate['message-type']) {
-      case MessageType.Action:
-      case MessageType.Chat: {
+      case LogType.Action:
+      case LogType.Chat: {
         parsedMessage = new Message(message, userstate, self)
         break
       }
@@ -121,7 +137,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
   }),
-  { addMessage, addUserWithMessage }
+  { addLog, addUserWithMessage }
 )(ChatClient)
 
 /**
@@ -135,7 +151,7 @@ type StateProps = {
  * React Props.
  */
 type DispatchProps = {
-  addMessage: typeof addMessage
+  addLog: typeof addLog
   addUserWithMessage: typeof addUserWithMessage
 }
 

@@ -1,6 +1,6 @@
 declare module 'twitch-js' {
   import Event from 'Constants/event'
-  import { MessageType } from 'Libs/Message'
+  import LogType from 'Constants/logType'
 
   type ClientOptions = {
     options?: {
@@ -54,7 +54,7 @@ declare module 'twitch-js' {
     'emotes-raw': string
     'badges-raw': string
     username: string
-    'message-type': MessageType
+    'message-type': LogType.Action | LogType.Chat | LogType.Whisper
   }
 
   export class Client {
@@ -68,6 +68,8 @@ declare module 'twitch-js' {
       event: Event.Message,
       listener: (channel: string, userstate: UserState, message: string, self: boolean) => void
     ): void
+    on(event: Event.FollowersOnly, listener: (channel: string, enabled: boolean, length: number) => void): void
+    on(event: Event.Notice, listener: (channel: string, msgid: string, message: string) => void): void
   }
 
   namespace Client {

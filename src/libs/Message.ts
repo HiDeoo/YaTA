@@ -1,17 +1,9 @@
 import * as _ from 'lodash'
 import { UserState } from 'twitch-js'
 
+import LogType from 'Constants/logType'
 import User, { SerializedUser } from 'Libs/User'
 import { Serializable } from 'Utils/typescript'
-
-/**
- * Message types.
- */
-export enum MessageType {
-  Chat = 'chat',
-  Action = 'action',
-  Whisper = 'whisper',
-}
 
 /**
  * Message class representing either a chat message, an action (/me) or a whisper.
@@ -24,7 +16,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private date: string
   private self: boolean
   private message: string
-  private type: MessageType
+  private type: LogType
 
   /**
    * Creates and parses a new chat message instance.
@@ -76,6 +68,6 @@ export type SerializedMessage = {
   id: string
   date: string
   self: boolean
-  type: MessageType
+  type: LogType
   message: string
 }
