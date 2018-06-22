@@ -17,6 +17,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private self: boolean
   private message: string
   private type: LogType
+  private time: string
 
   /**
    * Creates and parses a new chat message instance.
@@ -31,6 +32,9 @@ export default class Message implements Serializable<SerializedMessage> {
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate)
     this.type = userstate['message-type']
+
+    const date = new Date(parseInt(this.date, 10))
+    this.time = `${date.getHours()}:${date.getMinutes()}`
 
     // TODO emotes
     // TODO badges
@@ -52,6 +56,7 @@ export default class Message implements Serializable<SerializedMessage> {
       id: this.id,
       message: this.message,
       self: this.self,
+      time: this.time,
       type: this.type,
       user: this.user.serialize(),
     }
@@ -70,4 +75,5 @@ export type SerializedMessage = {
   self: boolean
   type: LogType
   message: string
+  time: string
 }
