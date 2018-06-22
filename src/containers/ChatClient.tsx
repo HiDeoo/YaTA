@@ -52,6 +52,14 @@ class ChatClient extends React.Component<Props> {
   }
 
   /**
+   * Lifecycle: shouldComponentUpdate.
+   * @return The client should never update.
+   */
+  public shouldComponentUpdate() {
+    return false
+  }
+
+  /**
    * Lifecycle: componentDidUpdate.
    */
   public componentDidUpdate() {

@@ -1,8 +1,46 @@
+import * as _ from 'lodash'
 import { Reducer } from 'redux'
 
+import Logs from 'Constants/logs'
 import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotice } from 'Libs/Notice'
 import { createAction } from 'Utils/redux'
+
+/**
+ * Determines if logs should be rotated.
+ * @param state - The state holding the logs.
+ * @return `true` when logs should be rotated.
+ */
+function shouldRotateLogs(state: LogsState) {
+  return state.allIds.length > Logs.Max + Logs.Threshold
+}
+
+/**
+ * Rotates the logs.
+ * @param  state - The state holding the logs.
+ * @return The new state with rotated logs.
+ */
+function rotateLogs(state: LogsState) {
+  const rotationIndex = state.allIds.length - Logs.Max
+
+  const allIds = state.allIds.slice(rotationIndex)
+
+  const byId = _.reduce(
+    allIds,
+    (newById, id) => {
+      newById[id] = state.byId[id]
+
+      return newById
+    },
+    {}
+  )
+
+  return {
+    ...state,
+    allIds,
+    byId,
+  }
+}
 
 /**
  * Actions types.
@@ -30,10 +68,12 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
     case Actions.ADD: {
       const { log } = action.payload
 
+      const newState = shouldRotateLogs(state) ? rotateLogs(state) : state
+
       return {
-        ...state,
-        allIds: [...state.allIds, log.id],
-        byId: { ...state.byId, [log.id]: log },
+        ...newState,
+        allIds: [...newState.allIds, log.id],
+        byId: { ...newState.byId, [log.id]: log },
       }
     }
     default: {
