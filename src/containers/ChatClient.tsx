@@ -8,10 +8,11 @@ import LogType from 'Constants/logType'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import { AppState } from 'Store/ducks/app'
+import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog } from 'Store/ducks/logs'
-import { addUserWithMessage } from 'Store/ducks/users'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
+import { getChatters } from 'Store/selectors/chatters'
 
 /**
  * ChatClient Component.
@@ -87,7 +88,7 @@ class ChatClient extends React.Component<Props> {
         this.props.addLog(serializedMessage)
 
         if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
-          this.props.addUserWithMessage(serializedMessage.user, serializedMessage.id)
+          this.props.addChatterWithMessage(serializedMessage.user, serializedMessage.id)
         }
       }
     })
@@ -121,6 +122,15 @@ class ChatClient extends React.Component<Props> {
       case LogType.Action:
       case LogType.Chat: {
         parsedMessage = new Message(message, userstate, self)
+
+        if (_.isNil(parsedMessage.user.color)) {
+          const user = _.get(this.props.chatters, parsedMessage.user.id)
+
+          if (_.isNil(user)) {
+            parsedMessage.color = parsedMessage.user.generateRandomColor()
+          }
+        }
+
         break
       }
       default: {
@@ -136,8 +146,9 @@ class ChatClient extends React.Component<Props> {
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
+    chatters: getChatters(state),
   }),
-  { addLog, addUserWithMessage }
+  { addLog, addChatterWithMessage }
 )(ChatClient)
 
 /**
@@ -145,6 +156,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 type StateProps = {
   channel: AppState['channel']
+  chatters: ChattersState['byId']
 }
 
 /**
@@ -152,7 +164,7 @@ type StateProps = {
  */
 type DispatchProps = {
   addLog: typeof addLog
-  addUserWithMessage: typeof addUserWithMessage
+  addChatterWithMessage: typeof addChatterWithMessage
 }
 
 /**

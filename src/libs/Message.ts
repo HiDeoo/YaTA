@@ -2,16 +2,16 @@ import * as _ from 'lodash'
 import { UserState } from 'twitch-js'
 
 import LogType from 'Constants/logType'
-import User, { SerializedUser } from 'Libs/User'
+import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { Serializable } from 'Utils/typescript'
 
 /**
  * Message class representing either a chat message, an action (/me) or a whisper.
  */
 export default class Message implements Serializable<SerializedMessage> {
+  public user: Chatter
+  public color: string | null
   private badges: string[]
-  private color: string | null
-  private user: User
   private id: string
   private date: string
   private self: boolean
@@ -29,7 +29,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.badges = _.keys(userstate.badges)
     this.color = userstate.color
     this.date = userstate['tmi-sent-ts']
-    this.user = new User(userstate)
+    this.user = new Chatter(userstate)
     this.type = userstate['message-type']
 
     // TODO emotes
@@ -64,7 +64,7 @@ export default class Message implements Serializable<SerializedMessage> {
 export type SerializedMessage = {
   badges: string[]
   color: string | null
-  user: SerializedUser
+  user: SerializedChatter
   id: string
   date: string
   self: boolean

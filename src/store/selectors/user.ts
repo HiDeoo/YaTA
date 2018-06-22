@@ -11,7 +11,7 @@ import { ApplicationState } from 'Store/reducers'
 const getUserState = (state: ApplicationState) => state.user
 
 /**
- * Returns if the user is logged in or nto.
+ * Returns if the user is logged in or not.
  * @param  state - The Redux state.
  * @return `true` when logged in.
  */
