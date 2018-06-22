@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { SerializedChat } from 'Libs/Chat'
+import { SerializedMessage } from 'Libs/Message'
 
 /**
  * Wrapper component.
@@ -30,6 +30,6 @@ export default class ChatMessage extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  message: SerializedChat
+  message: SerializedMessage
   style: React.CSSProperties
 }

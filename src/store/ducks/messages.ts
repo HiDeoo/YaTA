@@ -1,6 +1,6 @@
 import { Reducer } from 'redux'
 
-import { SerializedChat } from 'Libs/Chat'
+import { SerializedMessage } from 'Libs/Message'
 import { createAction } from 'Utils/redux'
 
 /**
@@ -48,7 +48,7 @@ export default messagesReducer
  * @param  message - The message to add.
  * @return The action.
  */
-export const addMessage = (message: SerializedChat) =>
+export const addMessage = (message: SerializedMessage) =>
   createAction(Actions.ADD, {
     message,
   })
@@ -65,7 +65,7 @@ export type MessagesState = {
   /**
    * All messages keyed by ids.
    */
-  byId: { [key: string]: SerializedChat }
+  byId: { [key: string]: SerializedMessage }
 
   /**
    * All messages ordered by ids.

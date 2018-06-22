@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import tmi, { Client, UserState } from 'twitch-js'
 
 import Event from 'Constants/event'
-import MessageType from 'Constants/messageType'
-import Chat from 'Libs/Chat'
+import Message, { MessageType } from 'Libs/Message'
 import { AppState } from 'Store/ducks/app'
 import { addMessage } from 'Store/ducks/messages'
 import { addUserWithMessage } from 'Store/ducks/users'
@@ -85,7 +84,7 @@ class ChatClient extends React.Component<Props> {
 
         this.props.addMessage(serializedMessage)
 
-        if (parsedMessage instanceof Chat) {
+        if (serializedMessage.type === MessageType.Chat || serializedMessage.type === MessageType.Action) {
           this.props.addUserWithMessage(serializedMessage.user, serializedMessage.id)
         }
       }
@@ -100,11 +99,12 @@ class ChatClient extends React.Component<Props> {
    * @return The parsed message.
    */
   private parseRawMessage(message: string, userstate: UserState, self: boolean) {
-    let parsedMessage: Chat | null
+    let parsedMessage: Message | null
 
     switch (userstate['message-type']) {
+      case MessageType.Action:
       case MessageType.Chat: {
-        parsedMessage = new Chat(message, userstate, self)
+        parsedMessage = new Message(message, userstate, self)
         break
       }
       default: {

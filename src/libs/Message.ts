@@ -1,14 +1,22 @@
 import * as _ from 'lodash'
 import { UserState } from 'twitch-js'
 
-import MessageType from 'Constants/messageType'
 import User, { SerializedUser } from 'Libs/User'
 import { Serializable } from 'Utils/typescript'
 
 /**
- * Chat message class.
+ * Message types.
  */
-export default class Chat implements Serializable<SerializedChat> {
+export enum MessageType {
+  Chat = 'chat',
+  Action = 'action',
+  Whisper = 'whisper',
+}
+
+/**
+ * Message class representing either a chat message, an action (/me) or a whisper.
+ */
+export default class Message implements Serializable<SerializedMessage> {
   private badges: string[]
   private color: string | null
   private user: User
@@ -16,6 +24,7 @@ export default class Chat implements Serializable<SerializedChat> {
   private date: string
   private self: boolean
   private message: string
+  private type: MessageType
 
   /**
    * Creates and parses a new chat message instance.
@@ -29,6 +38,7 @@ export default class Chat implements Serializable<SerializedChat> {
     this.color = userstate.color
     this.date = userstate['tmi-sent-ts']
     this.user = new User(userstate)
+    this.type = userstate['message-type']
 
     // TODO emotes
     // TODO badges
@@ -50,16 +60,16 @@ export default class Chat implements Serializable<SerializedChat> {
       id: this.id,
       message: this.message,
       self: this.self,
-      type: MessageType.Chat,
+      type: this.type,
       user: this.user.serialize(),
     }
   }
 }
 
 /**
- * Serialized chat message.
+ * Serialized message.
  */
-export type SerializedChat = {
+export type SerializedMessage = {
   badges: string[]
   color: string | null
   user: SerializedUser

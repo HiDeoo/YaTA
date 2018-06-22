@@ -1,6 +1,6 @@
 declare module 'twitch-js' {
   import Event from 'Constants/event'
-  import MessageType from 'Constants/messageType'
+  import { MessageType } from 'Libs/Message'
 
   type ClientOptions = {
     options?: {

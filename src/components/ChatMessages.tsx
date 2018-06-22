@@ -3,7 +3,7 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } fro
 
 import ChatMessage from 'Components/ChatMessage'
 import FlexContent from 'Components/FlexContent'
-import { SerializedChat } from 'Libs/Chat'
+import { SerializedMessage } from 'Libs/Message'
 import base from 'Styled/base'
 
 /**
@@ -58,5 +58,5 @@ export default class ChatMessages extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  messages: SerializedChat[]
+  messages: SerializedMessage[]
 }
