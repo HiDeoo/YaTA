@@ -3,16 +3,16 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } fro
 
 import ChatMessage from 'Components/ChatMessage'
 import FlexContent from 'Components/FlexContent'
-import { Sizes } from 'Constants/theme'
 import { SerializedChat } from 'Libs/Chat'
+import base from 'Styled/base'
 
 /**
  * Message measures cache.
  */
 const messageMeasureCache = new CellMeasurerCache({
-  defaultHeight: Sizes.Message.minHeight,
+  defaultHeight: base.message.minHeight,
   fixedWidth: true,
-  minHeight: Sizes.Message.minHeight,
+  minHeight: base.message.minHeight,
 })
 
 /**

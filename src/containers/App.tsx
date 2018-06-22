@@ -2,6 +2,7 @@ import { Classes, Colors } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
 
 import Channels from 'Components/Channels'
 import FlexContent from 'Components/FlexContent'
@@ -19,6 +20,8 @@ import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn } from 'Store/selectors/user'
+import dark from 'Styled/dark'
+import light from 'Styled/light'
 
 /**
  * React State.
@@ -55,7 +58,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { showSettings } = this.state
-    const { isLoggedIn } = this.props
+    const { isLoggedIn, theme } = this.props
 
     const isLoggingIn = this.isLoginPage() || this.isAuthPage()
 
@@ -66,23 +69,25 @@ class App extends React.Component<Props, State> {
     }
 
     return (
-      <FlexLayout vertical>
-        <Header
-          toggleSettings={this.toggleSettings}
-          isLoggedIn={isLoggedIn}
-          channel={this.props.channel}
-          logout={this.props.resetUser}
-        />
-        <Settings visible={showSettings} toggle={this.toggleSettings} />
-        <FlexContent>
-          <Switch>
-            <Route exact path="/" component={Channels} />
-            <Route path="/auth" component={Auth} />
-            <Route path="/login" component={Login} />
-            <Route path="/:channel" component={Channel} />
-          </Switch>
-        </FlexContent>
-      </FlexLayout>
+      <ThemeProvider theme={theme === Theme.Dark ? dark : light}>
+        <FlexLayout vertical>
+          <Header
+            toggleSettings={this.toggleSettings}
+            isLoggedIn={isLoggedIn}
+            channel={this.props.channel}
+            logout={this.props.resetUser}
+          />
+          <Settings visible={showSettings} toggle={this.toggleSettings} />
+          <FlexContent>
+            <Switch>
+              <Route exact path="/" component={Channels} />
+              <Route path="/auth" component={Auth} />
+              <Route path="/login" component={Login} />
+              <Route path="/:channel" component={Channel} />
+            </Switch>
+          </FlexContent>
+        </FlexLayout>
+      </ThemeProvider>
     )
   }
 

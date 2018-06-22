@@ -6,13 +6,4 @@ enum Theme {
   Dark,
 }
 
-/**
- * Sizes related constants.
- */
-export const Sizes = {
-  Message: {
-    minHeight: 32,
-  },
-}
-
 export default Theme

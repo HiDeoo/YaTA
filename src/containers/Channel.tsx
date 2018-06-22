@@ -10,11 +10,9 @@ import ChatMessages from 'Components/ChatMessages'
 import FlexLayout from 'Components/FlexLayout'
 import ChatClient from 'Containers/ChatClient'
 import { AppState, setChannel } from 'Store/ducks/app'
-import { SettingsState } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getMessages } from 'Store/selectors/messages'
-import { getTheme } from 'Store/selectors/settings'
 
 /**
  * Channel Component.
@@ -34,7 +32,7 @@ class Channel extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { channel, messages, theme } = this.props
+    const { channel, messages } = this.props
 
     if (_.isNil(channel)) {
       return (
@@ -48,7 +46,7 @@ class Channel extends React.Component<Props> {
       <FlexLayout vertical>
         <ChatClient />
         <ChatMessages messages={messages} />
-        <ChatInput theme={theme} />
+        <ChatInput />
       </FlexLayout>
     )
   }
@@ -58,7 +56,6 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
     messages: getMessages(state),
-    theme: getTheme(state),
   }),
   { setChannel }
 )(Channel)
@@ -69,7 +66,6 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 type StateProps = {
   channel: AppState['channel']
   messages: ReturnType<typeof getMessages>
-  theme: SettingsState['theme']
 }
 
 /**

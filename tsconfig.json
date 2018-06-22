@@ -22,6 +22,7 @@
       "Libs/*": ["src/libs/*"],
       "Store": ["src/store/index.ts"],
       "Store/*": ["src/store/*"],
+      "Styled/*": ["src/styled/*"],
       "Utils/*": ["src/utils/*"]
     }
   },

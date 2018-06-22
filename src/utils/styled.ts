@@ -16,3 +16,13 @@ export function ifProp<T, U>(needle: string | object, pass: T, fail: U) {
     return result ? pass : fail
   }
 }
+
+/**
+ * Returns a theme value.
+ * The path will be prefixed with `theme.`.
+ * @param  path - The path of the theme value.
+ * @return The theme value getter.
+ */
+export function color(path: string) {
+  return (props: object) => _.get(props, `theme.${path}`) as string
+}

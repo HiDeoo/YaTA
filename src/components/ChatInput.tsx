@@ -1,17 +1,15 @@
-import { Colors, TextArea } from '@blueprintjs/core'
+import { TextArea } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import Theme from 'Constants/theme'
-import { SettingsState } from 'Store/ducks/settings'
-import { withSCProps } from 'Utils/react'
+import { color } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
-  background-color: ${(props) => (props.theme === Theme.Dark ? Colors.DARK_GRAY4 : Colors.LIGHT_GRAY3)};
-  border-top: 1px solid ${(props) => (props.theme === Theme.Dark ? Colors.DARK_GRAY5 : Colors.LIGHT_GRAY2)};
+const Wrapper = styled.div`
+  background-color: ${color('chatInput.background')};
+  border-top: 1px solid ${color('chatInput.border')};
   padding: 10px;
 `
 
@@ -26,30 +24,16 @@ const Input = styled(TextArea)`
 /**
  * ChatInput Component.
  */
-export default class ChatInput extends React.Component<Props> {
+export default class ChatInput extends React.Component {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
     return (
-      <Wrapper theme={this.props.theme}>
+      <Wrapper>
         <Input large fill value="" />
       </Wrapper>
     )
   }
-}
-
-/**
- * React Props.
- */
-type Props = {
-  theme: SettingsState['theme']
-}
-
-/**
- * React Props.
- */
-type WrapperProps = {
-  theme: SettingsState['theme']
 }
