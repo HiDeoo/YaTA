@@ -25,7 +25,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "test:coverage": "yarn run test --coverage && open coverage/index.html",
     "lint": "yarn run lint:ts; yarn run lint:css",
-    "lint:ts": "tslint -p . -t stylish && tsc -p .  --noEmit",
+    "lint:ts": "tslint -p . -t stylish && tsc -p tsconfig.prod.json  --noEmit",
     "lint:css": "stylelint 'src/**/*.tsx'",
     "eject": "react-scripts-ts eject",
     "precommit": "lint-staged"

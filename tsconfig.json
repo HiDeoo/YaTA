@@ -15,7 +15,6 @@
     "noUnusedParameters": true,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
     "paths": {
       "Components/*": ["src/components/*"],
       "Constants/*": ["src/constants/*"],
