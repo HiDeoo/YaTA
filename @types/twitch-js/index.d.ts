@@ -8,15 +8,15 @@ declare module 'twitch-js' {
       debug: boolean
     }
     connection?: {
-      server: string
-      port: number
-      reconnect: boolean
-      maxReconnectAttempts: number
-      maxReconnectInterval: number
-      reconnectDecay: number
-      reconnectInterval: number
-      secure: boolean
-      timeout: number
+      server?: string
+      port?: number
+      reconnect?: boolean
+      maxReconnectAttempts?: number
+      maxReconnectInterval?: number
+      reconnectDecay?: number
+      reconnectInterval?: number
+      secure?: boolean
+      timeout?: number
     }
     identity?: {
       username: string
@@ -70,6 +70,11 @@ declare module 'twitch-js' {
     ): void
     on(event: Event.FollowersOnly, listener: (channel: string, enabled: boolean, length: number) => void): void
     on(event: Event.Notice, listener: (channel: string, msgid: string, message: string) => void): void
+    on(event: Event.Connecting, listener: (adress: string, port: number) => void): void
+    on(event: Event.Connected, listener: (adress: string, port: number) => void): void
+    on(event: Event.Logon, listener: () => void): void
+    on(event: Event.Disconnected, listener: (reason: string) => void): void
+    on(event: Event.Reconnect, listener: () => void): void
   }
 
   namespace Client {

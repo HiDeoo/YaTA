@@ -1,5 +1,6 @@
 import { Reducer } from 'redux'
 
+import Status from 'Constants/status'
 import { createAction } from 'Utils/redux'
 
 /**
@@ -7,6 +8,7 @@ import { createAction } from 'Utils/redux'
  */
 export enum Actions {
   SET_CHANNEL = 'app/SET_CHANNEL',
+  UPDATE_STATUS = 'app/UPDATE_STATUS',
 }
 
 /**
@@ -14,6 +16,7 @@ export enum Actions {
  */
 export const initialState = {
   channel: null,
+  status: Status.Default,
 }
 
 /**
@@ -30,6 +33,12 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
         channel: action.payload.channel,
       }
     }
+    case Actions.UPDATE_STATUS: {
+      return {
+        ...state,
+        status: action.payload.status,
+      }
+    }
     default: {
       return state
     }
@@ -40,7 +49,7 @@ export default appReducer
 
 /**
  * Sets the current channel.
- * @param  state - The new channel.
+ * @param  channel - The new channel.
  * @return The action.
  */
 export const setChannel = (channel: string) =>
@@ -49,9 +58,19 @@ export const setChannel = (channel: string) =>
   })
 
 /**
+ * Updates the current status.
+ * @param  status - The new status.
+ * @return The action.
+ */
+export const updateStatus = (status: Status) =>
+  createAction(Actions.UPDATE_STATUS, {
+    status,
+  })
+
+/**
  * App actions.
  */
-export type AppActions = ReturnType<typeof setChannel>
+export type AppActions = ReturnType<typeof setChannel> | ReturnType<typeof updateStatus>
 
 /**
  * App state.
@@ -61,4 +80,9 @@ export type AppState = {
    * The current channel.
    */
   channel: string | null
+
+  /**
+   * Connection status.
+   */
+  status: Status
 }

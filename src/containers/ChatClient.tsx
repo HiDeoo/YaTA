@@ -5,9 +5,10 @@ import tmi, { Client, UserState } from 'twitch-js'
 
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
+import Status from 'Constants/status'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
-import { AppState } from 'Store/ducks/app'
+import { AppState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
@@ -34,6 +35,7 @@ class ChatClient extends React.Component<Props> {
 
     this.client = tmi.client({
       channels: [],
+      connection: { reconnect: true },
       identity: props.loginDetails,
       options: { clientId: process.env.REACT_APP_TWITCH_CLIENT_ID, debug: true },
     })
@@ -51,10 +53,10 @@ class ChatClient extends React.Component<Props> {
       throw new Error('Missing channel.')
     }
 
+    this.subscribe()
+
     // await this.client.connect()
     // await this.client.join(channel)
-
-    this.subscribe()
   }
 
   /**
@@ -93,6 +95,26 @@ class ChatClient extends React.Component<Props> {
    * Sets up subscriptions.
    */
   private subscribe() {
+    this.client.on(Event.Connecting, () => {
+      this.props.updateStatus(Status.Connecting)
+    })
+
+    this.client.on(Event.Connected, () => {
+      this.props.updateStatus(Status.Connected)
+    })
+
+    this.client.on(Event.Logon, () => {
+      this.props.updateStatus(Status.Logon)
+    })
+
+    this.client.on(Event.Disconnected, () => {
+      this.props.updateStatus(Status.Disconnected)
+    })
+
+    this.client.on(Event.Reconnect, () => {
+      this.props.updateStatus(Status.Reconnecting)
+    })
+
     this.client.on(Event.Message, (_channel, userstate, message, self) => {
       const parsedMessage = this.parseRawMessage(message, userstate, self)
 
@@ -114,6 +136,8 @@ class ChatClient extends React.Component<Props> {
       )
 
       this.props.addLog(notice.serialize())
+
+      // TODO update room state?
     })
 
     this.client.on(Event.Notice, (_channel, msgid, message) => {
@@ -163,7 +187,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     chatters: getChatters(state),
     loginDetails: getChatLoginDetails(state),
   }),
-  { addLog, addChatterWithMessage }
+  { addLog, addChatterWithMessage, updateStatus }
 )(ChatClient)
 
 /**
@@ -181,6 +205,7 @@ type StateProps = {
 type DispatchProps = {
   addLog: typeof addLog
   addChatterWithMessage: typeof addChatterWithMessage
+  updateStatus: typeof updateStatus
 }
 
 /**
