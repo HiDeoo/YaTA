@@ -16,6 +16,7 @@ enum Event {
   R9k = 'r9kbeta',
   Reconnect = 'reconnect',
   Roomstate = 'roomstate',
+  Slowmode = 'slowmode',
 }
 
 export default Event

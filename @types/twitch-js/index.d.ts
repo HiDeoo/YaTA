@@ -96,6 +96,7 @@ declare module 'twitch-js' {
     ): void
     on(event: Event.Hosting, listener: (channel: string, target: string, viewers: number) => void): void
     on(event: Event.R9k, listener: (channel: string, enabled: boolean) => void): void
+    on(event: Event.Slowmode, listener: (channel: string, enabled: boolean, length: number) => void): void
   }
 
   namespace Client {

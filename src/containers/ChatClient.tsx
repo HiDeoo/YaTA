@@ -183,7 +183,18 @@ class ChatClient extends React.Component<Props> {
     this.client.on(Event.R9k, (_channel, enabled) => {
       const notice = new Notice(
         enabled ? 'This room is now in R9K mode.' : 'This room is no longer in R9K mode.',
-        Event.Emoteonly
+        Event.R9k
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
+    this.client.on(Event.Slowmode, (_channel, enabled, length) => {
+      const notice = new Notice(
+        enabled
+          ? `This room is now in slow mode. You may send messages every ${length} seconds.`
+          : 'This room is no longer in slow mode.',
+        Event.Slowmode
       )
 
       this.props.addLog(notice.serialize())
