@@ -8,6 +8,8 @@ enum Event {
   Disconnected = 'disconnected',
   Emoteonly = 'emoteonly',
   FollowersOnly = 'followersonly',
+  Hosted = 'hosted',
+  Hosting = 'hosting',
   Logon = 'logon',
   Message = 'message',
   Notice = 'notice',

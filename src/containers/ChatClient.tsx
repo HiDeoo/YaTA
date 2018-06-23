@@ -9,6 +9,7 @@ import Status from 'Constants/status'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import RoomState from 'Libs/RoomState'
+import Twitch from 'Libs/Twitch'
 import { AppState, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog } from 'Store/ducks/logs'
@@ -130,7 +131,7 @@ class ChatClient extends React.Component<Props> {
 
     this.client.on(Event.FollowersOnly, (_channel, enabled, _length) => {
       const notice = new Notice(
-        enabled ? `This room is in followers-only mode.` : 'This room is no longer in followers-only mode.',
+        enabled ? 'This room is in followers-only mode.' : 'This room is no longer in followers-only mode.',
         Event.FollowersOnly
       )
 
@@ -139,9 +140,28 @@ class ChatClient extends React.Component<Props> {
 
     this.client.on(Event.Emoteonly, (_channel, enabled) => {
       const notice = new Notice(
-        enabled ? `This room is now in emote-only mode.` : 'This room is no longer in emote-only mode.',
+        enabled ? 'This room is now in emote-only mode.' : 'This room is no longer in emote-only mode.',
         Event.Emoteonly
       )
+
+      this.props.addLog(notice.serialize())
+    })
+
+    this.client.on(Event.Hosted, (channel, username, viewers, autohost) => {
+      if (Twitch.sanitizeChannel(channel) === this.props.channel) {
+        return
+      }
+
+      const notice = new Notice(
+        `${username} is now ${autohost ? 'auto' : ''} hosting you for up to ${viewers} viewers.`,
+        Event.Hosted
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
+    this.client.on(Event.Hosting, (_channel, target, viewers) => {
+      const notice = new Notice(`Now hosting ${target} for up to ${viewers} viewers.`, Event.Hosting)
 
       this.props.addLog(notice.serialize())
     })

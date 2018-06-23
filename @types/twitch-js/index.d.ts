@@ -90,6 +90,11 @@ declare module 'twitch-js' {
     on(event: Event.Clearchat, listener: (channel: string) => void): void
     on(event: Event.FollowersOnly, listener: (channel: string, enabled: boolean, length: number) => void): void
     on(event: Event.Emoteonly, listener: (channel: string, enabled: boolean) => void): void
+    on(
+      event: Event.Hosted,
+      listener: (channel: string, username: string, viewers: number, autohost: boolean) => void
+    ): void
+    on(event: Event.Hosting, listener: (channel: string, target: string, viewers: number) => void): void
   }
 
   namespace Client {

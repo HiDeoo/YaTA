@@ -67,6 +67,19 @@ export default class Twitch {
   }
 
   /**
+   * Sanitizes the name of a channel (remove the extra # at the beginning if present).
+   * @param  channel - The channel name to sanitize.
+   * @return The sanitized name.
+   */
+  public static sanitizeChannel(channel: string) {
+    if (channel.charAt(0) === '#') {
+      return channel.substr(1)
+    }
+
+    return channel
+  }
+
+  /**
    * Fetches Twitch public JWK.
    * @return The JWK.
    */
