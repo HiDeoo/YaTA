@@ -180,6 +180,15 @@ class ChatClient extends React.Component<Props> {
       }
     })
 
+    this.client.on(Event.R9k, (_channel, enabled) => {
+      const notice = new Notice(
+        enabled ? 'This room is now in R9K mode.' : 'This room is no longer in R9K mode.',
+        Event.Emoteonly
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
     this.client.on(Event.Notice, (_channel, msgid, message) => {
       console.log('notice ', msgid, message)
       // TODO

@@ -13,6 +13,7 @@ enum Event {
   Logon = 'logon',
   Message = 'message',
   Notice = 'notice',
+  R9k = 'r9kbeta',
   Reconnect = 'reconnect',
   Roomstate = 'roomstate',
 }
