@@ -16,3 +16,19 @@ const getUserState = (state: ApplicationState) => state.user
  * @return `true` when logged in.
  */
 export const getIsLoggedIn = createSelector([getUserState], (user) => !_.isNil(user.tokens))
+
+/**
+ * Returns the chat login details.
+ * @param  state - The Redux state.
+ * @return The login details.
+ */
+export const getChatLoginDetails = createSelector([getUserState], (user) => {
+  if (_.isNil(user.tokens) || _.isNil(user.username)) {
+    return null
+  }
+
+  return {
+    password: `oauth:${user.tokens.access}`,
+    username: user.username,
+  }
+})

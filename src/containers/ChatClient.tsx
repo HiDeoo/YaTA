@@ -13,6 +13,7 @@ import { addLog } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
+import { getChatLoginDetails } from 'Store/selectors/user'
 
 /**
  * ChatClient Component.
@@ -27,8 +28,13 @@ class ChatClient extends React.Component<Props> {
   constructor(props: Props) {
     super(props)
 
+    if (_.isNil(props.loginDetails)) {
+      throw new Error('Missing login details.')
+    }
+
     this.client = tmi.client({
       channels: [],
+      identity: props.loginDetails,
       options: { clientId: process.env.REACT_APP_TWITCH_CLIENT_ID, debug: true },
     })
   }
@@ -155,6 +161,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
     chatters: getChatters(state),
+    loginDetails: getChatLoginDetails(state),
   }),
   { addLog, addChatterWithMessage }
 )(ChatClient)
@@ -165,6 +172,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 type StateProps = {
   channel: AppState['channel']
   chatters: ChattersState['byId']
+  loginDetails: ReturnType<typeof getChatLoginDetails>
 }
 
 /**
