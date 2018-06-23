@@ -18,6 +18,7 @@ enum Event {
   Roomstate = 'roomstate',
   Slowmode = 'slowmode',
   Subscribers = 'subscribers',
+  Unhost = 'unhost',
 }
 
 export default Event

@@ -129,7 +129,7 @@ class ChatClient extends React.Component<Props> {
       this.props.addLog(notice.serialize())
     })
 
-    this.client.on(Event.FollowersOnly, (_channel, enabled, _length) => {
+    this.client.on(Event.FollowersOnly, (_channel, enabled) => {
       const notice = new Notice(
         enabled ? 'This room is in followers-only mode.' : 'This room is no longer in followers-only mode.',
         Event.FollowersOnly
@@ -205,6 +205,12 @@ class ChatClient extends React.Component<Props> {
         enabled ? 'This room is now in subscriber-only mode.' : 'This room is no longer in subscriber-only mode.',
         Event.Subscribers
       )
+
+      this.props.addLog(notice.serialize())
+    })
+
+    this.client.on(Event.Unhost, () => {
+      const notice = new Notice('No longer hosting.', Event.Unhost)
 
       this.props.addLog(notice.serialize())
     })
