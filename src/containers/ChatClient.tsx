@@ -122,6 +122,12 @@ class ChatClient extends React.Component<Props> {
       this.props.updateRoomState(state.serialize())
     })
 
+    this.client.on(Event.Clearchat, () => {
+      const notice = new Notice('Chat was cleared by a moderator.', Event.Clearchat)
+
+      this.props.addLog(notice.serialize())
+    })
+
     this.client.on(Event.Message, (_channel, userstate, message, self) => {
       const parsedMessage = this.parseRawMessage(message, userstate, self)
 
@@ -143,8 +149,6 @@ class ChatClient extends React.Component<Props> {
       )
 
       this.props.addLog(notice.serialize())
-
-      // TODO update room state?
     })
 
     this.client.on(Event.Notice, (_channel, msgid, message) => {
@@ -176,6 +180,7 @@ class ChatClient extends React.Component<Props> {
 
         break
       }
+      // TODO whispers
       default: {
         parsedMessage = null
         break

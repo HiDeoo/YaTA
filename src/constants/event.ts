@@ -2,6 +2,7 @@
  * Events.
  */
 enum Event {
+  Clearchat = 'clearchat',
   Connecting = 'connecting',
   Connected = 'connected',
   Disconnected = 'disconnected',

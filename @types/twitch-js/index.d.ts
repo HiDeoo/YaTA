@@ -88,6 +88,7 @@ declare module 'twitch-js' {
     on(event: Event.Disconnected, listener: (reason: string) => void): void
     on(event: Event.Reconnect, listener: () => void): void
     on(event: Event.Roomstate, listener: (channel: string, state: RoomState) => void): void
+    on(event: Event.Clearchat, listener: (channel: string) => void): void
   }
 
   namespace Client {
