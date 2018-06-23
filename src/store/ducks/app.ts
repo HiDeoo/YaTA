@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
 
 import Status from 'Constants/status'
+import { SerializedRoomState } from 'Libs/RoomState'
 import { createAction } from 'Utils/redux'
 
 /**
@@ -9,6 +10,7 @@ import { createAction } from 'Utils/redux'
 export enum Actions {
   SET_CHANNEL = 'app/SET_CHANNEL',
   UPDATE_STATUS = 'app/UPDATE_STATUS',
+  UPDATE_ROOM_STATE = 'app/UPDATE_ROOM_STATE',
 }
 
 /**
@@ -16,6 +18,7 @@ export enum Actions {
  */
 export const initialState = {
   channel: null,
+  roomState: null,
   status: Status.Default,
 }
 
@@ -37,6 +40,15 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
       return {
         ...state,
         status: action.payload.status,
+      }
+    }
+    case Actions.UPDATE_ROOM_STATE: {
+      return {
+        ...state,
+        roomState: {
+          ...state.roomState,
+          ...action.payload.state,
+        },
       }
     }
     default: {
@@ -68,9 +80,22 @@ export const updateStatus = (status: Status) =>
   })
 
 /**
+ * Updates the room state.
+ * @param  state - The new state.
+ * @return The action.
+ */
+export const updateRoomState = (state: SerializedRoomState) =>
+  createAction(Actions.UPDATE_ROOM_STATE, {
+    state,
+  })
+
+/**
  * App actions.
  */
-export type AppActions = ReturnType<typeof setChannel> | ReturnType<typeof updateStatus>
+export type AppActions =
+  | ReturnType<typeof setChannel>
+  | ReturnType<typeof updateStatus>
+  | ReturnType<typeof updateRoomState>
 
 /**
  * App state.
@@ -85,4 +110,9 @@ export type AppState = {
    * Connection status.
    */
   status: Status
+
+  /**
+   * Room state.
+   */
+  roomState: SerializedRoomState | null
 }

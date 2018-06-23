@@ -8,7 +8,8 @@ import LogType from 'Constants/logType'
 import Status from 'Constants/status'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
-import { AppState, updateStatus } from 'Store/ducks/app'
+import RoomState from 'Libs/RoomState'
+import { AppState, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
@@ -115,6 +116,12 @@ class ChatClient extends React.Component<Props> {
       this.props.updateStatus(Status.Reconnecting)
     })
 
+    this.client.on(Event.Roomstate, (_channel, rawState) => {
+      const state = new RoomState(rawState)
+
+      this.props.updateRoomState(state.serialize())
+    })
+
     this.client.on(Event.Message, (_channel, userstate, message, self) => {
       const parsedMessage = this.parseRawMessage(message, userstate, self)
 
@@ -187,7 +194,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     chatters: getChatters(state),
     loginDetails: getChatLoginDetails(state),
   }),
-  { addLog, addChatterWithMessage, updateStatus }
+  { addLog, addChatterWithMessage, updateRoomState, updateStatus }
 )(ChatClient)
 
 /**
@@ -205,6 +212,7 @@ type StateProps = {
 type DispatchProps = {
   addLog: typeof addLog
   addChatterWithMessage: typeof addChatterWithMessage
+  updateRoomState: typeof updateRoomState
   updateStatus: typeof updateStatus
 }
 

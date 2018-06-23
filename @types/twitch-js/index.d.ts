@@ -38,6 +38,18 @@ declare module 'twitch-js' {
     [key: string]: string[]
   }
 
+  export type RoomState = {
+    'broadcaster-lang'?: string | null
+    'emote-only'?: boolean
+    'followers-only'?: string
+    r9k?: boolean
+    rituals?: boolean
+    'room-id': string
+    slow?: boolean
+    'subs-only'?: boolean
+    channel: string
+  }
+
   export type UserState = {
     badges: Badges | null
     color: string | null
@@ -75,6 +87,7 @@ declare module 'twitch-js' {
     on(event: Event.Logon, listener: () => void): void
     on(event: Event.Disconnected, listener: (reason: string) => void): void
     on(event: Event.Reconnect, listener: () => void): void
+    on(event: Event.Roomstate, listener: (channel: string, state: RoomState) => void): void
   }
 
   namespace Client {

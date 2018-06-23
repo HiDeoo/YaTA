@@ -10,6 +10,7 @@ enum Event {
   Message = 'message',
   Notice = 'notice',
   Reconnect = 'reconnect',
+  Roomstate = 'roomstate',
 }
 
 export default Event
