@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import tmi, { Client, UserState } from 'twitch-js'
 
 import Event from 'Constants/event'
@@ -19,9 +20,16 @@ import { getChatters } from 'Store/selectors/chatters'
 import { getChatLoginDetails } from 'Store/selectors/user'
 
 /**
+ * React State.
+ */
+const initialState = { clientDidFail: false }
+type State = Readonly<typeof initialState>
+
+/**
  * ChatClient Component.
  */
-class ChatClient extends React.Component<Props> {
+class ChatClient extends React.Component<Props, State> {
+  public state: State = initialState
   private client: Client
 
   /**
@@ -32,13 +40,15 @@ class ChatClient extends React.Component<Props> {
     super(props)
 
     if (_.isNil(props.loginDetails)) {
-      throw new Error('Missing login details.')
+      this.state = {
+        clientDidFail: true,
+      }
     }
 
     this.client = tmi.client({
       channels: [],
       connection: { reconnect: true },
-      identity: props.loginDetails,
+      identity: props.loginDetails || undefined,
       options: { clientId: process.env.REACT_APP_TWITCH_CLIENT_ID, debug: true },
     })
   }
@@ -47,42 +57,43 @@ class ChatClient extends React.Component<Props> {
    * Lifecycle: componentDidMount.
    */
   public async componentDidMount() {
-    console.error('> componentDidMount')
-
     const { channel } = this.props
 
     if (_.isNil(channel)) {
-      throw new Error('Missing channel.')
+      this.setState(() => ({ clientDidFail: true }))
     }
 
     this.subscribe()
 
-    // await this.client.connect()
-    // await this.client.join(channel)
+    try {
+      // await this.client.connect()
+      // await this.client.join(channel)
+    } catch (error) {
+      this.setState(() => ({ clientDidFail: true }))
+    }
   }
 
   /**
    * Lifecycle: shouldComponentUpdate.
-   * @return The client should never update.
+   * @param  nextProps - The next props.
+   * @param  nextState - The next state.
+   * @return The client should never update except if failing.
    */
-  public shouldComponentUpdate() {
-    return false
-  }
-
-  /**
-   * Lifecycle: componentDidUpdate.
-   */
-  public componentDidUpdate() {
-    console.error('> componentDidUpdate')
+  public shouldComponentUpdate(_nextProps: Props, nextState: State) {
+    return this.state.clientDidFail !== nextState.clientDidFail
   }
 
   /**
    * Lifecycle: componentWillUnmount.
    */
   public async componentWillUnmount() {
-    await this.client.disconnect()
+    try {
+      await this.client.disconnect()
 
-    this.client.removeAllListeners()
+      this.client.removeAllListeners()
+    } catch (error) {
+      //
+    }
   }
 
   /**
@@ -90,6 +101,10 @@ class ChatClient extends React.Component<Props> {
    * @return The client should not render anything.
    */
   public render() {
+    if (this.state.clientDidFail) {
+      return <Redirect to="/" />
+    }
+
     return null
   }
 
