@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
+import { IdToken } from 'Libs/Twitch'
 import { createAction, RehydrateAction } from 'Utils/redux'
 
 /**
@@ -17,6 +18,7 @@ export enum Actions {
  */
 export const initialState = {
   tokens: null,
+  username: null,
 }
 
 /**
@@ -38,6 +40,7 @@ const userReducer: Reducer<UserState, UserActions> = (state = initialState, acti
       return {
         ...state,
         tokens: action.payload,
+        username: action.payload.id.preferred_username,
       }
     }
     case Actions.RESET: {
@@ -54,10 +57,10 @@ export default userReducer
 /**
  * Sets the current user tokens.
  * @param  access - The access token.
- * @param  id - The id token.
+ * @param  id - The ID token.
  * @return The action.
  */
-export const setTokens = (access: string, id: string) =>
+export const setTokens = (access: string, id: IdToken) =>
   createAction(Actions.SET_TOKENS, {
     access,
     id,
@@ -83,6 +86,11 @@ export type UserState = {
    */
   tokens: {
     access: string
-    id: string
+    id: IdToken
   } | null
+
+  /**
+   * Username.
+   */
+  username: string | null
 }
