@@ -128,6 +128,24 @@ class ChatClient extends React.Component<Props> {
       this.props.addLog(notice.serialize())
     })
 
+    this.client.on(Event.FollowersOnly, (_channel, enabled, _length) => {
+      const notice = new Notice(
+        enabled ? `This room is in followers-only mode.` : 'This room is no longer in followers-only mode.',
+        Event.FollowersOnly
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
+    this.client.on(Event.Emoteonly, (_channel, enabled) => {
+      const notice = new Notice(
+        enabled ? `This room is now in emote-only mode.` : 'This room is no longer in emote-only mode.',
+        Event.Emoteonly
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
     this.client.on(Event.Message, (_channel, userstate, message, self) => {
       const parsedMessage = this.parseRawMessage(message, userstate, self)
 
@@ -140,15 +158,6 @@ class ChatClient extends React.Component<Props> {
           this.props.addChatterWithMessage(serializedMessage.user, serializedMessage.id)
         }
       }
-    })
-
-    this.client.on(Event.FollowersOnly, (_channel, enabled, _length) => {
-      const notice = new Notice(
-        enabled ? 'This room is in followers-only mode.' : 'This room is no longer in followers-only mode.',
-        Event.FollowersOnly
-      )
-
-      this.props.addLog(notice.serialize())
     })
 
     this.client.on(Event.Notice, (_channel, msgid, message) => {

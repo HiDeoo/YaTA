@@ -6,6 +6,7 @@ enum Event {
   Connecting = 'connecting',
   Connected = 'connected',
   Disconnected = 'disconnected',
+  Emoteonly = 'emoteonly',
   FollowersOnly = 'followersonly',
   Logon = 'logon',
   Message = 'message',

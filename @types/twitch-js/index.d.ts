@@ -80,7 +80,6 @@ declare module 'twitch-js' {
       event: Event.Message,
       listener: (channel: string, userstate: UserState, message: string, self: boolean) => void
     ): void
-    on(event: Event.FollowersOnly, listener: (channel: string, enabled: boolean, length: number) => void): void
     on(event: Event.Notice, listener: (channel: string, msgid: string, message: string) => void): void
     on(event: Event.Connecting, listener: (adress: string, port: number) => void): void
     on(event: Event.Connected, listener: (adress: string, port: number) => void): void
@@ -89,6 +88,8 @@ declare module 'twitch-js' {
     on(event: Event.Reconnect, listener: () => void): void
     on(event: Event.Roomstate, listener: (channel: string, state: RoomState) => void): void
     on(event: Event.Clearchat, listener: (channel: string) => void): void
+    on(event: Event.FollowersOnly, listener: (channel: string, enabled: boolean, length: number) => void): void
+    on(event: Event.Emoteonly, listener: (channel: string, enabled: boolean) => void): void
   }
 
   namespace Client {
