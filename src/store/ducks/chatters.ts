@@ -16,6 +16,7 @@ export enum Actions {
  */
 export const initialState = {
   byId: {},
+  byName: {},
 }
 
 /**
@@ -33,6 +34,7 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
         return {
           ...state,
           byId: { ...state.byId, [chatter.id]: { ...chatter, messages: [messageId] } },
+          byName: { ...state.byName, [chatter.name]: chatter.id },
         }
       }
 
@@ -77,4 +79,10 @@ export type ChattersState = {
    * All chatters keyed by ids.
    */
   byId: { [key: string]: SerializedChatter & { messages: string[] } }
+
+  /**
+   * All chatters keyed by names.
+   * Note: this is only a reference to the chatter id.
+   */
+  byName: { [key: string]: string }
 }
