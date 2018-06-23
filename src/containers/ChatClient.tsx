@@ -171,9 +171,7 @@ class ChatClient extends React.Component<Props> {
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)
 
-          if (_.isNil(user)) {
-            parsedMessage.color = parsedMessage.user.generateRandomColor()
-          }
+          parsedMessage.updateColor(_.isNil(user) ? parsedMessage.user.generateRandomColor() : user.color)
         }
 
         break

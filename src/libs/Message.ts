@@ -45,6 +45,15 @@ export default class Message implements Serializable<SerializedMessage> {
   }
 
   /**
+   * Updates the message color.
+   * @param newColor - The new color.
+   */
+  public updateColor(newColor: string | null) {
+    this.color = newColor
+    this.user.color = newColor
+  }
+
+  /**
    * Serializes a chat message.
    * @return The serialized chat message.
    */
