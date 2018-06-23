@@ -17,6 +17,7 @@ enum Event {
   Reconnect = 'reconnect',
   Roomstate = 'roomstate',
   Slowmode = 'slowmode',
+  Subscribers = 'subscribers',
 }
 
 export default Event

@@ -200,6 +200,15 @@ class ChatClient extends React.Component<Props> {
       this.props.addLog(notice.serialize())
     })
 
+    this.client.on(Event.Subscribers, (_channel, enabled) => {
+      const notice = new Notice(
+        enabled ? 'This room is now in subscriber-only mode.' : 'This room is no longer in subscriber-only mode.',
+        Event.Subscribers
+      )
+
+      this.props.addLog(notice.serialize())
+    })
+
     this.client.on(Event.Notice, (_channel, msgid, message) => {
       console.log('notice ', msgid, message)
       // TODO
