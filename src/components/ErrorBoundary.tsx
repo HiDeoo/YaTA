@@ -28,6 +28,9 @@ export default class ErrorBoundary extends React.Component<Props, State> {
    */
   public componentDidCatch(error: Error) {
     this.setState(() => ({ hasError: true, error }))
+
+    // tslint:disable-next-line:no-console
+    console.error(error)
   }
 
   /**
