@@ -60,13 +60,13 @@ declare module 'twitch-js' {
     emotes: Emotes | null
     id: string
     mod: boolean
-    'room-id': string
+    'room-id'?: string
     subscriber: boolean
     'tmi-sent-ts': string
-    turbo: boolean
+    turbo?: boolean
     'user-id': string
     'user-type': null
-    'emotes-raw': string
+    'emotes-raw'?: string
     'badges-raw': string
     username: string
     'message-type': LogType.Action | LogType.Chat | LogType.Whisper | LogType.Cheer
@@ -159,6 +159,8 @@ declare module 'twitch-js' {
     on(event: Event.Ritual, listener: (ritual: Ritual) => void): void
     on(event: Event.Raid, listener: (raid: Raid) => void): void
     on(event: Event.Cheer, listener: (channel: string, userstate: UserState, message: string) => void): void
+
+    say(channel: string, message: string): void
   }
 
   namespace Client {

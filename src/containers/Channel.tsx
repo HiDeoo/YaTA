@@ -8,16 +8,26 @@ import Center from 'Components/Center'
 import ChatInput from 'Components/ChatInput'
 import ChatLogs from 'Components/ChatLogs'
 import FlexLayout from 'Components/FlexLayout'
-import ChatClient from 'Containers/ChatClient'
+import ReadyState from 'Constants/readyState'
+import ChatClient, { Client } from 'Containers/ChatClient'
 import { AppState, setChannel } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getLogs } from 'Store/selectors/logs'
 
 /**
+ * React State.
+ */
+const initialState = { inputValue: '' }
+type State = Readonly<typeof initialState>
+
+/**
  * Channel Component.
  */
-class Channel extends React.Component<Props> {
+class Channel extends React.Component<Props, State> {
+  public state: State = initialState
+  public chatClient = React.createRef<any>()
+
   /**
    * Lifecycle: componentDidMount.
    */
@@ -44,11 +54,51 @@ class Channel extends React.Component<Props> {
 
     return (
       <FlexLayout vertical>
-        <ChatClient />
+        <ChatClient ref={this.chatClient} />
         <ChatLogs logs={logs} />
-        <ChatInput />
+        <ChatInput value={this.state.inputValue} onChange={this.onChangeInputValue} onSubmit={this.sendMessage} />
       </FlexLayout>
     )
+  }
+
+  /**
+   * Triggered when input value is modified.
+   */
+  private onChangeInputValue = (value: string) => {
+    this.setState(() => ({ inputValue: value }))
+  }
+
+  /**
+   * Returns the Twitch client instance if defined and connected.
+   * @return The Twitch client or null.
+   */
+  private getTwitchClient() {
+    if (!_.isNil(this.chatClient.current)) {
+      const chatClient = this.chatClient.current.getWrappedInstance() as Client
+      const twitchClient = chatClient.client
+
+      if (twitchClient.readyState() !== ReadyState.Open) {
+        return null
+      }
+
+      return twitchClient
+    }
+
+    return null
+  }
+
+  /**
+   * Send a message.
+   */
+  private sendMessage = () => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      client.say(channel, this.state.inputValue)
+
+      this.setState(() => ({ inputValue: '' }))
+    }
   }
 }
 

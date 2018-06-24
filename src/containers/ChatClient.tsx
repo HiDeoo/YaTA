@@ -2,7 +2,8 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import tmi, { Client, Payment, Raid, Ritual, RoomState as RawRoomState, UserState } from 'twitch-js'
+import * as shortid from 'shortid'
+import tmi, { Client as TwitchClient, Payment, Raid, Ritual, RoomState as RawRoomState, UserState } from 'twitch-js'
 
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
@@ -32,9 +33,9 @@ type State = Readonly<typeof initialState>
 /**
  * ChatClient Component.
  */
-class ChatClient extends React.Component<Props, State> {
+export class Client extends React.Component<Props, State> {
   public state: State = initialState
-  private client: Client
+  public client: TwitchClient
 
   /**
    * Creates a new instance of the component.
@@ -69,6 +70,8 @@ class ChatClient extends React.Component<Props, State> {
 
     if (_.isNil(channel)) {
       this.setState(() => ({ clientDidFail: true }))
+
+      return
     }
 
     this.client.on(Event.Connecting, this.onConnecting)
@@ -559,6 +562,12 @@ class ChatClient extends React.Component<Props, State> {
       case LogType.Action:
       case LogType.Cheer:
       case LogType.Chat: {
+        if (self) {
+          userstate.id = shortid.generate()
+          userstate['user-id'] = 'self'
+          userstate['tmi-sent-ts'] = Date.now().toString()
+        }
+
         parsedMessage = new Message(message, userstate, self)
 
         if (_.isNil(parsedMessage.user.color)) {
@@ -588,8 +597,10 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
   }),
-  { addLog, addChatterWithMessage, purgeLogs, updateRoomState, updateStatus, setModerator }
-)(ChatClient)
+  { addLog, addChatterWithMessage, purgeLogs, updateRoomState, updateStatus, setModerator },
+  null,
+  { withRef: true }
+)(Client)
 
 /**
  * React Props.
