@@ -1,6 +1,8 @@
 declare module 'twitch-js' {
   import Event from 'Constants/event'
   import LogType from 'Constants/logType'
+  import ReadyState from 'Constants/readyState'
+  import RitualType from 'Constants/ritualType'
 
   type ClientOptions = {
     options?: {
@@ -30,13 +32,6 @@ declare module 'twitch-js' {
     }
   }
 
-  export enum ReadyState {
-    Connecting = 'CONNECTING',
-    Open = 'OPEN',
-    Closing = 'CLOSING',
-    Closed = 'CLOSED',
-  }
-
   type Badges = {
     [key: string]: number
   }
@@ -59,6 +54,7 @@ declare module 'twitch-js' {
 
   export type UserState = {
     badges: Badges | null
+    bits?: number
     color: string | null
     'display-name': string
     emotes: Emotes | null
@@ -73,7 +69,27 @@ declare module 'twitch-js' {
     'emotes-raw': string
     'badges-raw': string
     username: string
-    'message-type': LogType.Action | LogType.Chat | LogType.Whisper
+    'message-type': LogType.Action | LogType.Chat | LogType.Whisper | LogType.Cheer
+  }
+
+  export type Payment = {
+    prime: boolean
+    plan: string
+    planName: string
+  }
+
+  export type Ritual = {
+    channel: string
+    username: string
+    type: RitualType
+    userstate: UserState
+  }
+
+  export type Raid = {
+    channel: string
+    raider: string
+    viewers: number
+    userstate: UserState
   }
 
   export class Client {
@@ -115,6 +131,34 @@ declare module 'twitch-js' {
     on(event: Event.Mod, listener: (channel: string, username: string) => void): void
     on(event: Event.Unmod, listener: (channel: string, username: string) => void): void
     on(event: Event.Mods, listener: (channel: string, mods: string[]) => void): void
+    on(
+      event: Event.Subscription,
+      listener: (
+        channel: string,
+        username: string,
+        method: Payment,
+        message: string | null,
+        userstate: UserState
+      ) => void
+    ): void
+    on(
+      event: Event.ReSub,
+      listener: (
+        channel: string,
+        username: string,
+        months: number,
+        message: string | null,
+        userstate: UserState,
+        method: Payment
+      ) => void
+    ): void
+    on(
+      event: Event.SubGift,
+      listener: (channel: string, username: string, recipient: string, method: Payment, userstate: UserState) => void
+    ): void
+    on(event: Event.Ritual, listener: (ritual: Ritual) => void): void
+    on(event: Event.Raid, listener: (raid: Raid) => void): void
+    on(event: Event.Cheer, listener: (channel: string, userstate: UserState, message: string) => void): void
   }
 
   namespace Client {

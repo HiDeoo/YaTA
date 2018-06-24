@@ -4,6 +4,7 @@ import { Reducer } from 'redux'
 import Logs from 'Constants/logs'
 import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotice } from 'Libs/Notice'
+import { SerializedNotification } from 'Libs/Notification'
 import { createAction } from 'Utils/redux'
 
 /**
@@ -145,4 +146,4 @@ export type LogsState = {
 /**
  * Log possible types.
  */
-export type Log = SerializedMessage | SerializedNotice
+export type Log = SerializedMessage | SerializedNotice | SerializedNotification

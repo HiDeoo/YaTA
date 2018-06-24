@@ -2,13 +2,16 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import tmi, { Client, ReadyState, RoomState as RawRoomState, UserState } from 'twitch-js'
+import tmi, { Client, Payment, Raid, Ritual, RoomState as RawRoomState, UserState } from 'twitch-js'
 
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
+import ReadyState from 'Constants/readyState'
+import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
+import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
 import { AppState, updateRoomState, updateStatus } from 'Store/ducks/app'
@@ -90,6 +93,12 @@ class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.Ban, this.onBan)
     this.client.on(Event.Timeout, this.onTimeout)
     this.client.on(Event.Notice, this.onNotice)
+    this.client.on(Event.Subscription, this.onSubscription)
+    this.client.on(Event.ReSub, this.onResub)
+    this.client.on(Event.SubGift, this.onSubGift)
+    this.client.on(Event.Ritual, this.onRitual)
+    this.client.on(Event.Raid, this.onRaid)
+    this.client.on(Event.Cheer, this.onCheer)
 
     try {
       // await this.client.connect()
@@ -428,6 +437,103 @@ class ChatClient extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when a user subscribe to a channel.
+   * @param channel - The channel.
+   * @param username - The username.
+   * @param method - The method used to sub.
+   * @param message - Sub message.
+   */
+  private onSubscription = (_channel: string, username: string, method: Payment, message: string | null) => {
+    const notification = new Notification(
+      `${username} just subscribed${method.prime ? ' with Twitch Prime' : ''}!`,
+      NotificationEvent.Subscription,
+      !_.isNil(message) ? message : undefined
+    )
+
+    this.props.addLog(notification.serialize())
+  }
+
+  /**
+   * Triggered when a user re-subscribe to a channel.
+   * @param channel - The channel.
+   * @param username - The username.
+   * @param months - The duration of the subscription.
+   * @param message - Sub message.
+   * @param userstate - The associated userstate.
+   * @param method - The method used to sub.
+   */
+  private onResub = (
+    _channel: string,
+    username: string,
+    months: number,
+    message: string | null,
+    _userstate: UserState,
+    method: Payment
+  ) => {
+    const notification = new Notification(
+      `${username} just re-subscribed for ${months} months in a row${method.prime ? ' with Twitch Prime' : ''}!`,
+      NotificationEvent.ReSub,
+      !_.isNil(message) ? message : undefined
+    )
+
+    this.props.addLog(notification.serialize())
+  }
+
+  /**
+   * Triggered when a user gift a subscription.
+   * @param channel - The channel.
+   * @param username - The username.
+   * @param recipient - The gift recipient.
+   */
+  private onSubGift = (_channel: string, username: string, recipient: string) => {
+    const notification = new Notification(`${username} just gifted a sub to ${recipient}!`, NotificationEvent.SubGift)
+
+    this.props.addLog(notification.serialize())
+  }
+
+  /**
+   * Triggered when a ritual occurs in a channel.
+   * @param ritual - The ritual.
+   */
+  private onRitual = ({ username, type }: Ritual) => {
+    if (type === RitualType.NewChatter) {
+      const notification = new Notification(
+        `${username} is new here! Say hi to ${username}!`,
+        NotificationEvent.RitualNewChatter
+      )
+
+      this.props.addLog(notification.serialize())
+    }
+  }
+
+  /**
+   * Triggered when a raid occurs in a channel.
+   * @param raid - The raid.
+   */
+  private onRaid = ({ raider, viewers }: Raid) => {
+    const notification = new Notification(`${raider} is raiding with a party of ${viewers}!`, NotificationEvent.Raid)
+
+    this.props.addLog(notification.serialize())
+  }
+
+  /**
+   * Triggered when a new message with cheers is received.
+   * @param channel - The channel.
+   * @param userstate - The associated userstate.
+   * @param message - The received message.
+   */
+  private onCheer = (_channel: string, userstate: UserState, message: string) => {
+    const parsedMessage = this.parseRawMessage(message, { ...userstate, 'message-type': LogType.Cheer }, false)
+
+    if (!_.isNil(parsedMessage)) {
+      const serializedMessage = parsedMessage.serialize()
+
+      this.props.addLog(serializedMessage)
+      this.props.addChatterWithMessage(serializedMessage.user, serializedMessage.id)
+    }
+  }
+
+  /**
    * Triggered when a notice is received.
    * @param channel - The channel.
    * @param msgid - The notice id.
@@ -451,6 +557,7 @@ class ChatClient extends React.Component<Props, State> {
 
     switch (userstate['message-type']) {
       case LogType.Action:
+      case LogType.Cheer:
       case LogType.Chat: {
         parsedMessage = new Message(message, userstate, self)
 

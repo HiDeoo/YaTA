@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { SerializedNotice } from 'Libs/Notice'
+import { SerializedNotification } from 'Libs/Notification'
 
 /**
  * Wrapper component.
@@ -12,17 +12,17 @@ const Wrapper = styled.div`
 `
 
 /**
- * ChatNotice Component.
+ * ChatNotification Component.
  */
-export default class ChatNotice extends React.Component<Props> {
+export default class ChatNotification extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { notice, style } = this.props
+    const { notification, style } = this.props
 
-    return <Wrapper style={style}>{notice.message}</Wrapper>
+    return <Wrapper style={style}>{notification.title}</Wrapper>
   }
 }
 
@@ -30,6 +30,6 @@ export default class ChatNotice extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  notice: SerializedNotice
+  notification: SerializedNotification
   style: React.CSSProperties
 }

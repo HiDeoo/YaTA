@@ -6,6 +6,8 @@ enum LogType {
   Action = 'action',
   Whisper = 'whisper',
   Notice = 'notice',
+  Notification = 'notification',
+  Cheer = 'cheer',
 }
 
 export default LogType

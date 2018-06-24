@@ -4,10 +4,12 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } fro
 
 import ChatMessage from 'Components/ChatMessage'
 import ChatNotice from 'Components/ChatNotice'
+import ChatNotification from 'Components/ChatNotification'
 import FlexContent from 'Components/FlexContent'
 import LogType from 'Constants/logType'
 import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotice } from 'Libs/Notice'
+import { SerializedNotification } from 'Libs/Notification'
 import { Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
 
@@ -64,6 +66,8 @@ export default class ChatMessages extends React.Component<Props> {
       LogComponent = <ChatMessage style={style} message={log} />
     } else if (this.isNotice(log)) {
       LogComponent = <ChatNotice style={style} notice={log} />
+    } else if (this.isNotification(log)) {
+      LogComponent = <ChatNotification style={style} notification={log} />
     }
 
     if (_.isNil(LogComponent)) {
@@ -83,16 +87,25 @@ export default class ChatMessages extends React.Component<Props> {
    * @return `true` if the log is a message.
    */
   private isMessage(log: Log): log is SerializedMessage {
-    return log.type === LogType.Action || log.type === LogType.Chat
+    return log.type === LogType.Action || log.type === LogType.Chat || log.type === LogType.Cheer
   }
 
   /**
-   * Determines if a log entry is a message.
+   * Determines if a log entry is a notice.
    * @param  log - The log entry to validate.
-   * @return `true` if the log is a message.
+   * @return `true` if the log is a notice.
    */
   private isNotice(log: Log): log is SerializedNotice {
     return log.type === LogType.Notice
+  }
+
+  /**
+   * Determines if a log entry is a notification.
+   * @param  log - The log entry to validate.
+   * @return `true` if the log is a notification.
+   */
+  private isNotification(log: Log): log is SerializedNotification {
+    return log.type === LogType.Notification
   }
 }
 
