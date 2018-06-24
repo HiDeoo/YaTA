@@ -11,6 +11,7 @@ import { Serializable } from 'Utils/typescript'
 export default class Message implements Serializable<SerializedMessage> {
   public user: Chatter
   public color: string | null
+  public isMod: boolean
   private badges: string[]
   private id: string
   private date: string
@@ -18,6 +19,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private message: string
   private type: LogType
   private time: string
+  private purged: boolean = false
 
   /**
    * Creates and parses a new chat message instance.
@@ -32,13 +34,14 @@ export default class Message implements Serializable<SerializedMessage> {
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate)
     this.type = userstate['message-type']
+    this.isMod = userstate.mod
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${date.getHours()}:${date.getMinutes()}`
 
     // TODO emotes
     // TODO badges
-    // TODO mod?
+    // TODO mod? Might need to serialize that to prevent mod controls to show on a mod if you're only a mod & not the broadcast
     // TODO room-id?
     // TODO subscriber?
     // TODO turbo?
@@ -64,6 +67,7 @@ export default class Message implements Serializable<SerializedMessage> {
       date: this.date,
       id: this.id,
       message: this.message,
+      purged: this.purged,
       self: this.self,
       time: this.time,
       type: this.type,
@@ -84,5 +88,6 @@ export type SerializedMessage = {
   self: boolean
   type: LogType
   message: string
+  purged: boolean
   time: string
 }

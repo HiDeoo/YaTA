@@ -10,8 +10,8 @@ import { Serializable } from 'Utils/typescript'
 export default class Chatter implements Serializable<SerializedChatter> {
   public id: string
   public color: string | null
+  public name: string
   private displayName: string
-  private name: string
 
   /**
    * Creates a new chatter instance.

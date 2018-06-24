@@ -11,12 +11,14 @@ import { createAction, RehydrateAction } from 'Utils/redux'
 export enum Actions {
   SET_TOKENS = 'user/SET_TOKENS',
   RESET = 'user/RESET',
+  SET_MODERATOR = 'user/SET_MODERATOR',
 }
 
 /**
  * Initial state.
  */
 export const initialState = {
+  isMod: false,
   tokens: null,
   username: null,
 }
@@ -34,17 +36,23 @@ const userReducer: Reducer<UserState, UserActions> = (state = initialState, acti
         return state
       }
 
-      return action.payload.user
+      return { ...action.payload.user, isMod: false }
     }
     case Actions.SET_TOKENS: {
       return {
         ...state,
         tokens: action.payload,
-        username: action.payload.id.preferred_username,
+        username: action.payload.id.preferred_username.toLowerCase(),
       }
     }
     case Actions.RESET: {
       return initialState
+    }
+    case Actions.SET_MODERATOR: {
+      return {
+        ...state,
+        isMod: action.payload.isMod,
+      }
     }
     default: {
       return state
@@ -73,9 +81,23 @@ export const setTokens = (access: string, id: IdToken) =>
 export const resetUser = () => createAction(Actions.RESET)
 
 /**
+ * Sets the current user moderator status.
+ * @param  isMod - Defines if the current user is a mod.
+ * @return The action.
+ */
+export const setModerator = (isMod: boolean) =>
+  createAction(Actions.SET_MODERATOR, {
+    isMod,
+  })
+
+/**
  * User actions.
  */
-export type UserActions = RehydrateAction | ReturnType<typeof setTokens> | ReturnType<typeof resetUser>
+export type UserActions =
+  | RehydrateAction
+  | ReturnType<typeof setTokens>
+  | ReturnType<typeof resetUser>
+  | ReturnType<typeof setModerator>
 
 /**
  * User state.
@@ -93,4 +115,9 @@ export type UserState = {
    * Username.
    */
   username: string | null
+
+  /**
+   * `true` when the user is a moderator.
+   */
+  isMod: boolean
 }

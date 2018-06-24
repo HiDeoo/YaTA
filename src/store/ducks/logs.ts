@@ -47,6 +47,7 @@ function rotateLogs(state: LogsState) {
  */
 export enum Actions {
   ADD = 'logs/ADD',
+  PURGE = 'logs/PURGE',
 }
 
 /**
@@ -76,6 +77,23 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
         byId: { ...newState.byId, [log.id]: log },
       }
     }
+    case Actions.PURGE: {
+      const updatedMessages = _.reduce(
+        action.payload.logs,
+        (messages, id) => {
+          const message = _.get(state.byId, id)
+
+          if (_.isNil(message)) {
+            return messages
+          }
+
+          return { ...messages, [id]: { ...message, purged: true } }
+        },
+        {}
+      )
+
+      return { ...state, byId: { ...state.byId, ...updatedMessages } }
+    }
     default: {
       return state
     }
@@ -95,9 +113,19 @@ export const addLog = (log: Log) =>
   })
 
 /**
+ * Purges log entries.
+ * @param  logs - The log ids to purge.
+ * @return The action.
+ */
+export const purgeLogs = (logs: string[]) =>
+  createAction(Actions.PURGE, {
+    logs,
+  })
+
+/**
  * Logs actions.
  */
-export type LogsActions = ReturnType<typeof addLog>
+export type LogsActions = ReturnType<typeof addLog> | ReturnType<typeof purgeLogs>
 
 /**
  * Logs state.

@@ -30,6 +30,13 @@ declare module 'twitch-js' {
     }
   }
 
+  export enum ReadyState {
+    Connecting = 'CONNECTING',
+    Open = 'OPEN',
+    Closing = 'CLOSING',
+    Closed = 'CLOSED',
+  }
+
   type Badges = {
     [key: string]: number
   }
@@ -75,6 +82,7 @@ declare module 'twitch-js' {
     disconnect(): void
     join(channel: string): void
     removeAllListeners(event?: Event): void
+    readyState(): ReadyState
 
     on(
       event: Event.Message,
@@ -99,6 +107,14 @@ declare module 'twitch-js' {
     on(event: Event.Slowmode, listener: (channel: string, enabled: boolean, length: number) => void): void
     on(event: Event.Subscribers, listener: (channel: string, enabled: boolean) => void): void
     on(event: Event.Unhost, listener: (channel: string, viewers: number) => void): void
+    on(event: Event.Ban, listener: (channel: string, username: string, reason: string | null) => void): void
+    on(
+      event: Event.Timeout,
+      listener: (channel: string, username: string, reason: string | null, duration: number) => void
+    ): void
+    on(event: Event.Mod, listener: (channel: string, username: string) => void): void
+    on(event: Event.Unmod, listener: (channel: string, username: string) => void): void
+    on(event: Event.Mods, listener: (channel: string, mods: string[]) => void): void
   }
 
   namespace Client {

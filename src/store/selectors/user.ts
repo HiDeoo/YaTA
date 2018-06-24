@@ -18,6 +18,13 @@ const getUserState = (state: ApplicationState) => state.user
 export const getIsLoggedIn = createSelector([getUserState], (user) => !_.isNil(user.tokens))
 
 /**
+ * Returns if the user is known as a moderator or not.
+ * @param  state - The Redux state.
+ * @return `true` when a moderator.
+ */
+export const getIsMod = createSelector([getUserState], (user) => user.isMod)
+
+/**
  * Returns the chat login details.
  * @param  state - The Redux state.
  * @return The login details.
