@@ -542,10 +542,10 @@ export class Client extends React.Component<Props, State> {
    * @param msgid - The notice id.
    * @param message - The notice associated message.
    */
-  private onNotice = (_channel: string, msgid: string, message: string) => {
-    console.log('notice ', msgid, message)
-    // TODO
-    // TODO check when banning someone if we don't at the same time get a notice & manually add one.
+  private onNotice = (_channel: string, _msgid: string, message: string) => {
+    const notice = new Notice(message, Event.Notice)
+
+    this.props.addLog(notice.serialize())
   }
 
   /**
