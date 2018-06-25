@@ -1,8 +1,9 @@
 import * as _ from 'lodash'
-import { UserState } from 'twitch-js'
+import { Emotes, UserState } from 'twitch-js'
 
 import LogType from 'Constants/logType'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
+import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
 /**
@@ -26,7 +27,6 @@ export default class Message implements Serializable<SerializedMessage> {
    * @class
    */
   constructor(message: string, userstate: UserState, self: boolean) {
-    this.message = message
     this.self = self
     this.id = userstate.id
     this.badges = _.keys(userstate.badges)
@@ -39,7 +39,8 @@ export default class Message implements Serializable<SerializedMessage> {
     const date = new Date(parseInt(this.date, 10))
     this.time = `${date.getHours()}:${date.getMinutes()}`
 
-    // TODO emotes
+    this.message = !_.isNil(userstate.emotes) ? this.parseEmotes(message, userstate.emotes) : escape(message)
+
     // TODO badges
     // TODO mod? Might need to serialize that to prevent mod controls to show on a mod if you're only a mod & not the broadcast
     // TODO room-id?
@@ -73,6 +74,37 @@ export default class Message implements Serializable<SerializedMessage> {
       type: this.type,
       user: this.user.serialize(),
     }
+  }
+
+  /**
+   * Parses a message for emotes.
+   * @param message - The message to parse.
+   * @param emotes - The message emotes.
+   */
+  private parseEmotes(message: string, emotes: Emotes) {
+    const parsedMessage = message.split('')
+
+    _.forEach(emotes, (ranges, id) => {
+      _.forEach(ranges, (range) => {
+        const strIndexes = range.split('-')
+        const indexes = [parseInt(strIndexes[0], 10), parseInt(strIndexes[1], 10)]
+        const name = []
+
+        for (let i = indexes[0]; i <= indexes[1]; ++i) {
+          name.push(parsedMessage[i])
+          parsedMessage[i] = ''
+        }
+
+        const emoteName = name.join('')
+        const srcset = `https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0 1x,https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0 2x,https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0 4x`
+
+        parsedMessage[
+          indexes[0]
+        ] = `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0" srcset=${srcset} alt="${emoteName}" />`
+      })
+    })
+
+    return escape(parsedMessage).join('')
   }
 }
 

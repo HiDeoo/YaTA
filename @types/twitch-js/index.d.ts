@@ -36,7 +36,7 @@ declare module 'twitch-js' {
     [key: string]: number
   }
 
-  type Emotes = {
+  export type Emotes = {
     [key: string]: string[]
   }
 

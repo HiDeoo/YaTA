@@ -22,7 +22,21 @@ export default class ChatMessage extends React.Component<Props> {
   public render() {
     const { message, style } = this.props
 
-    return <Wrapper style={style}>{message.message}</Wrapper>
+    return (
+      <Wrapper style={style}>
+        <span dangerouslySetInnerHTML={this.renderMessage()} />
+      </Wrapper>
+    )
+  }
+
+  /**
+   * Renders a message by directly setting HTML from React.
+   * @return The HTML content to render.
+   */
+  private renderMessage() {
+    const { message } = this.props.message
+
+    return { __html: message }
   }
 }
 
