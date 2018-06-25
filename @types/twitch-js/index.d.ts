@@ -33,7 +33,7 @@ declare module 'twitch-js' {
   }
 
   type Badges = {
-    [key: string]: number
+    [key: string]: string
   }
 
   export type Emotes = {

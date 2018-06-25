@@ -14,7 +14,7 @@ import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
-import Twitch from 'Libs/Twitch'
+import Twitch, { Badges } from 'Libs/Twitch'
 import { AppState, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog, purgeLogs } from 'Store/ducks/logs'
@@ -36,6 +36,7 @@ type State = Readonly<typeof initialState>
 export class Client extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
+  private badges: Badges | null = null
 
   /**
    * Creates a new instance of the component.
@@ -190,10 +191,12 @@ export class Client extends React.Component<Props, State> {
    * @param channel - The channel.
    * @param rawState - The raw room state.
    */
-  private onRoomStateUpdate = (_channel: string, rawState: RawRoomState) => {
+  private onRoomStateUpdate = async (_channel: string, rawState: RawRoomState) => {
     const state = new RoomState(rawState)
 
     this.props.updateRoomState(state.serialize())
+
+    this.badges = await Twitch.fetchBadges(state.roomId)
   }
 
   /**
@@ -568,7 +571,7 @@ export class Client extends React.Component<Props, State> {
           userstate['tmi-sent-ts'] = Date.now().toString()
         }
 
-        parsedMessage = new Message(message, userstate, self)
+        parsedMessage = new Message(message, userstate, self, this.badges)
 
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)

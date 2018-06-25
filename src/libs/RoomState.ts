@@ -7,7 +7,7 @@ import { Serializable } from 'Utils/typescript'
  * Room state class.
  */
 export default class RoomState implements Serializable<SerializedRoomState> {
-  private roomId: string
+  public roomId: string
   private language?: string | null
   private emoteOnly?: boolean
   private followersOnly?: string
@@ -19,6 +19,7 @@ export default class RoomState implements Serializable<SerializedRoomState> {
   /**
    * Creates a new room state instance.
    * @class
+   * @param state - The raw room state.
    */
   constructor(state: RawRoomState) {
     this.roomId = state['room-id']

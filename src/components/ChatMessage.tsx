@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -19,6 +20,21 @@ const Time = styled.span`
   color: ${color('message.time.color')};
   font-size: 0.8rem;
   padding-right: 6px;
+`
+
+/**
+ * Badges component.
+ */
+const Badges = styled.span`
+  .badge {
+    display: inline-block;
+    padding-right: 4px;
+    vertical-align: middle;
+
+    &:last-of-type {
+      padding-right: 6px;
+    }
+  }
 `
 
 /**
@@ -57,20 +73,35 @@ export default class ChatMessage extends React.Component<Props> {
     return (
       <Wrapper style={style}>
         <Time>{message.time}</Time>
+        {this.renderBadges()}
         <Username color={usernameColor}>{message.user.displayName}</Username>
-        <Message dangerouslySetInnerHTML={this.renderMessage()} />
+        {this.renderMessage()}
       </Wrapper>
     )
   }
 
   /**
    * Renders a message by directly setting HTML from React.
-   * @return The HTML content to render.
+   * @return Element to render.
    */
   private renderMessage() {
     const { message } = this.props.message
 
-    return { __html: message }
+    return <Message dangerouslySetInnerHTML={{ __html: message }} />
+  }
+
+  /**
+   * Renders badges by directly setting HTML from React.
+   * @return The HTML content to render.
+   */
+  private renderBadges() {
+    const { badges } = this.props.message
+
+    if (_.isNil(badges)) {
+      return null
+    }
+
+    return <Badges dangerouslySetInnerHTML={{ __html: badges }} />
   }
 }
 

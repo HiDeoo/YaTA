@@ -80,6 +80,35 @@ export default class Twitch {
   }
 
   /**
+   * Fetches Twitch badges.
+   * @return The badges.
+   */
+  public static async fetchBadges(channelId: string): Promise<Badges> {
+    const response = await Promise.all([
+      (await this.fetch('https://badges.twitch.tv/v1/badges/global/display')).json(),
+      (await this.fetch(`https://badges.twitch.tv/v1/badges/channels/${channelId}/display`)).json(),
+    ])
+
+    return { ...response[0].badge_sets, ...response[0].badge_sets }
+  }
+
+  /**
+   * Fetches an URL.
+   * @param  url - The URL to fetch.
+   * @return The response.
+   */
+  private static fetch(url: string) {
+    const headers = new Headers({
+      Accept: 'application/vnd.twitchtv.v5+json',
+      'Client-ID': process.env.REACT_APP_TWITCH_CLIENT_ID,
+    })
+
+    const request = new Request(url, { headers })
+
+    return fetch(request)
+  }
+
+  /**
    * Fetches Twitch public JWK.
    * @return The JWK.
    */
@@ -103,4 +132,28 @@ export type IdToken = {
   iss: string
   preferred_username: string
   sub: string
+}
+
+/**
+ * Twitch badges.
+ */
+export type Badges = {
+  [key: string]: {
+    versions: {
+      [key: string]: Badge
+    }
+  }
+}
+
+/**
+ * Twitch badge.
+ */
+export type Badge = {
+  click_action: string
+  click_url: string
+  description: string
+  image_url_1x: string
+  image_url_2x: string
+  image_url_4x: string
+  title: string
 }

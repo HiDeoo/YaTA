@@ -3,6 +3,7 @@ import { Emotes, UserState } from 'twitch-js'
 
 import LogType from 'Constants/logType'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
+import { Badges } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -13,7 +14,7 @@ export default class Message implements Serializable<SerializedMessage> {
   public user: Chatter
   public color: string | null
   public isMod: boolean
-  private badges: string[]
+  private badges: string | null
   private id: string
   private date: string
   private self: boolean
@@ -25,11 +26,14 @@ export default class Message implements Serializable<SerializedMessage> {
   /**
    * Creates and parses a new chat message instance.
    * @class
+   * @param message - The received message.
+   * @param userstate - The associated user state.
+   * @param self - Defines if the message was sent by ourself.
+   * @param badges - The known badges if any.
    */
-  constructor(message: string, userstate: UserState, self: boolean) {
+  constructor(message: string, userstate: UserState, self: boolean, badges: Badges | null) {
     this.self = self
     this.id = userstate.id
-    this.badges = _.keys(userstate.badges)
     this.color = userstate.color
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate)
@@ -39,9 +43,9 @@ export default class Message implements Serializable<SerializedMessage> {
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
 
+    this.badges = !_.isNil(badges) && _.size(userstate.badges) > 0 ? this.parseBadges(userstate, badges) : null
     this.message = !_.isNil(userstate.emotes) ? this.parseEmotes(message, userstate.emotes) : escape(message)
 
-    // TODO badges
     // TODO mod? Might need to serialize that to prevent mod controls to show on a mod if you're only a mod & not the broadcast
     // TODO room-id?
     // TODO subscriber?
@@ -77,6 +81,39 @@ export default class Message implements Serializable<SerializedMessage> {
   }
 
   /**
+   * Parses badges.
+   * @param userstate - The userstate.
+   * @param badges - The known badges for the associated channeL.
+   */
+  private parseBadges(userstate: UserState, badges: Badges) {
+    const parsedBadges: string[] = []
+
+    _.forEach(userstate.badges, (version, name) => {
+      const set = _.get(badges, name)
+
+      if (_.isNil(set)) {
+        return false
+      }
+
+      const badge = _.get(set.versions, version)
+
+      if (_.isNil(badge)) {
+        return false
+      }
+
+      const srcset = `${badge.image_url_1x} 1x,${badge.image_url_2x} 2x,${badge.image_url_4x} 4x`
+
+      parsedBadges.push(
+        `<img class="badge" src="${badge.image_url_1x}" srcset="${srcset}" alt="${badge.description}" />`
+      )
+
+      return
+    })
+
+    return escape(parsedBadges).join('')
+  }
+
+  /**
    * Parses a message for emotes.
    * @param message - The message to parse.
    * @param emotes - The message emotes.
@@ -100,7 +137,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
         parsedMessage[
           indexes[0]
-        ] = `<img class="emote" src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0" srcset=${srcset} alt="${emoteName}" />`
+        ] = `<img class="emote" src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
       })
     })
 
@@ -112,7 +149,7 @@ export default class Message implements Serializable<SerializedMessage> {
  * Serialized message.
  */
 export type SerializedMessage = {
-  badges: string[]
+  badges: string | null
   color: string | null
   user: SerializedChatter
   id: string

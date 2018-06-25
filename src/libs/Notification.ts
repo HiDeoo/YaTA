@@ -16,6 +16,9 @@ export default class Notification implements Serializable<SerializedNotification
   /**
    * Creates a new notice.
    * @class
+   * @param title - The notification title.
+   * @param event - The associated event.
+   * @param [message] - An additional notification message.
    */
   constructor(title: string, event: NotificationEvent, message?: string) {
     this.id = shortid.generate()

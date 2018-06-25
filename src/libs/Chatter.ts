@@ -16,6 +16,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
   /**
    * Creates a new chatter instance.
    * @class
+   * @param userstate - The associated user state.
    */
   constructor(userstate: UserState) {
     this.displayName = userstate['display-name']

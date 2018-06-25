@@ -15,6 +15,8 @@ export default class Notice implements Serializable<SerializedNotice> {
   /**
    * Creates a new notice.
    * @class
+   * @param message - The received message.
+   * @param event - The associated event if any.
    */
   constructor(message: string, event: Event | null = null) {
     this.id = shortid.generate()
