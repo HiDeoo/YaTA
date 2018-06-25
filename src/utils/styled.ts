@@ -18,11 +18,21 @@ export function ifProp<T, U>(needle: string | object, pass: T, fail: U) {
 }
 
 /**
- * Returns a theme value.
+ * Returns a theme color value.
  * The path will be prefixed with `theme.`.
  * @param  path - The path of the theme value.
- * @return The theme value getter.
+ * @return The color value getter.
  */
 export function color(path: string) {
   return (props: object) => _.get(props, `theme.${path}`) as string
+}
+
+/**
+ * Returns a theme size value.
+ * The path will be prefixed with `theme.`.
+ * @param  path - The path of the theme value.
+ * @return The size value getter.
+ */
+export function size(path: string) {
+  return (props: object) => _.get(props, `theme.${path}`) as number
 }

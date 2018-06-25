@@ -5,27 +5,37 @@ import { Colors } from '@blueprintjs/core'
  */
 export default {
   chatters: [
-    Colors.BLUE1,
     Colors.BLUE3,
-    Colors.GREEN1,
+    Colors.BLUE5,
     Colors.GREEN3,
+    Colors.GREEN5,
     Colors.ORANGE3,
-    Colors.RED1,
+    Colors.ORANGE5,
     Colors.RED3,
-    Colors.VERMILION3,
-    Colors.ROSE3,
-    Colors.VIOLET3,
-    Colors.INDIGO1,
+    Colors.RED5,
+    Colors.VERMILION4,
+    Colors.ROSE4,
+    Colors.VIOLET4,
     Colors.INDIGO3,
-    Colors.COBALT1,
+    Colors.INDIGO5,
     Colors.COBALT3,
-    Colors.TURQUOISE3,
+    Colors.COBALT5,
+    Colors.TURQUOISE4,
     Colors.FOREST3,
     Colors.LIME3,
     Colors.GOLD4,
-    Colors.SEPIA3,
+    Colors.SEPIA4,
   ],
+  log: {
+    hPadding: 10,
+    minHeight: 28,
+  },
   message: {
-    minHeight: 32,
+    time: {
+      color: Colors.GRAY2,
+    },
+  },
+  notice: {
+    color: Colors.GRAY2,
   },
 }

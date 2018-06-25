@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
+import styled from 'styled-components'
 
 import ChatMessage from 'Components/ChatMessage'
 import ChatNotice from 'Components/ChatNotice'
@@ -17,10 +18,19 @@ import base from 'Styled/base'
  * Message measures cache.
  */
 const messageMeasureCache = new CellMeasurerCache({
-  defaultHeight: base.message.minHeight,
+  defaultHeight: base.log.minHeight,
   fixedWidth: true,
-  minHeight: base.message.minHeight,
+  minHeight: base.log.minHeight,
 })
+
+/**
+ * Wrapper component.
+ */
+const Wrapper = styled(FlexContent)`
+  font-size: 0.85rem;
+  line-height: 1.4rem;
+  padding: 8px 0;
+`
 
 /**
  * ChatMessages Component.
@@ -34,7 +44,7 @@ export default class ChatMessages extends React.Component<Props> {
     const { logs } = this.props
 
     return (
-      <FlexContent>
+      <Wrapper>
         <AutoSizer>
           {({ height, width }) => (
             <List
@@ -48,7 +58,7 @@ export default class ChatMessages extends React.Component<Props> {
             />
           )}
         </AutoSizer>
-      </FlexContent>
+      </Wrapper>
     )
   }
 

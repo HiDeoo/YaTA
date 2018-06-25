@@ -100,7 +100,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
         parsedMessage[
           indexes[0]
-        ] = `<img src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0" srcset=${srcset} alt="${emoteName}" />`
+        ] = `<img class="emote" src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0" srcset=${srcset} alt="${emoteName}" />`
       })
     })
 

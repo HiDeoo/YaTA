@@ -2,13 +2,14 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { SerializedNotice } from 'Libs/Notice'
+import { color, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  font-size: 0.88rem;
-  padding: 5px 10px;
+  color: ${color('notice.color')};
+  padding: 0 ${size('log.hPadding')}px;
 `
 
 /**

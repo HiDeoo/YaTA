@@ -2,13 +2,43 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { SerializedMessage } from 'Libs/Message'
+import { withSCProps } from 'Utils/react'
+import { color, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  font-size: 0.88rem;
-  padding: 5px 10px;
+  padding: 4px ${size('log.hPadding')}px;
+`
+
+/**
+ * Time component.
+ */
+const Time = styled.span`
+  color: ${color('message.time.color')};
+  font-size: 0.8rem;
+  padding-right: 6px;
+`
+
+/**
+ * Username component.
+ */
+const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
+  color: ${(props) => props.color};
+  font-weight: bold;
+  padding-right: 6px;
+`
+
+/**
+ * Message component.
+ */
+const Message = styled.span`
+  .emote {
+    display: inline-block;
+    margin: -0.5rem 0;
+    vertical-align: middle;
+  }
 `
 
 /**
@@ -22,9 +52,13 @@ export default class ChatMessage extends React.Component<Props> {
   public render() {
     const { message, style } = this.props
 
+    const usernameColor = message.user.color as string
+
     return (
       <Wrapper style={style}>
-        <span dangerouslySetInnerHTML={this.renderMessage()} />
+        <Time>{message.time}</Time>
+        <Username color={usernameColor}>{message.user.displayName}</Username>
+        <Message dangerouslySetInnerHTML={this.renderMessage()} />
       </Wrapper>
     )
   }
@@ -46,4 +80,11 @@ export default class ChatMessage extends React.Component<Props> {
 type Props = {
   message: SerializedMessage
   style: React.CSSProperties
+}
+
+/**
+ * React Props.
+ */
+type UsernameProps = {
+  color: string
 }

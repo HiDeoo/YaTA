@@ -11,4 +11,8 @@ export default {
     background: Colors.LIGHT_GRAY3,
     border: Colors.LIGHT_GRAY2,
   },
+  notification: {
+    background: Colors.LIGHT_GRAY3,
+    border: Colors.BLUE4,
+  },
 }
