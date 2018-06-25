@@ -45,7 +45,7 @@ export default class ChatMessages extends React.Component<Props> {
 
     return (
       <Wrapper>
-        <AutoSizer>
+        <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
               deferredMeasurementCache={messageMeasureCache}
@@ -61,6 +61,13 @@ export default class ChatMessages extends React.Component<Props> {
         </AutoSizer>
       </Wrapper>
     )
+  }
+
+  /**
+   * Clears the measures cache when resize the window.
+   */
+  private onResize = () => {
+    messageMeasureCache.clearAll()
   }
 
   /**
