@@ -1,6 +1,6 @@
+import * as storage from 'localforage'
 import { applyMiddleware, compose, createStore, Middleware, Store } from 'redux'
 import { persistCombineReducers, Persistor, persistStore } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import reducers, { ApplicationState } from 'Store/reducers'
 
