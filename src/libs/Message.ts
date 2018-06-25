@@ -37,7 +37,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.isMod = userstate.mod
 
     const date = new Date(parseInt(this.date, 10))
-    this.time = `${date.getHours()}:${date.getMinutes()}`
+    this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
 
     this.message = !_.isNil(userstate.emotes) ? this.parseEmotes(message, userstate.emotes) : escape(message)
 
