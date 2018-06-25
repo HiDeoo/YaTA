@@ -54,6 +54,7 @@ export default class ChatMessages extends React.Component<Props> {
               rowCount={logs.length}
               rowHeight={messageMeasureCache.rowHeight}
               rowRenderer={this.messageRenderer}
+              scrollToIndex={logs.length - 1}
               width={width}
             />
           )}
