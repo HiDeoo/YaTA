@@ -89,7 +89,7 @@ export default class Twitch {
       (await this.fetch(`https://badges.twitch.tv/v1/badges/channels/${channelId}/display`)).json(),
     ])
 
-    return { ...response[0].badge_sets, ...response[0].badge_sets }
+    return { ...response[0].badge_sets, ...response[1].badge_sets }
   }
 
   /**

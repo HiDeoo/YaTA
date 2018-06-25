@@ -18,7 +18,7 @@ const Wrapper = styled.div`
  */
 const Time = styled.span`
   color: ${color('message.time.color')};
-  font-size: 0.8rem;
+  font-size: 0.77rem;
   padding-right: 6px;
 `
 

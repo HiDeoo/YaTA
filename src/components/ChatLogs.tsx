@@ -27,7 +27,7 @@ const messageMeasureCache = new CellMeasurerCache({
  * Wrapper component.
  */
 const Wrapper = styled(FlexContent)`
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   line-height: 1.4rem;
   padding: 8px 0;
 `

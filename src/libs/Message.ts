@@ -92,13 +92,13 @@ export default class Message implements Serializable<SerializedMessage> {
       const set = _.get(badges, name)
 
       if (_.isNil(set)) {
-        return false
+        return
       }
 
       const badge = _.get(set.versions, version)
 
       if (_.isNil(badge)) {
-        return false
+        return
       }
 
       const srcset = `${badge.image_url_1x} 1x,${badge.image_url_2x} 2x,${badge.image_url_4x} 4x`
