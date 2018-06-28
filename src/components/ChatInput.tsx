@@ -30,11 +30,18 @@ export default class ChatInput extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { value } = this.props
+    const { disabled, value } = this.props
 
     return (
       <Wrapper>
-        <Input large fill value={value} onChange={this.onChangeInputValue} onKeyDown={this.onKeyDownInputValue} />
+        <Input
+          value={value}
+          onChange={this.onChangeInputValue}
+          onKeyDown={this.onKeyDownInputValue}
+          disabled={disabled}
+          large
+          fill
+        />
       </Wrapper>
     )
   }
@@ -64,6 +71,7 @@ export default class ChatInput extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  disabled: boolean
   onChange: (value: string) => void
   onSubmit: () => void
   value: string

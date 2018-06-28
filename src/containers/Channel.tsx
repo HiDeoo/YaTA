@@ -9,10 +9,11 @@ import ChatInput from 'Components/ChatInput'
 import ChatLogs from 'Components/ChatLogs'
 import FlexLayout from 'Components/FlexLayout'
 import ReadyState from 'Constants/readyState'
+import Status from 'Constants/status'
 import ChatClient, { Client } from 'Containers/ChatClient'
 import { AppState, setChannel } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
+import { getChannel, getStatus } from 'Store/selectors/app'
 import { getLogs } from 'Store/selectors/logs'
 
 /**
@@ -56,7 +57,12 @@ class Channel extends React.Component<Props, State> {
       <FlexLayout vertical>
         <ChatClient ref={this.chatClient} />
         <ChatLogs logs={logs} />
-        <ChatInput value={this.state.inputValue} onChange={this.onChangeInputValue} onSubmit={this.sendMessage} />
+        <ChatInput
+          disabled={this.props.status !== Status.Connected}
+          value={this.state.inputValue}
+          onChange={this.onChangeInputValue}
+          onSubmit={this.sendMessage}
+        />
       </FlexLayout>
     )
   }
@@ -106,6 +112,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
     logs: getLogs(state),
+    status: getStatus(state),
   }),
   { setChannel }
 )(Channel)
@@ -116,6 +123,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 type StateProps = {
   channel: AppState['channel']
   logs: ReturnType<typeof getLogs>
+  status: AppState['status']
 }
 
 /**
