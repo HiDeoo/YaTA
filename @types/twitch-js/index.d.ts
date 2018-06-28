@@ -161,6 +161,8 @@ declare module 'twitch-js' {
     on(event: Event.Cheer, listener: (channel: string, userstate: UserState, message: string) => void): void
 
     say(channel: string, message: string): void
+    timeout(channel: string, username: string, length: number, reason?: string): void
+    ban(channel: string, username: string, reason?: string): void
   }
 
   namespace Client {

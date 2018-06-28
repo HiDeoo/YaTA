@@ -27,7 +27,7 @@ export const getIsMod = createSelector([getUserState], (user) => user.isMod)
 /**
  * Returns the chat login details.
  * @param  state - The Redux state.
- * @return The login details.
+ * @return The chat login details.
  */
 export const getChatLoginDetails = createSelector([getUserState], (user) => {
   if (_.isNil(user.tokens) || _.isNil(user.username)) {
@@ -36,6 +36,22 @@ export const getChatLoginDetails = createSelector([getUserState], (user) => {
 
   return {
     password: `oauth:${user.tokens.access}`,
+    username: user.username,
+  }
+})
+
+/**
+ * Returns the login details.
+ * @param  state - The Redux state.
+ * @return The login details.
+ */
+export const getLoginDetails = createSelector([getUserState], (user) => {
+  if (_.isNil(user.tokens) || _.isNil(user.username)) {
+    return null
+  }
+
+  return {
+    password: user.tokens.access,
     username: user.username,
   }
 })

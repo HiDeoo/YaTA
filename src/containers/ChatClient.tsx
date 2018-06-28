@@ -283,7 +283,7 @@ export class Client extends React.Component<Props, State> {
       if (
         !_.isNil(this.props.loginDetails) &&
         parsedMessage.user.name === this.props.loginDetails.username &&
-        parsedMessage.isMod
+        parsedMessage.user.isMod
       ) {
         this.props.setModerator(true)
       }

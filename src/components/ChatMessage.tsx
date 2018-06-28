@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { withSCProps } from 'Utils/react'
 import { color, size } from 'Utils/styled'
@@ -42,6 +43,7 @@ const Badges = styled.span`
  */
 const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
   color: ${(props) => props.color};
+  cursor: pointer;
   font-weight: bold;
   padding-right: 6px;
 `
@@ -75,7 +77,9 @@ export default class ChatMessage extends React.Component<Props> {
       <Wrapper style={style}>
         <Time>{message.time}</Time>
         {this.renderBadges()}
-        <Username color={usernameColor}>{message.user.displayName}</Username>
+        <Username color={usernameColor} onClick={this.onClickUsername}>
+          {message.user.displayName}
+        </Username>
         {this.renderMessage()}
       </Wrapper>
     )
@@ -104,12 +108,22 @@ export default class ChatMessage extends React.Component<Props> {
 
     return <Badges dangerouslySetInnerHTML={{ __html: badges }} />
   }
+
+  /**
+   * Triggered when a username is clicked and we should show details for him.
+   */
+  private onClickUsername = () => {
+    const { focusChatter, message } = this.props
+
+    focusChatter(message.user)
+  }
 }
 
 /**
  * React Props.
  */
 type Props = {
+  focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage
   style: React.CSSProperties
 }

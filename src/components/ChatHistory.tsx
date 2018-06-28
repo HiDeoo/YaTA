@@ -1,15 +1,10 @@
-import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
-import ChatMessage from 'Components/ChatMessage'
-import ChatNotice from 'Components/ChatNotice'
-import ChatNotification from 'Components/ChatNotification'
-import FlexContent from 'Components/FlexContent'
-import { SerializedChatter } from 'Libs/Chatter'
-import { isMessage, isNotice, isNotification, Log } from 'Store/ducks/logs'
+import { SerializedMessage } from 'Libs/Message'
 import base from 'Styled/base'
+import { color } from 'Utils/styled'
 
 /**
  * Message measures cache.
@@ -23,22 +18,42 @@ const messageMeasureCache = new CellMeasurerCache({
 /**
  * Wrapper component.
  */
-const Wrapper = styled(FlexContent)`
+const Wrapper = styled.div`
+  background-color: ${color('history.background')};
+  border: 1px solid ${color('history.border')};
   font-size: 0.82rem;
+  height: 200px;
   line-height: 1.4rem;
-  padding: 8px 0;
+  padding: 0;
+  width: 100%;
 `
 
 /**
- * ChatMessages Component.
+ * Message component.
  */
-export default class ChatMessages extends React.Component<Props> {
+const Message = styled.div`
+  padding: 2px 8px;
+`
+
+/**
+ * Time component.
+ */
+const Time = styled.span`
+  color: ${color('message.time.color')};
+  font-size: 0.77rem;
+  padding-right: 6px;
+`
+
+/**
+ * ChatHistory Component.
+ */
+export default class ChatHistory extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { logs } = this.props
+    const { messages } = this.props
 
     return (
       <Wrapper>
@@ -48,10 +63,10 @@ export default class ChatMessages extends React.Component<Props> {
               deferredMeasurementCache={messageMeasureCache}
               height={height}
               overscanRowCount={10}
-              rowCount={logs.length}
+              rowCount={messages.length}
               rowHeight={messageMeasureCache.rowHeight}
               rowRenderer={this.messageRenderer}
-              scrollToIndex={logs.length - 1}
+              scrollToIndex={messages.length - 1}
               width={width}
             />
           )}
@@ -68,30 +83,19 @@ export default class ChatMessages extends React.Component<Props> {
   }
 
   /**
-   * Render a log based on its type.
+   * Render a message.
    * @param  listRowProps - The props to add to the row being rendered.
    * @return Element to render.
    */
   private messageRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
-    const log = this.props.logs[index]
-
-    let LogComponent: JSX.Element | null = null
-
-    if (isMessage(log)) {
-      LogComponent = <ChatMessage style={style} message={log} focusChatter={this.props.focusChatter} />
-    } else if (isNotice(log)) {
-      LogComponent = <ChatNotice style={style} notice={log} />
-    } else if (isNotification(log)) {
-      LogComponent = <ChatNotification style={style} notification={log} />
-    }
-
-    if (_.isNil(LogComponent)) {
-      return null
-    }
+    const message = this.props.messages[index]
 
     return (
       <CellMeasurer cache={messageMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-        {LogComponent}
+        <Message style={style}>
+          <Time>{message.time}</Time>
+          <span dangerouslySetInnerHTML={{ __html: message.message }} />
+        </Message>
       </CellMeasurer>
     )
   }
@@ -101,6 +105,5 @@ export default class ChatMessages extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  focusChatter: (chatter: SerializedChatter) => void
-  logs: Log[]
+  messages: SerializedMessage[]
 }

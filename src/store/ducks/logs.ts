@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import { Reducer } from 'redux'
 
 import Logs from 'Constants/logs'
+import LogType from 'Constants/logType'
 import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotice } from 'Libs/Notice'
 import { SerializedNotification } from 'Libs/Notification'
@@ -147,3 +148,30 @@ export type LogsState = {
  * Log possible types.
  */
 export type Log = SerializedMessage | SerializedNotice | SerializedNotification
+
+/**
+ * Determines if a log entry is a message.
+ * @param  log - The log entry to validate.
+ * @return `true` if the log is a message.
+ */
+export function isMessage(log: Log): log is SerializedMessage {
+  return log.type === LogType.Action || log.type === LogType.Chat || log.type === LogType.Cheer
+}
+
+/**
+ * Determines if a log entry is a notice.
+ * @param  log - The log entry to validate.
+ * @return `true` if the log is a notice.
+ */
+export function isNotice(log: Log): log is SerializedNotice {
+  return log.type === LogType.Notice
+}
+
+/**
+ * Determines if a log entry is a notification.
+ * @param  log - The log entry to validate.
+ * @return `true` if the log is a notification.
+ */
+export function isNotification(log: Log): log is SerializedNotification {
+  return log.type === LogType.Notification
+}

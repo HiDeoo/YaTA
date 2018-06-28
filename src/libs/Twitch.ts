@@ -7,6 +7,11 @@ import jose from 'node-jose'
 const baseAuthUrl = 'https://id.twitch.tv/oauth2'
 
 /**
+ * Twitch base kraken URL.
+ */
+const baseKrakenUrl = 'https://api.twitch.tv/kraken'
+
+/**
  * Twitch class.
  */
 export default class Twitch {
@@ -22,7 +27,7 @@ export default class Twitch {
     url.searchParams.set('client_id', REACT_APP_TWITCH_CLIENT_ID)
     url.searchParams.set('redirect_uri', REACT_APP_TWITCH_REDIRECT_URI)
     url.searchParams.set('response_type', 'token id_token')
-    url.searchParams.set('scope', 'openid chat_login')
+    url.searchParams.set('scope', 'openid chat_login user_read')
 
     return url
   }
@@ -85,23 +90,52 @@ export default class Twitch {
    */
   public static async fetchBadges(channelId: string): Promise<Badges> {
     const response = await Promise.all([
-      (await this.fetch('https://badges.twitch.tv/v1/badges/global/display')).json(),
-      (await this.fetch(`https://badges.twitch.tv/v1/badges/channels/${channelId}/display`)).json(),
+      (await Twitch.fetch('https://badges.twitch.tv/v1/badges/global/display')).json(),
+      (await Twitch.fetch(`https://badges.twitch.tv/v1/badges/channels/${channelId}/display`)).json(),
     ])
 
     return { ...response[0].badge_sets, ...response[1].badge_sets }
   }
 
   /**
+   * Fetches details about a specific user.
+   * @param  id - The user id.
+   * @return The user details.
+   */
+  public static async fetchUser(id: string): Promise<UserDetails> {
+    const response = await Twitch.fetch(`${baseKrakenUrl}/users/${id}`)
+
+    return response.json()
+  }
+
+  /**
+   * Fetches details about the current authenticated user.
+   * @param  token - The user token.
+   * @return The user details.
+   */
+  public static async fetchAuthenticatedUser(token: string): Promise<AuthenticatedUserDetails> {
+    const response = await Twitch.fetch(`${baseKrakenUrl}/user`, { Authorization: `OAuth ${token}` })
+
+    return response.json()
+  }
+
+  /**
    * Fetches an URL.
    * @param  url - The URL to fetch.
+   * @param  additionalHeaders -  Additional headers to pass down to the query.
    * @return The response.
    */
-  private static fetch(url: string) {
+  private static fetch(url: string, additionalHeaders?: { [key: string]: string }) {
     const headers = new Headers({
       Accept: 'application/vnd.twitchtv.v5+json',
       'Client-ID': process.env.REACT_APP_TWITCH_CLIENT_ID,
     })
+
+    if (_.size(additionalHeaders) > 0) {
+      _.forEach(additionalHeaders, (value, name) => {
+        headers.append(name, value)
+      })
+    }
 
     const request = new Request(url, { headers })
 
@@ -156,4 +190,28 @@ export type Badge = {
   image_url_2x: string
   image_url_4x: string
   title: string
+}
+
+/**
+ * Twitch user details.
+ */
+export type UserDetails = {
+  bio: string | null
+  created_at: string
+  display_name: string
+  logo: string
+  name: string
+  type: string
+  updated_at: string
+  _id: string
+}
+
+/**
+ * Twitch authenticated user details.
+ */
+export interface AuthenticatedUserDetails extends UserDetails {
+  email: string
+  email_verified: boolean
+  partnered: boolean
+  twitter_connected: boolean
 }

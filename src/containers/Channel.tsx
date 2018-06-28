@@ -11,6 +11,8 @@ import FlexLayout from 'Components/FlexLayout'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
 import ChatClient, { Client } from 'Containers/ChatClient'
+import ChatDetails from 'Containers/ChatDetails'
+import { SerializedChatter } from 'Libs/Chatter'
 import { AppState, setChannel } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getStatus } from 'Store/selectors/app'
@@ -19,7 +21,7 @@ import { getLogs } from 'Store/selectors/logs'
 /**
  * React State.
  */
-const initialState = { inputValue: '' }
+const initialState = { inputValue: '', focusedChatter: null as SerializedChatter | null }
 type State = Readonly<typeof initialState>
 
 /**
@@ -44,6 +46,7 @@ class Channel extends React.Component<Props, State> {
    */
   public render() {
     const { channel, logs } = this.props
+    const { focusedChatter } = this.state
 
     if (_.isNil(channel)) {
       return (
@@ -56,13 +59,14 @@ class Channel extends React.Component<Props, State> {
     return (
       <FlexLayout vertical>
         <ChatClient ref={this.chatClient} />
-        <ChatLogs logs={logs} />
+        <ChatLogs logs={logs} focusChatter={this.focusChatter} />
         <ChatInput
           disabled={this.props.status !== Status.Connected}
           value={this.state.inputValue}
           onChange={this.onChangeInputValue}
           onSubmit={this.sendMessage}
         />
+        <ChatDetails chatter={focusedChatter} unfocus={this.unfocusChatter} timeout={this.timeout} ban={this.ban} />
       </FlexLayout>
     )
   }
@@ -72,6 +76,21 @@ class Channel extends React.Component<Props, State> {
    */
   private onChangeInputValue = (value: string) => {
     this.setState(() => ({ inputValue: value }))
+  }
+
+  /**
+   * Focuses a specific chatter.
+   * @param chatter - The chatter to focus.
+   */
+  private focusChatter = (chatter: SerializedChatter) => {
+    this.setState(() => ({ focusedChatter: chatter }))
+  }
+
+  /**
+   * Unfocuses any focused chatter.
+   */
+  private unfocusChatter = () => {
+    this.setState(() => ({ focusedChatter: null }))
   }
 
   /**
@@ -94,16 +113,55 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Send a message.
+   * Sends a message.
    */
-  private sendMessage = () => {
+  private sendMessage = async () => {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
-      client.say(channel, this.state.inputValue)
+      try {
+        await client.say(channel, this.state.inputValue)
 
-      this.setState(() => ({ inputValue: '' }))
+        this.setState(() => ({ inputValue: '' }))
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Timeouts a user.
+   * @param username - The name of the user to timeout.
+   * @param duration - The duration of the timeout in seconds.
+   */
+  private timeout = async (username: string, duration: number) => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.timeout(channel, username, duration)
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Bans a user.
+   * @param username - The name of the user to timeout.
+   */
+  private ban = async (username: string) => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.ban(channel, username)
+      } catch (error) {
+        //
+      }
     }
   }
 }

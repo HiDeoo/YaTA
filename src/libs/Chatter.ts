@@ -11,6 +11,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
   public id: string
   public color: string | null
   public name: string
+  public isMod: boolean
   private displayName: string
 
   /**
@@ -23,6 +24,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
     this.id = userstate['user-id']
     this.name = userstate.username
     this.color = userstate.color
+    this.isMod = userstate.mod
   }
 
   /**
@@ -46,6 +48,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
       color: this.color,
       displayName: this.displayName,
       id: this.id,
+      isMod: this.isMod,
       name: this.name,
     }
   }
@@ -58,5 +61,6 @@ export type SerializedChatter = {
   color: string | null
   displayName: string
   id: string
+  isMod: boolean
   name: string
 }

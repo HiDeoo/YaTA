@@ -11,6 +11,10 @@ export default {
     background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY5,
   },
+  history: {
+    background: Colors.DARK_GRAY4,
+    border: Colors.DARK_GRAY1,
+  },
   notification: {
     background: Colors.DARK_GRAY2,
     border: Colors.BLUE4,

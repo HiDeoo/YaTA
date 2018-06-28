@@ -15,6 +15,7 @@
       ]
     }],
     "value-list-max-empty-lines": null,
-    "selector-list-comma-newline-after": "always-multi-line"
+    "selector-list-comma-newline-after": "always-multi-line",
+    "no-descending-specificity": null
   }
 }

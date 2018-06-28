@@ -13,7 +13,6 @@ import { Serializable } from 'Utils/typescript'
 export default class Message implements Serializable<SerializedMessage> {
   public user: Chatter
   public color: string | null
-  public isMod: boolean
   private badges: string | null
   private id: string
   private date: string
@@ -38,7 +37,6 @@ export default class Message implements Serializable<SerializedMessage> {
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate)
     this.type = userstate['message-type']
-    this.isMod = userstate.mod
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
@@ -46,7 +44,6 @@ export default class Message implements Serializable<SerializedMessage> {
     this.badges = !_.isNil(badges) && _.size(userstate.badges) > 0 ? this.parseBadges(userstate, badges) : null
     this.message = !_.isNil(userstate.emotes) ? this.parseEmotes(message, userstate.emotes) : escape(message)
 
-    // TODO mod? Might need to serialize that to prevent mod controls to show on a mod if you're only a mod & not the broadcast
     // TODO room-id?
     // TODO subscriber?
     // TODO turbo?
