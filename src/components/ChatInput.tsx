@@ -1,4 +1,4 @@
-import { Intent, TextArea } from '@blueprintjs/core'
+import { Intent, IToastOptions, Position, TextArea, Toast as _Toast, Toaster } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -16,6 +16,17 @@ const Wrapper = styled.div`
 `
 
 /**
+ * Toast component.
+ */
+const Toast = styled(_Toast)`
+  margin-bottom: 60px !important;
+
+  .pt-button-group {
+    display: none;
+  }
+`
+
+/**
  * Input component.
  */
 const Input = styled(TextArea)`
@@ -24,28 +35,78 @@ const Input = styled(TextArea)`
 `
 
 /**
+ * React State.
+ */
+const initialState = { toasts: [] as IToastOptions[], intent: Intent.NONE }
+type State = Readonly<typeof initialState>
+
+/**
  * ChatInput Component.
  */
-export default class ChatInput extends React.Component<Props> {
+export default class ChatInput extends React.Component<Props, State> {
+  /**
+   * Lifecycle: getDerivedStateFromProps.
+   * @param  nextProps - The next props.
+   * @return An object to update the state or `null` to update nothing.
+   */
+  public static getDerivedStateFromProps(nextProps: Props) {
+    const toasts: IToastOptions[] = []
+    let intent = Intent.NONE
+
+    const { value } = nextProps
+
+    if (ChatInput.isWhisper(value)) {
+      toasts.push({
+        icon: 'inbox',
+        intent: Intent.SUCCESS,
+        message: "You're about to send a whisper.",
+      })
+
+      intent = Intent.SUCCESS
+    } else if (value.length > Message.Max) {
+      toasts.push({
+        icon: 'warning-sign',
+        intent: Intent.DANGER,
+        message: 'Your message exceed the 500 characters limit.',
+      })
+
+      intent = Intent.DANGER
+    } else if (value.length > Message.Warning) {
+      toasts.push({
+        icon: 'hand',
+        intent: Intent.WARNING,
+        message: 'Your message exceed 400 characters. Try to avoid long messages.',
+      })
+
+      intent = Intent.WARNING
+    }
+
+    return { intent, toasts }
+  }
+
+  /**
+   * Determines if a message looks like a whisper command (/w user message).
+   * @return `true` if the value is a whisper.
+   */
+  private static isWhisper(message: string) {
+    return /^\/w \S+ /.test(message)
+  }
+
+  public state: State = initialState
+
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
     const { disabled, value } = this.props
-
-    let intent: Intent
-
-    if (value.length > Message.Max) {
-      intent = Intent.DANGER
-    } else if (value.length > Message.Warning) {
-      intent = Intent.WARNING
-    } else {
-      intent = Intent.NONE
-    }
+    const { intent, toasts } = this.state
 
     return (
       <Wrapper>
+        <Toaster position={Position.BOTTOM}>
+          {_.map(toasts, (toast, index) => <Toast key={index} {...toast} />)}
+        </Toaster>
         <Input
           value={value}
           intent={intent}
