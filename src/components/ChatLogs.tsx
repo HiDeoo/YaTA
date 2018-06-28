@@ -6,9 +6,10 @@ import styled from 'styled-components'
 import ChatMessage from 'Components/ChatMessage'
 import ChatNotice from 'Components/ChatNotice'
 import ChatNotification from 'Components/ChatNotification'
+import ChatWhisper from 'Components/ChatWhisper'
 import FlexContent from 'Components/FlexContent'
 import { SerializedChatter } from 'Libs/Chatter'
-import { isMessage, isNotice, isNotification, Log } from 'Store/ducks/logs'
+import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
 
 /**
@@ -83,6 +84,8 @@ export default class ChatMessages extends React.Component<Props> {
       LogComponent = <ChatNotice style={style} notice={log} />
     } else if (isNotification(log)) {
       LogComponent = <ChatNotification style={style} notification={log} />
+    } else if (isWhisper(log)) {
+      LogComponent = <ChatWhisper style={style} whisper={log} />
     }
 
     if (_.isNil(LogComponent)) {

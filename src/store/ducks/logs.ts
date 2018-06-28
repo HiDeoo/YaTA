@@ -175,3 +175,12 @@ export function isNotice(log: Log): log is SerializedNotice {
 export function isNotification(log: Log): log is SerializedNotification {
   return log.type === LogType.Notification
 }
+
+/**
+ * Determines if a log entry is a whisper.
+ * @param  log - The log entry to validate.
+ * @return `true` if the log is a whisper.
+ */
+export function isWhisper(log: Log): log is SerializedMessage {
+  return log.type === LogType.Whisper
+}

@@ -19,4 +19,8 @@ export default {
     background: Colors.LIGHT_GRAY3,
     border: Colors.BLUE4,
   },
+  whisper: {
+    background: Colors.LIGHT_GRAY3,
+    border: Colors.INDIGO5,
+  },
 }

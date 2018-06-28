@@ -564,10 +564,14 @@ export class Client extends React.Component<Props, State> {
     switch (userstate['message-type']) {
       case LogType.Action:
       case LogType.Cheer:
+      case LogType.Whisper:
       case LogType.Chat: {
         if (self) {
           userstate.id = shortid.generate()
           userstate['user-id'] = 'self'
+          userstate['tmi-sent-ts'] = Date.now().toString()
+        } else if (userstate['message-type'] === LogType.Whisper) {
+          userstate.id = `${userstate['thread-id']}-${userstate['message-id']}`
           userstate['tmi-sent-ts'] = Date.now().toString()
         }
 
@@ -581,7 +585,6 @@ export class Client extends React.Component<Props, State> {
 
         break
       }
-      // TODO whispers
       default: {
         parsedMessage = null
         break

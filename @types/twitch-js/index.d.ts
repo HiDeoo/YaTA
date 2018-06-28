@@ -61,9 +61,11 @@ declare module 'twitch-js' {
     id: string
     mod: boolean
     'room-id'?: string
+    'thread-id'?: string
     subscriber: boolean
     'tmi-sent-ts': string
     turbo?: boolean
+    'message-id'?: string
     'user-id': string
     'user-type': null
     'emotes-raw'?: string
