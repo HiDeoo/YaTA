@@ -17,7 +17,7 @@ import { AppState } from 'Store/ducks/app'
 import { SettingsState } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
+import { getChannel, getStatus } from 'Store/selectors/app'
 import { getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn } from 'Store/selectors/user'
 import dark from 'Styled/dark'
@@ -76,6 +76,7 @@ class App extends React.Component<Props, State> {
             isLoggedIn={isLoggedIn}
             channel={this.props.channel}
             logout={this.props.resetUser}
+            status={this.props.status}
           />
           <Settings visible={showSettings} toggle={this.toggleSettings} />
           <FlexContent>
@@ -132,6 +133,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
     isLoggedIn: getIsLoggedIn(state),
+    status: getStatus(state),
     theme: getTheme(state),
   }),
   { resetUser }
@@ -143,6 +145,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 type StateProps = {
   channel: AppState['channel']
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
+  status: AppState['status']
   theme: SettingsState['theme']
 }
 

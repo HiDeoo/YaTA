@@ -15,3 +15,10 @@ const getAppState = (state: ApplicationState) => state.app
  * @return The current channel.
  */
 export const getChannel = createSelector([getAppState], (app) => app.channel)
+
+/**
+ * Returns the current status.
+ * @param  state - The Redux state.
+ * @return The current status.
+ */
+export const getStatus = createSelector([getAppState], (app) => app.status)
