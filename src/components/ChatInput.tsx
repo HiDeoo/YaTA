@@ -1,8 +1,9 @@
-import { TextArea } from '@blueprintjs/core'
+import { Intent, TextArea } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import Message from 'Constants/message'
 import { color } from 'Utils/styled'
 
 /**
@@ -33,10 +34,21 @@ export default class ChatInput extends React.Component<Props> {
   public render() {
     const { disabled, value } = this.props
 
+    let intent: Intent
+
+    if (value.length > Message.Max) {
+      intent = Intent.DANGER
+    } else if (value.length > Message.Warning) {
+      intent = Intent.WARNING
+    } else {
+      intent = Intent.NONE
+    }
+
     return (
       <Wrapper>
         <Input
           value={value}
+          intent={intent}
           onChange={this.onChangeInputValue}
           onKeyDown={this.onKeyDownInputValue}
           disabled={disabled}
@@ -77,7 +89,7 @@ export default class ChatInput extends React.Component<Props> {
   private validateInputValue() {
     const { value } = this.props
 
-    return value.length > 0 && _.trim(value).length > 0
+    return value.length > 0 && _.trim(value).length > 0 && value.length <= Message.Max
   }
 }
 
