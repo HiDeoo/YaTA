@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import LogType from 'Constants/logType'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { withSCProps } from 'Utils/react'
@@ -51,7 +52,9 @@ const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
 /**
  * Message component.
  */
-const Message = styled.span`
+const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
+  color: ${(props) => props.color};
+
   .emote {
     display: inline-block;
     margin: -0.5rem 0;
@@ -90,9 +93,12 @@ export default class ChatMessage extends React.Component<Props> {
    * @return Element to render.
    */
   private renderMessage() {
-    const { message } = this.props.message
+    const { message } = this.props
 
-    return <Message dangerouslySetInnerHTML={{ __html: message }} />
+    const isAction = message.type === LogType.Action
+    const messageColor = isAction && !_.isNil(message.user.color) ? message.user.color : 'inherit'
+
+    return <Message color={messageColor} dangerouslySetInnerHTML={{ __html: message.message }} />
   }
 
   /**
@@ -132,5 +138,12 @@ type Props = {
  * React Props.
  */
 type UsernameProps = {
+  color: string
+}
+
+/**
+ * React Props.
+ */
+type MessageProps = {
   color: string
 }
