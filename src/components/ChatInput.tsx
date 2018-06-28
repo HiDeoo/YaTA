@@ -1,4 +1,5 @@
 import { TextArea } from '@blueprintjs/core'
+import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -54,6 +55,10 @@ export default class ChatInput extends React.Component<Props> {
     if (event.key === 'Enter') {
       event.preventDefault()
 
+      if (!this.validateInputValue()) {
+        return
+      }
+
       this.props.onSubmit()
     }
   }
@@ -64,6 +69,15 @@ export default class ChatInput extends React.Component<Props> {
    */
   private onChangeInputValue = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onChange(event.target.value)
+  }
+
+  /**
+   * Validates the input value to determine if the message can be sent or not.
+   */
+  private validateInputValue() {
+    const { value } = this.props
+
+    return value.length > 0 && _.trim(value).length > 0
   }
 }
 
