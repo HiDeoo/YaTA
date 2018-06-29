@@ -51,7 +51,16 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { channel, highlightChangelog, isLoggedIn, logout, toggleChangelog, toggleSettings } = this.props
+    const {
+      channel,
+      goHome,
+      highlightChangelog,
+      isHomePage,
+      isLoggedIn,
+      logout,
+      toggleChangelog,
+      toggleSettings,
+    } = this.props
 
     const title = `${!_.isNil(channel) ? `${channel} - ` : ''}YaTA`
 
@@ -65,6 +74,11 @@ export default class Header extends React.Component<Props> {
           {this.renderStatus()}
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
+          {!isHomePage && (
+            <Tooltip content="Home" position={Position.BOTTOM}>
+              <Button onClick={goHome} icon="home" minimal title="Home" />
+            </Tooltip>
+          )}
           {highlightChangelog && (
             <Tooltip content="New version available! Check the changelog." position={Position.BOTTOM}>
               <Changelog onClick={toggleChangelog} icon="lightbulb" minimal title="Changelog" />
@@ -88,9 +102,9 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   private renderStatus() {
-    const { status } = this.props
+    const { isHomePage, status } = this.props
 
-    if (status === Status.Default || status === Status.Connected) {
+    if (isHomePage || status === Status.Default || status === Status.Connected) {
       return null
     }
 
@@ -134,7 +148,9 @@ export default class Header extends React.Component<Props> {
  */
 type Props = {
   channel: AppState['channel']
+  goHome: () => void
   highlightChangelog: boolean
+  isHomePage: boolean
   isLoggedIn: boolean
   status: AppState['status']
   toggleChangelog: () => void

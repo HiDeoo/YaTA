@@ -1,4 +1,5 @@
 import { Classes, Colors } from '@blueprintjs/core'
+import { History } from 'history'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -87,6 +88,8 @@ class App extends React.Component<Props, State> {
             logout={this.props.resetUser}
             status={status}
             highlightChangelog={shouldReadChangelog}
+            goHome={this.goHome}
+            isHomePage={this.isHomePage()}
           />
           <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
           <FlexContent>
@@ -136,6 +139,14 @@ class App extends React.Component<Props, State> {
   }
 
   /**
+   * Returns if the user is currently browsing the home page.
+   * @return `true` if on the home page.
+   */
+  private isHomePage() {
+    return this.props.location.pathname === '/'
+  }
+
+  /**
    * Returns if the user is currently browsing the login page.
    * @return `true` if on the login page.
    */
@@ -149,6 +160,13 @@ class App extends React.Component<Props, State> {
    */
   private isAuthPage() {
     return this.props.location.pathname === '/auth'
+  }
+
+  /**
+   * Navigates to the homepage.
+   */
+  private goHome = () => {
+    this.props.history.push('/')
   }
 }
 
@@ -189,6 +207,7 @@ type DispatchProps = {
  * React Props.
  */
 type OwnProps = {
+  history: History
   location: Location
 }
 
