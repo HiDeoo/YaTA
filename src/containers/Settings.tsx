@@ -7,9 +7,9 @@ import styled from 'styled-components'
 import FlexLayout from 'Components/FlexLayout'
 import Theme from 'Constants/theme'
 import { setShouldReadChangelog } from 'Store/ducks/app'
-import { SettingsState, setVersion, toggleTheme } from 'Store/ducks/settings'
+import { SettingsState, setVersion, toggleCopyMessageOnDoubleClick, toggleTheme } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getTheme } from 'Store/selectors/settings'
+import { getCopyMessageOnDoubleClick, getTheme } from 'Store/selectors/settings'
 
 /**
  * SettingsDialog component.
@@ -185,7 +185,7 @@ class Settings extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderTabGeneral() {
-    const { theme } = this.props
+    const { copyMessageOnDoubleClick, theme } = this.props
 
     return (
       <SettingsPanel>
@@ -193,6 +193,11 @@ class Settings extends React.Component<Props, State> {
           <Switch checked={theme === Theme.Dark} label="Dark theme" onChange={this.onToggleTheme} />
           {this.renderThemeConfirmation()}
         </Popover>
+        <Switch
+          checked={copyMessageOnDoubleClick}
+          label="Copy message on double click"
+          onChange={this.props.toggleCopyMessageOnDoubleClick}
+        />
       </SettingsPanel>
     )
   }
@@ -282,15 +287,17 @@ class Settings extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
+    copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     theme: getTheme(state),
   }),
-  { toggleTheme, setVersion, setShouldReadChangelog }
+  { toggleCopyMessageOnDoubleClick, toggleTheme, setVersion, setShouldReadChangelog }
 )(Settings)
 
 /**
  * React Props.
  */
 type StateProps = {
+  copyMessageOnDoubleClick: SettingsState['copyMessageOnDoubleClick']
   theme: SettingsState['theme']
 }
 
@@ -300,6 +307,7 @@ type StateProps = {
 type DispatchProps = {
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
+  toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleTheme: typeof toggleTheme
 }
 

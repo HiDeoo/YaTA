@@ -100,9 +100,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
       const srcset = `${badge.image_url_1x} 1x,${badge.image_url_2x} 2x,${badge.image_url_4x} 4x`
 
-      parsedBadges.push(
-        `<img class="badge" src="${badge.image_url_1x}" srcset="${srcset}" alt="${badge.description}" />`
-      )
+      parsedBadges.push(`<img class="badge" src="${badge.image_url_1x}" srcset="${srcset}" />`)
 
       return
     })

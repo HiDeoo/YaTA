@@ -22,3 +22,13 @@ export const getTheme = createSelector([getSettingsState], (settings) => setting
  * @return The version.
  */
 export const getLastKnownVersion = createSelector([getSettingsState], (settings) => settings.lastKnownVersion)
+
+/**
+ * Returns the 'copy message on double click' setting.
+ * @param  state - The Redux state.
+ * @return The 'copy message on double click' setting.
+ */
+export const getCopyMessageOnDoubleClick = createSelector(
+  [getSettingsState],
+  (settings) => settings.copyMessageOnDoubleClick
+)

@@ -11,4 +11,10 @@ export default {
       settings: { ...state.settings, lastKnownVersion: initialState.lastKnownVersion },
     }
   },
+  1: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, copyMessageOnDoubleClick: initialState.copyMessageOnDoubleClick },
+    }
+  },
 }

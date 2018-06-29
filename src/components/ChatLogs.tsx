@@ -78,8 +78,10 @@ export default class ChatMessages extends React.Component<Props> {
 
     let LogComponent: JSX.Element | null = null
 
+    const { copyMessage, focusChatter } = this.props
+
     if (isMessage(log)) {
-      LogComponent = <ChatMessage style={style} message={log} focusChatter={this.props.focusChatter} />
+      LogComponent = <ChatMessage style={style} message={log} focusChatter={focusChatter} copyMessage={copyMessage} />
     } else if (isNotice(log)) {
       LogComponent = <ChatNotice style={style} notice={log} />
     } else if (isNotification(log)) {
@@ -104,6 +106,7 @@ export default class ChatMessages extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  copyMessage: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
 }

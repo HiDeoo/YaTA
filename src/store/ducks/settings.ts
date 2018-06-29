@@ -11,12 +11,14 @@ import { createAction, RehydrateAction } from 'Utils/redux'
 export enum Actions {
   TOGGLE_THEME = 'settings/TOGGLE_THEME',
   SET_VERSION = 'settings/SET_VERSION',
+  TOGGLE_COPY_MESSAGE_DOUBLE_CLICK = 'settings/TOGGLE_COPY_MESSAGE_DOUBLE_CLICK',
 }
 
 /**
  * Initial state.
  */
 export const initialState = {
+  copyMessageOnDoubleClick: true,
   lastKnownVersion: null,
   theme: Theme.Dark as SettingsState['theme'],
 }
@@ -48,6 +50,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         lastKnownVersion: action.payload.version,
       }
     }
+    case Actions.TOGGLE_COPY_MESSAGE_DOUBLE_CLICK: {
+      return {
+        ...state,
+        copyMessageOnDoubleClick: !state.copyMessageOnDoubleClick,
+      }
+    }
     default: {
       return state
     }
@@ -73,9 +81,19 @@ export const setVersion = (version: string) =>
   })
 
 /**
+ * Toggle the 'copy message on double click' setting.
+ * @return The action.
+ */
+export const toggleCopyMessageOnDoubleClick = () => createAction(Actions.TOGGLE_COPY_MESSAGE_DOUBLE_CLICK)
+
+/**
  * Settings actions.
  */
-export type SettingsActions = RehydrateAction | ReturnType<typeof toggleTheme> | ReturnType<typeof setVersion>
+export type SettingsActions =
+  | RehydrateAction
+  | ReturnType<typeof toggleTheme>
+  | ReturnType<typeof setVersion>
+  | ReturnType<typeof toggleCopyMessageOnDoubleClick>
 
 /**
  * Settings state.
@@ -90,4 +108,9 @@ export type SettingsState = {
    * Last know version of the application.
    */
   lastKnownVersion: string | null
+
+  /**
+   * Defines if messages should be copied in the clipboard when double clicking them.
+   */
+  copyMessageOnDoubleClick: boolean
 }

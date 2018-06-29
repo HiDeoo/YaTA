@@ -1,4 +1,5 @@
-import { Spinner } from '@blueprintjs/core'
+import { Intent, Spinner } from '@blueprintjs/core'
+import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -13,10 +14,12 @@ import Status from 'Constants/status'
 import ChatClient, { Client } from 'Containers/ChatClient'
 import ChatDetails from 'Containers/ChatDetails'
 import { SerializedChatter } from 'Libs/Chatter'
+import Toaster from 'Libs/Toaster'
 import { AppState, setChannel } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getStatus } from 'Store/selectors/app'
 import { getLogs } from 'Store/selectors/logs'
+import { getCopyMessageOnDoubleClick } from 'Store/selectors/settings'
 
 /**
  * React State.
@@ -59,7 +62,7 @@ class Channel extends React.Component<Props, State> {
     return (
       <FlexLayout vertical>
         <ChatClient ref={this.chatClient} />
-        <ChatLogs logs={logs} focusChatter={this.focusChatter} />
+        <ChatLogs logs={logs} focusChatter={this.focusChatter} copyMessage={this.copyMessage} />
         <ChatInput
           disabled={this.props.status !== Status.Connected}
           value={this.state.inputValue}
@@ -91,6 +94,21 @@ class Channel extends React.Component<Props, State> {
    */
   private unfocusChatter = () => {
     this.setState(() => ({ focusedChatter: null }))
+  }
+
+  /**
+   * Copy a message to the clipboard if the feature is enabled.
+   */
+  private copyMessage = (message: string) => {
+    const { copyMessageOnDoubleClick } = this.props
+
+    if (!copyMessageOnDoubleClick) {
+      return
+    }
+
+    copy(message)
+
+    Toaster.show({ message: 'Copied!', intent: Intent.SUCCESS, icon: 'clipboard', timeout: 1000 })
   }
 
   /**
@@ -169,6 +187,7 @@ class Channel extends React.Component<Props, State> {
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
+    copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     logs: getLogs(state),
     status: getStatus(state),
   }),
@@ -180,6 +199,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  */
 type StateProps = {
   channel: AppState['channel']
+  copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   logs: ReturnType<typeof getLogs>
   status: AppState['status']
 }

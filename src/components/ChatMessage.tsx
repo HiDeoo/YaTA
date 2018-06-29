@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 const Time = styled.span`
   color: ${color('message.time.color')};
   font-size: 0.77rem;
-  padding-right: 6px;
+  padding-right: 2px;
 `
 
 /**
@@ -46,7 +46,7 @@ const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
   color: ${(props) => props.color};
   cursor: pointer;
   font-weight: bold;
-  padding-right: 6px;
+  padding-right: 2px;
 `
 
 /**
@@ -77,12 +77,12 @@ export default class ChatMessage extends React.Component<Props> {
     const usernameColor = message.user.color as string
 
     return (
-      <Wrapper style={style}>
-        <Time>{message.time}</Time>
+      <Wrapper style={style} onDoubleClick={this.onMessageDoubleClick}>
+        <Time>{message.time} </Time>
         {this.renderBadges()}
         <Username color={usernameColor} onClick={this.onClickUsername}>
           {message.user.displayName}
-        </Username>
+        </Username>{' '}
         {this.renderMessage()}
       </Wrapper>
     )
@@ -123,12 +123,22 @@ export default class ChatMessage extends React.Component<Props> {
 
     focusChatter(message.user)
   }
+
+  /**
+   * Triggered when the message is double clicked.
+   */
+  private onMessageDoubleClick = () => {
+    const { message } = this.props
+
+    this.props.copyMessage(`[${message.time}] ${message.user.displayName}: ${message.message}`)
+  }
 }
 
 /**
  * React Props.
  */
 type Props = {
+  copyMessage: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage
   style: React.CSSProperties
