@@ -31,3 +31,12 @@ export function escape(html: string | string[]) {
 
   return escapeArray(html.split('')).join('')
 }
+
+/**
+ * Removes <img /> tags from a string and replace them by their associated alt attributes.
+ * @param  str - The string to sanitize.
+ * @return The sanitized string.
+ */
+export function replaceImgTagByAlt(str: string) {
+  return str.replace(/<img.*?alt="(.*?)"[^\>]+>/g, '$1')
+}

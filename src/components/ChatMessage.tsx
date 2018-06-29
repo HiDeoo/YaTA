@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import LogType from 'Constants/logType'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
+import { replaceImgTagByAlt } from 'Utils/html'
 import { withSCProps } from 'Utils/react'
 import { color, size } from 'Utils/styled'
 
@@ -130,7 +131,7 @@ export default class ChatMessage extends React.Component<Props> {
   private onMessageDoubleClick = () => {
     const { message } = this.props
 
-    this.props.copyMessage(`[${message.time}] ${message.user.displayName}: ${message.message}`)
+    this.props.copyMessage(`[${message.time}] ${message.user.displayName}: ${replaceImgTagByAlt(message.message)}`)
   }
 }
 
