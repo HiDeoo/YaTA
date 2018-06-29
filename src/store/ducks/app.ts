@@ -11,6 +11,7 @@ export enum Actions {
   SET_CHANNEL = 'app/SET_CHANNEL',
   UPDATE_STATUS = 'app/UPDATE_STATUS',
   UPDATE_ROOM_STATE = 'app/UPDATE_ROOM_STATE',
+  SET_SHOULD_READ_CHANGELOG = 'app/SET_SHOULD_READ_CHANGELOG',
 }
 
 /**
@@ -19,6 +20,7 @@ export enum Actions {
 export const initialState = {
   channel: null,
   roomState: null,
+  shouldReadChangelog: false,
   status: Status.Default,
 }
 
@@ -49,6 +51,12 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
           ...state.roomState,
           ...action.payload.state,
         },
+      }
+    }
+    case Actions.SET_SHOULD_READ_CHANGELOG: {
+      return {
+        ...state,
+        shouldReadChangelog: action.payload.shouldRead,
       }
     }
     default: {
@@ -90,12 +98,22 @@ export const updateRoomState = (state: SerializedRoomState) =>
   })
 
 /**
+ * Indicates or not that a new changelog is available.
+ * @return The action.
+ */
+export const setShouldReadChangelog = (shouldRead: boolean) =>
+  createAction(Actions.SET_SHOULD_READ_CHANGELOG, {
+    shouldRead,
+  })
+
+/**
  * App actions.
  */
 export type AppActions =
   | ReturnType<typeof setChannel>
   | ReturnType<typeof updateStatus>
   | ReturnType<typeof updateRoomState>
+  | ReturnType<typeof setShouldReadChangelog>
 
 /**
  * App state.
@@ -115,4 +133,9 @@ export type AppState = {
    * Room state.
    */
   roomState: SerializedRoomState | null
+
+  /**
+   * Defines if the user is using a new version of the application and should read the associated changelog.
+   */
+  shouldReadChangelog: boolean
 }

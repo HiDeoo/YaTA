@@ -1,14 +1,21 @@
 import * as storage from 'localforage'
 import { applyMiddleware, compose, createStore, Middleware, Store } from 'redux'
-import { persistCombineReducers, Persistor, persistStore } from 'redux-persist'
+import { createMigrate, persistCombineReducers, Persistor, persistStore } from 'redux-persist'
 
+import migrations from 'Store/migrations'
 import reducers, { ApplicationState } from 'Store/reducers'
 
 /**
  * Combined & persisted reducers.
  */
 const persistedReducers = persistCombineReducers<ApplicationState>(
-  { key: 'YaTA:store', whitelist: ['settings', 'user'], storage },
+  {
+    key: 'YaTA:store',
+    migrate: createMigrate(migrations as any, { debug: false }),
+    storage,
+    version: 0,
+    whitelist: ['settings', 'user'],
+  },
   reducers
 )
 

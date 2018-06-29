@@ -10,12 +10,14 @@ import { createAction, RehydrateAction } from 'Utils/redux'
  */
 export enum Actions {
   TOGGLE_THEME = 'settings/TOGGLE_THEME',
+  SET_VERSION = 'settings/SET_VERSION',
 }
 
 /**
  * Initial state.
  */
 export const initialState = {
+  lastKnownVersion: null,
   theme: Theme.Dark as SettingsState['theme'],
 }
 
@@ -40,6 +42,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         theme: state.theme === Theme.Dark ? Theme.Light : Theme.Dark,
       }
     }
+    case Actions.SET_VERSION: {
+      return {
+        ...state,
+        lastKnownVersion: action.payload.version,
+      }
+    }
     default: {
       return state
     }
@@ -55,16 +63,31 @@ export default settingsReducer
 export const toggleTheme = () => createAction(Actions.TOGGLE_THEME)
 
 /**
+ * Sets the last known version of the application.
+ * @param  version - The new version.
+ * @return The action.
+ */
+export const setVersion = (version: string) =>
+  createAction(Actions.SET_VERSION, {
+    version,
+  })
+
+/**
  * Settings actions.
  */
-export type SettingsActions = RehydrateAction | ReturnType<typeof toggleTheme>
+export type SettingsActions = RehydrateAction | ReturnType<typeof toggleTheme> | ReturnType<typeof setVersion>
 
 /**
  * Settings state.
  */
 export type SettingsState = {
   /**
-   * Test state.
+   * Selected theme.
    */
   theme: Theme
+
+  /**
+   * Last know version of the application.
+   */
+  lastKnownVersion: string | null
 }

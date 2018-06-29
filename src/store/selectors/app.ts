@@ -22,3 +22,10 @@ export const getChannel = createSelector([getAppState], (app) => app.channel)
  * @return The current status.
  */
 export const getStatus = createSelector([getAppState], (app) => app.status)
+
+/**
+ * Returns if a new changelog is available or not.
+ * @param  state - The Redux state.
+ * @return `true` when a changelog is available.
+ */
+export const getShouldReadChangelog = createSelector([getAppState], (app) => app.shouldReadChangelog)

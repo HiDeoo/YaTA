@@ -15,3 +15,10 @@ const getSettingsState = (state: ApplicationState) => state.settings
  * @return The theme.
  */
 export const getTheme = createSelector([getSettingsState], (settings) => settings.theme)
+
+/**
+ * Returns the last known version.
+ * @param  state - The Redux state.
+ * @return The version.
+ */
+export const getLastKnownVersion = createSelector([getSettingsState], (settings) => settings.lastKnownVersion)

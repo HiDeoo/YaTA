@@ -1,7 +1,9 @@
 import { Classes, Colors } from '@blueprintjs/core'
+import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import * as semCompare from 'semver-compare'
 import { ThemeProvider } from 'styled-components'
 
 import Channels from 'Components/Channels'
@@ -12,13 +14,13 @@ import Login from 'Components/Login'
 import Theme from 'Constants/theme'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
-import Settings from 'Containers/Settings'
-import { AppState } from 'Store/ducks/app'
-import { SettingsState } from 'Store/ducks/settings'
+import Settings, { SettingsTab } from 'Containers/Settings'
+import { AppState, setShouldReadChangelog } from 'Store/ducks/app'
+import { SettingsState, setVersion } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getStatus } from 'Store/selectors/app'
-import { getTheme } from 'Store/selectors/settings'
+import { getChannel, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
+import { getLastKnownVersion, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn } from 'Store/selectors/user'
 import dark from 'Styled/dark'
 import light from 'Styled/light'
@@ -26,7 +28,7 @@ import light from 'Styled/light'
 /**
  * React State.
  */
-const initialState = { showSettings: false }
+const initialState = { showSettings: false, settingSelectedTab: SettingsTab.General }
 type State = Readonly<typeof initialState>
 
 /**
@@ -40,6 +42,12 @@ class App extends React.Component<Props, State> {
    */
   public componentDidMount() {
     this.installTheme()
+
+    if (_.isNil(this.props.lastKnownVersion)) {
+      this.props.setVersion(process.env.REACT_APP_VERSION)
+    } else if (semCompare(process.env.REACT_APP_VERSION, this.props.lastKnownVersion) === 1) {
+      this.props.setShouldReadChangelog(true)
+    }
   }
 
   /**
@@ -57,8 +65,8 @@ class App extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { showSettings } = this.state
-    const { isLoggedIn, theme } = this.props
+    const { showSettings, settingSelectedTab } = this.state
+    const { channel, isLoggedIn, shouldReadChangelog, status, theme } = this.props
 
     const isLoggingIn = this.isLoginPage() || this.isAuthPage()
 
@@ -73,12 +81,14 @@ class App extends React.Component<Props, State> {
         <FlexLayout vertical>
           <Header
             toggleSettings={this.toggleSettings}
+            toggleChangelog={this.toggleChangelog}
             isLoggedIn={isLoggedIn}
-            channel={this.props.channel}
+            channel={channel}
             logout={this.props.resetUser}
-            status={this.props.status}
+            status={status}
+            highlightChangelog={shouldReadChangelog}
           />
-          <Settings visible={showSettings} toggle={this.toggleSettings} />
+          <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
           <FlexContent>
             <Switch>
               <Route exact path="/" component={Channels} />
@@ -109,7 +119,20 @@ class App extends React.Component<Props, State> {
    * Toggles the settings panel.
    */
   private toggleSettings = () => {
-    this.setState(({ showSettings }) => ({ showSettings: !showSettings }))
+    this.setState(({ showSettings }) => ({
+      settingSelectedTab: SettingsTab.General,
+      showSettings: !showSettings,
+    }))
+  }
+
+  /**
+   * Toggles the changelog panel.
+   */
+  private toggleChangelog = () => {
+    this.setState(({ showSettings }) => ({
+      settingSelectedTab: SettingsTab.Changelog,
+      showSettings: !showSettings,
+    }))
   }
 
   /**
@@ -133,10 +156,12 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
     isLoggedIn: getIsLoggedIn(state),
+    lastKnownVersion: getLastKnownVersion(state),
+    shouldReadChangelog: getShouldReadChangelog(state),
     status: getStatus(state),
     theme: getTheme(state),
   }),
-  { resetUser }
+  { resetUser, setVersion, setShouldReadChangelog }
 )(App)
 
 /**
@@ -145,6 +170,8 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 type StateProps = {
   channel: AppState['channel']
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
+  lastKnownVersion: SettingsState['lastKnownVersion']
+  shouldReadChangelog: AppState['shouldReadChangelog']
   status: AppState['status']
   theme: SettingsState['theme']
 }
@@ -154,6 +181,8 @@ type StateProps = {
  */
 type DispatchProps = {
   resetUser: typeof resetUser
+  setShouldReadChangelog: typeof setShouldReadChangelog
+  setVersion: typeof setVersion
 }
 
 /**

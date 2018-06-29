@@ -6,7 +6,9 @@ import {
   NavbarDivider,
   NavbarGroup,
   NavbarHeading,
+  Position,
   Spinner,
+  Tooltip,
 } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -32,6 +34,15 @@ const StatusMessage = styled(NavbarHeading)`
 `
 
 /**
+ * Changelog component.
+ */
+const Changelog = styled(Button)`
+  svg {
+    color: ${Colors.GOLD5} !important;
+  }
+`
+
+/**
  * Header Component.
  */
 export default class Header extends React.Component<Props> {
@@ -40,7 +51,7 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { channel, isLoggedIn, logout, toggleSettings } = this.props
+    const { channel, highlightChangelog, isLoggedIn, logout, toggleChangelog, toggleSettings } = this.props
 
     const title = `${!_.isNil(channel) ? `${channel} - ` : ''}YaTA`
 
@@ -54,8 +65,19 @@ export default class Header extends React.Component<Props> {
           {this.renderStatus()}
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-          <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal title="Settings" />
-          {isLoggedIn && <Button onClick={logout} icon="log-out" minimal title="Log out" />}
+          {highlightChangelog && (
+            <Tooltip content="New version available! Check the changelog." position={Position.BOTTOM}>
+              <Changelog onClick={toggleChangelog} icon="lightbulb" minimal title="Changelog" />
+            </Tooltip>
+          )}
+          <Tooltip content="Settings" position={Position.BOTTOM}>
+            <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal title="Settings" />
+          </Tooltip>
+          {isLoggedIn && (
+            <Tooltip content="Log out" position={Position.BOTTOM}>
+              <Button onClick={logout} icon="log-out" minimal title="Log out" />
+            </Tooltip>
+          )}
         </NavbarGroup>
       </Navbar>
     )
@@ -112,8 +134,10 @@ export default class Header extends React.Component<Props> {
  */
 type Props = {
   channel: AppState['channel']
+  highlightChangelog: boolean
   isLoggedIn: boolean
   status: AppState['status']
+  toggleChangelog: () => void
   toggleSettings: () => void
   logout: () => void
 }
