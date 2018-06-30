@@ -2,9 +2,10 @@ import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
+import ChatMessageContent from 'Components/ChatMessageContent'
 import { SerializedMessage } from 'Libs/Message'
 import base from 'Styled/base'
-import { color } from 'Utils/styled'
+import { color, size } from 'Utils/styled'
 
 /**
  * Message measures cache.
@@ -32,7 +33,8 @@ const Wrapper = styled.div`
  * Message component.
  */
 const Message = styled.div`
-  padding: 2px 8px;
+  min-height: ${size('log.minHeight')}px;
+  padding: 4px 8px;
 `
 
 /**
@@ -94,7 +96,7 @@ export default class ChatHistory extends React.Component<Props> {
       <CellMeasurer cache={messageMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
         <Message style={style}>
           <Time>{message.time}</Time>
-          <span dangerouslySetInnerHTML={{ __html: message.message }} />
+          <ChatMessageContent message={message} />
         </Message>
       </CellMeasurer>
     )
