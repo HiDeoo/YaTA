@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import { Emotes } from 'twitch-js'
 
-import { getWordsIndicesMatching } from 'Utils/string'
+import { getWordsIndexesMatching } from 'Utils/string'
 
 /**
  * EmotesProvider class.
@@ -38,13 +38,13 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     return _.reduce(
       this.emotes,
       (emotes, emote) => {
-        const indices = getWordsIndicesMatching(message, emote.code)
+        const indexes = getWordsIndexesMatching(message, emote.code)
 
-        if (indices.length === 0) {
+        if (indexes.length === 0) {
           return emotes
         }
 
-        const ranges = _.map(indices, (index) => [index, index + emote.code.length - 1].join('-'))
+        const ranges = _.map(indexes, (index) => [index, index + emote.code.length - 1].join('-'))
 
         emotes[`${this.prefix}-${emote.id}`] = ranges
 

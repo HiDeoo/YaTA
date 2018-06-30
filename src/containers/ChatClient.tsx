@@ -592,7 +592,14 @@ export class Client extends React.Component<Props, State> {
           userstate['tmi-sent-ts'] = Date.now().toString()
         }
 
-        parsedMessage = new Message(message, userstate, self, this.badges, this.emotesProviders)
+        parsedMessage = new Message(
+          message,
+          userstate,
+          self,
+          this.badges,
+          this.emotesProviders,
+          this.props.loginDetails!.username
+        )
 
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)

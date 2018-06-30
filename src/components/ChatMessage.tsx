@@ -7,13 +7,15 @@ import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { replaceImgTagByAlt } from 'Utils/html'
 import { withSCProps } from 'Utils/react'
-import { color, size } from 'Utils/styled'
+import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = styled.div`
-  padding: 4px ${size('log.hPadding')}px;
+const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
+  background-color: ${ifProp('mentionned', color('log.mention.self.background'), 'inherit')};
+  border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
+  padding: 4px ${size('log.hPadding')}px 4px 7px;
 `
 
 /**
@@ -64,7 +66,7 @@ export default class ChatMessage extends React.Component<Props> {
     const usernameColor = message.user.color as string
 
     return (
-      <Wrapper style={style} onDoubleClick={this.onMessageDoubleClick}>
+      <Wrapper style={style} onDoubleClick={this.onMessageDoubleClick} mentionned={message.mentionned}>
         <Time>{message.time} </Time>
         {this.renderBadges()}
         <Username color={usernameColor} onClick={this.onClickUsername}>
@@ -116,6 +118,13 @@ type Props = {
   focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage
   style: React.CSSProperties
+}
+
+/**
+ * React Props.
+ */
+type WrapperProps = {
+  mentionned: boolean
 }
 
 /**

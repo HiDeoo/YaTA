@@ -1,11 +1,11 @@
 /**
- * Returns all the indices of all occurences of a string in another string.
+ * Returns all the indexes of all occurences of a string in another string.
  * @see https://stackoverflow.com/a/3410557/1945960
  * @param  str - The string to search in.
  * @param  search - The search pattern.
  * @return The indexes.
  */
-export function getWordsIndicesMatching(str: string, search: string) {
+export function getWordsIndexesMatching(str: string, search: string) {
   const searchLength = search.length
 
   if (searchLength === 0) {
@@ -14,7 +14,7 @@ export function getWordsIndicesMatching(str: string, search: string) {
 
   let index = 0
   let startIndex = 0
-  const indices = []
+  const indexes = []
 
   // tslint:disable-next-line:no-conditional-assignment
   while ((index = str.indexOf(search, startIndex)) > -1) {
@@ -33,11 +33,11 @@ export function getWordsIndicesMatching(str: string, search: string) {
       (isLeftBoundary && nextCharacter === ' ') ||
       (prevCharacter === ' ' && isRightBoundary)
     ) {
-      indices.push(index)
+      indexes.push(index)
     }
 
     startIndex = index + searchLength
   }
 
-  return indices
+  return indexes
 }
