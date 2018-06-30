@@ -106,7 +106,12 @@ export default class ChatMessage extends React.Component<Props> {
   private onMessageDoubleClick = () => {
     const { message } = this.props
 
-    this.props.copyMessage(`[${message.time}] ${message.user.displayName}: ${replaceImgTagByAlt(message.message)}`)
+    const tmpDiv = document.createElement('div')
+    tmpDiv.innerHTML = replaceImgTagByAlt(message.message)
+
+    const sanitizedMessage = tmpDiv.textContent || tmpDiv.innerText || ''
+
+    this.props.copyMessage(`[${message.time}] ${message.user.displayName}: ${sanitizedMessage}`)
   }
 }
 
