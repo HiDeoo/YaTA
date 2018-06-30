@@ -3,6 +3,7 @@ import { Emotes, UserState } from 'twitch-js'
 
 import LogType from 'Constants/logType'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
+import { EmotesProviders } from 'Libs/EmotesProvider'
 import { Badges } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
@@ -29,8 +30,15 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param userstate - The associated user state.
    * @param self - Defines if the message was sent by ourself.
    * @param badges - The known badges if any.
+   * @param emotesProviders - Additional emotes providers.
    */
-  constructor(message: string, userstate: UserState, self: boolean, badges: Badges | null) {
+  constructor(
+    message: string,
+    userstate: UserState,
+    self: boolean,
+    badges: Badges | null,
+    emotesProviders: EmotesProviders
+  ) {
     this.self = self
     this.id = userstate.id
     this.color = userstate.color
@@ -42,7 +50,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
 
     this.badges = !_.isNil(badges) && _.size(userstate.badges) > 0 ? this.parseBadges(userstate, badges) : null
-    this.message = !_.isNil(userstate.emotes) ? this.parseEmotes(message, userstate.emotes) : escape(message)
+    this.message = this.parseEmotes(message, userstate.emotes || {}, emotesProviders)
 
     // TODO room-id?
     // TODO subscriber?
@@ -112,11 +120,22 @@ export default class Message implements Serializable<SerializedMessage> {
    * Parses a message for emotes.
    * @param message - The message to parse.
    * @param emotes - The message emotes.
+   * @param emotesProviders - Additional emotes providers.
    */
-  private parseEmotes(message: string, emotes: Emotes) {
+  private parseEmotes(message: string, emotes: Emotes, emotesProviders: EmotesProviders) {
+    _.forEach(emotesProviders, (provider) => {
+      const providerEmotes = provider.getMessageEmotes(message)
+
+      if (_.size(providerEmotes) > 0) {
+        _.merge(emotes, providerEmotes)
+      }
+    })
+
     const parsedMessage = message.split('')
 
     _.forEach(emotes, (ranges, id) => {
+      const [providerPrefix, emoteId] = id.split('-')
+
       _.forEach(ranges, (range) => {
         const strIndexes = range.split('-')
         const indexes = [parseInt(strIndexes[0], 10), parseInt(strIndexes[1], 10)]
@@ -128,11 +147,17 @@ export default class Message implements Serializable<SerializedMessage> {
         }
 
         const emoteName = name.join('')
-        const srcset = `https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0 1x,https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0 2x,https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0 4x`
 
-        parsedMessage[
-          indexes[0]
-        ] = `<img class="emote" src="https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
+        if (_.isNil(emoteId)) {
+          const url = 'https://static-cdn.jtvnw.net/emoticons/v1/'
+          const srcset = `${url}${id}/1.0 1x,${url}${id}/2.0 2x,${url}${id}/3.0 4x`
+
+          parsedMessage[
+            indexes[0]
+          ] = `<img class="emote" src="${url}${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
+        } else {
+          parsedMessage[indexes[0]] = emotesProviders[providerPrefix].getEmoteTag(emoteId, emoteName)
+        }
       })
     })
 

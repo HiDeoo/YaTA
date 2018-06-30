@@ -10,6 +10,8 @@ import LogType from 'Constants/logType'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
+import Bttv from 'Libs/Bttv'
+import { EmotesProviders } from 'Libs/EmotesProvider'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
@@ -37,6 +39,7 @@ export class Client extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   private badges: Badges | null = null
+  private emotesProviders: EmotesProviders = {}
 
   /**
    * Creates a new instance of the component.
@@ -196,7 +199,21 @@ export class Client extends React.Component<Props, State> {
 
     this.props.updateRoomState(state.serialize())
 
-    this.badges = await Twitch.fetchBadges(state.roomId)
+    try {
+      this.badges = await Twitch.fetchBadges(state.roomId)
+
+      if (!_.isNil(this.props.channel)) {
+        const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
+
+        const provider = emotesAndBots.emotes
+
+        this.emotesProviders[provider.prefix] = provider
+
+        // TODO bots
+      }
+    } catch (error) {
+      //
+    }
   }
 
   /**
@@ -575,7 +592,7 @@ export class Client extends React.Component<Props, State> {
           userstate['tmi-sent-ts'] = Date.now().toString()
         }
 
-        parsedMessage = new Message(message, userstate, self, this.badges)
+        parsedMessage = new Message(message, userstate, self, this.badges, this.emotesProviders)
 
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)
