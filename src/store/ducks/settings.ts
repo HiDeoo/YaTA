@@ -12,6 +12,7 @@ export enum Actions {
   TOGGLE_THEME = 'settings/TOGGLE_THEME',
   SET_VERSION = 'settings/SET_VERSION',
   TOGGLE_COPY_MESSAGE_DOUBLE_CLICK = 'settings/TOGGLE_COPY_MESSAGE_DOUBLE_CLICK',
+  TOGGLE_SHOW_CONTEXT_MENU = 'settings/TOGGLE_SHOW_CONTEXT_MENU',
 }
 
 /**
@@ -20,6 +21,7 @@ export enum Actions {
 export const initialState = {
   copyMessageOnDoubleClick: true,
   lastKnownVersion: null,
+  showContextMenu: false,
   theme: Theme.Dark as SettingsState['theme'],
 }
 
@@ -56,6 +58,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         copyMessageOnDoubleClick: !state.copyMessageOnDoubleClick,
       }
     }
+    case Actions.TOGGLE_SHOW_CONTEXT_MENU: {
+      return {
+        ...state,
+        showContextMenu: !state.showContextMenu,
+      }
+    }
     default: {
       return state
     }
@@ -81,10 +89,16 @@ export const setVersion = (version: string) =>
   })
 
 /**
- * Toggle the 'copy message on double click' setting.
+ * Toggle the 'Copy message on double click' setting.
  * @return The action.
  */
 export const toggleCopyMessageOnDoubleClick = () => createAction(Actions.TOGGLE_COPY_MESSAGE_DOUBLE_CLICK)
+
+/**
+ * Toggle the 'Show context menu' setting.
+ * @return The action.
+ */
+export const toggleShowContextMenu = () => createAction(Actions.TOGGLE_SHOW_CONTEXT_MENU)
 
 /**
  * Settings actions.
@@ -94,6 +108,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleTheme>
   | ReturnType<typeof setVersion>
   | ReturnType<typeof toggleCopyMessageOnDoubleClick>
+  | ReturnType<typeof toggleShowContextMenu>
 
 /**
  * Settings state.
@@ -113,4 +128,9 @@ export type SettingsState = {
    * Defines if messages should be copied in the clipboard when double clicking them.
    */
   copyMessageOnDoubleClick: boolean
+
+  /**
+   * Defines if a context menu should be added to each message.
+   */
+  showContextMenu: boolean
 }

@@ -17,4 +17,10 @@ export default {
       settings: { ...state.settings, copyMessageOnDoubleClick: initialState.copyMessageOnDoubleClick },
     }
   },
+  2: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, showContextMenu: initialState.showContextMenu },
+    }
+  },
 }

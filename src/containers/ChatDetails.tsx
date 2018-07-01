@@ -8,12 +8,10 @@ import ChatHistory from 'Components/ChatHistory'
 import FlexLayout from 'Components/FlexLayout'
 import { SerializedChatter } from 'Libs/Chatter'
 import Twitch, { AuthenticatedUserDetails, UserDetails } from 'Libs/Twitch'
-import { AppState } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
-import { getIsMod, getLoginDetails } from 'Store/selectors/user'
+import { getLoginDetails } from 'Store/selectors/user'
 
 /**
  * Details component.
@@ -119,7 +117,9 @@ class ChatDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderModerationTools() {
-    if (!this.showModerationTools()) {
+    const { canModerate, chatter } = this.props
+
+    if (_.isNil(chatter) || !canModerate(chatter)) {
       return null
     }
 
@@ -194,19 +194,6 @@ class ChatDetails extends React.Component<Props, State> {
   }
 
   /**
-   * Defines if moderation tools should be visible or not.
-   * @return `true` when to show moderation tools.
-   */
-  private showModerationTools() {
-    const { channel, chatter, isMod, loginDetails } = this.props
-
-    const chatterIsSelf = !_.isNil(loginDetails) && !_.isNil(chatter) && loginDetails.username === chatter.name
-    const chatterIsBroadcaster = !_.isNil(chatter) && !_.isNil(channel) && chatter.name === channel
-
-    return isMod && !chatterIsSelf && !chatterIsBroadcaster
-  }
-
-  /**
    * Triggered when purge button is clicked.
    */
   private onClickPurge = () => {
@@ -256,7 +243,7 @@ class ChatDetails extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when ban button is clicked.
+   * Triggered when the ban button is clicked.
    */
   private onClickBan = () => {
     const { ban, chatter, unfocus } = this.props
@@ -273,8 +260,6 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
   const getChatterMessages = makeGetChatterMessages()
 
   return {
-    channel: getChannel(state),
-    isMod: getIsMod(state),
     loginDetails: getLoginDetails(state),
     messages: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterMessages(state, ownProps.chatter.id)) : null,
   }
@@ -284,8 +269,6 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
  * React Props.
  */
 type StateProps = {
-  channel: AppState['channel']
-  isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getLoginDetails>
   messages: ReturnType<typeof getLogsByIds> | null
 }
@@ -295,6 +278,7 @@ type StateProps = {
  */
 type OwnProps = {
   ban: (username: string) => void
+  canModerate: (chatter: SerializedChatter) => boolean
   chatter: SerializedChatter | null
   timeout: (username: string, duration: number) => void
   unfocus: () => void

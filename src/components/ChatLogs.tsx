@@ -39,7 +39,7 @@ export default class ChatMessages extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { logs } = this.props
+    const { copyMessageOnDoubleClick, logs, showContextMenu } = this.props
 
     return (
       <Wrapper>
@@ -54,6 +54,8 @@ export default class ChatMessages extends React.Component<Props> {
               rowRenderer={this.messageRenderer}
               scrollToIndex={logs.length - 1}
               width={width}
+              showContextMenu={showContextMenu}
+              copyMessageOnDoubleClick={copyMessageOnDoubleClick}
             />
           )}
         </AutoSizer>
@@ -78,10 +80,30 @@ export default class ChatMessages extends React.Component<Props> {
 
     let LogComponent: JSX.Element | null = null
 
-    const { copyMessage, focusChatter } = this.props
+    const {
+      ban,
+      canModerate,
+      copyMessageOnDoubleClick,
+      copyToClipboard,
+      focusChatter,
+      showContextMenu,
+      timeout,
+    } = this.props
 
     if (isMessage(log)) {
-      LogComponent = <ChatMessage style={style} message={log} focusChatter={focusChatter} copyMessage={copyMessage} />
+      LogComponent = (
+        <ChatMessage
+          style={style}
+          message={log}
+          copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          copyToClipboard={copyToClipboard}
+          showContextMenu={showContextMenu}
+          focusChatter={focusChatter}
+          canModerate={canModerate}
+          timeout={timeout}
+          ban={ban}
+        />
+      )
     } else if (isNotice(log)) {
       LogComponent = <ChatNotice style={style} notice={log} />
     } else if (isNotification(log)) {
@@ -106,7 +128,12 @@ export default class ChatMessages extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  copyMessage: (message: string) => void
+  ban: (username: string) => void
+  canModerate: (chatter: SerializedChatter) => boolean
+  copyMessageOnDoubleClick: boolean
+  copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
+  showContextMenu: boolean
+  timeout: (username: string, duration: number) => void
 }

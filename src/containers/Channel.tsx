@@ -20,7 +20,8 @@ import { AppState, setChannel, toggleChattersList } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getShowChattersList, getStatus } from 'Store/selectors/app'
 import { getLogs } from 'Store/selectors/logs'
-import { getCopyMessageOnDoubleClick } from 'Store/selectors/settings'
+import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
+import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 
 /**
  * React State.
@@ -49,7 +50,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { channel, logs, showChattersList } = this.props
+    const { channel, copyMessageOnDoubleClick, logs, showChattersList, showContextMenu } = this.props
     const { focusedChatter } = this.state
 
     if (_.isNil(channel)) {
@@ -64,14 +65,29 @@ class Channel extends React.Component<Props, State> {
       <FlexLayout vertical>
         <ChattersList visible={showChattersList} toggle={this.props.toggleChattersList} channel={channel} />
         <ChatClient ref={this.chatClient} />
-        <ChatLogs logs={logs} focusChatter={this.focusChatter} copyMessage={this.copyMessage} />
+        <ChatLogs
+          logs={logs}
+          copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          showContextMenu={showContextMenu}
+          focusChatter={this.focusChatter}
+          copyToClipboard={this.copyToClipboard}
+          canModerate={this.canModerate}
+          timeout={this.timeout}
+          ban={this.ban}
+        />
         <ChatInput
           disabled={this.props.status !== Status.Connected}
           value={this.state.inputValue}
           onChange={this.onChangeInputValue}
           onSubmit={this.sendMessage}
         />
-        <ChatDetails chatter={focusedChatter} unfocus={this.unfocusChatter} timeout={this.timeout} ban={this.ban} />
+        <ChatDetails
+          chatter={focusedChatter}
+          unfocus={this.unfocusChatter}
+          timeout={this.timeout}
+          ban={this.ban}
+          canModerate={this.canModerate}
+        />
       </FlexLayout>
     )
   }
@@ -101,16 +117,24 @@ class Channel extends React.Component<Props, State> {
   /**
    * Copy a message to the clipboard if the feature is enabled.
    */
-  private copyMessage = (message: string) => {
-    const { copyMessageOnDoubleClick } = this.props
-
-    if (!copyMessageOnDoubleClick) {
-      return
-    }
-
+  private copyToClipboard = (message: string) => {
     copy(message)
 
     Toaster.show({ message: 'Copied!', intent: Intent.SUCCESS, icon: 'clipboard', timeout: 1000 })
+  }
+
+  /**
+   * Determines if the current user can moderate a specific user.
+   * @param  chatter - The user to moderate.
+   * @retern `true` when the user can be moderated.
+   */
+  private canModerate = (chatter: SerializedChatter) => {
+    const { channel, isMod, loginDetails } = this.props
+
+    const chatterIsSelf = !_.isNil(loginDetails) && loginDetails.username === chatter.name
+    const chatterIsBroadcaster = !_.isNil(channel) && chatter.name === channel
+
+    return isMod && !chatterIsSelf && !chatterIsBroadcaster
   }
 
   /**
@@ -190,8 +214,11 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+    isMod: getIsMod(state),
+    loginDetails: getLoginDetails(state),
     logs: getLogs(state),
     showChattersList: getShowChattersList(state),
+    showContextMenu: getShowContextMenu(state),
     status: getStatus(state),
   }),
   { setChannel, toggleChattersList }
@@ -203,8 +230,11 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 type StateProps = {
   channel: AppState['channel']
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
+  isMod: ReturnType<typeof getIsMod>
+  loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
   showChattersList: AppState['showChattersList']
+  showContextMenu: ReturnType<typeof getShowContextMenu>
   status: AppState['status']
 }
 

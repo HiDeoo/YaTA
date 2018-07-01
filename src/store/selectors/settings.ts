@@ -24,11 +24,18 @@ export const getTheme = createSelector([getSettingsState], (settings) => setting
 export const getLastKnownVersion = createSelector([getSettingsState], (settings) => settings.lastKnownVersion)
 
 /**
- * Returns the 'copy message on double click' setting.
+ * Returns the 'Copy message on double click' setting.
  * @param  state - The Redux state.
- * @return The 'copy message on double click' setting.
+ * @return The 'Copy message on double click' setting.
  */
 export const getCopyMessageOnDoubleClick = createSelector(
   [getSettingsState],
   (settings) => settings.copyMessageOnDoubleClick
 )
+
+/**
+ * Returns the 'Show context menu' setting.
+ * @param  state - The Redux state.
+ * @return The 'Show context menu' setting.
+ */
+export const getShowContextMenu = createSelector([getSettingsState], (settings) => settings.showContextMenu)

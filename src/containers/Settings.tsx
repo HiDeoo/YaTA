@@ -7,9 +7,15 @@ import styled from 'styled-components'
 import FlexLayout from 'Components/FlexLayout'
 import Theme from 'Constants/theme'
 import { setShouldReadChangelog } from 'Store/ducks/app'
-import { SettingsState, setVersion, toggleCopyMessageOnDoubleClick, toggleTheme } from 'Store/ducks/settings'
+import {
+  SettingsState,
+  setVersion,
+  toggleCopyMessageOnDoubleClick,
+  toggleShowContextMenu,
+  toggleTheme,
+} from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getCopyMessageOnDoubleClick, getTheme } from 'Store/selectors/settings'
+import { getCopyMessageOnDoubleClick, getShowContextMenu, getTheme } from 'Store/selectors/settings'
 
 /**
  * SettingsDialog component.
@@ -185,7 +191,7 @@ class Settings extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderTabGeneral() {
-    const { copyMessageOnDoubleClick, theme } = this.props
+    const { copyMessageOnDoubleClick, showContextMenu, theme } = this.props
 
     return (
       <SettingsPanel>
@@ -198,6 +204,7 @@ class Settings extends React.Component<Props, State> {
           label="Copy message on double click"
           onChange={this.props.toggleCopyMessageOnDoubleClick}
         />
+        <Switch checked={showContextMenu} label="Show context menu" onChange={this.props.toggleShowContextMenu} />
       </SettingsPanel>
     )
   }
@@ -288,9 +295,10 @@ class Settings extends React.Component<Props, State> {
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+    showContextMenu: getShowContextMenu(state),
     theme: getTheme(state),
   }),
-  { toggleCopyMessageOnDoubleClick, toggleTheme, setVersion, setShouldReadChangelog }
+  { setVersion, setShouldReadChangelog, toggleCopyMessageOnDoubleClick, toggleShowContextMenu, toggleTheme }
 )(Settings)
 
 /**
@@ -298,6 +306,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  */
 type StateProps = {
   copyMessageOnDoubleClick: SettingsState['copyMessageOnDoubleClick']
+  showContextMenu: SettingsState['showContextMenu']
   theme: SettingsState['theme']
 }
 
@@ -308,6 +317,7 @@ type DispatchProps = {
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
+  toggleShowContextMenu: typeof toggleShowContextMenu
   toggleTheme: typeof toggleTheme
 }
 
