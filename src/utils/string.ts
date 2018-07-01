@@ -1,3 +1,5 @@
+import * as _ from 'lodash'
+
 /**
  * Returns all the indexes of all occurences of a string in another string.
  * @see https://stackoverflow.com/a/3410557/1945960
@@ -40,4 +42,20 @@ export function getWordsIndexesMatching(str: string, search: string) {
   }
 
   return indexes
+}
+
+/**
+ * Extracts the word from a string at a specific position.
+ * @param  str - The string.
+ * @param  position - The position of the word.
+ * @return The word at the position and its boundaries.
+ */
+export function getWordAtPosition(str: string, position: number) {
+  const start = /[\w]+$/.exec(str.substr(0, position))
+  const wordStart = _.isNil(start) ? position : start.index
+
+  const end = /^\w+/.exec(str.substr(position))
+  const wordEnd = position + (_.isNil(end) ? 0 : end[0].length)
+
+  return { word: str.substring(wordStart, wordEnd), start: wordStart, end: wordEnd }
 }

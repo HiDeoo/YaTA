@@ -5,6 +5,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Message from 'Constants/message'
+import { getWordAtPosition } from 'Utils/string'
 import { color } from 'Utils/styled'
 
 /**
@@ -98,14 +99,14 @@ export default class ChatInput extends React.Component<Props, State> {
   private completions: string[] | null = null
   private completionIndex = -1
   private completionCursor = null as number | null
-  private splittedValueBeforeCompletion: string[] | null = null
+  private splittedValueBeforeCompletion: string[] | null = null // [ 'before', 'word being auto-completed', 'after']
 
   /**
    * Lifecycle: componentDidUpdate.
    * @param prevProps - The previous props.
    */
   public componentDidUpdate(prevProps: Props) {
-    if (prevProps.value !== this.props.value && !_.isNil(this.completionCursor) && !_.isNil(this.input.current)) {
+    if (!_.isNil(this.completionCursor) && prevProps.value !== this.props.value && !_.isNil(this.input.current)) {
       this.input.current.setSelectionRange(this.completionCursor, this.completionCursor)
 
       this.completionCursor = null
@@ -150,24 +151,16 @@ export default class ChatInput extends React.Component<Props, State> {
       if (!_.isNil(this.input.current)) {
         // Fetching completions only if needed.
         if (_.isNil(this.completions)) {
-          const textarea = this.input.current
+          const cursor = this.input.current.selectionStart
+          const text = this.input.current.value
 
-          const selectionStart = textarea.selectionStart
-          const text = textarea.value
-
-          const start = /[\w]+$/.exec(text.substr(0, selectionStart))
-          const wordStart = _.isNil(start) ? selectionStart : start.index
-
-          const end = /^\w+/.exec(text.substr(selectionStart))
-          const wordEnd = selectionStart + (_.isNil(end) ? 0 : end[0].length)
-
-          const word = text.substring(wordStart, wordEnd)
+          const { word, end, start } = getWordAtPosition(text, cursor)
 
           if (word.length === 0) {
             return
           }
 
-          this.splittedValueBeforeCompletion = [text.substring(0, wordStart), word, text.substring(wordEnd)]
+          this.splittedValueBeforeCompletion = [text.substring(0, start), word, text.substring(end)]
 
           this.completions = this.props.getCompletions(word)
         }
@@ -178,9 +171,7 @@ export default class ChatInput extends React.Component<Props, State> {
 
           if (this.completionIndex >= this.completions.length) {
             this.completionIndex = 0
-          }
-
-          if (this.completionIndex < 0) {
+          } else if (this.completionIndex < 0) {
             this.completionIndex = this.completions.length - 1
           }
 
@@ -191,6 +182,7 @@ export default class ChatInput extends React.Component<Props, State> {
 
           let cursorOffset = 0
 
+          // Add an extra space so we can continue typing immediately after auto-completing.
           if (after.length === 0) {
             after = ' '
             cursorOffset += 1
@@ -204,6 +196,7 @@ export default class ChatInput extends React.Component<Props, State> {
         }
       }
     } else if (event.key === 'Escape' && !_.isNil(this.splittedValueBeforeCompletion)) {
+      // Restore the value as it was before auto-completing.
       this.props.onChange(this.splittedValueBeforeCompletion.join(''))
     } else if (event.key !== 'Shift') {
       this.completions = null
