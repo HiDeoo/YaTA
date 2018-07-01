@@ -29,7 +29,7 @@ const Chatter = styled.div`
 /**
  * Type component.
  */
-const Type = styled.div`
+const Group = styled.div`
   color: ${color('chattersList.typeColor')};
   font-weight: bold;
   padding-left: 15px;
@@ -44,19 +44,28 @@ const Search = styled(InputGroup)`
 `
 
 /**
- * Type order used when rendering chatters.
+ * Row types.
  */
-const TypeOrder: Array<keyof Chatters> = ['staff', 'global_mods', 'admins', 'moderators', 'viewers']
+enum RowType {
+  Chatter,
+  Group,
+  Separator,
+}
+
+/**
+ * Group order used when rendering chatters.
+ */
+const GroupOrder: Array<keyof Chatters> = ['staff', 'global_mods', 'admins', 'moderators', 'viewers']
 
 /**
  * React State.
  */
 const initialState = {
-  chatters: null as TypesAndChatters | null,
+  chatters: null as ChattersRows | null,
   count: null as number | null,
   didFail: false,
   filter: '',
-  filteredChatters: null as TypesAndChatters | null,
+  filteredChatters: null as ChattersRows | null,
 }
 type State = Readonly<typeof initialState>
 
@@ -69,7 +78,6 @@ export default class ChattersList extends React.Component<Props, State> {
   /**
    * Lifecycle: componentDidUpdate.
    * @param prevProps - The previous props.
-   * @param prevState - The previous state.
    */
   public async componentDidUpdate(prevProps: Props) {
     if (prevProps.visible !== this.props.visible) {
@@ -77,17 +85,7 @@ export default class ChattersList extends React.Component<Props, State> {
         try {
           const response = await Twitch.fetchChatters(this.props.channel)
 
-          let chatters: TypesAndChatters = []
-
-          _.forEach(TypeOrder, (type) => {
-            const typeChatters = response.chatters[type]
-
-            if (typeChatters.length > 0) {
-              chatters.push('')
-              chatters.push({ type: this.sanitizeType(type) })
-              chatters = _.concat(chatters, typeChatters)
-            }
-          })
+          const chatters = this.parseChatters(response.chatters)
 
           this.setState(() => ({ didFail: false, count: response.chatter_count, chatters }))
         } catch (error) {
@@ -133,9 +131,9 @@ export default class ChattersList extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderList() {
-    const { chatters, filter, filteredChatters } = this.state
+    const { filter } = this.state
 
-    const rows = filter.length > 0 ? filteredChatters : chatters
+    const rows = this.getRowsToRender()
 
     return (
       <>
@@ -144,11 +142,11 @@ export default class ChattersList extends React.Component<Props, State> {
           {({ height, width }) => (
             <List
               height={height}
-              noRowsRenderer={this.noRowRender}
+              noRowsRenderer={this.noRowsRenderer}
               overscanRowCount={5}
-              rowCount={rows!.length}
+              rowCount={rows.length}
               rowHeight={base.chattersList.height}
-              rowRenderer={this.chatterRenderer}
+              rowRenderer={this.rowRenderer}
               width={width}
             />
           )}
@@ -158,63 +156,36 @@ export default class ChattersList extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when the filter input is modified.
-   * @param event - The associated event.
-   */
-  private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
-    const filter = event.currentTarget.value
-
-    let filteredChatters: TypesAndChatters | null = null
-
-    const { chatters } = this.state
-
-    if (!_.isNil(chatters) && filter.length > 0) {
-      filteredChatters = _.filter(chatters, (chatter) => {
-        return _.isString(chatter) && chatter.length > 0 && chatter.includes(filter)
-      })
-
-      if (filteredChatters.length > 0) {
-        filteredChatters.unshift('')
-      }
-    }
-
-    this.setState(() => ({ filter, filteredChatters }))
-  }
-
-  /**
-   * Render a chatter.
+   * Render a row.
    * @param  listRowProps - The props to add to the row being rendered.
    * @return Element to render.
    */
-  private chatterRenderer: ListRowRenderer = ({ index, key, style }) => {
-    const { chatters, filter, filteredChatters } = this.state
+  private rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    const rows = this.getRowsToRender()
 
-    const rows = filter.length > 0 ? filteredChatters : chatters
+    const chatter = rows[index]
+    const props = { key, style }
 
-    const chatter = rows![index]
-
-    if (_.isString(chatter)) {
+    if (chatter.type === RowType.Chatter) {
       return (
-        <Chatter key={key} style={style}>
-          <a href={`https://www.twitch.tv/${chatter}`} target="_blank">
-            {chatter}
+        <Chatter {...props}>
+          <a href={`https://www.twitch.tv/${chatter.name}`} target="_blank">
+            {chatter.name}
           </a>
         </Chatter>
       )
+    } else if (chatter.type === RowType.Separator) {
+      return <div {...props} />
     }
 
-    return (
-      <Type key={key} style={style}>
-        {chatter.type}
-      </Type>
-    )
+    return <Group {...props}>{chatter.name}</Group>
   }
 
   /**
    * Renders an empty filtered list.
    * @return Element to render.
    */
-  private noRowRender = () => {
+  private noRowsRenderer = () => {
     return (
       <Center>
         <Shrug />
@@ -265,12 +236,87 @@ export default class ChattersList extends React.Component<Props, State> {
   }
 
   /**
-   * Sanitizes a user type.
-   * @param  type - The type to sanitize.
-   * @return The sanitized type.
+   * Triggered when the filter input is modified.
+   * @param event - The associated event.
    */
-  private sanitizeType(type: string) {
-    return _.replace(type, '_', ' ').toUpperCase()
+  private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
+    const filter = event.currentTarget.value
+
+    let filteredChatters: ChattersRows | null = null
+
+    const { chatters } = this.state
+
+    if (!_.isNil(chatters) && filter.length > 0) {
+      const sanitizedFilter = filter.toLowerCase()
+
+      filteredChatters = _.filter(chatters, (chatter) => {
+        return chatter.type === RowType.Chatter && chatter.name.includes(sanitizedFilter)
+      })
+
+      if (filteredChatters.length > 0) {
+        filteredChatters.unshift(this.createRow(RowType.Separator))
+      }
+    }
+
+    this.setState(() => ({ filter, filteredChatters }))
+  }
+
+  /**
+   * Returns the rows to render based on if we're filtering or not the results.
+   * @return The rows to render.
+   */
+  private getRowsToRender() {
+    const { chatters, filter, filteredChatters } = this.state
+
+    return filter.length > 0 && !_.isNil(filteredChatters) ? filteredChatters : chatters || []
+  }
+
+  /**
+   * Parses chatters into actual rows to render.
+   * @param  chatters - The chatters
+   * @return The rows to render.
+   */
+  private parseChatters(chatters: Chatters) {
+    let rows: ChattersRows = []
+
+    _.forEach(GroupOrder, (group) => {
+      const groupChatters = chatters[group]
+
+      if (groupChatters.length > 0) {
+        rows.push(this.createRow(RowType.Separator))
+        rows.push(this.createRow(RowType.Group, this.sanitizeGroup(group)))
+
+        rows = _.concat(rows, _.map(groupChatters, (chatter) => this.createRow(RowType.Chatter, chatter)))
+      }
+    })
+
+    return rows
+  }
+
+  /**
+   * Creates a row based on its type.
+   * @param  type - The type of the row.
+   * @param  [name] - The name of the row if needed.
+   * @return The row.
+   */
+  private createRow(type: RowType.Separator): SeparatorRow
+  private createRow(type: RowType.Group, name: string): GroupRow
+  private createRow(type: RowType.Chatter, name: string): ChatterRow
+  private createRow(type: RowType, name?: string) {
+    if (type === RowType.Separator) {
+      return { type: RowType.Separator }
+    }
+
+    return { type, name }
+  }
+
+  /**
+   * Sanitizes a chatter group.
+   * @param  group - The group to sanitize.
+   * @return The sanitized group.
+   */
+  private sanitizeGroup(group: string) {
+    return _.replace(group, '_', ' ').toUpperCase()
   }
 }
 
@@ -284,6 +330,9 @@ type Props = {
 }
 
 /**
- * Types and chatters.
+ * Chatters, groups & separators.
  */
-type TypesAndChatters = Array<string | { type: string }>
+type ChatterRow = { type: RowType.Chatter; name: string }
+type GroupRow = { type: RowType.Group; name: string }
+type SeparatorRow = { type: RowType.Separator }
+type ChattersRows = Array<ChatterRow | GroupRow | SeparatorRow>
