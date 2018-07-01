@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import Key from 'Constants/key'
 import Message from 'Constants/message'
 import { getWordAtPosition } from 'Utils/string'
 import { color } from 'Utils/styled'
@@ -98,7 +99,7 @@ export default class ChatInput extends React.Component<Props, State> {
   private input = React.createRef<HTMLTextAreaElement>()
   private completions: string[] | null = null
   private completionIndex = -1
-  private completionCursor = null as number | null
+  private newCursor = null as number | null
   private splittedValueBeforeCompletion: string[] | null = null // [ 'before', 'word being auto-completed', 'after']
 
   /**
@@ -106,11 +107,13 @@ export default class ChatInput extends React.Component<Props, State> {
    * @param prevProps - The previous props.
    */
   public componentDidUpdate(prevProps: Props) {
-    if (!_.isNil(this.completionCursor) && prevProps.value !== this.props.value && !_.isNil(this.input.current)) {
-      this.input.current.setSelectionRange(this.completionCursor, this.completionCursor)
+    requestAnimationFrame(() => {
+      if (!_.isNil(this.newCursor) && prevProps.value !== this.props.value && !_.isNil(this.input.current)) {
+        this.input.current.setSelectionRange(this.newCursor, this.newCursor)
 
-      this.completionCursor = null
-    }
+        this.newCursor = null
+      }
+    })
   }
 
   /**
@@ -145,7 +148,7 @@ export default class ChatInput extends React.Component<Props, State> {
    * Triggered when a key is pressed down in the input.
    */
   private onKeyDownInputValue = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Tab') {
+    if (event.key === Key.Tab) {
       event.preventDefault()
 
       if (!_.isNil(this.input.current)) {
@@ -192,19 +195,19 @@ export default class ChatInput extends React.Component<Props, State> {
 
           this.props.onChange(sentence)
 
-          this.completionCursor = before.length + completion.length + cursorOffset
+          this.newCursor = before.length + completion.length + cursorOffset
         }
       }
-    } else if (event.key === 'Escape' && !_.isNil(this.splittedValueBeforeCompletion)) {
+    } else if (event.key === Key.Escape && !_.isNil(this.splittedValueBeforeCompletion)) {
       // Restore the value as it was before auto-completing.
       this.props.onChange(this.splittedValueBeforeCompletion.join(''))
-    } else if (event.key !== 'Shift') {
+    } else if (event.key !== Key.Shift) {
       this.completions = null
       this.completionIndex = -1
       this.splittedValueBeforeCompletion = null
     }
 
-    if (event.key === 'Enter') {
+    if (event.key === Key.Enter) {
       event.preventDefault()
 
       if (!this.validateInputValue()) {
@@ -212,6 +215,14 @@ export default class ChatInput extends React.Component<Props, State> {
       }
 
       this.props.onSubmit()
+    } else if (event.key === Key.Up || event.key === Key.Down) {
+      const entry = this.props.getHistory(event.key === Key.Up)
+
+      if (!_.isNil(entry)) {
+        this.newCursor = entry.length
+
+        this.props.onChange(entry)
+      }
     }
   }
 
@@ -239,6 +250,7 @@ export default class ChatInput extends React.Component<Props, State> {
 type Props = {
   disabled: boolean
   getCompletions: (word: string) => string[]
+  getHistory: (previous?: boolean) => string | null
   onChange: (value: string) => void
   onSubmit: () => void
   value: string

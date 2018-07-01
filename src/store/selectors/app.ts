@@ -36,3 +36,17 @@ export const getShouldReadChangelog = createSelector([getAppState], (app) => app
  * @return `true` when showing the chatters list.
  */
 export const getShowChattersList = createSelector([getAppState], (app) => app.showChattersList)
+
+/**
+ * Returns the history.
+ * @param  state - The Redux state.
+ * @return The history.
+ */
+export const getHistory = createSelector([getAppState], (app) => app.history)
+
+/**
+ * Returns the history index.
+ * @param  state - The Redux state.
+ * @return The history index.
+ */
+export const getHistoryIndex = createSelector([getAppState], (app) => app.historyIndex)

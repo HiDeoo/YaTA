@@ -13,6 +13,8 @@ export enum Actions {
   UPDATE_ROOM_STATE = 'app/UPDATE_ROOM_STATE',
   SET_SHOULD_READ_CHANGELOG = 'app/SET_SHOULD_READ_CHANGELOG',
   TOGGLE_CHATTERS_LIST = 'app/TOGGLE_CHATTERS_LIST',
+  ADD_TO_HISTORY = 'app/ADD_TO_HISTORY',
+  UPDATE_HISTORY_INDEX = 'app/UPDATE_HISTORY_INDEX',
 }
 
 /**
@@ -20,6 +22,8 @@ export enum Actions {
  */
 export const initialState = {
   channel: null,
+  history: [],
+  historyIndex: -1,
   roomState: null,
   shouldReadChangelog: false,
   showChattersList: false,
@@ -67,6 +71,19 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
         showChattersList: !state.showChattersList,
       }
     }
+    case Actions.ADD_TO_HISTORY: {
+      return {
+        ...state,
+        history: [action.payload.message, ...state.history],
+        historyIndex: initialState.historyIndex,
+      }
+    }
+    case Actions.UPDATE_HISTORY_INDEX: {
+      return {
+        ...state,
+        historyIndex: action.payload.index,
+      }
+    }
     default: {
       return state
     }
@@ -107,6 +124,7 @@ export const updateRoomState = (state: SerializedRoomState) =>
 
 /**
  * Indicates or not that a new changelog is available.
+ * @param  shouldRead - `true` when a new changelog is available.
  * @return The action.
  */
 export const setShouldReadChangelog = (shouldRead: boolean) =>
@@ -121,6 +139,26 @@ export const setShouldReadChangelog = (shouldRead: boolean) =>
 export const toggleChattersList = () => createAction(Actions.TOGGLE_CHATTERS_LIST)
 
 /**
+ * Adds a message to the history.
+ * @param  message - The message to add.
+ * @return The action.
+ */
+export const addToHistory = (message: string) =>
+  createAction(Actions.ADD_TO_HISTORY, {
+    message,
+  })
+
+/**
+ * Updates the history index.
+ * @param  index - The new index.
+ * @return The action.
+ */
+export const updateHistoryIndex = (index: number) =>
+  createAction(Actions.UPDATE_HISTORY_INDEX, {
+    index,
+  })
+
+/**
  * App actions.
  */
 export type AppActions =
@@ -129,6 +167,8 @@ export type AppActions =
   | ReturnType<typeof updateRoomState>
   | ReturnType<typeof setShouldReadChangelog>
   | ReturnType<typeof toggleChattersList>
+  | ReturnType<typeof addToHistory>
+  | ReturnType<typeof updateHistoryIndex>
 
 /**
  * App state.
@@ -158,4 +198,14 @@ export type AppState = {
    * Defines if we should show the chatters list or not.
    */
   showChattersList: boolean
+
+  /**
+   * Messages sent by the current user.
+   */
+  history: string[]
+
+  /**
+   * Current position in the history.
+   */
+  historyIndex: number
 }

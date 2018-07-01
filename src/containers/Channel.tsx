@@ -16,9 +16,9 @@ import ChatClient, { Client } from 'Containers/ChatClient'
 import ChatDetails from 'Containers/ChatDetails'
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
-import { AppState, setChannel, toggleChattersList } from 'Store/ducks/app'
+import { addToHistory, AppState, setChannel, toggleChattersList, updateHistoryIndex } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getShowChattersList, getStatus } from 'Store/selectors/app'
+import { getChannel, getHistory, getHistoryIndex, getShowChattersList, getStatus } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
@@ -82,6 +82,7 @@ class Channel extends React.Component<Props, State> {
           onChange={this.onChangeInputValue}
           onSubmit={this.sendMessage}
           getCompletions={this.getCompletions}
+          getHistory={this.getHistory}
         />
         <ChatDetails
           chatter={focusedChatter}
@@ -153,6 +154,28 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Returns the next or previous history entry if available.
+   * @param [next=true] - `true` to fetch the previous entry or `false` for the next one.
+   */
+  private getHistory = (previous: boolean = true) => {
+    const { history, historyIndex } = this.props
+
+    const index = historyIndex + (previous ? 1 : -1)
+
+    if (previous && index >= history.length) {
+      return null
+    } else if (!previous && index < 0) {
+      this.props.updateHistoryIndex(-1)
+
+      return ''
+    }
+
+    this.props.updateHistoryIndex(index)
+
+    return history[index]
+  }
+
+  /**
    * Returns the Twitch client instance if defined and connected.
    * @return The Twitch client or null.
    */
@@ -180,9 +203,13 @@ class Channel extends React.Component<Props, State> {
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        await client.say(channel, this.state.inputValue)
+        const message = this.state.inputValue
+
+        await client.say(channel, message)
 
         this.setState(() => ({ inputValue: '' }))
+
+        this.props.addToHistory(message)
       } catch (error) {
         //
       }
@@ -230,6 +257,8 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+    history: getHistory(state),
+    historyIndex: getHistoryIndex(state),
     isMod: getIsMod(state),
     loginDetails: getLoginDetails(state),
     logs: getLogs(state),
@@ -237,7 +266,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     showContextMenu: getShowContextMenu(state),
     status: getStatus(state),
   }),
-  { setChannel, toggleChattersList }
+  { addToHistory, setChannel, toggleChattersList, updateHistoryIndex }
 )(Channel)
 
 /**
@@ -247,6 +276,8 @@ type StateProps = {
   channel: AppState['channel']
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
+  history: AppState['history']
+  historyIndex: AppState['historyIndex']
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
@@ -259,8 +290,10 @@ type StateProps = {
  * React Props.
  */
 type DispatchProps = {
+  addToHistory: typeof addToHistory
   setChannel: typeof setChannel
   toggleChattersList: typeof toggleChattersList
+  updateHistoryIndex: typeof updateHistoryIndex
 }
 
 /**
