@@ -56,6 +56,7 @@ export default class ChatMessages extends React.Component<Props> {
               width={width}
               showContextMenu={showContextMenu}
               copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+              purgedCount={_.sumBy(logs, 'purged')}
             />
           )}
         </AutoSizer>

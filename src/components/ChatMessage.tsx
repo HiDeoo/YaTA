@@ -16,6 +16,7 @@ import { color, ifProp, size } from 'Utils/styled'
 const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
   background-color: ${ifProp('mentionned', color('log.mention.self.background'), 'inherit')};
   border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
+  opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')}px 4px 7px;
 
   & > .pt-popover-wrapper {
@@ -73,7 +74,7 @@ export default class ChatMessage extends React.Component<Props> {
     const usernameColor = message.user.color as string
 
     return (
-      <Wrapper style={style} onDoubleClick={this.onDoubleClick} mentionned={message.mentionned}>
+      <Wrapper style={style} onDoubleClick={this.onDoubleClick} mentionned={message.mentionned} purged={message.purged}>
         {this.renderContextMenu()}
         <Time>{message.time} </Time>
         {this.renderBadges()}
@@ -253,6 +254,7 @@ type Props = {
  */
 type WrapperProps = {
   mentionned: boolean
+  purged: boolean
 }
 
 /**
