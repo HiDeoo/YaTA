@@ -15,6 +15,7 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 
+import Page from 'Constants/page'
 import Status from 'Constants/status'
 import { AppState } from 'Store/ducks/app'
 
@@ -55,9 +56,9 @@ export default class Header extends React.Component<Props> {
       channel,
       goHome,
       highlightChangelog,
-      isHomePage,
       isLoggedIn,
       logout,
+      page,
       toggleChangelog,
       toggleSettings,
     } = this.props
@@ -74,7 +75,8 @@ export default class Header extends React.Component<Props> {
           {this.renderStatus()}
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-          {!isHomePage && (
+          {this.renderChannelControls()}
+          {page !== Page.Home && (
             <Tooltip content="Home" position={Position.BOTTOM}>
               <Button onClick={goHome} icon="home" minimal title="Home" />
             </Tooltip>
@@ -98,13 +100,34 @@ export default class Header extends React.Component<Props> {
   }
 
   /**
+   * Render the channel controls if necessary.
+   * @return Element to render.
+   */
+  private renderChannelControls() {
+    const { page, toggleChattersList } = this.props
+
+    if (page === Page.Home || page === Page.Auth || page === Page.Login) {
+      return null
+    }
+
+    return (
+      <>
+        <Tooltip content="Chatters List" position={Position.BOTTOM}>
+          <Button onClick={toggleChattersList} icon="people" minimal title="Chatters List" />
+        </Tooltip>
+        <NavbarDivider />
+      </>
+    )
+  }
+
+  /**
    * Render the status indicator if necessary.
    * @return Element to render.
    */
   private renderStatus() {
-    const { isHomePage, status } = this.props
+    const { page, status } = this.props
 
-    if (isHomePage || status === Status.Default || status === Status.Connected) {
+    if (page === Page.Home || status === Status.Default || status === Status.Connected) {
       return null
     }
 
@@ -150,10 +173,11 @@ type Props = {
   channel: AppState['channel']
   goHome: () => void
   highlightChangelog: boolean
-  isHomePage: boolean
   isLoggedIn: boolean
+  page: string
   status: AppState['status']
   toggleChangelog: () => void
   toggleSettings: () => void
+  toggleChattersList: () => void
   logout: () => void
 }

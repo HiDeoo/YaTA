@@ -8,6 +8,7 @@ import { match } from 'react-router'
 import Center from 'Components/Center'
 import ChatInput from 'Components/ChatInput'
 import ChatLogs from 'Components/ChatLogs'
+import ChattersList from 'Components/ChattersList'
 import FlexLayout from 'Components/FlexLayout'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
@@ -15,9 +16,9 @@ import ChatClient, { Client } from 'Containers/ChatClient'
 import ChatDetails from 'Containers/ChatDetails'
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
-import { AppState, setChannel } from 'Store/ducks/app'
+import { AppState, setChannel, toggleChattersList } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getStatus } from 'Store/selectors/app'
+import { getChannel, getShowChattersList, getStatus } from 'Store/selectors/app'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick } from 'Store/selectors/settings'
 
@@ -48,7 +49,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { channel, logs } = this.props
+    const { channel, logs, showChattersList } = this.props
     const { focusedChatter } = this.state
 
     if (_.isNil(channel)) {
@@ -61,6 +62,7 @@ class Channel extends React.Component<Props, State> {
 
     return (
       <FlexLayout vertical>
+        <ChattersList visible={showChattersList} toggle={this.props.toggleChattersList} channel={channel} />
         <ChatClient ref={this.chatClient} />
         <ChatLogs logs={logs} focusChatter={this.focusChatter} copyMessage={this.copyMessage} />
         <ChatInput
@@ -189,9 +191,10 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     channel: getChannel(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     logs: getLogs(state),
+    showChattersList: getShowChattersList(state),
     status: getStatus(state),
   }),
-  { setChannel }
+  { setChannel, toggleChattersList }
 )(Channel)
 
 /**
@@ -201,6 +204,7 @@ type StateProps = {
   channel: AppState['channel']
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   logs: ReturnType<typeof getLogs>
+  showChattersList: AppState['showChattersList']
   status: AppState['status']
 }
 
@@ -209,6 +213,7 @@ type StateProps = {
  */
 type DispatchProps = {
   setChannel: typeof setChannel
+  toggleChattersList: typeof toggleChattersList
 }
 
 /**

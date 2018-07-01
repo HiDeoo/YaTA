@@ -12,6 +12,7 @@ export enum Actions {
   UPDATE_STATUS = 'app/UPDATE_STATUS',
   UPDATE_ROOM_STATE = 'app/UPDATE_ROOM_STATE',
   SET_SHOULD_READ_CHANGELOG = 'app/SET_SHOULD_READ_CHANGELOG',
+  TOGGLE_CHATTERS_LIST = 'app/TOGGLE_CHATTERS_LIST',
 }
 
 /**
@@ -21,6 +22,7 @@ export const initialState = {
   channel: null,
   roomState: null,
   shouldReadChangelog: false,
+  showChattersList: false,
   status: Status.Default,
 }
 
@@ -57,6 +59,12 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
       return {
         ...state,
         shouldReadChangelog: action.payload.shouldRead,
+      }
+    }
+    case Actions.TOGGLE_CHATTERS_LIST: {
+      return {
+        ...state,
+        showChattersList: !state.showChattersList,
       }
     }
     default: {
@@ -107,6 +115,12 @@ export const setShouldReadChangelog = (shouldRead: boolean) =>
   })
 
 /**
+ * Toggles the chatters list.
+ * @return The action.
+ */
+export const toggleChattersList = () => createAction(Actions.TOGGLE_CHATTERS_LIST)
+
+/**
  * App actions.
  */
 export type AppActions =
@@ -114,6 +128,7 @@ export type AppActions =
   | ReturnType<typeof updateStatus>
   | ReturnType<typeof updateRoomState>
   | ReturnType<typeof setShouldReadChangelog>
+  | ReturnType<typeof toggleChattersList>
 
 /**
  * App state.
@@ -138,4 +153,9 @@ export type AppState = {
    * Defines if the user is using a new version of the application and should read the associated changelog.
    */
   shouldReadChangelog: boolean
+
+  /**
+   * Defines if we should show the chatters list or not.
+   */
+  showChattersList: boolean
 }

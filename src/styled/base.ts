@@ -26,6 +26,10 @@ export default {
     Colors.GOLD4,
     Colors.SEPIA4,
   ],
+  chattersList: {
+    height: 24,
+    typeColor: Colors.GRAY3,
+  },
   log: {
     hPadding: 10,
     minHeight: 28,

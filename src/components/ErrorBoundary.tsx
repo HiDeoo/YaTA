@@ -1,14 +1,7 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
 import Center from 'Components/Center'
-
-/**
- * Shrug component.
- */
-const Shrug = styled.div`
-  font-size: 2rem;
-`
+import Shrug from 'Components/Shrug'
 
 /**
  * React State.
@@ -43,7 +36,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
     if (hasError) {
       return (
         <Center>
-          <Shrug>¯\_(ツ)_/¯</Shrug>
+          <Shrug />
           <h1>Something went wrong!</h1>
           <p>Try reloading the application.</p>
         </Center>

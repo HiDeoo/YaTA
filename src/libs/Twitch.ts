@@ -12,6 +12,11 @@ const baseAuthUrl = 'https://id.twitch.tv/oauth2'
 const baseKrakenUrl = 'https://api.twitch.tv/kraken'
 
 /**
+ * Twitch base tmi URL.
+ */
+const baseTmiUrl = 'https://tmi.twitch.tv'
+
+/**
  * Twitch class.
  */
 export default class Twitch {
@@ -109,6 +114,19 @@ export default class Twitch {
   }
 
   /**
+   * Fetches chatters of a specific channel.
+   * @param  channel - The channel.
+   * @return The chatter.
+   */
+  public static async fetchChatters(channel: string): Promise<ChattersDetails> {
+    const response = await Twitch.fetch(
+      `https://cors-anywhere.herokuapp.com/${baseTmiUrl}/group/user/${channel}/chatters`
+    )
+
+    return response.json()
+  }
+
+  /**
    * Fetches details about the current authenticated user.
    * @param  token - The user token.
    * @return The user details.
@@ -125,7 +143,7 @@ export default class Twitch {
    * @param  additionalHeaders -  Additional headers to pass down to the query.
    * @return The response.
    */
-  private static fetch(url: string, additionalHeaders?: { [key: string]: string }) {
+  private static fetch(url: string, additionalHeaders?: { [key: string]: string }, options: RequestInit = {}) {
     const headers = new Headers({
       Accept: 'application/vnd.twitchtv.v5+json',
       'Client-ID': process.env.REACT_APP_TWITCH_CLIENT_ID,
@@ -137,7 +155,7 @@ export default class Twitch {
       })
     }
 
-    const request = new Request(url, { headers })
+    const request = new Request(url, { ...options, headers })
 
     return fetch(request)
   }
@@ -214,4 +232,23 @@ export interface AuthenticatedUserDetails extends UserDetails {
   email_verified: boolean
   partnered: boolean
   twitter_connected: boolean
+}
+
+/**
+ * Twitch chatters details.
+ */
+type ChattersDetails = {
+  chatter_count: number
+  chatters: Chatters
+}
+
+/**
+ * Twitch chatters.
+ */
+export type Chatters = {
+  admins: string[]
+  global_mods: string[]
+  moderators: string[]
+  staff: string[]
+  viewers: string[]
 }

@@ -12,11 +12,12 @@ import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Header from 'Components/Header'
 import Login from 'Components/Login'
+import Page from 'Constants/page'
 import Theme from 'Constants/theme'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Settings, { SettingsTab } from 'Containers/Settings'
-import { AppState, setShouldReadChangelog } from 'Store/ducks/app'
+import { AppState, setShouldReadChangelog, toggleChattersList } from 'Store/ducks/app'
 import { SettingsState, setVersion } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -67,9 +68,10 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { showSettings, settingSelectedTab } = this.state
-    const { channel, isLoggedIn, shouldReadChangelog, status, theme } = this.props
+    const { channel, isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
+    const { pathname } = location
 
-    const isLoggingIn = this.isLoginPage() || this.isAuthPage()
+    const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
 
     if (!isLoggedIn && !isLoggingIn) {
       return <Redirect to="/login" />
@@ -83,13 +85,14 @@ class App extends React.Component<Props, State> {
           <Header
             toggleSettings={this.toggleSettings}
             toggleChangelog={this.toggleChangelog}
+            toggleChattersList={this.props.toggleChattersList}
             isLoggedIn={isLoggedIn}
             channel={channel}
             logout={this.props.resetUser}
             status={status}
             highlightChangelog={shouldReadChangelog}
             goHome={this.goHome}
-            isHomePage={this.isHomePage()}
+            page={pathname}
           />
           <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
           <FlexContent>
@@ -139,34 +142,10 @@ class App extends React.Component<Props, State> {
   }
 
   /**
-   * Returns if the user is currently browsing the home page.
-   * @return `true` if on the home page.
-   */
-  private isHomePage() {
-    return this.props.location.pathname === '/'
-  }
-
-  /**
-   * Returns if the user is currently browsing the login page.
-   * @return `true` if on the login page.
-   */
-  private isLoginPage() {
-    return this.props.location.pathname === '/login'
-  }
-
-  /**
-   * Returns if the user is currently browsing the auth page.
-   * @return `true` if on the auth page.
-   */
-  private isAuthPage() {
-    return this.props.location.pathname === '/auth'
-  }
-
-  /**
    * Navigates to the homepage.
    */
   private goHome = () => {
-    this.props.history.push('/')
+    this.props.history.push(Page.Home)
   }
 }
 
@@ -179,7 +158,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     status: getStatus(state),
     theme: getTheme(state),
   }),
-  { resetUser, setVersion, setShouldReadChangelog }
+  { resetUser, setVersion, setShouldReadChangelog, toggleChattersList }
 )(App)
 
 /**
@@ -201,6 +180,7 @@ type DispatchProps = {
   resetUser: typeof resetUser
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
+  toggleChattersList: typeof toggleChattersList
 }
 
 /**

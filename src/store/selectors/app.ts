@@ -29,3 +29,10 @@ export const getStatus = createSelector([getAppState], (app) => app.status)
  * @return `true` when a changelog is available.
  */
 export const getShouldReadChangelog = createSelector([getAppState], (app) => app.shouldReadChangelog)
+
+/**
+ * Returns if the chatters list should be visible or not.
+ * @param  state - The Redux state.
+ * @return `true` when showing the chatters list.
+ */
+export const getShowChattersList = createSelector([getAppState], (app) => app.showChattersList)
