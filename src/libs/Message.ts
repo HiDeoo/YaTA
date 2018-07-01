@@ -203,19 +203,21 @@ export default class Message implements Serializable<SerializedMessage> {
     let regexp = new RegExp(pattern, 'gmi')
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
-    while ((match = regexp.exec(message)) != null) {
-      this.mentionned = true
+    if (!this.self) {
+      // tslint:disable-next-line:no-conditional-assignment
+      while ((match = regexp.exec(message)) != null) {
+        this.mentionned = true
 
-      const startIndex = match.index
-      const withAtSign = message.charAt(match.index) === '@'
-      const endIndex = startIndex + currentUsername.length + (withAtSign ? 1 : 0)
+        const startIndex = match.index
+        const withAtSign = message.charAt(match.index) === '@'
+        const endIndex = startIndex + currentUsername.length + (withAtSign ? 1 : 0)
 
-      for (let i = startIndex; i < endIndex; ++i) {
-        parsedMessage[i] = ''
+        for (let i = startIndex; i < endIndex; ++i) {
+          parsedMessage[i] = ''
+        }
+
+        parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${currentUsername}</span>`
       }
-
-      parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${currentUsername}</span>`
     }
 
     regexp = /@([a-zA-Z\d_]+)/g
