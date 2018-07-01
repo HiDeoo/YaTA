@@ -1,4 +1,5 @@
-import { Intent, IToastOptions, Position, TextArea, Toast as _Toast, Toaster } from '@blueprintjs/core'
+import { Classes, Intent, IToastOptions, Position, Toast as _Toast, Toaster } from '@blueprintjs/core'
+import * as classnames from 'classnames'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -29,7 +30,7 @@ const Toast = styled(_Toast)`
 /**
  * Input component.
  */
-const Input = styled(TextArea)`
+const Input = styled.textarea`
   outline: none;
   resize: none;
 `
@@ -37,7 +38,7 @@ const Input = styled(TextArea)`
 /**
  * React State.
  */
-const initialState = { toasts: [] as IToastOptions[], intent: Intent.NONE }
+const initialState = { toasts: [] as IToastOptions[], intent: '' }
 type State = Readonly<typeof initialState>
 
 /**
@@ -51,7 +52,7 @@ export default class ChatInput extends React.Component<Props, State> {
    */
   public static getDerivedStateFromProps(nextProps: Props) {
     const toasts: IToastOptions[] = []
-    let intent = Intent.NONE
+    let intent = ''
 
     const { value } = nextProps
 
@@ -62,7 +63,7 @@ export default class ChatInput extends React.Component<Props, State> {
         message: "You're about to send a whisper.",
       })
 
-      intent = Intent.SUCCESS
+      intent = Classes.INTENT_SUCCESS
     } else if (value.length > Message.Max) {
       toasts.push({
         icon: 'warning-sign',
@@ -70,7 +71,7 @@ export default class ChatInput extends React.Component<Props, State> {
         message: 'Your message exceed the 500 characters limit.',
       })
 
-      intent = Intent.DANGER
+      intent = Classes.INTENT_DANGER
     } else if (value.length > Message.Warning) {
       toasts.push({
         icon: 'hand',
@@ -78,7 +79,7 @@ export default class ChatInput extends React.Component<Props, State> {
         message: 'Your message exceed 400 characters. Try to avoid long messages.',
       })
 
-      intent = Intent.WARNING
+      intent = Classes.INTENT_WARNING
     }
 
     return { intent, toasts }
@@ -93,6 +94,23 @@ export default class ChatInput extends React.Component<Props, State> {
   }
 
   public state: State = initialState
+  private input = React.createRef<HTMLTextAreaElement>()
+  private completions: string[] | null = null
+  private completionIndex = -1
+  private completionCursor = null as number | null
+  private splittedValueBeforeCompletion: string[] | null = null
+
+  /**
+   * Lifecycle: componentDidUpdate.
+   * @param prevProps - The previous props.
+   */
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.value !== this.props.value && !_.isNil(this.completionCursor) && !_.isNil(this.input.current)) {
+      this.input.current.setSelectionRange(this.completionCursor, this.completionCursor)
+
+      this.completionCursor = null
+    }
+  }
 
   /**
    * Renders the component.
@@ -102,19 +120,21 @@ export default class ChatInput extends React.Component<Props, State> {
     const { disabled, value } = this.props
     const { intent, toasts } = this.state
 
+    const classes = classnames(Classes.INPUT, Classes.FILL, Classes.LARGE, intent)
+
     return (
       <Wrapper>
         <Toaster position={Position.BOTTOM}>
           {_.map(toasts, (toast, index) => <Toast key={index} {...toast} />)}
         </Toaster>
         <Input
+          dir="auto"
           value={value}
-          intent={intent}
+          disabled={false && disabled}
+          className={classes}
+          innerRef={this.input}
           onChange={this.onChangeInputValue}
           onKeyDown={this.onKeyDownInputValue}
-          disabled={disabled}
-          large
-          fill
         />
       </Wrapper>
     )
@@ -122,9 +142,75 @@ export default class ChatInput extends React.Component<Props, State> {
 
   /**
    * Triggered when a key is pressed down in the input.
-   * We use this event to detect when the 'Enter' key is pressed.
    */
   private onKeyDownInputValue = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+
+      if (!_.isNil(this.input.current)) {
+        // Fetching completions only if needed.
+        if (_.isNil(this.completions)) {
+          const textarea = this.input.current
+
+          const selectionStart = textarea.selectionStart
+          const text = textarea.value
+
+          const start = /[\w]+$/.exec(text.substr(0, selectionStart))
+          const wordStart = _.isNil(start) ? selectionStart : start.index
+
+          const end = /^\w+/.exec(text.substr(selectionStart))
+          const wordEnd = selectionStart + (_.isNil(end) ? 0 : end[0].length)
+
+          const word = text.substring(wordStart, wordEnd)
+
+          if (word.length === 0) {
+            return
+          }
+
+          this.splittedValueBeforeCompletion = [text.substring(0, wordStart), word, text.substring(wordEnd)]
+
+          this.completions = this.props.getCompletions(word)
+        }
+
+        // Only auto-complete if we have results.
+        if (this.completions.length > 0 && !_.isNil(this.splittedValueBeforeCompletion)) {
+          this.completionIndex += !event.shiftKey ? 1 : -1
+
+          if (this.completionIndex >= this.completions.length) {
+            this.completionIndex = 0
+          }
+
+          if (this.completionIndex < 0) {
+            this.completionIndex = this.completions.length - 1
+          }
+
+          const completion = this.completions[this.completionIndex]
+
+          const before = this.splittedValueBeforeCompletion[0]
+          let after = this.splittedValueBeforeCompletion[2]
+
+          let cursorOffset = 0
+
+          if (after.length === 0) {
+            after = ' '
+            cursorOffset += 1
+          }
+
+          const sentence = `${before}${completion}${after}`
+
+          this.props.onChange(sentence)
+
+          this.completionCursor = before.length + completion.length + cursorOffset
+        }
+      }
+    } else if (event.key === 'Escape' && !_.isNil(this.splittedValueBeforeCompletion)) {
+      this.props.onChange(this.splittedValueBeforeCompletion.join(''))
+    } else if (event.key !== 'Shift') {
+      this.completions = null
+      this.completionIndex = -1
+      this.splittedValueBeforeCompletion = null
+    }
+
     if (event.key === 'Enter') {
       event.preventDefault()
 
@@ -159,6 +245,7 @@ export default class ChatInput extends React.Component<Props, State> {
  */
 type Props = {
   disabled: boolean
+  getCompletions: (word: string) => string[]
   onChange: (value: string) => void
   onSubmit: () => void
   value: string

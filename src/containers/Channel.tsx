@@ -19,6 +19,7 @@ import Toaster from 'Libs/Toaster'
 import { AppState, setChannel, toggleChattersList } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getShowChattersList, getStatus } from 'Store/selectors/app'
+import { getChatters } from 'Store/selectors/chatters'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
@@ -80,6 +81,7 @@ class Channel extends React.Component<Props, State> {
           value={this.state.inputValue}
           onChange={this.onChangeInputValue}
           onSubmit={this.sendMessage}
+          getCompletions={this.getCompletions}
         />
         <ChatDetails
           chatter={focusedChatter}
@@ -135,6 +137,19 @@ class Channel extends React.Component<Props, State> {
     const chatterIsBroadcaster = !_.isNil(channel) && chatter.name === channel
 
     return isMod && !chatterIsSelf && !chatterIsBroadcaster
+  }
+
+  /**
+   * Returns a list of completions for a specific word.
+   * @param  word - The word to auto-complete.
+   * @return The list of completions.
+   */
+  private getCompletions = (word: string) => {
+    const sanitizedWord = word.toLowerCase()
+
+    return _.filter(this.props.chatters, (chatter) => {
+      return chatter.displayName.toLowerCase().startsWith(sanitizedWord)
+    }).map((chatter) => chatter.displayName)
   }
 
   /**
@@ -213,6 +228,7 @@ class Channel extends React.Component<Props, State> {
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     channel: getChannel(state),
+    chatters: getChatters(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     isMod: getIsMod(state),
     loginDetails: getLoginDetails(state),
@@ -229,6 +245,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  */
 type StateProps = {
   channel: AppState['channel']
+  chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getLoginDetails>
