@@ -3,7 +3,15 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import * as shortid from 'shortid'
-import tmi, { Client as TwitchClient, Payment, Raid, Ritual, RoomState as RawRoomState, UserState } from 'twitch-js'
+import tmi, {
+  Client as TwitchClient,
+  EmoteSets,
+  Payment,
+  Raid,
+  Ritual,
+  RoomState as RawRoomState,
+  UserState,
+} from 'twitch-js'
 
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
@@ -17,7 +25,7 @@ import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
 import Twitch, { Badges } from 'Libs/Twitch'
-import { AppState, updateRoomState, updateStatus } from 'Store/ducks/app'
+import { AppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
@@ -87,7 +95,7 @@ export class Client extends React.Component<Props, State> {
     this.client.on(Event.Roomstate, this.onRoomStateUpdate)
     this.client.on(Event.Clearchat, this.onClearChat)
     this.client.on(Event.FollowersOnly, this.onFollowersOnly)
-    this.client.on(Event.Emoteonly, this.onEmoteOnly)
+    this.client.on(Event.EmoteOnly, this.onEmoteOnly)
     this.client.on(Event.Hosted, this.onHosted)
     this.client.on(Event.Hosting, this.onHosting)
     this.client.on(Event.Message, this.onMessage)
@@ -107,6 +115,7 @@ export class Client extends React.Component<Props, State> {
     this.client.on(Event.Ritual, this.onRitual)
     this.client.on(Event.Raid, this.onRaid)
     this.client.on(Event.Cheer, this.onCheer)
+    this.client.on(Event.EmoteSets, this.onEmoteSets)
 
     try {
       // await this.client.connect()
@@ -210,6 +219,8 @@ export class Client extends React.Component<Props, State> {
 
         this.emotesProviders[provider.prefix] = provider
 
+        this.props.updateEmoteSets('bttv', provider.getEmoteSets())
+
         // TODO bots
       }
     } catch (error) {
@@ -248,7 +259,7 @@ export class Client extends React.Component<Props, State> {
   private onEmoteOnly = (_channel: string, enabled: boolean) => {
     const notice = new Notice(
       enabled ? 'This room is now in emote-only mode.' : 'This room is no longer in emote-only mode.',
-      Event.Emoteonly
+      Event.EmoteOnly
     )
 
     this.props.addLog(notice.serialize())
@@ -570,6 +581,23 @@ export class Client extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the user emote sets are received.
+   * @param setsList - The list of emote sets.
+   * @param sets - The emote sets.
+   */
+  private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
+    const emoteSets = _.flatten(
+      _.map(sets, (set) => {
+        return _.map(set, (emote) => {
+          return emote.code
+        })
+      })
+    )
+
+    this.props.updateEmoteSets('twitch', emoteSets)
+  }
+
+  /**
    * Parses a message.
    * @param message - The received message.
    * @param userstate - The associated user state.
@@ -644,7 +672,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
   }),
-  { addLog, addChatterWithMessage, purgeLogs, updateRoomState, updateStatus, setModerator },
+  { addLog, addChatterWithMessage, purgeLogs, setModerator, updateRoomState, updateStatus, updateEmoteSets },
   null,
   { withRef: true }
 )(Client)
@@ -670,6 +698,7 @@ type DispatchProps = {
   setModerator: typeof setModerator
   updateRoomState: typeof updateRoomState
   updateStatus: typeof updateStatus
+  updateEmoteSets: typeof updateEmoteSets
 }
 
 /**

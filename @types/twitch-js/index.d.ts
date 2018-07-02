@@ -94,6 +94,10 @@ declare module 'twitch-js' {
     userstate: UserState
   }
 
+  export type EmoteSets = {
+    [key: number]: Array<{ code: string; id: number }>
+  }
+
   export class Client {
     constructor()
     connect(): void
@@ -115,7 +119,7 @@ declare module 'twitch-js' {
     on(event: Event.Roomstate, listener: (channel: string, state: RoomState) => void): void
     on(event: Event.Clearchat, listener: (channel: string) => void): void
     on(event: Event.FollowersOnly, listener: (channel: string, enabled: boolean, length: number) => void): void
-    on(event: Event.Emoteonly, listener: (channel: string, enabled: boolean) => void): void
+    on(event: Event.EmoteOnly, listener: (channel: string, enabled: boolean) => void): void
     on(
       event: Event.Hosted,
       listener: (channel: string, username: string, viewers: number, autohost: boolean) => void
@@ -161,6 +165,7 @@ declare module 'twitch-js' {
     on(event: Event.Ritual, listener: (ritual: Ritual) => void): void
     on(event: Event.Raid, listener: (raid: Raid) => void): void
     on(event: Event.Cheer, listener: (channel: string, userstate: UserState, message: string) => void): void
+    on(event: Event.EmoteSets, listener: (setsList: string, sets: EmoteSets) => void): void
 
     say(channel: string, message: string): void
     whisper(username: string, message: string): void

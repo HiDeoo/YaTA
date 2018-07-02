@@ -20,7 +20,7 @@ import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, AppState, setChannel, toggleChattersList, updateHistoryIndex } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getHistory, getHistoryIndex, getShowChattersList, getStatus } from 'Store/selectors/app'
+import { getChannel, getEmotes, getHistory, getHistoryIndex, getShowChattersList, getStatus } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
@@ -179,14 +179,27 @@ class Channel extends React.Component<Props, State> {
   /**
    * Returns a list of completions for a specific word.
    * @param  word - The word to auto-complete.
+   * @param  excludeEmotes - `true` to ignore emotes.
    * @return The list of completions.
    */
-  private getCompletions = (word: string) => {
+  private getCompletions = (word: string, excludeEmotes: boolean = false) => {
     const sanitizedWord = word.toLowerCase()
 
-    return _.filter(this.props.chatters, (chatter) => {
+    const { chatters, emotes } = this.props
+
+    const usernameCompletions = _.filter(chatters, (chatter) => {
       return chatter.displayName.toLowerCase().startsWith(sanitizedWord)
     }).map((chatter) => chatter.displayName)
+
+    let emoteCompletions: string[] = []
+
+    if (!excludeEmotes) {
+      emoteCompletions = _.filter(emotes, (emote) => {
+        return emote.toLowerCase().startsWith(sanitizedWord)
+      })
+    }
+
+    return [...emoteCompletions, ...usernameCompletions]
   }
 
   /**
@@ -307,6 +320,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+    emotes: getEmotes(state),
     history: getHistory(state),
     historyIndex: getHistoryIndex(state),
     isMod: getIsMod(state),
@@ -326,6 +340,7 @@ type StateProps = {
   channel: AppState['channel']
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
+  emotes: ReturnType<typeof getEmotes>
   history: AppState['history']
   historyIndex: AppState['historyIndex']
   isMod: ReturnType<typeof getIsMod>

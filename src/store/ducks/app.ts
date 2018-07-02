@@ -15,6 +15,7 @@ export enum Actions {
   TOGGLE_CHATTERS_LIST = 'app/TOGGLE_CHATTERS_LIST',
   ADD_TO_HISTORY = 'app/ADD_TO_HISTORY',
   UPDATE_HISTORY_INDEX = 'app/UPDATE_HISTORY_INDEX',
+  UPDATE_EMOTE_SETS = 'app/UPDATE_EMOTE_SETS',
 }
 
 /**
@@ -22,6 +23,7 @@ export enum Actions {
  */
 export const initialState = {
   channel: null,
+  emoteSets: {},
   history: [],
   historyIndex: -1,
   roomState: null,
@@ -82,6 +84,14 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
       return {
         ...state,
         historyIndex: action.payload.index,
+      }
+    }
+    case Actions.UPDATE_EMOTE_SETS: {
+      const { prefix, emotes } = action.payload
+
+      return {
+        ...state,
+        emoteSets: { ...state.emoteSets, [prefix]: emotes },
       }
     }
     default: {
@@ -159,6 +169,18 @@ export const updateHistoryIndex = (index: number) =>
   })
 
 /**
+ * Updates an emote sets.
+ * @param  prefix - The emote provider prefix.
+ * @param  emotes - The emotes.
+ * @return The action.
+ */
+export const updateEmoteSets = (prefix: string, emotes: string[]) =>
+  createAction(Actions.UPDATE_EMOTE_SETS, {
+    emotes,
+    prefix,
+  })
+
+/**
  * App actions.
  */
 export type AppActions =
@@ -169,6 +191,7 @@ export type AppActions =
   | ReturnType<typeof toggleChattersList>
   | ReturnType<typeof addToHistory>
   | ReturnType<typeof updateHistoryIndex>
+  | ReturnType<typeof updateEmoteSets>
 
 /**
  * App state.
@@ -208,4 +231,11 @@ export type AppState = {
    * Current position in the history.
    */
   historyIndex: number
+
+  /**
+   * Emote sets.
+   */
+  emoteSets: {
+    [key: string]: string[]
+  }
 }

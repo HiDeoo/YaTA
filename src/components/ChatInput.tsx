@@ -158,7 +158,9 @@ export default class ChatInput extends React.Component<Props, State> {
 
           this.splittedValueBeforeCompletion = [text.substring(0, start), word, text.substring(end)]
 
-          this.completions = this.props.getCompletions(word)
+          const previousCharacter = this.splittedValueBeforeCompletion[0].slice(-1)
+
+          this.completions = this.props.getCompletions(word, previousCharacter === '@')
         }
 
         // Only auto-complete if we have results.
@@ -242,7 +244,7 @@ export default class ChatInput extends React.Component<Props, State> {
  */
 type Props = {
   disabled: boolean
-  getCompletions: (word: string) => string[]
+  getCompletions: (word: string, excludeEmotes: boolean) => string[]
   getHistory: (previous?: boolean) => string | null
   onChange: (value: string) => void
   onSubmit: () => void

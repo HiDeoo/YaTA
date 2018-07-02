@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
 import { ApplicationState } from 'Store/reducers'
@@ -8,6 +9,13 @@ import { ApplicationState } from 'Store/reducers'
  * @return The app state.
  */
 const getAppState = (state: ApplicationState) => state.app
+
+/**
+ * Returns the emote sets state.
+ * @param  state - The Redux state.
+ * @return The emote sets state.
+ */
+const getEmoteSetsState = (state: ApplicationState) => state.app.emoteSets
 
 /**
  * Returns the current channel.
@@ -50,3 +58,12 @@ export const getHistory = createSelector([getAppState], (app) => app.history)
  * @return The history index.
  */
 export const getHistoryIndex = createSelector([getAppState], (app) => app.historyIndex)
+
+/**
+ * Returns all the emotes available.
+ * @param  state - The Redux state.
+ * @return The emotes.
+ */
+export const getEmotes = createSelector([getEmoteSetsState], (sets) => {
+  return _.flatten(_.values(sets)).sort()
+})

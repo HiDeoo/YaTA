@@ -69,6 +69,14 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
 
     return `<img class="emote" src="${url1x}" srcset="${srcset}" alt="${name}" />`
   }
+
+  /**
+   * Returns the associated emote sets.
+   * @return The emote sets.
+   */
+  public getEmoteSets() {
+    return _.map(this.emotes, 'code')
+  }
 }
 
 /**
