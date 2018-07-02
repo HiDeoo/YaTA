@@ -36,6 +36,13 @@ const Toast = styled(_Toast)`
 const Input = styled.textarea`
   outline: none;
   resize: none;
+
+  &.pt-input.pt-large {
+    font-size: 13px;
+    height: 50px;
+    line-height: 20px;
+    padding: 5px 10px;
+  }
 `
 
 /**
