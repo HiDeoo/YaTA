@@ -1,4 +1,3 @@
-import linkifyHtml from 'linkifyjs/html'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -38,18 +37,7 @@ const ChatMessageContent: React.SFC<Props> = ({ message }) => {
   const isAction = message.type === LogType.Action
   const messageColor = isAction && !_.isNil(message.user.color) ? message.user.color : 'inherit'
 
-  return (
-    <Message
-      color={messageColor}
-      dangerouslySetInnerHTML={{
-        __html: linkifyHtml(message.message, {
-          attributes: {
-            'data-tip': '',
-          },
-        }),
-      }}
-    />
-  )
+  return <Message color={messageColor} dangerouslySetInnerHTML={{ __html: message.message }} />
 }
 
 export default ChatMessageContent

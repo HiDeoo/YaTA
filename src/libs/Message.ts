@@ -1,3 +1,4 @@
+import linkifyHtml from 'linkifyjs/html'
 import * as _ from 'lodash'
 import { Emotes, UserState } from 'twitch-js'
 
@@ -121,7 +122,7 @@ export default class Message implements Serializable<SerializedMessage> {
   }
 
   /**
-   * Parses a message for emotes.
+   * Parses a message for emotes, mentions, links, etc.
    * @param message - The message to parse.
    * @param emotes - The message emotes.
    * @param emotesProviders - Additional emotes providers.
@@ -135,7 +136,11 @@ export default class Message implements Serializable<SerializedMessage> {
     parsedMessage = this.parseEmotes(parsedMessage, emotes, emotesProviders)
     parsedMessage = this.parseMentions(message, parsedMessage, currentUsername)
 
-    return escape(parsedMessage).join('')
+    return linkifyHtml(escape(parsedMessage).join(''), {
+      attributes: {
+        'data-tip': '',
+      },
+    })
   }
 
   /**
