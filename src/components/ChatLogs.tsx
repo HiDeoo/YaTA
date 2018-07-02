@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 import * as React from 'react'
+import * as ReactTooltip from 'react-tooltip'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
@@ -34,6 +35,13 @@ const Wrapper = styled(FlexContent)`
  * ChatMessages Component.
  */
 export default class ChatMessages extends React.Component<Props> {
+  /**
+   * Lifecycle: componentDidUpdate.
+   */
+  public componentDidUpdate() {
+    ReactTooltip.rebuild()
+  }
+
   /**
    * Renders the component.
    * @return Element to render.

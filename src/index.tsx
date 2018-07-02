@@ -20,6 +20,26 @@ injectGlobal`
     height: 100%;
     overflow-y: hidden;
   }
+
+  .__react_component_tooltip {
+    width: 220px;
+    height: 220px;
+    padding: 10px;
+
+    img {
+      display: inline-block;
+      max-height: 200px;
+      max-width: 200px;
+    }
+
+    .preview {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      width: 100%;
+    }
+  }
 `
 
 /**

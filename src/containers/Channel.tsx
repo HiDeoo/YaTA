@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
+import * as ReactTooltip from 'react-tooltip'
 
 import Center from 'Components/Center'
 import ChatInput from 'Components/ChatInput'
@@ -26,6 +27,11 @@ import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 
 /**
+ * Regex used to identify links to preview.
+ */
+const PreviewRegex = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif)/
+
+/**
  * React State.
  */
 const initialState = { inputValue: '', focusedChatter: null as SerializedChatter | null }
@@ -37,6 +43,7 @@ type State = Readonly<typeof initialState>
 class Channel extends React.Component<Props, State> {
   public state: State = initialState
   public chatClient = React.createRef<any>()
+  private chatLogs = React.createRef<HTMLElement>()
 
   /**
    * Lifecycle: componentDidMount.
@@ -64,7 +71,8 @@ class Channel extends React.Component<Props, State> {
     }
 
     return (
-      <FlexLayout vertical>
+      <FlexLayout vertical innerRef={this.chatLogs}>
+        <ReactTooltip html effect="solid" getContent={this.getTooltipContent} />
         <ChattersList visible={showChattersList} toggle={this.props.toggleChattersList} channel={channel} />
         <ChatClient ref={this.chatClient} />
         <ChatLogs
@@ -94,6 +102,33 @@ class Channel extends React.Component<Props, State> {
         />
       </FlexLayout>
     )
+  }
+
+  /**
+   * Returns the content of a tooltip when hovering a link.
+   * @return The tooltip content.
+   */
+  private getTooltipContent = () => {
+    if (!_.isNil(this.chatLogs.current)) {
+      const wrapper = this.chatLogs.current
+
+      const nodes = wrapper.querySelectorAll(':hover')
+      const node = nodes.item(nodes.length - 1)
+
+      if (node instanceof HTMLAnchorElement) {
+        const href = node.getAttribute('href')
+
+        if (!_.isNil(href)) {
+          if (PreviewRegex.test(href)) {
+            return `<div class="preview"><img src=${href} /></div>`
+          } else {
+            return null
+          }
+        }
+      }
+    }
+
+    return ' '
   }
 
   /**
