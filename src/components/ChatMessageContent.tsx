@@ -17,7 +17,6 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
     display: inline-block;
     margin: -0.5rem 0;
     vertical-align: middle;
-    width: 28px;
   }
 
   .mention {

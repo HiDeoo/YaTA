@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import Key from 'Constants/key'
 import Message from 'Constants/message'
+import Twitch from 'Libs/Twitch'
 import { getWordAtPosition } from 'Utils/string'
 import { color } from 'Utils/styled'
 
@@ -58,7 +59,7 @@ export default class ChatInput extends React.Component<Props, State> {
 
     const { value } = nextProps
 
-    if (ChatInput.isWhisper(value)) {
+    if (Twitch.isWhisperCommand(value)) {
       toasts.push({
         icon: 'inbox',
         intent: Intent.SUCCESS,
@@ -85,14 +86,6 @@ export default class ChatInput extends React.Component<Props, State> {
     }
 
     return { intent, toasts }
-  }
-
-  /**
-   * Determines if a message looks like a whisper command (/w user message).
-   * @return `true` if the value is a whisper.
-   */
-  private static isWhisper(message: string) {
-    return /^\/w \S+ /.test(message)
   }
 
   public state: State = initialState
@@ -134,7 +127,7 @@ export default class ChatInput extends React.Component<Props, State> {
         <Input
           dir="auto"
           value={value}
-          disabled={false && disabled}
+          disabled={disabled}
           className={classes}
           innerRef={this.input}
           onChange={this.onChangeInputValue}

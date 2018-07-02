@@ -38,6 +38,7 @@ type State = Readonly<typeof initialState>
 export class Client extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
+  public nextWhisperRecipient: string | null = null
   private badges: Badges | null = null
   private emotesProviders: EmotesProviders = {}
 
@@ -578,18 +579,34 @@ export class Client extends React.Component<Props, State> {
   private parseRawMessage(message: string, userstate: UserState, self: boolean) {
     let parsedMessage: Message | null
 
+    // Do not show a whisper we just sent if we don't know the recipient ahead of time.
+    if (userstate['message-type'] === LogType.Whisper && self && _.isNil(this.nextWhisperRecipient)) {
+      return null
+    }
+
     switch (userstate['message-type']) {
       case LogType.Action:
       case LogType.Cheer:
       case LogType.Whisper:
       case LogType.Chat: {
-        if (self) {
+        if (userstate['message-type'] !== LogType.Whisper && self) {
           userstate.id = shortid.generate()
           userstate['user-id'] = 'self'
           userstate['tmi-sent-ts'] = Date.now().toString()
         } else if (userstate['message-type'] === LogType.Whisper) {
-          userstate.id = `${userstate['thread-id']}-${userstate['message-id']}`
+          userstate.id = self ? shortid.generate() : `${userstate['thread-id']}-${userstate['message-id']}`
           userstate['tmi-sent-ts'] = Date.now().toString()
+
+          if (self) {
+            userstate['user-id'] = 'self'
+
+            if (!_.isNil(this.nextWhisperRecipient)) {
+              userstate['display-name'] = this.nextWhisperRecipient
+              userstate.username = this.nextWhisperRecipient
+
+              this.nextWhisperRecipient = null
+            }
+          }
         }
 
         parsedMessage = new Message(

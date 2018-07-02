@@ -2,6 +2,7 @@ import { Icon } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import ChatMessageContent from 'Components/ChatMessageContent'
 import { SerializedMessage } from 'Libs/Message'
 import { withSCProps } from 'Utils/react'
 import { color, size } from 'Utils/styled'
@@ -12,7 +13,7 @@ import { color, size } from 'Utils/styled'
 const Wrapper = styled.div`
   background-color: ${color('whisper.background')};
   border-left: 3px solid ${color('whisper.border')};
-  padding: 2px ${size('log.hPadding')}px 2px calc(${size('log.hPadding')}px - 1px);
+  padding: 4px ${size('log.hPadding')}px 4px calc(${size('log.hPadding')}px - 1px);
 `
 
 /**
@@ -48,21 +49,11 @@ export default class ChatWhisper extends React.Component<Props> {
 
     return (
       <Wrapper style={style}>
-        <InboxIcon icon="inbox" />
-        <Username color={usernameColor}>{whisper.user.displayName}</Username>
-        {this.renderMessage()}
+        <InboxIcon icon={whisper.self ? 'document-share' : 'document-open'} />
+        <Username color={whisper.self ? 'inherit' : usernameColor}>{whisper.user.displayName}</Username>
+        <ChatMessageContent message={whisper} />
       </Wrapper>
     )
-  }
-
-  /**
-   * Renders a message by directly setting HTML from React.
-   * @return Element to render.
-   */
-  private renderMessage() {
-    const { whisper } = this.props
-
-    return <span dangerouslySetInnerHTML={{ __html: whisper.message }} />
   }
 }
 

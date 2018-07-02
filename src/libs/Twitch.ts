@@ -90,6 +90,14 @@ export default class Twitch {
   }
 
   /**
+   * Determines if a message is a whisper command (/w user message).
+   * @return `true` if the value is a whisper.
+   */
+  public static isWhisperCommand(message: string) {
+    return /^\/w \S+ .+/.test(message)
+  }
+
+  /**
    * Fetches Twitch badges.
    * @return The badges.
    */

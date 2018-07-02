@@ -16,6 +16,7 @@ import ChatClient, { Client } from 'Containers/ChatClient'
 import ChatDetails from 'Containers/ChatDetails'
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
+import Twitch from 'Libs/Twitch'
 import { addToHistory, AppState, setChannel, toggleChattersList, updateHistoryIndex } from 'Store/ducks/app'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getHistory, getHistoryIndex, getShowChattersList, getStatus } from 'Store/selectors/app'
@@ -205,11 +206,25 @@ class Channel extends React.Component<Props, State> {
       try {
         const message = this.state.inputValue
 
-        await client.say(channel, message)
+        if (Twitch.isWhisperCommand(message)) {
+          const matches = /^\/w (\S+) (.+)/g.exec(message)
+
+          if (!_.isNil(matches)) {
+            const username = matches[1]
+            const whisper = matches[2]
+
+            const chatClient = this.chatClient.current.getWrappedInstance() as Client
+            chatClient.nextWhisperRecipient = username
+
+            await client.whisper(username, whisper)
+          }
+        } else {
+          await client.say(channel, message)
+
+          this.props.addToHistory(message)
+        }
 
         this.setState(() => ({ inputValue: '' }))
-
-        this.props.addToHistory(message)
       } catch (error) {
         //
       }
