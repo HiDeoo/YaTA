@@ -6,24 +6,27 @@ import styled from 'styled-components'
 
 import ChatHistory from 'Components/ChatHistory'
 import ExternalButton from 'Components/ExternalButton'
-import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import { SerializedChatter } from 'Libs/Chatter'
-import Twitch, { AuthenticatedUserDetails, UserDetails } from 'Libs/Twitch'
+import Twitch, { ChannelDetails } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { getLoginDetails } from 'Store/selectors/user'
 
 /**
- * Details component.
+ * DetailsRow component.
  */
-const Details = styled(FlexLayout)`
+const DetailsRow = styled(FlexLayout)`
   align-items: center;
+  margin-bottom: 15px;
 
-  & > svg,
-  & > div:first-child {
-    margin-right: 10px;
+  & > div {
+    margin-right: 25px;
+
+    & > svg {
+      margin-right: 6px;
+    }
   }
 `
 
@@ -32,6 +35,10 @@ const Details = styled(FlexLayout)`
  */
 const Tools = styled.div`
   margin-bottom: 20px;
+
+  & > a {
+    margin-right: 10px;
+  }
 
   & > div {
     margin-bottom: 10px;
@@ -49,7 +56,7 @@ const Tools = styled.div`
 /**
  * React State.
  */
-const initialState = { details: null as UserDetails | AuthenticatedUserDetails | null, didFailToFetchDetails: false }
+const initialState = { details: null as ChannelDetails | null, didFailToFetchDetails: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -67,12 +74,13 @@ class ChatDetails extends React.Component<Props, State> {
 
     if (!_.isNil(chatter) && prevProps.chatter !== chatter) {
       try {
-        let details: UserDetails | AuthenticatedUserDetails
+        let details: ChannelDetails
 
         if (chatter.id !== 'self') {
-          details = await Twitch.fetchUser(chatter.id)
+          details = await Twitch.fetchChannel(chatter.id)
         } else if (chatter.id === 'self' && !_.isNil(loginDetails)) {
-          details = await Twitch.fetchAuthenticatedUser(loginDetails.password)
+          const user = await Twitch.fetchAuthenticatedUser(loginDetails.password)
+          details = await Twitch.fetchChannel(user._id)
         }
 
         this.setState(() => ({ details, didFailToFetchDetails: false }))
@@ -171,25 +179,34 @@ class ChatDetails extends React.Component<Props, State> {
 
     if (_.isNil(details)) {
       return (
-        <Details>
+        <DetailsRow>
           <Spinner small /> Fetching user details…
-        </Details>
+        </DetailsRow>
       )
     }
 
     return (
-      <Details>
-        <FlexContent>
-          <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
-        </FlexContent>
-        <div>
+      <>
+        <DetailsRow>
+          <div>
+            <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
+          </div>
+          <div>
+            <Icon icon="eye-open" /> {details.views}
+          </div>
+          <div>
+            <Icon icon="follower" /> {details.followers}
+          </div>
+        </DetailsRow>
+        <Tools>
+          <ExternalButton text="Open Channel" icon="document-open" href={details.url} />
           <ExternalButton
             text="Username History"
             icon="history"
             href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.userName}`}
           />
-        </div>
-      </Details>
+        </Tools>
+      </>
     )
   }
 

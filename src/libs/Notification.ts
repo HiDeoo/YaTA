@@ -46,7 +46,6 @@ export default class Notification implements Serializable<SerializedNotification
  * Notification associated events.
  */
 export enum NotificationEvent {
-  Cheer,
   Raid,
   ReSub,
   RitualNewChatter,

@@ -43,6 +43,7 @@ const Time = styled.span`
 const Badges = styled.span`
   .badge {
     display: inline-block;
+    margin-top: -1px;
     padding-right: 4px;
     vertical-align: middle;
 

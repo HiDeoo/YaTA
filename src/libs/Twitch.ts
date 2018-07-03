@@ -127,6 +127,17 @@ export default class Twitch {
   }
 
   /**
+   * Fetches details about a channel.
+   * @param  id - The channel id.
+   * @return The channel details.
+   */
+  public static async fetchChannel(id: string): Promise<ChannelDetails> {
+    const response = await Twitch.fetch(`${baseKrakenUrl}/channels/${id}`)
+
+    return response.json()
+  }
+
+  /**
    * Fetches details about a clip.
    * @param  slug - The clip slug.
    * @return The clip details.
@@ -257,6 +268,34 @@ export type UserDetails = {
   type: string
   updated_at: string
   _id: string
+}
+
+/**
+ * Twitch channel details.
+ */
+export type ChannelDetails = {
+  mature: boolean
+  status: string | null
+  broadcaster_language: string
+  display_name: string
+  game: string | null
+  language: string
+  _id: string
+  name: string
+  created_at: string
+  updated_at: string
+  partner: boolean
+  logo: string
+  video_banner: string | null
+  profile_banner: string | null
+  profile_banner_background_color: string | null
+  url: string
+  views: number
+  followers: number
+  broadcaster_type: string
+  description: string
+  private_video: boolean
+  privacy_options_enabled: boolean
 }
 
 /**
