@@ -34,7 +34,7 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
         return {
           ...state,
           byId: { ...state.byId, [chatter.id]: { ...chatter, messages: [messageId] } },
-          byName: { ...state.byName, [chatter.name]: chatter.id },
+          byName: { ...state.byName, [chatter.userName]: chatter.id },
         }
       }
 

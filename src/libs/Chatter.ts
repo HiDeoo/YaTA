@@ -10,9 +10,10 @@ import { Serializable } from 'Utils/typescript'
 export default class Chatter implements Serializable<SerializedChatter> {
   public id: string
   public color: string | null
-  public name: string
+  public userName: string
   public isMod: boolean
   private displayName: string
+  private showUserName: boolean
 
   /**
    * Creates a new chatter instance.
@@ -22,9 +23,10 @@ export default class Chatter implements Serializable<SerializedChatter> {
   constructor(userstate: UserState) {
     this.displayName = userstate['display-name']
     this.id = userstate['user-id']
-    this.name = userstate.username
+    this.userName = userstate.username
     this.color = userstate.color
     this.isMod = userstate.mod
+    this.showUserName = this.displayName.toLocaleLowerCase() !== this.userName.toLocaleLowerCase()
   }
 
   /**
@@ -49,7 +51,8 @@ export default class Chatter implements Serializable<SerializedChatter> {
       displayName: this.displayName,
       id: this.id,
       isMod: this.isMod,
-      name: this.name,
+      showUsername: this.showUserName,
+      userName: this.userName,
     }
   }
 }
@@ -62,5 +65,6 @@ export type SerializedChatter = {
   displayName: string
   id: string
   isMod: boolean
-  name: string
+  showUsername: boolean
+  userName: string
 }

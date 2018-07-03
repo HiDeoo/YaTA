@@ -53,13 +53,21 @@ const Badges = styled.span`
 `
 
 /**
- * Username component.
+ * Name component.
  */
-const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
+const Name = withSCProps<NameProps, HTMLSpanElement>(styled.span)`
   color: ${(props) => props.color};
   cursor: pointer;
   font-weight: bold;
   padding-right: 2px;
+`
+
+/**
+ * Username component.
+ */
+const Username = styled.span`
+  font-size: 0.8rem;
+  font-weight: normal;
 `
 
 /**
@@ -80,9 +88,10 @@ export default class ChatMessage extends React.Component<Props> {
         {this.renderContextMenu()}
         <Time>{message.time} </Time>
         {this.renderBadges()}
-        <Username color={usernameColor} onClick={this.onClickUsername}>
+        <Name color={usernameColor} onClick={this.onClickUsername}>
           {message.user.displayName}
-        </Username>{' '}
+          {message.user.showUsername && <Username> ({message.user.userName})</Username>}
+        </Name>{' '}
         <ChatMessageContent message={message} />
         {this.renderClips()}
       </Wrapper>
@@ -252,7 +261,7 @@ export default class ChatMessage extends React.Component<Props> {
   private timeout(duration: number) {
     const { message, timeout } = this.props
 
-    timeout(message.user.name, duration)
+    timeout(message.user.userName, duration)
   }
 
   /**
@@ -261,7 +270,7 @@ export default class ChatMessage extends React.Component<Props> {
   private onClickBan = () => {
     const { ban, message } = this.props
 
-    ban(message.user.name)
+    ban(message.user.userName)
   }
 }
 
@@ -291,6 +300,6 @@ type WrapperProps = {
 /**
  * React Props.
  */
-type UsernameProps = {
+type NameProps = {
   color: string
 }

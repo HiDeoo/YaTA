@@ -93,8 +93,10 @@ class ChatDetails extends React.Component<Props, State> {
       return null
     }
 
+    const title = `${chatter.displayName}${chatter.showUsername ? ` (${chatter.userName})` : ''}`
+
     return (
-      <Dialog isOpen={!_.isNil(chatter)} onClose={this.onClose} icon="user" title={chatter.displayName}>
+      <Dialog isOpen={!_.isNil(chatter)} onClose={this.onClose} icon="user" title={title}>
         <div className={Classes.DIALOG_BODY}>
           {this.renderDetails()}
           {this.renderModerationTools()}
@@ -184,7 +186,7 @@ class ChatDetails extends React.Component<Props, State> {
           <ExternalButton
             text="Username History"
             icon="history"
-            href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.name}`}
+            href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.userName}`}
           />
         </div>
       </Details>
@@ -248,7 +250,7 @@ class ChatDetails extends React.Component<Props, State> {
     const { chatter, timeout, unfocus } = this.props
 
     if (!_.isNil(chatter)) {
-      timeout(chatter.name, duration)
+      timeout(chatter.userName, duration)
     }
 
     unfocus()
@@ -261,7 +263,7 @@ class ChatDetails extends React.Component<Props, State> {
     const { ban, chatter, unfocus } = this.props
 
     if (!_.isNil(chatter)) {
-      ban(chatter.name)
+      ban(chatter.userName)
     }
 
     unfocus()

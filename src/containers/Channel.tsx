@@ -176,8 +176,8 @@ class Channel extends React.Component<Props, State> {
   private canModerate = (chatter: SerializedChatter) => {
     const { channel, isMod, loginDetails } = this.props
 
-    const chatterIsSelf = !_.isNil(loginDetails) && loginDetails.username === chatter.name
-    const chatterIsBroadcaster = !_.isNil(channel) && chatter.name === channel
+    const chatterIsSelf = !_.isNil(loginDetails) && loginDetails.username === chatter.userName
+    const chatterIsBroadcaster = !_.isNil(channel) && chatter.userName === channel
 
     return isMod && !chatterIsSelf && !chatterIsBroadcaster
   }
