@@ -25,11 +25,12 @@ import { getChatters } from 'Store/selectors/chatters'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
+import { sanitizeUrlForPreview } from 'Utils/preview'
 
 /**
  * RegExp used to identify links to preview.
  */
-const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif)/
+const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
 
 /**
  * RegExp used to identify whisper command (/w user message).
@@ -125,7 +126,7 @@ class Channel extends React.Component<Props, State> {
 
         if (!_.isNil(href)) {
           if (PreviewRegExp.test(href)) {
-            return `<div class="preview"><img src=${href} /></div>`
+            return `<div class="preview"><img src=${sanitizeUrlForPreview(href)} /></div>`
           } else {
             return null
           }
