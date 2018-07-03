@@ -17,6 +17,11 @@ const baseKrakenUrl = 'https://api.twitch.tv/kraken'
 const baseTmiUrl = 'https://tmi.twitch.tv'
 
 /**
+ * RegExp used to identify whisper command (/w user message).
+ */
+const WhisperRegExp = /^\/w \S+ .+/
+
+/**
  * Twitch class.
  */
 export default class Twitch {
@@ -94,7 +99,7 @@ export default class Twitch {
    * @return `true` if the value is a whisper.
    */
   public static isWhisperCommand(message: string) {
-    return /^\/w \S+ .+/.test(message)
+    return WhisperRegExp.test(message)
   }
 
   /**

@@ -27,9 +27,14 @@ import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 
 /**
- * Regex used to identify links to preview.
+ * RegExp used to identify links to preview.
  */
-const PreviewRegex = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif)/
+const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif)/
+
+/**
+ * RegExp used to identify whisper command (/w user message).
+ */
+const WhisperRegExp = /^\/w (\S+) (.+)/g
 
 /**
  * React State.
@@ -119,7 +124,7 @@ class Channel extends React.Component<Props, State> {
         const href = node.getAttribute('href')
 
         if (!_.isNil(href)) {
-          if (PreviewRegex.test(href)) {
+          if (PreviewRegExp.test(href)) {
             return `<div class="preview"><img src=${href} /></div>`
           } else {
             return null
@@ -255,7 +260,7 @@ class Channel extends React.Component<Props, State> {
         const message = this.state.inputValue
 
         if (Twitch.isWhisperCommand(message)) {
-          const matches = /^\/w (\S+) (.+)/g.exec(message)
+          const matches = WhisperRegExp.exec(message)
 
           if (!_.isNil(matches)) {
             const username = matches[1]

@@ -10,6 +10,11 @@ import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
 /**
+ * RegExp used to identify any mention (starting with @).
+ */
+const MentionRegExp = /@([a-zA-Z\d_]+)/g
+
+/**
  * Message class representing either a chat message, an action (/me) or a whisper.
  */
 export default class Message implements Serializable<SerializedMessage> {
@@ -205,12 +210,12 @@ export default class Message implements Serializable<SerializedMessage> {
    */
   private parseMentions(message: string, parsedMessage: string[], currentUsername: string) {
     const pattern = `(?<!\\S)(@?${currentUsername})(?!\\S)`
-    let regexp = new RegExp(pattern, 'gmi')
+    let regExp = new RegExp(pattern, 'gmi')
     let match
 
     if (!this.self) {
       // tslint:disable-next-line:no-conditional-assignment
-      while ((match = regexp.exec(message)) != null) {
+      while ((match = regExp.exec(message)) != null) {
         this.mentionned = true
 
         const startIndex = match.index
@@ -225,10 +230,10 @@ export default class Message implements Serializable<SerializedMessage> {
       }
     }
 
-    regexp = /@([a-zA-Z\d_]+)/g
+    regExp = MentionRegExp
 
     // tslint:disable-next-line:no-conditional-assignment
-    while ((match = regexp.exec(message)) != null) {
+    while ((match = regExp.exec(message)) != null) {
       if (match[1].toLowerCase() !== currentUsername.toLowerCase()) {
         const startIndex = match.index
         const endIndex = startIndex + match[0].length
