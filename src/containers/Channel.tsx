@@ -19,12 +19,13 @@ import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, AppState, setChannel, toggleChattersList, updateHistoryIndex } from 'Store/ducks/app'
+import { ignoreUser } from 'Store/ducks/chatters'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getEmotes, getHistory, getHistoryIndex, getShowChattersList, getStatus } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
-import { getIsMod, getLoginDetails } from 'Store/selectors/user'
+import { getIsMod, getLoginDetails, getUserId } from 'Store/selectors/user'
 import { sanitizeUrlForPreview } from 'Utils/preview'
 
 /**
@@ -103,6 +104,7 @@ class Channel extends React.Component<Props, State> {
           chatter={focusedChatter}
           unfocus={this.unfocusChatter}
           timeout={this.timeout}
+          block={this.block}
           ban={this.ban}
           canModerate={this.canModerate}
         />
@@ -149,7 +151,7 @@ class Channel extends React.Component<Props, State> {
    * @param chatter - The chatter to focus.
    */
   private focusChatter = (chatter: SerializedChatter) => {
-    this.setState(() => ({ focusedChatter: chatter }))
+    this.setState(() => ({ focusedChatter: this.props.chatters[chatter.id] }))
   }
 
   /**
@@ -319,6 +321,24 @@ class Channel extends React.Component<Props, State> {
       }
     }
   }
+
+  /**
+   * Blocks a user.
+   * @param targetId - The user id of the user to block.
+   */
+  private block = async (targetId: string) => {
+    const { loginDetails, userId } = this.props
+
+    if (!_.isNil(loginDetails) && !_.isNil(userId)) {
+      try {
+        const ignoredUser = await Twitch.blockUser(loginDetails.password, userId, targetId)
+
+        this.props.ignoreUser(ignoredUser.user._id)
+      } catch (error) {
+        //
+      }
+    }
+  }
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
@@ -335,8 +355,9 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     showChattersList: getShowChattersList(state),
     showContextMenu: getShowContextMenu(state),
     status: getStatus(state),
+    userId: getUserId(state),
   }),
-  { addToHistory, setChannel, toggleChattersList, updateHistoryIndex }
+  { addToHistory, ignoreUser, setChannel, toggleChattersList, updateHistoryIndex }
 )(Channel)
 
 /**
@@ -355,6 +376,7 @@ type StateProps = {
   showChattersList: AppState['showChattersList']
   showContextMenu: ReturnType<typeof getShowContextMenu>
   status: AppState['status']
+  userId: ReturnType<typeof getUserId>
 }
 
 /**
@@ -362,6 +384,7 @@ type StateProps = {
  */
 type DispatchProps = {
   addToHistory: typeof addToHistory
+  ignoreUser: typeof ignoreUser
   setChannel: typeof setChannel
   toggleChattersList: typeof toggleChattersList
   updateHistoryIndex: typeof updateHistoryIndex

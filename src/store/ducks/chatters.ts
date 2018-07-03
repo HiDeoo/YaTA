@@ -9,6 +9,7 @@ import { createAction } from 'Utils/redux'
  */
 export enum Actions {
   ADD = 'chatters/ADD',
+  IGNORE_USER = 'chatters/MARK_AS_IGNORED',
 }
 
 /**
@@ -30,7 +31,7 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
     case Actions.ADD: {
       const { messageId, chatter } = action.payload
 
-      if (_.isNil(_.get(state.byId, action.payload.chatter.id))) {
+      if (_.isNil(_.get(state.byId, chatter.id))) {
         return {
           ...state,
           byId: { ...state.byId, [chatter.id]: { ...chatter, messages: [messageId] } },
@@ -42,9 +43,24 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
         ...state,
         byId: {
           ...state.byId,
-          [chatter.id]: { ...chatter, messages: [...state.byId[chatter.id].messages, messageId] },
+          [chatter.id]: { ...state.byId[chatter.id], messages: [...state.byId[chatter.id].messages, messageId] },
         },
       }
+    }
+    case Actions.IGNORE_USER: {
+      const { id } = action.payload
+
+      if (!_.isNil(_.get(state.byId, id))) {
+        return {
+          ...state,
+          byId: {
+            ...state.byId,
+            [id]: { ...state.byId[id], ignored: true },
+          },
+        }
+      }
+
+      return state
     }
     default: {
       return state
@@ -67,9 +83,19 @@ export const addChatterWithMessage = (chatter: SerializedChatter, messageId: str
   })
 
 /**
+ * Marks a chatter as ignored.
+ * @param  id - The chatter id.
+ * @return The action.
+ */
+export const ignoreUser = (id: string) =>
+  createAction(Actions.IGNORE_USER, {
+    id,
+  })
+
+/**
  * Chatters actions.
  */
-export type ChattersActions = ReturnType<typeof addChatterWithMessage>
+export type ChattersActions = ReturnType<typeof addChatterWithMessage> | ReturnType<typeof ignoreUser>
 
 /**
  * Chatterss state.

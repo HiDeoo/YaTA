@@ -76,9 +76,9 @@ class ChatDetails extends React.Component<Props, State> {
       try {
         let details: ChannelDetails
 
-        if (chatter.id !== 'self') {
+        if (!this.isSelf()) {
           details = await Twitch.fetchChannel(chatter.id)
-        } else if (chatter.id === 'self' && !_.isNil(loginDetails)) {
+        } else if (this.isSelf() && !_.isNil(loginDetails)) {
           const user = await Twitch.fetchAuthenticatedUser(loginDetails.password)
           details = await Twitch.fetchChannel(user._id)
         }
@@ -205,6 +205,11 @@ class ChatDetails extends React.Component<Props, State> {
             icon="history"
             href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.userName}`}
           />
+          {!this.isSelf() && (
+            <Button disabled={chatter.ignored} icon="blocked-person" intent={Intent.DANGER} onClick={this.onClickBlock}>
+              Block
+            </Button>
+          )}
         </Tools>
       </>
     )
@@ -285,6 +290,29 @@ class ChatDetails extends React.Component<Props, State> {
 
     unfocus()
   }
+
+  /**
+   * Triggered when the block button is clicked.
+   */
+  private onClickBlock = () => {
+    const { block, chatter, unfocus } = this.props
+
+    if (!_.isNil(chatter)) {
+      block(chatter.id)
+    }
+
+    unfocus()
+  }
+
+  /**
+   * Defines if the current focused user is ourself.
+   * @return `true` when ourself.
+   */
+  private isSelf() {
+    const { chatter } = this.props
+
+    return !_.isNil(chatter) && chatter.id === 'self'
+  }
 }
 
 export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownProps: OwnProps) => {
@@ -309,6 +337,7 @@ type StateProps = {
  */
 type OwnProps = {
   ban: (username: string) => void
+  block: (targetId: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   chatter: SerializedChatter | null
   timeout: (username: string, duration: number) => void

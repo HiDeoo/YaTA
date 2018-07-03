@@ -37,7 +37,7 @@ export default class Twitch {
     url.searchParams.set('client_id', REACT_APP_TWITCH_CLIENT_ID)
     url.searchParams.set('redirect_uri', REACT_APP_TWITCH_REDIRECT_URI)
     url.searchParams.set('response_type', 'token id_token')
-    url.searchParams.set('scope', 'openid chat_login user_read')
+    url.searchParams.set('scope', 'openid chat_login user_read user_blocks_edit')
 
     return url
   }
@@ -179,6 +179,24 @@ export default class Twitch {
    */
   public static async fetchAuthenticatedUser(token: string): Promise<AuthenticatedUserDetails> {
     const response = await Twitch.fetch(`${baseKrakenUrl}/user`, { Authorization: `OAuth ${token}` })
+
+    return response.json()
+  }
+
+  /**
+   * Blocks a user.
+   * @param  token - The user token.
+   * @param  userId - The user id of the current user.
+   * @param  targetId - The user id of the user to block.
+   */
+  public static async blockUser(token: string, userId: string, targetId: string): Promise<BlockedUser> {
+    const response = await Twitch.fetch(
+      `${baseKrakenUrl}/users/${userId}/blocks/${targetId}`,
+      {
+        Authorization: `OAuth ${token}`,
+      },
+      { method: 'PUT' }
+    )
 
     return response.json()
   }
@@ -367,4 +385,20 @@ type ClipUser = {
   id: string
   logo: string
   name: string
+}
+
+/**
+ * Blocked user.
+ */
+type BlockedUser = {
+  user: {
+    _id: string
+    bio: string | null
+    created_at: string
+    display_name: string
+    logo: string | null
+    name: string
+    type: string
+    updated_at: string
+  }
 }
