@@ -57,7 +57,7 @@ class Channel extends React.Component<Props, State> {
    */
   public componentDidMount() {
     if (this.props.match.params.channel !== this.props.channel) {
-      this.props.setChannel(this.props.match.params.channel)
+      this.props.setChannel(this.props.match.params.channel.toLowerCase())
     }
   }
 
@@ -178,10 +178,15 @@ class Channel extends React.Component<Props, State> {
   private canModerate = (chatter: SerializedChatter) => {
     const { channel, isMod, loginDetails } = this.props
 
+    const userIsBroadcaster = !_.isNil(loginDetails) && !_.isNil(channel) && loginDetails.username === channel
     const chatterIsSelf = !_.isNil(loginDetails) && loginDetails.username === chatter.userName
     const chatterIsBroadcaster = !_.isNil(channel) && chatter.userName === channel
+    const chatterIsMod = chatter.isMod
 
-    return isMod && !chatterIsSelf && !chatterIsBroadcaster
+    return (
+      (isMod && userIsBroadcaster && !chatterIsSelf) ||
+      (isMod && !chatterIsSelf && !chatterIsBroadcaster && !chatterIsMod)
+    )
   }
 
   /**
