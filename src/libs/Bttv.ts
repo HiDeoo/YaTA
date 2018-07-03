@@ -21,14 +21,18 @@ export default class Bttv {
       (await Bttv.fetch(`${baseAPIUrl}/channels/${channel}`)).json(),
     ])
 
-    const emotes = new EmotesProvider(
-      'bttv',
-      [...response[0].emotes, ...response[1].emotes] as BttvEmote[],
-      response[0].urlTemplate
-    )
+    const isChannelRegistered = response[1].status === 200
+
+    const rawEmotes: BttvEmote[] = isChannelRegistered
+      ? [...response[0].emotes, ...response[1].emotes]
+      : response[0].emotes
+
+    const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? response[1].bots : null
+
+    const emotes = new EmotesProvider('bttv', rawEmotes, response[0].urlTemplate)
 
     return {
-      bots: response[1].bots,
+      bots,
       emotes,
     }
   }
@@ -73,6 +77,6 @@ interface BttvEmote extends Emote {
  * Bttv emotes and bots details.
  */
 type BttvEmotesAndBots = {
-  bots: string[]
+  bots: string[] | null
   emotes: EmotesProvider<BttvEmote>
 }
