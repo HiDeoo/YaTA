@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import ChatHistory from 'Components/ChatHistory'
+import ExternalButton from 'Components/ExternalButton'
+import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import { SerializedChatter } from 'Libs/Chatter'
 import Twitch, { AuthenticatedUserDetails, UserDetails } from 'Libs/Twitch'
@@ -26,9 +28,9 @@ const Details = styled(FlexLayout)`
 `
 
 /**
- * ModerationTools component.
+ * Tools component.
  */
-const ModerationTools = styled.div`
+const Tools = styled.div`
   margin-bottom: 20px;
 
   & > div {
@@ -95,7 +97,6 @@ class ChatDetails extends React.Component<Props, State> {
       <Dialog isOpen={!_.isNil(chatter)} onClose={this.onClose} icon="user" title={chatter.displayName}>
         <div className={Classes.DIALOG_BODY}>
           {this.renderDetails()}
-          <hr />
           {this.renderModerationTools()}
           {this.renderHistory()}
         </div>
@@ -124,7 +125,8 @@ class ChatDetails extends React.Component<Props, State> {
     }
 
     return (
-      <ModerationTools>
+      <Tools>
+        <hr />
         <div>
           <Button icon="trash" onClick={this.onClickPurge}>
             Purge
@@ -149,7 +151,7 @@ class ChatDetails extends React.Component<Props, State> {
             </Button>
           </ButtonGroup>
         </div>
-      </ModerationTools>
+      </Tools>
     )
   }
 
@@ -159,8 +161,9 @@ class ChatDetails extends React.Component<Props, State> {
    */
   private renderDetails() {
     const { details, didFailToFetchDetails } = this.state
+    const { chatter } = this.props
 
-    if (didFailToFetchDetails) {
+    if (_.isNil(chatter) || didFailToFetchDetails) {
       return null
     }
 
@@ -174,7 +177,16 @@ class ChatDetails extends React.Component<Props, State> {
 
     return (
       <Details>
-        <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
+        <FlexContent>
+          <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
+        </FlexContent>
+        <div>
+          <ExternalButton
+            text="Username History"
+            icon="history"
+            href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.name}`}
+          />
+        </div>
       </Details>
     )
   }
