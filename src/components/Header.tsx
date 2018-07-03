@@ -20,6 +20,13 @@ import Status from 'Constants/status'
 import { AppState } from 'Store/ducks/app'
 
 /**
+ * ChannelLink component.
+ */
+const ChannelLink = styled.a`
+  color: inherit !important;
+`
+
+/**
  * StatusSpinner component.
  */
 const StatusSpinner = styled(Spinner)`
@@ -63,13 +70,28 @@ export default class Header extends React.Component<Props> {
       toggleSettings,
     } = this.props
 
-    const title = `${!_.isNil(channel) ? `${channel} - ` : ''}YaTA`
+    const showChannelName = page !== Page.Home && !_.isNil(channel)
+
+    const headerTitle = `${showChannelName ? `${channel} - ` : ''}YaTA`
+
+    const title = (
+      <span>
+        {showChannelName && (
+          <>
+            <ChannelLink target="_blank" href={`https://twitch.tv/${channel}`}>
+              {channel}
+            </ChannelLink>{' '}
+            -{' '}
+          </>
+        )}Yata
+      </span>
+    )
 
     return (
       <Navbar>
         <NavbarGroup align={Alignment.LEFT}>
           <Helmet>
-            <title>{title}</title>
+            <title>{headerTitle}</title>
           </Helmet>
           <NavbarHeading>{title}</NavbarHeading>
           {this.renderStatus()}
