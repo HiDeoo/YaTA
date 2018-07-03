@@ -49,6 +49,7 @@ export class Client extends React.Component<Props, State> {
   public nextWhisperRecipient: string | null = null
   private badges: Badges | null = null
   private emotesProviders: EmotesProviders = {}
+  private bots: string[] = []
 
   /**
    * Creates a new instance of the component.
@@ -221,7 +222,9 @@ export class Client extends React.Component<Props, State> {
 
         this.props.updateEmoteSets('bttv', provider.getEmoteSets())
 
-        // TODO bots
+        if (!_.isNil(emotesAndBots.bots)) {
+          this.bots.push(...emotesAndBots.bots)
+        }
       }
     } catch (error) {
       //
@@ -664,7 +667,8 @@ export class Client extends React.Component<Props, State> {
           self,
           this.badges,
           this.emotesProviders,
-          this.props.loginDetails!.username
+          this.props.loginDetails!.username,
+          this.bots
         )
 
         if (_.isNil(parsedMessage.user.color)) {

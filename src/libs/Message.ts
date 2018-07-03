@@ -46,6 +46,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param badges - The known badges if any.
    * @param emotesProviders - Additional emotes providers.
    * @param currentUsername - The name of the current user.
+   * @param bots - Known bots.
    */
   constructor(
     message: string,
@@ -53,7 +54,8 @@ export default class Message implements Serializable<SerializedMessage> {
     self: boolean,
     badges: Badges | null,
     emotesProviders: EmotesProviders,
-    currentUsername: string
+    currentUsername: string,
+    bots: string[]
   ) {
     this.self = self
     this.id = userstate.id
@@ -65,12 +67,8 @@ export default class Message implements Serializable<SerializedMessage> {
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
 
-    this.badges = !_.isNil(badges) && _.size(userstate.badges) > 0 ? this.parseBadges(userstate, badges) : null
+    this.badges = this.parseBadges(userstate, badges, bots)
     this.message = this.parseMessage(message, userstate.emotes || {}, emotesProviders, currentUsername)
-
-    // TODO room-id?
-    // TODO subscriber?
-    // TODO turbo?
   }
 
   /**
@@ -106,31 +104,39 @@ export default class Message implements Serializable<SerializedMessage> {
 
   /**
    * Parses badges.
-   * @param userstate - The userstate.
-   * @param badges - The known badges for the associated channeL.
+   * @param  userstate - The userstate.
+   * @param  badges - The known badges for the associated channeL.
+   * @param  bots - Known bots.
+   * @return Parsed badges.
    */
-  private parseBadges(userstate: UserState, badges: Badges) {
+  private parseBadges(userstate: UserState, badges: Badges | null, bots: string[]) {
     const parsedBadges: string[] = []
 
-    _.forEach(userstate.badges, (version, name) => {
-      const set = _.get(badges, name)
+    if (_.includes(bots, userstate.username)) {
+      parsedBadges.push('<img class="badge" src="https://cdn.betterttv.net/tags/bot.png" />')
+    }
 
-      if (_.isNil(set)) {
+    if (!_.isNil(badges) && _.size(userstate.badges)) {
+      _.forEach(userstate.badges, (version, name) => {
+        const set = _.get(badges, name)
+
+        if (_.isNil(set)) {
+          return
+        }
+
+        const badge = _.get(set.versions, version)
+
+        if (_.isNil(badge)) {
+          return
+        }
+
+        const srcset = `${badge.image_url_1x} 1x,${badge.image_url_2x} 2x,${badge.image_url_4x} 4x`
+
+        parsedBadges.push(`<img class="badge" src="${badge.image_url_1x}" srcset="${srcset}" />`)
+
         return
-      }
-
-      const badge = _.get(set.versions, version)
-
-      if (_.isNil(badge)) {
-        return
-      }
-
-      const srcset = `${badge.image_url_1x} 1x,${badge.image_url_2x} 2x,${badge.image_url_4x} 4x`
-
-      parsedBadges.push(`<img class="badge" src="${badge.image_url_1x}" srcset="${srcset}" />`)
-
-      return
-    })
+      })
+    }
 
     return escape(parsedBadges).join('')
   }
