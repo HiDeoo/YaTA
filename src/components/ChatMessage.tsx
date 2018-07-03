@@ -3,9 +3,11 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import ChatClip from 'Components/ChatClip'
 import ChatMessageContent from 'Components/ChatMessageContent'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
+import { Clip } from 'Libs/Twitch'
 import { replaceImgTagByAlt } from 'Utils/html'
 import { withSCProps } from 'Utils/react'
 import { color, ifProp, size } from 'Utils/styled'
@@ -82,8 +84,37 @@ export default class ChatMessage extends React.Component<Props> {
           {message.user.displayName}
         </Username>{' '}
         <ChatMessageContent message={message} />
+        {this.renderClips()}
       </Wrapper>
     )
+  }
+
+  /**
+   * Renders the clips preview if necessary.
+   * @return Element to render.
+   */
+  private renderClips() {
+    const { message } = this.props
+
+    if (!message.hasClip) {
+      return null
+    }
+
+    const clips = _.reduce(
+      message.clips,
+      (validClips, clip) => {
+        if (!_.isNil(clip)) {
+          validClips[clip.slug] = clip
+        }
+
+        return validClips
+      },
+      {}
+    ) as { [key: string]: Clip }
+
+    return _.map(clips, (clip) => {
+      return <ChatClip key={clip.slug} clip={clip} />
+    })
   }
 
   /**

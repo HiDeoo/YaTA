@@ -5,7 +5,7 @@ import { Emotes, UserState } from 'twitch-js'
 import LogType from 'Constants/logType'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { EmotesProviders } from 'Libs/EmotesProvider'
-import { Badges } from 'Libs/Twitch'
+import { Badges, Clip } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -13,6 +13,11 @@ import { Serializable } from 'Utils/typescript'
  * RegExp used to identify any mention (starting with @).
  */
 const MentionRegExp = /@([a-zA-Z\d_]+)/g
+
+/**
+ * RegExp used to identify a clip link.
+ */
+const ClipRegExp = /https:\/\/clips\.twitch\.tv\/(\w+)/g
 
 /**
  * Message class representing either a chat message, an action (/me) or a whisper.
@@ -29,6 +34,8 @@ export default class Message implements Serializable<SerializedMessage> {
   private time: string
   private purged: boolean = false
   private mentionned: boolean = false
+  private hasClip: boolean = false
+  private clips: Clips = {}
 
   /**
    * Creates and parses a new chat message instance.
@@ -82,8 +89,10 @@ export default class Message implements Serializable<SerializedMessage> {
   public serialize() {
     return {
       badges: this.badges,
+      clips: this.clips,
       color: this.color,
       date: this.date,
+      hasClip: this.hasClip,
       id: this.id,
       mentionned: this.mentionned,
       message: this.message,
@@ -134,6 +143,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param currentUsername - The name of the current user.
    */
   private parseMessage(message: string, emotes: Emotes, emotesProviders: EmotesProviders, currentUsername: string) {
+    this.parseClips(message)
     this.parseAdditionalEmotes(message, emotes, emotesProviders)
 
     let parsedMessage = message.split('')
@@ -248,6 +258,20 @@ export default class Message implements Serializable<SerializedMessage> {
 
     return parsedMessage
   }
+
+  /**
+   * Checks if the message contains any clip.
+   * @param message - The message to parse.
+   */
+  private parseClips(message: string) {
+    let match
+
+    // tslint:disable-next-line:no-conditional-assignment
+    while ((match = ClipRegExp.exec(message)) != null) {
+      this.hasClip = true
+      this.clips[match[1]] = null
+    }
+  }
 }
 
 /**
@@ -265,4 +289,13 @@ export type SerializedMessage = {
   message: string
   purged: boolean
   time: string
+  hasClip: boolean
+  clips: Clips
+}
+
+/**
+ * Clips details.
+ */
+type Clips = {
+  [key: string]: Clip | null
 }

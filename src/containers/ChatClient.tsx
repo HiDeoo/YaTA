@@ -305,7 +305,7 @@ export class Client extends React.Component<Props, State> {
    * @param message - The received message.
    * @param self - `true` if the sender is the receiver.
    */
-  private onMessage = (_channel: string, userstate: UserState, message: string, self: boolean) => {
+  private onMessage = async (_channel: string, userstate: UserState, message: string, self: boolean) => {
     const parsedMessage = this.parseRawMessage(message, userstate, self)
 
     if (!_.isNil(parsedMessage)) {
@@ -318,6 +318,27 @@ export class Client extends React.Component<Props, State> {
       }
 
       const serializedMessage = parsedMessage.serialize()
+
+      if (serializedMessage.hasClip) {
+        try {
+          const clipSlugs = _.keys(serializedMessage.clips)
+          const clips = await Twitch.fetchClips(clipSlugs)
+
+          const newClips = _.reduce(
+            clips,
+            (clipsById, clip) => {
+              clipsById[clip.slug] = clip
+
+              return clipsById
+            },
+            {}
+          )
+
+          serializedMessage.clips = newClips
+        } catch (error) {
+          //
+        }
+      }
 
       this.props.addLog(serializedMessage)
 
@@ -672,7 +693,15 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
   }),
-  { addLog, addChatterWithMessage, purgeLogs, setModerator, updateRoomState, updateStatus, updateEmoteSets },
+  {
+    addChatterWithMessage,
+    addLog,
+    purgeLogs,
+    setModerator,
+    updateEmoteSets,
+    updateRoomState,
+    updateStatus,
+  },
   null,
   { withRef: true }
 )(Client)
@@ -697,8 +726,8 @@ type DispatchProps = {
   purgeLogs: typeof purgeLogs
   setModerator: typeof setModerator
   updateRoomState: typeof updateRoomState
-  updateStatus: typeof updateStatus
   updateEmoteSets: typeof updateEmoteSets
+  updateStatus: typeof updateStatus
 }
 
 /**

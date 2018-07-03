@@ -127,6 +127,28 @@ export default class Twitch {
   }
 
   /**
+   * Fetches details about a clip.
+   * @param  slug - The clip slug.
+   * @return The clip details.
+   */
+  public static async fetchClip(slug: string): Promise<Clip> {
+    const response = await Twitch.fetch(`${baseKrakenUrl}/clips/${slug}`)
+
+    return response.json()
+  }
+
+  /**
+   * Fetches details about multiple clips.
+   * @param  slug - The clip slugs.
+   * @return The clips details.
+   */
+  public static async fetchClips(slugs: string[]): Promise<Clip[]> {
+    const requests = _.map(slugs, async (slug) => Twitch.fetchClip(slug))
+
+    return Promise.all(requests)
+  }
+
+  /**
    * Fetches chatters of a specific channel.
    * @param  channel - The channel.
    * @return The chatter.
@@ -264,4 +286,46 @@ export type Chatters = {
   moderators: string[]
   staff: string[]
   viewers: string[]
+}
+
+/**
+ * Twitch clip.
+ */
+export type Clip = {
+  broadcast_id: string
+  broadcaster: ClipUser
+  created_at: string
+  curator: ClipUser
+  duration: number
+  embed_html: string
+  embed_url: string
+  game: string
+  language: string
+  slug: string
+  thumbnails: {
+    medium: string
+    small: string
+    tiny: string
+  }
+  title: string
+  tracking_id: string
+  url: string
+  views: number
+  vod: {
+    id: string
+    offset: number
+    preview_image_url: string
+    url: string
+  }
+}
+
+/**
+ * Twitch clip user details.
+ */
+type ClipUser = {
+  channel_url: string
+  display_name: string
+  id: string
+  logo: string
+  name: string
 }

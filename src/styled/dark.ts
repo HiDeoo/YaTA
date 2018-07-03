@@ -11,6 +11,9 @@ const dark = {
     background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY5,
   },
+  clips: {
+    meta: Colors.GRAY3,
+  },
   history: {
     background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY1,
