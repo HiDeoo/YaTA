@@ -145,6 +145,15 @@ export default class ChatInput extends React.Component<Props, State> {
   }
 
   /**
+   * Focus the input field.
+   */
+  public focus() {
+    if (!_.isNil(this.input.current)) {
+      this.input.current.focus()
+    }
+  }
+
+  /**
    * Triggered when a key is pressed down in the input.
    */
   private onKeyDownInputValue = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

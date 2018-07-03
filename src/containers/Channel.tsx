@@ -51,6 +51,7 @@ class Channel extends React.Component<Props, State> {
   public state: State = initialState
   public chatClient = React.createRef<any>()
   private chatLogs = React.createRef<HTMLElement>()
+  private input = React.createRef<ChatInput>()
 
   /**
    * Lifecycle: componentDidMount.
@@ -89,10 +90,12 @@ class Channel extends React.Component<Props, State> {
           focusChatter={this.focusChatter}
           copyToClipboard={this.copyToClipboard}
           canModerate={this.canModerate}
+          whisper={this.whisper}
           timeout={this.timeout}
           ban={this.ban}
         />
         <ChatInput
+          ref={this.input}
           disabled={this.props.status !== Status.Connected}
           value={this.state.inputValue}
           onChange={this.onChangeInputValue}
@@ -103,6 +106,7 @@ class Channel extends React.Component<Props, State> {
         <ChatDetails
           chatter={focusedChatter}
           unfocus={this.unfocusChatter}
+          whisper={this.whisper}
           timeout={this.timeout}
           block={this.block}
           ban={this.ban}
@@ -342,6 +346,18 @@ class Channel extends React.Component<Props, State> {
       } catch (error) {
         //
       }
+    }
+  }
+
+  /**
+   * Prepare a whisper by setting the input to the whisper command.
+   * @param username - The username to whisper.
+   */
+  private whisper = (username: string) => {
+    this.setState(() => ({ inputValue: `/w ${username} ` }))
+
+    if (!_.isNil(this.input.current)) {
+      this.input.current.focus()
     }
   }
 }

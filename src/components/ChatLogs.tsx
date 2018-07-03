@@ -97,6 +97,7 @@ export default class ChatMessages extends React.Component<Props> {
       focusChatter,
       showContextMenu,
       timeout,
+      whisper,
     } = this.props
 
     if (isMessage(log)) {
@@ -110,6 +111,7 @@ export default class ChatMessages extends React.Component<Props> {
           focusChatter={focusChatter}
           canModerate={canModerate}
           timeout={timeout}
+          whisper={whisper}
           ban={ban}
         />
       )
@@ -145,4 +147,5 @@ type Props = {
   logs: Log[]
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
+  whisper: (username: string) => void
 }

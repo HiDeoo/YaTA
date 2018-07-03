@@ -34,9 +34,10 @@ const DetailsRow = styled(FlexLayout)`
  * Tools component.
  */
 const Tools = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
-  & > a {
+  & > a,
+  & > button {
     margin-right: 10px;
   }
 
@@ -45,10 +46,6 @@ const Tools = styled.div`
 
     & > button {
       margin-right: 10px;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
     }
   }
 `
@@ -135,33 +132,35 @@ class ChatDetails extends React.Component<Props, State> {
     }
 
     return (
-      <Tools>
+      <>
         <hr />
-        <div>
-          <Button icon="trash" onClick={this.onClickPurge}>
-            Purge
-          </Button>
-          <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan}>
-            Ban
-          </Button>
-        </div>
-        <div>
-          <ButtonGroup>
-            <Button icon="time" onClick={this.onClickTimeout10M}>
-              10m
+        <Tools>
+          <div>
+            <Button icon="trash" onClick={this.onClickPurge}>
+              Purge
             </Button>
-            <Button icon="time" onClick={this.onClickTimeout1H}>
-              1h
+            <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan}>
+              Ban
             </Button>
-            <Button icon="time" onClick={this.onClickTimeout6H}>
-              6h
-            </Button>
-            <Button icon="time" onClick={this.onClickTimeout24H}>
-              24h
-            </Button>
-          </ButtonGroup>
-        </div>
-      </Tools>
+          </div>
+          <div>
+            <ButtonGroup>
+              <Button icon="time" onClick={this.onClickTimeout10M}>
+                10m
+              </Button>
+              <Button icon="time" onClick={this.onClickTimeout1H}>
+                1h
+              </Button>
+              <Button icon="time" onClick={this.onClickTimeout6H}>
+                6h
+              </Button>
+              <Button icon="time" onClick={this.onClickTimeout24H}>
+                24h
+              </Button>
+            </ButtonGroup>
+          </div>
+        </Tools>
+      </>
     )
   }
 
@@ -198,6 +197,16 @@ class ChatDetails extends React.Component<Props, State> {
             <Icon icon="follower" /> {details.followers}
           </div>
         </DetailsRow>
+        {!this.isSelf() && (
+          <Tools>
+            <Button icon="envelope" onClick={this.onClickWhisper}>
+              Whisper
+            </Button>
+            <Button disabled={chatter.ignored} icon="blocked-person" intent={Intent.DANGER} onClick={this.onClickBlock}>
+              Block
+            </Button>
+          </Tools>
+        )}
         <Tools>
           <ExternalButton text="Open Channel" icon="document-open" href={details.url} />
           <ExternalButton
@@ -205,11 +214,6 @@ class ChatDetails extends React.Component<Props, State> {
             icon="history"
             href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.userName}`}
           />
-          {!this.isSelf() && (
-            <Button disabled={chatter.ignored} icon="blocked-person" intent={Intent.DANGER} onClick={this.onClickBlock}>
-              Block
-            </Button>
-          )}
         </Tools>
       </>
     )
@@ -305,6 +309,19 @@ class ChatDetails extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the whisper button is clicked.
+   */
+  private onClickWhisper = () => {
+    const { chatter, unfocus, whisper } = this.props
+
+    if (!_.isNil(chatter)) {
+      whisper(chatter.userName)
+    }
+
+    unfocus()
+  }
+
+  /**
    * Defines if the current focused user is ourself.
    * @return `true` when ourself.
    */
@@ -342,6 +359,7 @@ type OwnProps = {
   chatter: SerializedChatter | null
   timeout: (username: string, duration: number) => void
   unfocus: () => void
+  whisper: (username: string) => void
 }
 
 /**

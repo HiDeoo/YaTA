@@ -140,6 +140,12 @@ export default class ChatMessage extends React.Component<Props> {
 
     const menu = (
       <Menu>
+        {message.user.id !== 'self' && (
+          <>
+            <MenuItem icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
+            <MenuDivider />
+          </>
+        )}
         <MenuItem icon="clipboard" text="Copy message" onClick={this.copyMessage} />
         <MenuItem icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
         {canModerate(message.user) && (
@@ -273,6 +279,15 @@ export default class ChatMessage extends React.Component<Props> {
 
     ban(message.user.userName)
   }
+
+  /**
+   * Triggered when the whisper menu item is clicked.
+   */
+  private onClickWhisper = () => {
+    const { whisper, message } = this.props
+
+    whisper(message.user.userName)
+  }
 }
 
 /**
@@ -288,6 +303,7 @@ type Props = {
   showContextMenu: boolean
   style: React.CSSProperties
   timeout: (username: string, duration: number) => void
+  whisper: (username: string) => void
 }
 
 /**
