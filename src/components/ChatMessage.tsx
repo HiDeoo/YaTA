@@ -23,7 +23,7 @@ const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
 
   & > .pt-popover-wrapper {
     .pt-button {
-      margin-top: -4px;
+      margin-top: -3px;
     }
   }
 `
