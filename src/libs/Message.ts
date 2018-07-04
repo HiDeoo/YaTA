@@ -247,7 +247,7 @@ export default class Message implements Serializable<SerializedMessage> {
             const end = start + match[2].length + (match[4].length === 0 ? match[4].length : match[4].length - 1)
 
             const url = images['1']
-            const srcset = `${images['1']} 1x,${images['2']}/2.0 2x,${images['4']} 4x`
+            const srcset = `${images['1']} 1x,${images['2']} 2x,${images['4']} 4x`
 
             const str = `<img class="emote cheer" src="${url}" srcset="${srcset}" alt="${
               match[2]
