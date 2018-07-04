@@ -16,6 +16,7 @@ export enum Actions {
   ADD_TO_HISTORY = 'app/ADD_TO_HISTORY',
   UPDATE_HISTORY_INDEX = 'app/UPDATE_HISTORY_INDEX',
   UPDATE_EMOTE_SETS = 'app/UPDATE_EMOTE_SETS',
+  RESET_APP_STATE = 'app/RESET_APP_STATE',
 }
 
 /**
@@ -92,6 +93,12 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
       return {
         ...state,
         emoteSets: { ...state.emoteSets, [prefix]: emotes },
+      }
+    }
+    case Actions.RESET_APP_STATE: {
+      return {
+        ...initialState,
+        shouldReadChangelog: state.shouldReadChangelog,
       }
     }
     default: {
@@ -181,6 +188,12 @@ export const updateEmoteSets = (prefix: string, emotes: string[]) =>
   })
 
 /**
+ * Reset the app state.
+ * @return The action.
+ */
+export const resetAppState = () => createAction(Actions.RESET_APP_STATE)
+
+/**
  * App actions.
  */
 export type AppActions =
@@ -192,6 +205,7 @@ export type AppActions =
   | ReturnType<typeof addToHistory>
   | ReturnType<typeof updateHistoryIndex>
   | ReturnType<typeof updateEmoteSets>
+  | ReturnType<typeof resetAppState>
 
 /**
  * App state.

@@ -9,7 +9,8 @@ import { createAction } from 'Utils/redux'
  */
 export enum Actions {
   ADD = 'chatters/ADD',
-  IGNORE_USER = 'chatters/MARK_AS_IGNORED',
+  IGNORE_USER = 'chatters/IGNORE_USER',
+  CLEAR = 'chatters/CLEAR',
 }
 
 /**
@@ -62,6 +63,9 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
 
       return state
     }
+    case Actions.CLEAR: {
+      return initialState
+    }
     default: {
       return state
     }
@@ -93,9 +97,18 @@ export const ignoreUser = (id: string) =>
   })
 
 /**
+ * Clears all the chatters.
+ * @return The action.
+ */
+export const clearChatters = () => createAction(Actions.CLEAR)
+
+/**
  * Chatters actions.
  */
-export type ChattersActions = ReturnType<typeof addChatterWithMessage> | ReturnType<typeof ignoreUser>
+export type ChattersActions =
+  | ReturnType<typeof addChatterWithMessage>
+  | ReturnType<typeof ignoreUser>
+  | ReturnType<typeof clearChatters>
 
 /**
  * Chatterss state.

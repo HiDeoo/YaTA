@@ -25,9 +25,9 @@ import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
 import Twitch, { RawBadges } from 'Libs/Twitch'
-import { AppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
-import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
-import { addLog, purgeLogs } from 'Store/ducks/logs'
+import { AppState, resetAppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
+import { addChatterWithMessage, ChattersState, clearChatters } from 'Store/ducks/chatters'
+import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
@@ -143,7 +143,9 @@ export class ChatClient extends React.Component<Props, State> {
    * Lifecycle: componentWillUnmount.
    */
   public async componentWillUnmount() {
-    this.props.setModerator(false)
+    this.props.resetAppState()
+    this.props.clearLogs()
+    this.props.clearChatters()
 
     try {
       if (this.client.readyState() === ReadyState.Open) {
@@ -704,7 +706,10 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   {
     addChatterWithMessage,
     addLog,
+    clearChatters,
+    clearLogs,
     purgeLogs,
+    resetAppState,
     setModerator,
     updateEmoteSets,
     updateRoomState,
@@ -732,7 +737,10 @@ type StateProps = {
 type DispatchProps = {
   addLog: typeof addLog
   addChatterWithMessage: typeof addChatterWithMessage
+  clearChatters: typeof clearChatters
+  clearLogs: typeof clearLogs
   purgeLogs: typeof purgeLogs
+  resetAppState: typeof resetAppState
   setModerator: typeof setModerator
   updateRoomState: typeof updateRoomState
   updateEmoteSets: typeof updateEmoteSets
