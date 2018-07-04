@@ -32,6 +32,7 @@ import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
+import { getAutoConnectInDev } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 
 /**
@@ -80,7 +81,7 @@ export class Client extends React.Component<Props, State> {
       return
     }
 
-    const { channel } = this.props
+    const { autoConnectInDev, channel } = this.props
 
     if (_.isNil(channel)) {
       this.setState(() => ({ clientDidFail: true }))
@@ -118,11 +119,13 @@ export class Client extends React.Component<Props, State> {
     this.client.on(Event.Cheer, this.onCheer)
     this.client.on(Event.EmoteSets, this.onEmoteSets)
 
-    try {
-      // await this.client.connect()
-      // await this.client.join(channel)
-    } catch (error) {
-      this.setState(() => ({ clientDidFail: true }))
+    if (process.env.NODE_ENV !== 'development' || autoConnectInDev) {
+      try {
+        await this.client.connect()
+        await this.client.join(channel)
+      } catch (error) {
+        this.setState(() => ({ clientDidFail: true }))
+      }
     }
   }
 
@@ -691,6 +694,7 @@ export class Client extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
+    autoConnectInDev: getAutoConnectInDev(state),
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
@@ -714,6 +718,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  * React Props.
  */
 type StateProps = {
+  autoConnectInDev: ReturnType<typeof getAutoConnectInDev>
   channel: AppState['channel']
   chatters: ChattersState['byId']
   chattersMap: ChattersState['byName']

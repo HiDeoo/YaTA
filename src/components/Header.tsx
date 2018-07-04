@@ -8,6 +8,7 @@ import {
   NavbarHeading,
   Position,
   Spinner,
+  Switch as _Switch,
   Tooltip,
 } from '@blueprintjs/core'
 import * as _ from 'lodash'
@@ -48,6 +49,14 @@ const Changelog = styled(Button)`
   svg {
     color: ${Colors.GOLD5} !important;
   }
+`
+
+/**
+ * Switch component.
+ */
+const Switch = styled(_Switch)`
+  margin-left: 6px;
+  margin-top: 9px;
 `
 
 /**
@@ -98,6 +107,7 @@ export default class Header extends React.Component<Props> {
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           {this.renderChannelControls()}
+          {this.renderDebugTools()}
           {page !== Page.Home && (
             <Tooltip content="Home" position={Position.BOTTOM}>
               <Button onClick={goHome} icon="home" minimal title="Home" />
@@ -136,6 +146,27 @@ export default class Header extends React.Component<Props> {
       <>
         <Tooltip content="Chatters List" position={Position.BOTTOM}>
           <Button onClick={toggleChattersList} icon="people" minimal title="Chatters List" />
+        </Tooltip>
+        <NavbarDivider />
+      </>
+    )
+  }
+
+  /**
+   * Render the debug tools if necessary.
+   * @return Element to render.
+   */
+  private renderDebugTools() {
+    if (process.env.NODE_ENV !== 'development') {
+      return null
+    }
+
+    const { autoConnectInDev, toggleAutoConnectInDev } = this.props
+
+    return (
+      <>
+        <Tooltip content="Auto-Connect (dev only)" position={Position.BOTTOM}>
+          <Switch checked={autoConnectInDev} onChange={toggleAutoConnectInDev} />
         </Tooltip>
         <NavbarDivider />
       </>
@@ -192,14 +223,16 @@ export default class Header extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  autoConnectInDev: boolean
   channel: AppState['channel']
   goHome: () => void
   highlightChangelog: boolean
   isLoggedIn: boolean
+  logout: () => void
   page: string
   status: AppState['status']
+  toggleAutoConnectInDev: () => void
   toggleChangelog: () => void
-  toggleSettings: () => void
   toggleChattersList: () => void
-  logout: () => void
+  toggleSettings: () => void
 }

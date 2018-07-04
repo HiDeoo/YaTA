@@ -23,4 +23,10 @@ export default {
       settings: { ...state.settings, showContextMenu: initialState.showContextMenu },
     }
   },
+  3: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, autoConnectInDev: initialState.autoConnectInDev },
+    }
+  },
 }

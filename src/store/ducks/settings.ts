@@ -13,12 +13,14 @@ export enum Actions {
   SET_VERSION = 'settings/SET_VERSION',
   TOGGLE_COPY_MESSAGE_DOUBLE_CLICK = 'settings/TOGGLE_COPY_MESSAGE_DOUBLE_CLICK',
   TOGGLE_SHOW_CONTEXT_MENU = 'settings/TOGGLE_SHOW_CONTEXT_MENU',
+  TOGGLE_AUTO_CONNECT_IN_DEV = 'settings/TOGGLE_AUTO_CONNECT_IN_DEV',
 }
 
 /**
  * Initial state.
  */
 export const initialState = {
+  autoConnectInDev: true,
   copyMessageOnDoubleClick: true,
   lastKnownVersion: null,
   showContextMenu: false,
@@ -64,6 +66,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         showContextMenu: !state.showContextMenu,
       }
     }
+    case Actions.TOGGLE_AUTO_CONNECT_IN_DEV: {
+      return {
+        ...state,
+        autoConnectInDev: !state.autoConnectInDev,
+      }
+    }
     default: {
       return state
     }
@@ -101,6 +109,12 @@ export const toggleCopyMessageOnDoubleClick = () => createAction(Actions.TOGGLE_
 export const toggleShowContextMenu = () => createAction(Actions.TOGGLE_SHOW_CONTEXT_MENU)
 
 /**
+ * Toggle the 'Auto connect in dev' setting.
+ * @return The action.
+ */
+export const toggleAutoConnectInDev = () => createAction(Actions.TOGGLE_AUTO_CONNECT_IN_DEV)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -109,6 +123,7 @@ export type SettingsActions =
   | ReturnType<typeof setVersion>
   | ReturnType<typeof toggleCopyMessageOnDoubleClick>
   | ReturnType<typeof toggleShowContextMenu>
+  | ReturnType<typeof toggleAutoConnectInDev>
 
 /**
  * Settings state.
@@ -133,4 +148,9 @@ export type SettingsState = {
    * Defines if a context menu should be added to each message.
    */
   showContextMenu: boolean
+
+  /**
+   * When in dev mode, auto-connect to the chat servers.
+   */
+  autoConnectInDev: boolean
 }

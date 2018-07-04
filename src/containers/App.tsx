@@ -18,11 +18,11 @@ import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Settings, { SettingsTab } from 'Containers/Settings'
 import { AppState, setShouldReadChangelog, toggleChattersList } from 'Store/ducks/app'
-import { SettingsState, setVersion } from 'Store/ducks/settings'
+import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
-import { getLastKnownVersion, getTheme } from 'Store/selectors/settings'
+import { getAutoConnectInDev, getLastKnownVersion, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn } from 'Store/selectors/user'
 import dark from 'Styled/dark'
 import light from 'Styled/light'
@@ -68,7 +68,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { showSettings, settingSelectedTab } = this.state
-    const { channel, isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
+    const { channel, isLoggedIn, location, autoConnectInDev, shouldReadChangelog, status, theme } = this.props
     const { pathname } = location
 
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
@@ -83,16 +83,18 @@ class App extends React.Component<Props, State> {
       <ThemeProvider theme={theme === Theme.Dark ? dark : light}>
         <FlexLayout vertical>
           <Header
-            toggleSettings={this.toggleSettings}
+            channel={channel}
+            goHome={this.goHome}
+            highlightChangelog={shouldReadChangelog}
+            isLoggedIn={isLoggedIn}
+            logout={this.props.resetUser}
+            page={pathname}
+            autoConnectInDev={autoConnectInDev}
+            status={status}
             toggleChangelog={this.toggleChangelog}
             toggleChattersList={this.props.toggleChattersList}
-            isLoggedIn={isLoggedIn}
-            channel={channel}
-            logout={this.props.resetUser}
-            status={status}
-            highlightChangelog={shouldReadChangelog}
-            goHome={this.goHome}
-            page={pathname}
+            toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
+            toggleSettings={this.toggleSettings}
           />
           <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
           <FlexContent>
@@ -151,6 +153,7 @@ class App extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
+    autoConnectInDev: getAutoConnectInDev(state),
     channel: getChannel(state),
     isLoggedIn: getIsLoggedIn(state),
     lastKnownVersion: getLastKnownVersion(state),
@@ -158,13 +161,14 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     status: getStatus(state),
     theme: getTheme(state),
   }),
-  { resetUser, setVersion, setShouldReadChangelog, toggleChattersList }
+  { resetUser, setVersion, setShouldReadChangelog, toggleAutoConnectInDev, toggleChattersList }
 )(App)
 
 /**
  * React Props.
  */
 type StateProps = {
+  autoConnectInDev: SettingsState['autoConnectInDev']
   channel: AppState['channel']
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: SettingsState['lastKnownVersion']
@@ -180,6 +184,7 @@ type DispatchProps = {
   resetUser: typeof resetUser
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
+  toggleAutoConnectInDev: typeof toggleAutoConnectInDev
   toggleChattersList: typeof toggleChattersList
 }
 
