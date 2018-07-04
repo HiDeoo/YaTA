@@ -15,6 +15,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
   private displayName: string
   private showUserName: boolean
   private ignored: boolean = false
+  private isSelf: boolean
 
   /**
    * Creates a new chatter instance.
@@ -28,6 +29,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
     this.color = userstate.color
     this.isMod = userstate.mod
     this.showUserName = this.displayName.toLocaleLowerCase() !== this.userName.toLocaleLowerCase()
+    this.isSelf = userstate['user-id'] === 'self'
   }
 
   /**
@@ -53,6 +55,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
       id: this.id,
       ignored: this.ignored,
       isMod: this.isMod,
+      isSelf: this.isSelf,
       showUsername: this.showUserName,
       userName: this.userName,
     }
@@ -68,6 +71,7 @@ export type SerializedChatter = {
   id: string
   ignored: boolean
   isMod: boolean
+  isSelf: boolean
   showUsername: boolean
   userName: string
 }

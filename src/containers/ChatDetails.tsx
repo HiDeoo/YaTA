@@ -73,9 +73,9 @@ class ChatDetails extends React.Component<Props, State> {
       try {
         let details: ChannelDetails
 
-        if (!this.isSelf()) {
+        if (!chatter.isSelf) {
           details = await Twitch.fetchChannel(chatter.id)
-        } else if (this.isSelf() && !_.isNil(loginDetails)) {
+        } else if (chatter.isSelf && !_.isNil(loginDetails)) {
           const user = await Twitch.fetchAuthenticatedUser(loginDetails.password)
           details = await Twitch.fetchChannel(user._id)
         }
@@ -197,7 +197,7 @@ class ChatDetails extends React.Component<Props, State> {
             <Icon icon="follower" /> {details.followers}
           </div>
         </DetailsRow>
-        {!this.isSelf() && (
+        {!chatter.isSelf && (
           <Tools>
             <Button icon="envelope" onClick={this.onClickWhisper}>
               Whisper
@@ -319,16 +319,6 @@ class ChatDetails extends React.Component<Props, State> {
     }
 
     unfocus()
-  }
-
-  /**
-   * Defines if the current focused user is ourself.
-   * @return `true` when ourself.
-   */
-  private isSelf() {
-    const { chatter } = this.props
-
-    return !_.isNil(chatter) && chatter.id === 'self'
   }
 }
 

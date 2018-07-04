@@ -140,7 +140,7 @@ export default class ChatMessage extends React.Component<Props> {
 
     const menu = (
       <Menu>
-        {message.user.id !== 'self' && (
+        {!message.user.isSelf && (
           <>
             <MenuItem icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
             <MenuDivider />
