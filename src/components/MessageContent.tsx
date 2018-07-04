@@ -15,7 +15,7 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
 
   .emote {
     display: inline-block;
-    margin: -0.5rem 0;
+    margin-top: -3px;
     vertical-align: middle;
   }
 
