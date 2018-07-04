@@ -4,11 +4,11 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import ChatHistory from 'Components/ChatHistory'
 import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
+import History from 'Components/History'
 import { SerializedChatter } from 'Libs/Chatter'
-import Twitch, { ChannelDetails } from 'Libs/Twitch'
+import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
@@ -52,13 +52,13 @@ const Tools = styled.div`
 /**
  * React State.
  */
-const initialState = { details: null as ChannelDetails | null, didFailToFetchDetails: false }
+const initialState = { details: null as RawChannel | null, didFailToFetchDetails: false }
 type State = Readonly<typeof initialState>
 
 /**
- * ChatDetails Component.
+ * Details Component.
  */
-class ChatDetails extends React.Component<Props, State> {
+class Details extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -70,7 +70,7 @@ class ChatDetails extends React.Component<Props, State> {
 
     if (!_.isNil(chatter) && prevProps.chatter !== chatter) {
       try {
-        let details: ChannelDetails
+        let details: RawChannel
 
         if (!chatter.isSelf) {
           details = await Twitch.fetchChannel(chatter.id)
@@ -229,7 +229,7 @@ class ChatDetails extends React.Component<Props, State> {
       return null
     }
 
-    return <ChatHistory messages={messages} />
+    return <History messages={messages} />
   }
 
   /**
@@ -327,7 +327,7 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
   return {
     messages: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterMessages(state, ownProps.chatter.id)) : null,
   }
-})(ChatDetails)
+})(Details)
 
 /**
  * React Props.

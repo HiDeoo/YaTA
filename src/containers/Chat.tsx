@@ -24,7 +24,7 @@ import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
-import Twitch, { Badges } from 'Libs/Twitch'
+import Twitch, { RawBadges } from 'Libs/Twitch'
 import { AppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState } from 'Store/ducks/chatters'
 import { addLog, purgeLogs } from 'Store/ducks/logs'
@@ -42,13 +42,13 @@ const initialState = { clientDidFail: false }
 type State = Readonly<typeof initialState>
 
 /**
- * ChatClient Component.
+ * Chat Component.
  */
-export class Client extends React.Component<Props, State> {
+export class ChatClient extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
-  private badges: Badges | null = null
+  private badges: RawBadges | null = null
   private emotesProviders: EmotesProviders = {}
   private bots: string[] = []
 
@@ -712,7 +712,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   },
   null,
   { withRef: true }
-)(Client)
+)(ChatClient)
 
 /**
  * React Props.

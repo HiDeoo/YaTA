@@ -7,9 +7,9 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import * as semCompare from 'semver-compare'
 import { ThemeProvider } from 'styled-components'
 
-import Channels from 'Components/Channels'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
+import Follows from 'Components/Follows'
 import Header from 'Components/Header'
 import Login from 'Components/Login'
 import Page from 'Constants/page'
@@ -18,7 +18,7 @@ import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Settings, { SettingsTab } from 'Containers/Settings'
 import Twitch from 'Libs/Twitch'
-import { AppState, setShouldReadChangelog, toggleChattersList } from 'Store/ducks/app'
+import { AppState, setShouldReadChangelog, toggleChatters } from 'Store/ducks/app'
 import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -41,12 +41,20 @@ class App extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
+   * Creates a new instance of the component.
+   * @param props - The props of the component.
+   */
+  constructor(props: Props) {
+    super(props)
+
+    this.installTheme()
+    this.setUpTwitchApi()
+  }
+
+  /**
    * Lifecycle: componentDidMount.
    */
   public componentDidMount() {
-    this.installTheme()
-    this.setUpTwitchApi()
-
     const { lastKnownVersion } = this.props
 
     if (_.isNil(lastKnownVersion)) {
@@ -100,14 +108,14 @@ class App extends React.Component<Props, State> {
             autoConnectInDev={autoConnectInDev}
             status={status}
             toggleChangelog={this.toggleChangelog}
-            toggleChattersList={this.props.toggleChattersList}
+            toggleChatters={this.props.toggleChatters}
             toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
             toggleSettings={this.toggleSettings}
           />
           <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
           <FlexContent>
             <Switch>
-              <Route exact path="/" component={Channels} />
+              <Route exact path="/" component={Follows} />
               <Route path="/auth" component={Auth} />
               <Route path="/login" component={Login} />
               <Route path="/:channel" component={Channel} />
@@ -138,9 +146,9 @@ class App extends React.Component<Props, State> {
     const { loginDetails } = this.props
 
     if (!_.isNil(loginDetails)) {
-      Twitch.setToken(loginDetails.password)
+      Twitch.setAuthDetails(loginDetails.id, loginDetails.password)
     } else {
-      Twitch.setToken(null)
+      Twitch.setAuthDetails(null)
     }
   }
 
@@ -183,7 +191,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     status: getStatus(state),
     theme: getTheme(state),
   }),
-  { resetUser, setVersion, setShouldReadChangelog, toggleAutoConnectInDev, toggleChattersList }
+  { resetUser, setVersion, setShouldReadChangelog, toggleAutoConnectInDev, toggleChatters }
 )(App)
 
 /**
@@ -208,7 +216,7 @@ type DispatchProps = {
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
   toggleAutoConnectInDev: typeof toggleAutoConnectInDev
-  toggleChattersList: typeof toggleChattersList
+  toggleChatters: typeof toggleChatters
 }
 
 /**

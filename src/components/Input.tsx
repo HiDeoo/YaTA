@@ -31,9 +31,9 @@ const Toast = styled(_Toast)`
 `
 
 /**
- * Input component.
+ * TextArea component.
  */
-const Input = styled.textarea`
+const TextArea = styled.textarea`
   outline: none;
   resize: none;
 
@@ -52,9 +52,9 @@ const initialState = { toasts: [] as IToastOptions[], intent: '' }
 type State = Readonly<typeof initialState>
 
 /**
- * ChatInput Component.
+ * Input Component.
  */
-export default class ChatInput extends React.Component<Props, State> {
+export default class Input extends React.Component<Props, State> {
   /**
    * Lifecycle: getDerivedStateFromProps.
    * @param  nextProps - The next props.
@@ -131,7 +131,7 @@ export default class ChatInput extends React.Component<Props, State> {
         <Toaster position={Position.BOTTOM}>
           {_.map(toasts, (toast, index) => <Toast key={index} {...toast} />)}
         </Toaster>
-        <Input
+        <TextArea
           dir="auto"
           value={value}
           disabled={disabled}

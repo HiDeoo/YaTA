@@ -2,7 +2,7 @@ import { Icon } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import ChatMessageContent from 'Components/ChatMessageContent'
+import MessageContent from 'Components/MessageContent'
 import { SerializedMessage } from 'Libs/Message'
 import { withSCProps } from 'Utils/react'
 import { color, size } from 'Utils/styled'
@@ -35,9 +35,9 @@ const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
 `
 
 /**
- * ChatWhisper Component.
+ * Whisper Component.
  */
-export default class ChatWhisper extends React.Component<Props> {
+export default class Whisper extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
@@ -51,7 +51,7 @@ export default class ChatWhisper extends React.Component<Props> {
       <Wrapper style={style}>
         <InboxIcon icon={whisper.self ? 'document-share' : 'document-open'} />
         <Username color={whisper.self ? 'inherit' : usernameColor}>{whisper.user.displayName}</Username>
-        <ChatMessageContent message={whisper} />
+        <MessageContent message={whisper} />
       </Wrapper>
     )
   }

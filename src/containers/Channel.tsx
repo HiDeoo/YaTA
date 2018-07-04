@@ -7,25 +7,25 @@ import { match } from 'react-router'
 import * as ReactTooltip from 'react-tooltip'
 
 import Center from 'Components/Center'
-import ChatInput from 'Components/ChatInput'
-import ChatLogs from 'Components/ChatLogs'
-import ChattersList from 'Components/ChattersList'
+import Chatters from 'Components/Chatters'
 import FlexLayout from 'Components/FlexLayout'
+import Input from 'Components/Input'
+import Logs from 'Components/Logs'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
-import ChatClient, { Client } from 'Containers/ChatClient'
-import ChatDetails from 'Containers/ChatDetails'
+import Chat, { ChatClient } from 'Containers/Chat'
+import Details from 'Containers/Details'
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
-import { addToHistory, AppState, setChannel, toggleChattersList, updateHistoryIndex } from 'Store/ducks/app'
+import { addToHistory, AppState, setChannel, toggleChatters, updateHistoryIndex } from 'Store/ducks/app'
 import { ignoreUser } from 'Store/ducks/chatters'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getEmotes, getHistory, getHistoryIndex, getShowChattersList, getStatus } from 'Store/selectors/app'
+import { getChannel, getEmotes, getHistory, getHistoryIndex, getShowChatters, getStatus } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
 import { getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
-import { getIsMod, getLoginDetails, getUserId } from 'Store/selectors/user'
+import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import { sanitizeUrlForPreview } from 'Utils/preview'
 
 /**
@@ -50,8 +50,8 @@ type State = Readonly<typeof initialState>
 class Channel extends React.Component<Props, State> {
   public state: State = initialState
   public chatClient = React.createRef<any>()
-  private chatLogs = React.createRef<HTMLElement>()
-  private input = React.createRef<ChatInput>()
+  private Logs = React.createRef<HTMLElement>()
+  private input = React.createRef<Input>()
 
   /**
    * Lifecycle: componentDidMount.
@@ -67,7 +67,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { channel, copyMessageOnDoubleClick, logs, showChattersList, showContextMenu } = this.props
+    const { channel, copyMessageOnDoubleClick, logs, showChatters, showContextMenu } = this.props
     const { focusedChatter } = this.state
 
     if (_.isNil(channel)) {
@@ -79,11 +79,11 @@ class Channel extends React.Component<Props, State> {
     }
 
     return (
-      <FlexLayout vertical innerRef={this.chatLogs}>
+      <FlexLayout vertical innerRef={this.Logs}>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} />
-        <ChattersList visible={showChattersList} toggle={this.props.toggleChattersList} channel={channel} />
-        <ChatClient ref={this.chatClient} />
-        <ChatLogs
+        <Chatters visible={showChatters} toggle={this.props.toggleChatters} channel={channel} />
+        <Chat ref={this.chatClient} />
+        <Logs
           logs={logs}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           showContextMenu={showContextMenu}
@@ -94,7 +94,7 @@ class Channel extends React.Component<Props, State> {
           timeout={this.timeout}
           ban={this.ban}
         />
-        <ChatInput
+        <Input
           ref={this.input}
           disabled={this.props.status !== Status.Connected}
           value={this.state.inputValue}
@@ -103,7 +103,7 @@ class Channel extends React.Component<Props, State> {
           getCompletions={this.getCompletions}
           getHistory={this.getHistory}
         />
-        <ChatDetails
+        <Details
           chatter={focusedChatter}
           unfocus={this.unfocusChatter}
           whisper={this.whisper}
@@ -121,8 +121,8 @@ class Channel extends React.Component<Props, State> {
    * @return The tooltip content.
    */
   private getTooltipContent = () => {
-    if (!_.isNil(this.chatLogs.current)) {
-      const wrapper = this.chatLogs.current
+    if (!_.isNil(this.Logs.current)) {
+      const wrapper = this.Logs.current
 
       const nodes = wrapper.querySelectorAll(':hover')
       const node = nodes.item(nodes.length - 1)
@@ -247,7 +247,7 @@ class Channel extends React.Component<Props, State> {
    */
   private getTwitchClient() {
     if (!_.isNil(this.chatClient.current)) {
-      const chatClient = this.chatClient.current.getWrappedInstance() as Client
+      const chatClient = this.chatClient.current.getWrappedInstance() as ChatClient
       const twitchClient = chatClient.client
 
       if (twitchClient.readyState() !== ReadyState.Open) {
@@ -278,7 +278,7 @@ class Channel extends React.Component<Props, State> {
             const username = matches[1]
             const whisper = matches[2]
 
-            const chatClient = this.chatClient.current.getWrappedInstance() as Client
+            const chatClient = this.chatClient.current.getWrappedInstance() as ChatClient
             chatClient.nextWhisperRecipient = username
 
             await client.whisper(username, whisper)
@@ -336,16 +336,12 @@ class Channel extends React.Component<Props, State> {
    * @param targetId - The user id of the user to block.
    */
   private block = async (targetId: string) => {
-    const { loginDetails, userId } = this.props
+    try {
+      const ignoredUser = await Twitch.blockUser(targetId)
 
-    if (!_.isNil(loginDetails) && !_.isNil(userId)) {
-      try {
-        const ignoredUser = await Twitch.blockUser(userId, targetId)
-
-        this.props.ignoreUser(ignoredUser.user._id)
-      } catch (error) {
-        //
-      }
+      this.props.ignoreUser(ignoredUser.user._id)
+    } catch (error) {
+      //
     }
   }
 
@@ -373,12 +369,11 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     isMod: getIsMod(state),
     loginDetails: getLoginDetails(state),
     logs: getLogs(state),
-    showChattersList: getShowChattersList(state),
+    showChatters: getShowChatters(state),
     showContextMenu: getShowContextMenu(state),
     status: getStatus(state),
-    userId: getUserId(state),
   }),
-  { addToHistory, ignoreUser, setChannel, toggleChattersList, updateHistoryIndex }
+  { addToHistory, ignoreUser, setChannel, toggleChatters, updateHistoryIndex }
 )(Channel)
 
 /**
@@ -394,10 +389,9 @@ type StateProps = {
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
-  showChattersList: AppState['showChattersList']
+  showChatters: AppState['showChatters']
   showContextMenu: ReturnType<typeof getShowContextMenu>
   status: AppState['status']
-  userId: ReturnType<typeof getUserId>
 }
 
 /**
@@ -407,7 +401,7 @@ type DispatchProps = {
   addToHistory: typeof addToHistory
   ignoreUser: typeof ignoreUser
   setChannel: typeof setChannel
-  toggleChattersList: typeof toggleChattersList
+  toggleChatters: typeof toggleChatters
   updateHistoryIndex: typeof updateHistoryIndex
 }
 

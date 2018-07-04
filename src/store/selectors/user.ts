@@ -51,20 +51,8 @@ export const getLoginDetails = createSelector([getUserState], (user) => {
   }
 
   return {
+    id: user.tokens.id.sub,
     password: user.tokens.access,
     username: user.username,
   }
-})
-
-/**
- * Returns the user id.
- * @param  state - The Redux state.
- * @return The iser id.
- */
-export const getUserId = createSelector([getUserState], (user) => {
-  if (_.isNil(user.tokens)) {
-    return null
-  }
-
-  return user.tokens.id.sub
 })

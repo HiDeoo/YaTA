@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
-import { Clip } from 'Libs/Twitch'
+import { RawClip } from 'Libs/Twitch'
 import { color } from 'Utils/styled'
 
 /**
@@ -49,9 +49,9 @@ const Meta = styled.div`
 `
 
 /**
- * ChatClip Component.
+ * Clip Component.
  */
-export default class ChatClip extends React.Component<Props> {
+export default class Clip extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
@@ -90,5 +90,5 @@ export default class ChatClip extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  clip: Clip
+  clip: RawClip
 }

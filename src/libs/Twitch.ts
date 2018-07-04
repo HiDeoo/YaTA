@@ -26,10 +26,12 @@ const WhisperRegExp = /^\/w \S+ .+/
  */
 export default class Twitch {
   /**
-   * Sets the Twitch token to use for authenticated calls.
+   * Sets the Twitch token and user id to use for authenticated calls.
+   * @param id - The user id or null to invalidate.
    * @param token - The token or null to invalidate.
    */
-  public static setToken(token: string | null) {
+  public static setAuthDetails(id: string | null, token: string | null = null) {
+    Twitch.userId = id
     Twitch.token = token
   }
 
@@ -114,7 +116,7 @@ export default class Twitch {
    * Fetches Twitch badges.
    * @return The badges.
    */
-  public static async fetchBadges(channelId: string): Promise<Badges> {
+  public static async fetchBadges(channelId: string): Promise<RawBadges> {
     const response = await Promise.all([
       (await Twitch.fetch('https://badges.twitch.tv/v1/badges/global/display')).json(),
       (await Twitch.fetch(`https://badges.twitch.tv/v1/badges/channels/${channelId}/display`)).json(),
@@ -128,7 +130,7 @@ export default class Twitch {
    * @param  id - The user id.
    * @return The user details.
    */
-  public static async fetchUser(id: string): Promise<UserDetails> {
+  public static async fetchUser(id: string): Promise<RawUser> {
     const response = await Twitch.fetch(`${baseKrakenUrl}/users/${id}`)
 
     return response.json()
@@ -139,7 +141,7 @@ export default class Twitch {
    * @param  id - The channel id.
    * @return The channel details.
    */
-  public static async fetchChannel(id: string): Promise<ChannelDetails> {
+  public static async fetchChannel(id: string): Promise<RawChannel> {
     const response = await Twitch.fetch(`${baseKrakenUrl}/channels/${id}`)
 
     return response.json()
@@ -150,7 +152,7 @@ export default class Twitch {
    * @param  slug - The clip slug.
    * @return The clip details.
    */
-  public static async fetchClip(slug: string): Promise<Clip> {
+  public static async fetchClip(slug: string): Promise<RawClip> {
     const response = await Twitch.fetch(`${baseKrakenUrl}/clips/${slug}`)
 
     return response.json()
@@ -161,7 +163,7 @@ export default class Twitch {
    * @param  slug - The clip slugs.
    * @return The clips details.
    */
-  public static async fetchClips(slugs: string[]): Promise<Clip[]> {
+  public static async fetchClips(slugs: string[]): Promise<RawClip[]> {
     const requests = _.map(slugs, async (slug) => Twitch.fetchClip(slug))
 
     return Promise.all(requests)
@@ -172,10 +174,38 @@ export default class Twitch {
    * @param  channel - The channel.
    * @return The chatter.
    */
-  public static async fetchChatters(channel: string): Promise<ChattersDetails> {
+  public static async fetchChatters(channel: string): Promise<RawChattersDetails> {
     const response = await Twitch.fetch(
       `https://cors-anywhere.herokuapp.com/${baseTmiUrl}/group/user/${channel}/chatters`
     )
+
+    return response.json()
+  }
+
+  /**
+   * Fetches all followed streams for the current authenticated user.
+   * @return The follows.
+   */
+  public static async fetchAuthenticatedUserFollows(): Promise<RawFollows> {
+    const url = new URL(`${baseKrakenUrl}/users/${Twitch.userId}/follows/channels`)
+    url.searchParams.append('limit', '100')
+    url.searchParams.append('sortby', 'last_broadcast')
+
+    const response = await Twitch.fetch(url.toString(), Twitch.getAuthHeader())
+
+    return response.json()
+  }
+
+  /**
+   * Fetches all online followed streams for the current authenticated user.
+   * @return The streams.
+   */
+  public static async fetchAuthenticatedUserStreams(): Promise<RawStreams> {
+    const url = new URL(`${baseKrakenUrl}/streams/followed`)
+    url.searchParams.append('limit', '100')
+    url.searchParams.append('stream_type', 'live')
+
+    const response = await Twitch.fetch(url.toString(), Twitch.getAuthHeader())
 
     return response.json()
   }
@@ -185,9 +215,7 @@ export default class Twitch {
    * @return The user details.
    */
   public static async fetchAuthenticatedUser(): Promise<AuthenticatedUserDetails> {
-    Twitch.ensureToken()
-
-    const response = await Twitch.fetch(`${baseKrakenUrl}/user`, { Authorization: `OAuth ${Twitch.token}` })
+    const response = await Twitch.fetch(`${baseKrakenUrl}/user`, Twitch.getAuthHeader())
 
     return response.json()
   }
@@ -197,21 +225,29 @@ export default class Twitch {
    * @param  userId - The user id of the current user.
    * @param  targetId - The user id of the user to block.
    */
-  public static async blockUser(userId: string, targetId: string): Promise<BlockedUser> {
-    Twitch.ensureToken()
-
+  public static async blockUser(targetId: string): Promise<RawBlockerUser> {
     const response = await Twitch.fetch(
-      `${baseKrakenUrl}/users/${userId}/blocks/${targetId}`,
+      `${baseKrakenUrl}/users/${Twitch.userId}/blocks/${targetId}`,
+      Twitch.getAuthHeader(),
       {
-        Authorization: `OAuth ${Twitch.token}`,
-      },
-      { method: 'PUT' }
+        method: 'PUT',
+      }
     )
 
     return response.json()
   }
 
+  /**
+   * Defines if an object is either a live stream or a followed channel.
+   * @param  streamOrChannel - The stream or channel to identify.
+   * @return `true` of the parameter is a live stream.
+   */
+  public static isStream(streamOrChannel: RawStream | RawChannel): streamOrChannel is RawStream {
+    return !_.isNil(_.get(streamOrChannel, 'stream_type'))
+  }
+
   private static token: string | null
+  private static userId: string | null
 
   /**
    * Fetches an URL.
@@ -249,12 +285,15 @@ export default class Twitch {
   }
 
   /**
-   * Ensures a token is defined.
+   * Returns an auth header that can be used for authenticated request or throw.
+   * @return The header.
    */
-  private static ensureToken() {
+  private static getAuthHeader() {
     if (_.isNil(Twitch.token)) {
       throw new Error('Missing token for authenticated request.')
     }
+
+    return { Authorization: `OAuth ${Twitch.token}` }
   }
 }
 
@@ -274,10 +313,10 @@ export type IdToken = {
 /**
  * Twitch badges.
  */
-export type Badges = {
+export type RawBadges = {
   [key: string]: {
     versions: {
-      [key: string]: Badge
+      [key: string]: RawBadge
     }
   }
 }
@@ -285,7 +324,7 @@ export type Badges = {
 /**
  * Twitch badge.
  */
-export type Badge = {
+export type RawBadge = {
   click_action: string
   click_url: string
   description: string
@@ -298,7 +337,7 @@ export type Badge = {
 /**
  * Twitch user details.
  */
-export type UserDetails = {
+export type RawUser = {
   bio: string | null
   created_at: string
   display_name: string
@@ -312,7 +351,7 @@ export type UserDetails = {
 /**
  * Twitch channel details.
  */
-export type ChannelDetails = {
+export type RawChannel = {
   mature: boolean
   status: string | null
   broadcaster_language: string
@@ -340,7 +379,7 @@ export type ChannelDetails = {
 /**
  * Twitch authenticated user details.
  */
-export interface AuthenticatedUserDetails extends UserDetails {
+export interface AuthenticatedUserDetails extends RawUser {
   email: string
   email_verified: boolean
   partnered: boolean
@@ -350,15 +389,15 @@ export interface AuthenticatedUserDetails extends UserDetails {
 /**
  * Twitch chatters details.
  */
-type ChattersDetails = {
+type RawChattersDetails = {
   chatter_count: number
-  chatters: Chatters
+  chatters: RawChatters
 }
 
 /**
  * Twitch chatters.
  */
-export type Chatters = {
+export type RawChatters = {
   admins: string[]
   global_mods: string[]
   moderators: string[]
@@ -369,11 +408,11 @@ export type Chatters = {
 /**
  * Twitch clip.
  */
-export type Clip = {
+export type RawClip = {
   broadcast_id: string
-  broadcaster: ClipUser
+  broadcaster: RawClipUser
   created_at: string
-  curator: ClipUser
+  curator: RawClipUser
   duration: number
   embed_html: string
   embed_url: string
@@ -398,9 +437,9 @@ export type Clip = {
 }
 
 /**
- * Twitch clip user details.
+ * Twitch clip user.
  */
-type ClipUser = {
+type RawClipUser = {
   channel_url: string
   display_name: string
   id: string
@@ -411,7 +450,7 @@ type ClipUser = {
 /**
  * Blocked user.
  */
-type BlockedUser = {
+type RawBlockerUser = {
   user: {
     _id: string
     bio: string | null
@@ -422,4 +461,45 @@ type BlockedUser = {
     type: string
     updated_at: string
   }
+}
+
+/**
+ * Twitch follows.
+ */
+export type RawFollows = {
+  follows: Array<{ created_at: string; notifications: true; channel: RawChannel }>
+  _total: number
+}
+
+/**
+ * Twitch streams.
+ */
+export type RawStreams = {
+  streams: RawStream[]
+  _total: number
+}
+
+/**
+ * Twitch stream.
+ */
+export type RawStream = {
+  average_fps: number
+  broadcast_platform: string
+  channel: RawChannel
+  community_id: string
+  community_ids: string[]
+  created_at: string
+  delay: number
+  game: number
+  is_playlist: boolean
+  preview: {
+    large: string
+    medium: string
+    small: string
+    template: string
+  }
+  stream_type: string
+  video_height: number
+  viewers: number
+  _id: string
 }

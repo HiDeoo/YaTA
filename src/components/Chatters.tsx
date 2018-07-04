@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Shrug from 'Components/Shrug'
-import Twitch, { Chatters } from 'Libs/Twitch'
+import Twitch, { RawChatters } from 'Libs/Twitch'
 import base from 'Styled/base'
 import { color } from 'Utils/styled'
 
@@ -55,7 +55,7 @@ enum RowType {
 /**
  * Group order used when rendering chatters.
  */
-const GroupOrder: Array<keyof Chatters> = ['staff', 'global_mods', 'admins', 'moderators', 'viewers']
+const GroupOrder: Array<keyof RawChatters> = ['staff', 'global_mods', 'admins', 'moderators', 'viewers']
 
 /**
  * React State.
@@ -70,9 +70,9 @@ const initialState = {
 type State = Readonly<typeof initialState>
 
 /**
- * ChattersList Component.
+ * Chatters Component.
  */
-export default class ChattersList extends React.Component<Props, State> {
+export default class Chatters extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -276,7 +276,7 @@ export default class ChattersList extends React.Component<Props, State> {
    * @param  chatters - The chatters
    * @return The rows to render.
    */
-  private parseChatters(chatters: Chatters) {
+  private parseChatters(chatters: RawChatters) {
     let rows: ChattersRows = []
 
     _.forEach(GroupOrder, (group) => {

@@ -31,16 +31,16 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
 `
 
 /**
- * ChatMessageContent Component.
+ * MessageContent Component.
  */
-const ChatMessageContent: React.SFC<Props> = ({ message }) => {
+const MessageContent: React.SFC<Props> = ({ message }) => {
   const isAction = message.type === LogType.Action
   const messageColor = isAction && !_.isNil(message.user.color) ? message.user.color : 'inherit'
 
   return <Message color={messageColor} dangerouslySetInnerHTML={{ __html: message.message }} />
 }
 
-export default ChatMessageContent
+export default MessageContent
 
 /**
  * React Props.

@@ -136,7 +136,7 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   private renderChannelControls() {
-    const { page, toggleChattersList } = this.props
+    const { page, toggleChatters } = this.props
 
     if (page === Page.Home || page === Page.Auth || page === Page.Login) {
       return null
@@ -145,7 +145,7 @@ export default class Header extends React.Component<Props> {
     return (
       <>
         <Tooltip content="Chatters List" position={Position.BOTTOM}>
-          <Button onClick={toggleChattersList} icon="people" minimal title="Chatters List" />
+          <Button onClick={toggleChatters} icon="people" minimal title="Chatters List" />
         </Tooltip>
         <NavbarDivider />
       </>
@@ -233,6 +233,6 @@ type Props = {
   status: AppState['status']
   toggleAutoConnectInDev: () => void
   toggleChangelog: () => void
-  toggleChattersList: () => void
+  toggleChatters: () => void
   toggleSettings: () => void
 }

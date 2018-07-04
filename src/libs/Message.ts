@@ -5,7 +5,7 @@ import { Emotes, UserState } from 'twitch-js'
 import LogType from 'Constants/logType'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { EmotesProviders } from 'Libs/EmotesProvider'
-import { Badges, Clip } from 'Libs/Twitch'
+import { RawBadges, RawClip } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -52,7 +52,7 @@ export default class Message implements Serializable<SerializedMessage> {
     message: string,
     userstate: UserState,
     self: boolean,
-    badges: Badges | null,
+    badges: RawBadges | null,
     emotesProviders: EmotesProviders,
     currentUsername: string,
     bots: string[]
@@ -109,7 +109,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param  bots - Known bots.
    * @return Parsed badges.
    */
-  private parseBadges(userstate: UserState, badges: Badges | null, bots: string[]) {
+  private parseBadges(userstate: UserState, badges: RawBadges | null, bots: string[]) {
     const parsedBadges: string[] = []
 
     if (_.includes(bots, userstate.username)) {
@@ -303,5 +303,5 @@ export type SerializedMessage = {
  * Clips details.
  */
 type Clips = {
-  [key: string]: Clip | null
+  [key: string]: RawClip | null
 }

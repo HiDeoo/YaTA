@@ -13,9 +13,9 @@ const Wrapper = styled.div`
 `
 
 /**
- * ChatNotice Component.
+ * Notice Component.
  */
-export default class ChatNotice extends React.Component<Props> {
+export default class Notice extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

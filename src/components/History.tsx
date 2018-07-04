@@ -2,7 +2,7 @@ import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
-import ChatMessageContent from 'Components/ChatMessageContent'
+import MessageContent from 'Components/MessageContent'
 import { SerializedMessage } from 'Libs/Message'
 import base from 'Styled/base'
 import { color, size } from 'Utils/styled'
@@ -48,9 +48,9 @@ const Time = styled.span`
 `
 
 /**
- * ChatHistory Component.
+ * History Component.
  */
-export default class ChatHistory extends React.Component<Props> {
+export default class History extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
@@ -97,7 +97,7 @@ export default class ChatHistory extends React.Component<Props> {
       <CellMeasurer cache={messageMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
         <Message style={style}>
           <Time>{message.time}</Time>
-          <ChatMessageContent message={message} />
+          <MessageContent message={message} />
         </Message>
       </CellMeasurer>
     )

@@ -30,6 +30,11 @@ export default {
     height: 24,
     typeColor: Colors.GRAY3,
   },
+  follows: {
+    height: 66,
+    margin: 10,
+    width: 350,
+  },
   log: {
     hPadding: 10,
     minHeight: 28,

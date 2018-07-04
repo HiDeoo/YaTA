@@ -14,6 +14,10 @@ const light = {
   clips: {
     meta: Colors.GRAY1,
   },
+  follow: {
+    meta: Colors.GRAY1,
+    strong: Colors.DARK_GRAY5,
+  },
   history: {
     background: Colors.LIGHT_GRAY2,
     border: Colors.GRAY5,

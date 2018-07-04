@@ -4,11 +4,11 @@ import * as ReactTooltip from 'react-tooltip'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
-import ChatMessage from 'Components/ChatMessage'
-import ChatNotice from 'Components/ChatNotice'
-import ChatNotification from 'Components/ChatNotification'
-import ChatWhisper from 'Components/ChatWhisper'
 import FlexContent from 'Components/FlexContent'
+import Message from 'Components/Message'
+import Notice from 'Components/Notice'
+import ChatNotification from 'Components/Notification'
+import ChatWhisper from 'Components/Whisper'
 import { SerializedChatter } from 'Libs/Chatter'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
@@ -32,9 +32,9 @@ const Wrapper = styled(FlexContent)`
 `
 
 /**
- * ChatMessages Component.
+ * Logs Component.
  */
-export default class ChatMessages extends React.Component<Props> {
+export default class Logs extends React.Component<Props> {
   /**
    * Lifecycle: componentDidUpdate.
    */
@@ -102,7 +102,7 @@ export default class ChatMessages extends React.Component<Props> {
 
     if (isMessage(log)) {
       LogComponent = (
-        <ChatMessage
+        <Message
           style={style}
           message={log}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -116,7 +116,7 @@ export default class ChatMessages extends React.Component<Props> {
         />
       )
     } else if (isNotice(log)) {
-      LogComponent = <ChatNotice style={style} notice={log} />
+      LogComponent = <Notice style={style} notice={log} />
     } else if (isNotification(log)) {
       LogComponent = <ChatNotification style={style} notification={log} />
     } else if (isWhisper(log)) {

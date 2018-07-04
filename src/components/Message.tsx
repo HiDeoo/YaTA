@@ -3,11 +3,11 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import ChatClip from 'Components/ChatClip'
-import ChatMessageContent from 'Components/ChatMessageContent'
+import Clip from 'Components/Clip'
+import MessageContent from 'Components/MessageContent'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
-import { Clip } from 'Libs/Twitch'
+import { RawClip } from 'Libs/Twitch'
 import { replaceImgTagByAlt } from 'Utils/html'
 import { withSCProps } from 'Utils/react'
 import { color, ifProp, size } from 'Utils/styled'
@@ -72,9 +72,9 @@ const Username = styled.span`
 `
 
 /**
- * ChatMessage Component.
+ * Message Component.
  */
-export default class ChatMessage extends React.Component<Props> {
+export default class Message extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
@@ -93,8 +93,8 @@ export default class ChatMessage extends React.Component<Props> {
           {message.user.displayName}
           {message.user.showUsername && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
-        <ChatMessageContent message={message} />
         {this.renderClips()}
+        <MessageContent message={message} />
       </Wrapper>
     )
   }
@@ -120,10 +120,10 @@ export default class ChatMessage extends React.Component<Props> {
         return validClips
       },
       {}
-    ) as { [key: string]: Clip }
+    ) as { [key: string]: RawClip }
 
     return _.map(clips, (clip) => {
-      return <ChatClip key={clip.slug} clip={clip} />
+      return <Clip key={clip.slug} clip={clip} />
     })
   }
 
