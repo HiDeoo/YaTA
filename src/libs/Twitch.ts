@@ -26,6 +26,14 @@ const WhisperRegExp = /^\/w \S+ .+/
  */
 export default class Twitch {
   /**
+   * Sets the Twitch token to use for authenticated calls.
+   * @param token - The token or null to invalidate.
+   */
+  public static setToken(token: string | null) {
+    Twitch.token = token
+  }
+
+  /**
    * Returns the Twitch authentication URL.
    * @return The auth URL.
    */
@@ -174,32 +182,36 @@ export default class Twitch {
 
   /**
    * Fetches details about the current authenticated user.
-   * @param  token - The user token.
    * @return The user details.
    */
-  public static async fetchAuthenticatedUser(token: string): Promise<AuthenticatedUserDetails> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/user`, { Authorization: `OAuth ${token}` })
+  public static async fetchAuthenticatedUser(): Promise<AuthenticatedUserDetails> {
+    Twitch.ensureToken()
+
+    const response = await Twitch.fetch(`${baseKrakenUrl}/user`, { Authorization: `OAuth ${Twitch.token}` })
 
     return response.json()
   }
 
   /**
    * Blocks a user.
-   * @param  token - The user token.
    * @param  userId - The user id of the current user.
    * @param  targetId - The user id of the user to block.
    */
-  public static async blockUser(token: string, userId: string, targetId: string): Promise<BlockedUser> {
+  public static async blockUser(userId: string, targetId: string): Promise<BlockedUser> {
+    Twitch.ensureToken()
+
     const response = await Twitch.fetch(
       `${baseKrakenUrl}/users/${userId}/blocks/${targetId}`,
       {
-        Authorization: `OAuth ${token}`,
+        Authorization: `OAuth ${Twitch.token}`,
       },
       { method: 'PUT' }
     )
 
     return response.json()
   }
+
+  private static token: string | null
 
   /**
    * Fetches an URL.
@@ -234,6 +246,15 @@ export default class Twitch {
     const jwk = await jwkReponse.json()
 
     return jwk as JsonWebKey
+  }
+
+  /**
+   * Ensures a token is defined.
+   */
+  private static ensureToken() {
+    if (_.isNil(Twitch.token)) {
+      throw new Error('Missing token for authenticated request.')
+    }
   }
 }
 

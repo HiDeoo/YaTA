@@ -17,13 +17,14 @@ import Theme from 'Constants/theme'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Settings, { SettingsTab } from 'Containers/Settings'
+import Twitch from 'Libs/Twitch'
 import { AppState, setShouldReadChangelog, toggleChattersList } from 'Store/ducks/app'
 import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
 import { getAutoConnectInDev, getLastKnownVersion, getTheme } from 'Store/selectors/settings'
-import { getIsLoggedIn } from 'Store/selectors/user'
+import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import dark from 'Styled/dark'
 import light from 'Styled/light'
 
@@ -44,10 +45,13 @@ class App extends React.Component<Props, State> {
    */
   public componentDidMount() {
     this.installTheme()
+    this.setUpTwitchApi()
 
-    if (_.isNil(this.props.lastKnownVersion)) {
+    const { lastKnownVersion } = this.props
+
+    if (_.isNil(lastKnownVersion)) {
       this.props.setVersion(process.env.REACT_APP_VERSION)
-    } else if (semCompare(process.env.REACT_APP_VERSION, this.props.lastKnownVersion) === 1) {
+    } else if (semCompare(process.env.REACT_APP_VERSION, lastKnownVersion) === 1) {
       this.props.setShouldReadChangelog(true)
     }
   }
@@ -59,6 +63,10 @@ class App extends React.Component<Props, State> {
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.theme !== this.props.theme) {
       this.installTheme()
+    }
+
+    if (prevProps.isLoggedIn !== this.props.isLoggedIn) {
+      this.setUpTwitchApi()
     }
   }
 
@@ -124,6 +132,19 @@ class App extends React.Component<Props, State> {
   }
 
   /**
+   * Sets up the Twitch API.
+   */
+  private setUpTwitchApi() {
+    const { loginDetails } = this.props
+
+    if (!_.isNil(loginDetails)) {
+      Twitch.setToken(loginDetails.password)
+    } else {
+      Twitch.setToken(null)
+    }
+  }
+
+  /**
    * Toggles the settings panel.
    */
   private toggleSettings = () => {
@@ -157,6 +178,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     channel: getChannel(state),
     isLoggedIn: getIsLoggedIn(state),
     lastKnownVersion: getLastKnownVersion(state),
+    loginDetails: getLoginDetails(state),
     shouldReadChangelog: getShouldReadChangelog(state),
     status: getStatus(state),
     theme: getTheme(state),
@@ -172,6 +194,7 @@ type StateProps = {
   channel: AppState['channel']
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: SettingsState['lastKnownVersion']
+  loginDetails: ReturnType<typeof getLoginDetails>
   shouldReadChangelog: AppState['shouldReadChangelog']
   status: AppState['status']
   theme: SettingsState['theme']

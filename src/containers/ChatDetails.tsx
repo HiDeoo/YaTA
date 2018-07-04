@@ -12,7 +12,6 @@ import Twitch, { ChannelDetails } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
-import { getLoginDetails } from 'Store/selectors/user'
 
 /**
  * DetailsRow component.
@@ -67,7 +66,7 @@ class ChatDetails extends React.Component<Props, State> {
    * @param prevProps - The previous props.
    */
   public async componentDidUpdate(prevProps: Props) {
-    const { chatter, loginDetails } = this.props
+    const { chatter } = this.props
 
     if (!_.isNil(chatter) && prevProps.chatter !== chatter) {
       try {
@@ -75,8 +74,8 @@ class ChatDetails extends React.Component<Props, State> {
 
         if (!chatter.isSelf) {
           details = await Twitch.fetchChannel(chatter.id)
-        } else if (chatter.isSelf && !_.isNil(loginDetails)) {
-          const user = await Twitch.fetchAuthenticatedUser(loginDetails.password)
+        } else if (chatter.isSelf) {
+          const user = await Twitch.fetchAuthenticatedUser()
           details = await Twitch.fetchChannel(user._id)
         }
 
@@ -326,7 +325,6 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
   const getChatterMessages = makeGetChatterMessages()
 
   return {
-    loginDetails: getLoginDetails(state),
     messages: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterMessages(state, ownProps.chatter.id)) : null,
   }
 })(ChatDetails)
@@ -335,7 +333,6 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
  * React Props.
  */
 type StateProps = {
-  loginDetails: ReturnType<typeof getLoginDetails>
   messages: ReturnType<typeof getLogsByIds> | null
 }
 

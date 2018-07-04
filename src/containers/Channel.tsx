@@ -340,7 +340,7 @@ class Channel extends React.Component<Props, State> {
 
     if (!_.isNil(loginDetails) && !_.isNil(userId)) {
       try {
-        const ignoredUser = await Twitch.blockUser(loginDetails.password, userId, targetId)
+        const ignoredUser = await Twitch.blockUser(userId, targetId)
 
         this.props.ignoreUser(ignoredUser.user._id)
       } catch (error) {
