@@ -33,8 +33,9 @@ const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
  */
 const Time = styled.span`
   color: ${color('message.time.color')};
+  display: inline-block;
   font-size: 0.77rem;
-  padding-right: 2px;
+  min-width: 42px;
 `
 
 /**
