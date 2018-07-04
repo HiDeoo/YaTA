@@ -5,7 +5,7 @@ import { Emotes, UserState } from 'twitch-js'
 import LogType from 'Constants/logType'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { EmotesProviders } from 'Libs/EmotesProvider'
-import { RawBadges, RawClip } from 'Libs/Twitch'
+import { RawBadges, RawCheermote, RawCheermoteImage, RawClip } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -47,6 +47,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param emotesProviders - Additional emotes providers.
    * @param currentUsername - The name of the current user.
    * @param bots - Known bots.
+   * @param [cheermotes] - The cheermotes.
    */
   constructor(
     message: string,
@@ -55,7 +56,8 @@ export default class Message implements Serializable<SerializedMessage> {
     badges: RawBadges | null,
     emotesProviders: EmotesProviders,
     currentUsername: string,
-    bots: string[]
+    bots: string[],
+    cheermotes?: RawCheermote[] | null
   ) {
     this.self = self
     this.id = userstate.id
@@ -68,7 +70,10 @@ export default class Message implements Serializable<SerializedMessage> {
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
 
     this.badges = this.parseBadges(userstate, badges, bots)
-    this.message = this.parseMessage(message, userstate.emotes || {}, emotesProviders, currentUsername)
+
+    const sanitizedCheermotes = !_.isNil(userstate.bits) && userstate.bits > 0 ? cheermotes : null
+
+    this.message = this.parseMessage(message, userstate, emotesProviders, currentUsername, sanitizedCheermotes)
   }
 
   /**
@@ -144,11 +149,20 @@ export default class Message implements Serializable<SerializedMessage> {
   /**
    * Parses a message for emotes, mentions, links, etc.
    * @param message - The message to parse.
-   * @param emotes - The message emotes.
+   * @param userstate - The userstate.
    * @param emotesProviders - Additional emotes providers.
    * @param currentUsername - The name of the current user.
+   * @param [cheermotes] - The cheermotes.
    */
-  private parseMessage(message: string, emotes: Emotes, emotesProviders: EmotesProviders, currentUsername: string) {
+  private parseMessage(
+    message: string,
+    userstate: UserState,
+    emotesProviders: EmotesProviders,
+    currentUsername: string,
+    cheermotes?: RawCheermote[] | null
+  ) {
+    const emotes = userstate.emotes || {}
+
     this.parseClips(message)
     this.parseAdditionalEmotes(message, emotes, emotesProviders)
 
@@ -157,7 +171,13 @@ export default class Message implements Serializable<SerializedMessage> {
     parsedMessage = this.parseEmotes(parsedMessage, emotes, emotesProviders)
     parsedMessage = this.parseMentions(message, parsedMessage, currentUsername)
 
-    return linkifyHtml(escape(parsedMessage).join(''), {
+    let parsedMessageStr = escape(parsedMessage).join('')
+
+    if (!_.isNil(cheermotes) && !_.isNil(userstate.bits)) {
+      parsedMessageStr = this.parseCheermotes(parsedMessageStr, cheermotes, userstate.bits)
+    }
+
+    return linkifyHtml(parsedMessageStr, {
       attributes: {
         'data-tip': '',
       },
@@ -178,6 +198,78 @@ export default class Message implements Serializable<SerializedMessage> {
         _.merge(emotes, providerEmotes)
       }
     })
+  }
+
+  /**
+   * Parses a message for cheermotes.
+   * @param message - The message to parse.
+   * @param cheermotes - The cheermotes.
+   * @param totalBits - The number of bits in the message.
+   */
+  private parseCheermotes(message: string, cheermotes: RawCheermote[], totalBits: number) {
+    const parsedMessage = message.split('')
+
+    const replacements: Array<{ str: string; start: number; end: number }> = []
+
+    let usedBits = 0
+
+    _.forEach(cheermotes, (cheermote) => {
+      const pattern = `(^|\\s)(${cheermote.prefix}(\\d+))(\\s|$)`
+      const regExp = new RegExp(pattern, 'gmi')
+      let match
+
+      // tslint:disable-next-line:no-conditional-assignment
+      while ((match = regExp.exec(message)) != null) {
+        const bits = parseInt(match[3], 10)
+        let currentBits = bits
+
+        if (bits > totalBits || usedBits > totalBits) {
+          continue
+        }
+
+        let color = null as string | null
+        let images = null as RawCheermoteImage | null
+
+        _.forEach(cheermote.tiers, (tier) => {
+          if (tier.min_bits <= bits) {
+            color = tier.color
+            images = tier.images.dark.animated
+
+            currentBits = tier.min_bits
+          }
+        })
+
+        if (!_.isNil(color) && !_.isNil(images)) {
+          const potentialUsedBits = usedBits + currentBits
+
+          if (potentialUsedBits <= totalBits) {
+            const start = match.index + match[1].length
+            const end = start + match[2].length + (match[4].length === 0 ? match[4].length : match[4].length - 1)
+
+            const url = images['1']
+            const srcset = `${images['1']} 1x,${images['2']}/2.0 2x,${images['4']} 4x`
+
+            const str = `<img class="emote cheer" src="${url}" srcset="${srcset}" alt="${
+              match[2]
+            }" /><span class="cheer" style="color: ${color}">${bits}</span>`
+
+            replacements.push({ str, start, end })
+
+            usedBits = potentialUsedBits
+          }
+        }
+      }
+    })
+
+    _.forEach(replacements, ({ str, start, end }) => {
+      for (let i = start; i < end; ++i) {
+        parsedMessage[i] = ''
+      }
+
+      parsedMessage[start] = str
+    })
+
+    return parsedMessage.join('')
   }
 
   /**

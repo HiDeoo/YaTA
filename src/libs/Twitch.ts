@@ -148,6 +148,16 @@ export default class Twitch {
   }
 
   /**
+   * Fetches cheermotes.
+   * @return The cheermotes.
+   */
+  public static async fetchCheermotes(): Promise<{ actions: RawCheermote[] }> {
+    const response = await Twitch.fetch(`${baseKrakenUrl}/bits/actions`)
+
+    return response.json()
+  }
+
+  /**
    * Fetches details about a clip.
    * @param  slug - The clip slug.
    * @return The clip details.
@@ -503,3 +513,44 @@ export type RawStream = {
   viewers: number
   _id: string
 }
+
+/**
+ * Twitch Cheermote.
+ */
+export type RawCheermote = {
+  background: string[]
+  prefix: string
+  priority: number
+  scales: string[]
+  tiers: RawCheermoteTier[]
+  type: string
+  updated_at: string
+}
+
+/**
+ * Twitch Cheermote tier.
+ */
+type RawCheermoteTier = {
+  can_cheer: boolean
+  color: string
+  id: string
+  images: { [key in CheermoteImageBackground]: RawCheermoteImages }
+  min_bits: number
+}
+
+/**
+ * Twitch Cheermote images.
+ */
+type RawCheermoteImages = { [key in CheermoteImageType]: RawCheermoteImage }
+
+/**
+ * Twitch Cheermote image.
+ */
+export type RawCheermoteImage = { [key in CheermoteImageScales]: string }
+
+/**
+ * Cheermotes related types.
+ */
+type CheermoteImageBackground = 'dark' | 'light'
+type CheermoteImageType = 'static' | 'animated'
+type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'

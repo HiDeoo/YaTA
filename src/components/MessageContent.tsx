@@ -28,6 +28,10 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
       background-color: ${color('log.mention.self.color')};
     }
   }
+
+  span.cheer {
+    font-weight: bold;
+  }
 `
 
 /**

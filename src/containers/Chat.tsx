@@ -24,7 +24,7 @@ import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
-import Twitch, { RawBadges } from 'Libs/Twitch'
+import Twitch, { RawBadges, RawCheermote } from 'Libs/Twitch'
 import { AppState, resetAppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState, clearChatters } from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
@@ -51,6 +51,7 @@ export class ChatClient extends React.Component<Props, State> {
   private badges: RawBadges | null = null
   private emotesProviders: EmotesProviders = {}
   private bots: string[] = []
+  private cheermotes: RawCheermote[] | null = null
 
   /**
    * Creates a new instance of the component.
@@ -217,6 +218,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     try {
       this.badges = await Twitch.fetchBadges(state.roomId)
+      this.cheermotes = (await Twitch.fetchCheermotes()).actions
 
       if (!_.isNil(this.props.channel)) {
         const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
@@ -673,7 +675,8 @@ export class ChatClient extends React.Component<Props, State> {
           this.badges,
           this.emotesProviders,
           this.props.loginDetails!.username,
-          this.bots
+          this.bots,
+          userstate['message-type'] === LogType.Cheer ? this.cheermotes : undefined
         )
 
         if (_.isNil(parsedMessage.user.color)) {
