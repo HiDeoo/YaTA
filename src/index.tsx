@@ -57,6 +57,13 @@ function renderApplication(Component: React.ComponentType<WithStoreConfiguration
 const storeConfiguration = configureStore()
 
 /**
+ * Enables HMR.
+ */
+if (module.hot) {
+  module.hot.accept()
+}
+
+/**
  * Renders the application.
  */
 renderApplication(Wrapper, storeConfiguration)
