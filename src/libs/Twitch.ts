@@ -551,6 +551,6 @@ export type RawCheermoteImage = { [key in CheermoteImageScales]: string }
 /**
  * Cheermotes related types.
  */
-type CheermoteImageBackground = 'dark' | 'light'
+export type CheermoteImageBackground = 'dark' | 'light'
 type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'

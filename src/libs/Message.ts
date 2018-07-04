@@ -3,9 +3,10 @@ import * as _ from 'lodash'
 import { Emotes, UserState } from 'twitch-js'
 
 import LogType from 'Constants/logType'
+import Theme from 'Constants/theme'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { EmotesProviders } from 'Libs/EmotesProvider'
-import { RawBadges, RawCheermote, RawCheermoteImage, RawClip } from 'Libs/Twitch'
+import { CheermoteImageBackground, RawBadges, RawCheermote, RawCheermoteImage, RawClip } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -36,6 +37,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private mentionned: boolean = false
   private hasClip: boolean = false
   private clips: Clips = {}
+  private parseOptions: MessageParseOptions
 
   /**
    * Creates and parses a new chat message instance.
@@ -47,7 +49,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param emotesProviders - Additional emotes providers.
    * @param currentUsername - The name of the current user.
    * @param bots - Known bots.
-   * @param [cheermotes] - The cheermotes.
+   * @param [cheermotes=null] - The cheermotes.
    */
   constructor(
     message: string,
@@ -57,8 +59,11 @@ export default class Message implements Serializable<SerializedMessage> {
     emotesProviders: EmotesProviders,
     currentUsername: string,
     bots: string[],
-    cheermotes?: RawCheermote[] | null
+    cheermotes: RawCheermote[] | null = null,
+    parseOptions: MessageParseOptions
   ) {
+    this.parseOptions = parseOptions
+
     this.self = self
     this.id = userstate.id
     this.color = userstate.color
@@ -209,12 +214,14 @@ export default class Message implements Serializable<SerializedMessage> {
   private parseCheermotes(message: string, cheermotes: RawCheermote[], totalBits: number) {
     const parsedMessage = message.split('')
 
+    const cheermoteBackground: CheermoteImageBackground = this.parseOptions.theme === Theme.Dark ? 'dark' : 'light'
+
     const replacements: Array<{ str: string; start: number; end: number }> = []
 
     let usedBits = 0
 
     _.forEach(cheermotes, (cheermote) => {
-      const pattern = `(^|\\s)(${cheermote.prefix}(\\d+))(\\s|$)`
+      const pattern = `(^|\\b)(${cheermote.prefix}(\\d+))(\\b|$)`
       const regExp = new RegExp(pattern, 'gmi')
       let match
 
@@ -233,7 +240,7 @@ export default class Message implements Serializable<SerializedMessage> {
         _.forEach(cheermote.tiers, (tier) => {
           if (tier.min_bits <= bits) {
             color = tier.color
-            images = tier.images.dark.animated
+            images = tier.images[cheermoteBackground].animated
 
             currentBits = tier.min_bits
           }
@@ -396,4 +403,11 @@ export type SerializedMessage = {
  */
 type Clips = {
   [key: string]: RawClip | null
+}
+
+/**
+ * Message parse options.
+ */
+type MessageParseOptions = {
+  theme: Theme
 }

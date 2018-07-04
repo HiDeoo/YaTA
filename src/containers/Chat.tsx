@@ -32,7 +32,7 @@ import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
-import { getAutoConnectInDev } from 'Store/selectors/settings'
+import { getAutoConnectInDev, getTheme } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 
 /**
@@ -668,6 +668,8 @@ export class ChatClient extends React.Component<Props, State> {
           }
         }
 
+        const { theme } = this.props
+
         parsedMessage = new Message(
           message,
           userstate,
@@ -676,7 +678,8 @@ export class ChatClient extends React.Component<Props, State> {
           this.emotesProviders,
           this.props.loginDetails!.username,
           this.bots,
-          userstate['message-type'] === LogType.Cheer ? this.cheermotes : undefined
+          userstate['message-type'] === LogType.Cheer ? this.cheermotes : undefined,
+          { theme }
         )
 
         if (_.isNil(parsedMessage.user.color)) {
@@ -705,6 +708,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     chattersMap: getChattersMap(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
+    theme: getTheme(state),
   }),
   {
     addChatterWithMessage,
@@ -732,6 +736,7 @@ type StateProps = {
   chattersMap: ChattersState['byName']
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
+  theme: ReturnType<typeof getTheme>
 }
 
 /**
