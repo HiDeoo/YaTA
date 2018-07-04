@@ -23,7 +23,7 @@ export const initialState = {
   autoConnectInDev: true,
   copyMessageOnDoubleClick: true,
   lastKnownVersion: null,
-  showContextMenu: false,
+  showContextMenu: true,
   theme: Theme.Dark as SettingsState['theme'],
 }
 
