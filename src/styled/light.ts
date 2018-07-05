@@ -35,6 +35,12 @@ const light = {
     background: Colors.LIGHT_GRAY3,
     border: Colors.BLUE4,
   },
+  settings: {
+    table: {
+      background: Colors.LIGHT_GRAY2,
+      border: Colors.GRAY5,
+    },
+  },
   whisper: {
     background: Colors.LIGHT_GRAY3,
     border: Colors.INDIGO5,

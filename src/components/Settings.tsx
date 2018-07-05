@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import SettingsChangelog from 'Containers/SettingsChangelog'
 import SettingsGeneral from 'Containers/SettingsGeneral'
+import SettingsHighlights from 'Containers/SettingsHighlights'
 
 /**
  * SettingsDialog component.
@@ -24,6 +25,7 @@ const SettingsNavbar = styled(Navbar)`
  */
 export enum SettingsTab {
   General = 'general',
+  Highlights = 'highlights',
   Changelog = 'changelog',
 }
 
@@ -61,6 +63,7 @@ export default class Settings extends React.Component<Props, State> {
                 />
               }
             />
+            <Tab id={SettingsTab.Highlights} title="Highlights" panel={<SettingsHighlights />} />
             <Tab id={SettingsTab.Changelog} title="Changelog" panel={<SettingsChangelog />} />
           </Tabs>
         </SettingsNavbar>

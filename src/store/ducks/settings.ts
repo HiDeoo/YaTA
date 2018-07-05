@@ -14,6 +14,9 @@ export enum Actions {
   TOGGLE_COPY_MESSAGE_DOUBLE_CLICK = 'settings/TOGGLE_COPY_MESSAGE_DOUBLE_CLICK',
   TOGGLE_SHOW_CONTEXT_MENU = 'settings/TOGGLE_SHOW_CONTEXT_MENU',
   TOGGLE_AUTO_CONNECT_IN_DEV = 'settings/TOGGLE_AUTO_CONNECT_IN_DEV',
+  ADD_HIGHLIGHT = 'settings/ADD_HIGHLIGHT',
+  UPDATE_HIGHLIGHT = 'settings/UPDATE_HIGHLIGHT',
+  REMOVE_HIGHLIGHT = 'settings/REMOVE_HIGHLIGHT',
 }
 
 /**
@@ -22,6 +25,7 @@ export enum Actions {
 export const initialState = {
   autoConnectInDev: true,
   copyMessageOnDoubleClick: true,
+  highlights: {},
   lastKnownVersion: null,
   showContextMenu: true,
   theme: Theme.Dark as SettingsState['theme'],
@@ -72,6 +76,32 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         autoConnectInDev: !state.autoConnectInDev,
       }
     }
+    case Actions.ADD_HIGHLIGHT: {
+      const { highlight } = action.payload
+
+      return {
+        ...state,
+        highlights: { ...state.highlights, [highlight.id]: highlight },
+      }
+    }
+    case Actions.UPDATE_HIGHLIGHT: {
+      const { id, pattern } = action.payload
+
+      return {
+        ...state,
+        highlights: { ...state.highlights, [id]: { ...state.highlights[id], pattern } },
+      }
+    }
+    case Actions.REMOVE_HIGHLIGHT: {
+      const { id } = action.payload
+
+      const { [id]: highlightToRemove, ...otherHighlights } = state.highlights
+
+      return {
+        ...state,
+        highlights: otherHighlights,
+      }
+    }
     default: {
       return state
     }
@@ -115,6 +145,38 @@ export const toggleShowContextMenu = () => createAction(Actions.TOGGLE_SHOW_CONT
 export const toggleAutoConnectInDev = () => createAction(Actions.TOGGLE_AUTO_CONNECT_IN_DEV)
 
 /**
+ * Add an highlight.
+ * @param  highlight - The new highlight.
+ * @return The action.
+ */
+export const addHighlight = (highlight: Highlight) =>
+  createAction(Actions.ADD_HIGHLIGHT, {
+    highlight,
+  })
+
+/**
+ * Update an highlight pattern.
+ * @param  id - The highlight id.
+ * @param  pattern - The new pattern.
+ * @return The action.
+ */
+export const updateHighlight = (id: string, pattern: string) =>
+  createAction(Actions.UPDATE_HIGHLIGHT, {
+    id,
+    pattern,
+  })
+
+/**
+ * Removes an highlight.
+ * @param  id - The highlight id.
+ * @return The action.
+ */
+export const removeHighlight = (id: string) =>
+  createAction(Actions.REMOVE_HIGHLIGHT, {
+    id,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -124,6 +186,9 @@ export type SettingsActions =
   | ReturnType<typeof toggleCopyMessageOnDoubleClick>
   | ReturnType<typeof toggleShowContextMenu>
   | ReturnType<typeof toggleAutoConnectInDev>
+  | ReturnType<typeof addHighlight>
+  | ReturnType<typeof updateHighlight>
+  | ReturnType<typeof removeHighlight>
 
 /**
  * Settings state.
@@ -153,4 +218,17 @@ export type SettingsState = {
    * When in dev mode, auto-connect to the chat servers.
    */
   autoConnectInDev: boolean
+
+  /**
+   * Highlights.
+   */
+  highlights: { [key in Highlight['id']]: Highlight }
+}
+
+/**
+ * Highlight.
+ */
+export type Highlight = {
+  id: string
+  pattern: string
 }

@@ -29,4 +29,10 @@ export default {
       settings: { ...state.settings, autoConnectInDev: initialState.autoConnectInDev },
     }
   },
+  4: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, highlights: initialState.highlights },
+    }
+  },
 }

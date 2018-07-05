@@ -35,6 +35,12 @@ const dark = {
     background: Colors.DARK_GRAY2,
     border: Colors.BLUE4,
   },
+  settings: {
+    table: {
+      background: Colors.DARK_GRAY4,
+      border: Colors.DARK_GRAY1,
+    },
+  },
   whisper: {
     background: Colors.DARK_GRAY2,
     border: Colors.INDIGO5,
