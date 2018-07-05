@@ -23,7 +23,7 @@ export default class Notice extends React.Component<Props> {
   public render() {
     const { notice, style } = this.props
 
-    return <Wrapper style={style}>{notice.message}</Wrapper>
+    return <Wrapper style={style} dangerouslySetInnerHTML={{ __html: notice.message }} />
   }
 }
 

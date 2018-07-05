@@ -295,7 +295,11 @@ export class ChatClient extends React.Component<Props, State> {
    * @param viewers - The number of viewers.
    */
   private onHosting = (_channel: string, target: string, viewers: number) => {
-    const notice = new Notice(`Now hosting ${target} for up to ${viewers} viewers.`, Event.Hosting)
+    const notice = new Notice(
+      `Now hosting <a href="/${target}">${target}</a> for up to ${viewers} viewers.`,
+      Event.Hosting,
+      true
+    )
 
     this.props.addLog(notice.serialize())
   }
