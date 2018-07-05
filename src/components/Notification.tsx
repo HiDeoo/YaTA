@@ -27,6 +27,18 @@ const Message = styled.div`
  */
 export default class Notification extends React.Component<Props> {
   /**
+   * Lifecycle: shouldComponentUpdate.
+   * @param  nextProps - The next props.
+   * @return A boolean to indicate if the component should update on state or props change.
+   */
+  public shouldComponentUpdate(nextProps: Props) {
+    const { notification, style } = this.props
+    const { notification: nextNotification, style: nextStyle } = nextProps
+
+    return notification.id !== nextNotification.id || !_.isEqual(style, nextStyle)
+  }
+
+  /**
    * Renders the component.
    * @return Element to render.
    */

@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -16,6 +17,18 @@ const Wrapper = styled.div`
  * Notice Component.
  */
 export default class Notice extends React.Component<Props> {
+  /**
+   * Lifecycle: shouldComponentUpdate.
+   * @param  nextProps - The next props.
+   * @return A boolean to indicate if the component should update on state or props change.
+   */
+  public shouldComponentUpdate(nextProps: Props) {
+    const { notice, style } = this.props
+    const { notice: nextNotice, style: nextStyle } = nextProps
+
+    return notice.id !== nextNotice.id || !_.isEqual(style, nextStyle)
+  }
+
   /**
    * Renders the component.
    * @return Element to render.

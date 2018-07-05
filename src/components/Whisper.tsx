@@ -1,4 +1,5 @@
 import { Icon } from '@blueprintjs/core'
+import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -38,6 +39,18 @@ const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
  * Whisper Component.
  */
 export default class Whisper extends React.Component<Props> {
+  /**
+   * Lifecycle: shouldComponentUpdate.
+   * @param  nextProps - The next props.
+   * @return A boolean to indicate if the component should update on state or props change.
+   */
+  public shouldComponentUpdate(nextProps: Props) {
+    const { whisper, style } = this.props
+    const { whisper: nextWhisper, style: nextStyle } = nextProps
+
+    return whisper.id !== nextWhisper.id || !_.isEqual(style, nextStyle)
+  }
+
   /**
    * Renders the component.
    * @return Element to render.

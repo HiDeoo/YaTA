@@ -77,6 +77,18 @@ const Username = styled.span`
  */
 export default class Message extends React.Component<Props> {
   /**
+   * Lifecycle: shouldComponentUpdate.
+   * @param  nextProps - The next props.
+   * @return A boolean to indicate if the component should update on state or props change.
+   */
+  public shouldComponentUpdate(nextProps: Props) {
+    const { message, style } = this.props
+    const { message: nextMessage, style: nextStyle } = nextProps
+
+    return message.id !== nextMessage.id || message.purged !== nextMessage.purged || !_.isEqual(style, nextStyle)
+  }
+
+  /**
    * Renders the component.
    * @return Element to render.
    */
