@@ -116,7 +116,7 @@ export default class Message implements Serializable<SerializedMessage> {
     const parsedBadges: string[] = []
 
     if (_.includes(Message.bots, userstate.username)) {
-      parsedBadges.push('<img class="badge" src="https://cdn.betterttv.net/tags/bot.png" />')
+      parsedBadges.push('<img class="badge" data-tip="Bot" src="https://cdn.betterttv.net/tags/bot.png" />')
     }
 
     if (!_.isNil(Message.badges) && _.size(userstate.badges)) {
@@ -135,7 +135,9 @@ export default class Message implements Serializable<SerializedMessage> {
 
         const srcset = `${badge.image_url_1x} 1x,${badge.image_url_2x} 2x,${badge.image_url_4x} 4x`
 
-        parsedBadges.push(`<img class="badge" src="${badge.image_url_1x}" srcset="${srcset}" />`)
+        parsedBadges.push(
+          `<img class="badge" data-tip="${badge.title}" src="${badge.image_url_1x}" srcset="${srcset}" />`
+        )
 
         return
       })
@@ -291,7 +293,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
           parsedMessage[
             indexes[0]
-          ] = `<img class="emote" src="${url}${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
+          ] = `<img class="emote" data-tip="${emoteName}" src="${url}${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
         } else {
           parsedMessage[indexes[0]] = Message.emotesProviders[providerPrefix].getEmoteTag(emoteId, emoteName)
         }

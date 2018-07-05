@@ -5,6 +5,7 @@ import { injectGlobal } from 'styled-components'
 
 import Wrapper from 'Components/Wrapper'
 import configureStore, { StoreConfiguration } from 'Store'
+import base from 'Styled/base'
 import registerServiceWorker from './registerServiceWorker'
 
 import 'node_modules/@blueprintjs/core/lib/css/blueprint.css'
@@ -22,22 +23,43 @@ injectGlobal`
   }
 
   .__react_component_tooltip {
-    width: 220px;
-    height: 220px;
-    padding: 10px;
+    &.channelTooltip {
+      background-color: ${base.tooltip.background};
+      padding: 5px 10px;
 
-    img {
-      display: inline-block;
-      max-height: 200px;
-      max-width: 200px;
-    }
+      &.show {
+        opacity: 1;
+      }
 
-    .preview {
-      align-items: center;
-      display: flex;
-      height: 100%;
-      justify-content: center;
-      width: 100%;
+      &.place-left::after {
+        border-left: 8px solid ${base.tooltip.background};
+      }
+
+      &.place-right::after {
+        border-right: 8px solid ${base.tooltip.background};
+      }
+
+      &.place-top::after {
+        border-top: 8px solid ${base.tooltip.background};
+      }
+
+      &.place-bottom::after {
+        border-bottom: 8px solid ${base.tooltip.background};
+      }
+
+      img {
+        display: inline-block;
+        max-height: 200px;
+        max-width: 200px;
+      }
+
+      .preview {
+        align-items: center;
+        display: flex;
+        height: 210px;
+        justify-content: center;
+        width: 220px;
+      }
     }
   }
 `

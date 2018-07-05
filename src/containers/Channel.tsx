@@ -80,7 +80,7 @@ class Channel extends React.Component<Props, State> {
 
     return (
       <FlexLayout vertical innerRef={this.Logs}>
-        <ReactTooltip html effect="solid" getContent={this.getTooltipContent} />
+        <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
         <Chatters visible={showChatters} toggle={this.props.toggleChatters} channel={channel} />
         <Chat ref={this.chatClient} />
         <Logs
@@ -137,6 +137,8 @@ class Channel extends React.Component<Props, State> {
             return null
           }
         }
+      } else if (node instanceof HTMLImageElement) {
+        return node.getAttribute('data-tip')
       }
     }
 

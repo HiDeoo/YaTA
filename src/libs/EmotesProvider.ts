@@ -67,7 +67,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
 
     const srcset = `${url1x} 1x,${url2x} 2x,${url4x} 4x`
 
-    return `<img class="emote" src="${url1x}" srcset="${srcset}" alt="${name}" />`
+    return `<img class="emote" data-tip="${name}" src="${url1x}" srcset="${srcset}" alt="${name}" />`
   }
 
   /**
