@@ -35,6 +35,8 @@ const Wrapper = styled(FlexContent)`
  * Logs Component.
  */
 export default class Logs extends React.Component<Props> {
+  private pauseAutoScroll: boolean = false
+
   /**
    * Lifecycle: componentDidUpdate.
    */
@@ -49,6 +51,8 @@ export default class Logs extends React.Component<Props> {
   public render() {
     const { copyMessageOnDoubleClick, logs, showContextMenu } = this.props
 
+    const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
+
     return (
       <Wrapper>
         <AutoSizer onResize={this.onResize}>
@@ -60,7 +64,8 @@ export default class Logs extends React.Component<Props> {
               rowCount={logs.length}
               rowHeight={messageMeasureCache.rowHeight}
               rowRenderer={this.messageRenderer}
-              scrollToIndex={logs.length - 1}
+              onScroll={this.onScroll}
+              scrollToIndex={scrollToIndex}
               width={width}
               showContextMenu={showContextMenu}
               copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -70,6 +75,25 @@ export default class Logs extends React.Component<Props> {
         </AutoSizer>
       </Wrapper>
     )
+  }
+
+  /**
+   * Triggered when the list is scrolled.
+   * @param info - The scrolling informations.
+   */
+  private onScroll = ({
+    clientHeight,
+    scrollHeight,
+    scrollTop,
+  }: {
+    clientHeight: number
+    scrollHeight: number
+    scrollTop: number
+  }) => {
+    const offset = scrollHeight - scrollTop
+
+    // Allow for a little bit of threshold.
+    this.pauseAutoScroll = offset - clientHeight > 10
   }
 
   /**
