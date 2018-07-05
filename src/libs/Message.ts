@@ -30,6 +30,7 @@ export default class Message implements Serializable<SerializedMessage> {
   public static bots: string[] = []
   public static cheermotes: RawCheermote[] | null = null
   public static highlights: Highlights = {}
+  public static highlightsIgnoredUsers: string[] = []
 
   public user: Chatter
   public color: string | null
@@ -45,6 +46,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private hasClip: boolean = false
   private clips: Clips = {}
   private parseOptions: MessageParseOptions
+  private ignoreHighlight: boolean
 
   /**
    * Creates and parses a new chat message instance.
@@ -70,6 +72,8 @@ export default class Message implements Serializable<SerializedMessage> {
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate)
     this.type = userstate['message-type']
+
+    this.ignoreHighlight = this.self || _.includes(Message.highlightsIgnoredUsers, this.user.userName)
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
@@ -315,7 +319,7 @@ export default class Message implements Serializable<SerializedMessage> {
     let regExp = new RegExp(pattern, 'gmi')
     let match
 
-    if (!this.self) {
+    if (!this.ignoreHighlight) {
       // tslint:disable-next-line:no-conditional-assignment
       while ((match = regExp.exec(message)) != null) {
         this.mentionned = true
@@ -358,7 +362,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param parsedMessage - The message being parsed.
    */
   private parseHighlights(message: string, parsedMessage: string[]) {
-    if (!this.self) {
+    if (!this.ignoreHighlight) {
       _.forEach(Message.highlights, (highlight) => {
         const pattern = `(?<!\\S)(${highlight.pattern})(?!\\S)`
         const regExp = new RegExp(pattern, 'gmi')

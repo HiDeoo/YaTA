@@ -31,7 +31,7 @@ import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
-import { getAutoConnectInDev, getHighlights, getTheme } from 'Store/selectors/settings'
+import { getAutoConnectInDev, getHighlights, getHighlightsIgnoredUsers, getTheme } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 
 /**
@@ -134,7 +134,11 @@ export class ChatClient extends React.Component<Props, State> {
    * @return The client should never update except if failing.
    */
   public shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return this.state.clientDidFail !== nextState.clientDidFail || this.props.highlights !== nextProps.highlights
+    return (
+      this.state.clientDidFail !== nextState.clientDidFail ||
+      this.props.highlights !== nextProps.highlights ||
+      this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length
+    )
   }
 
   /**
@@ -144,6 +148,10 @@ export class ChatClient extends React.Component<Props, State> {
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.highlights !== this.props.highlights) {
       Message.highlights = this.props.highlights
+    }
+
+    if (prevProps.highlightsIgnoredUsers.length !== this.props.highlightsIgnoredUsers.length) {
+      Message.highlightsIgnoredUsers = this.props.highlightsIgnoredUsers
     }
   }
 
@@ -706,6 +714,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
     highlights: getHighlights(state),
+    highlightsIgnoredUsers: getHighlightsIgnoredUsers(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
     theme: getTheme(state),
@@ -735,6 +744,7 @@ type StateProps = {
   chatters: ChattersState['byId']
   chattersMap: ChattersState['byName']
   highlights: ReturnType<typeof getHighlights>
+  highlightsIgnoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
   theme: ReturnType<typeof getTheme>

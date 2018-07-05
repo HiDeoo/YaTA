@@ -1,10 +1,12 @@
 import styled from 'styled-components'
 
+import base from 'Styled/base'
+
 /**
  * SettingsPanel component.
  */
 const SettingsPanel = styled.div`
-  height: 320px;
+  height: ${base.settings.height - 80}px;
   margin: -20px -15px 0 -15px;
   overflow-y: scroll;
   padding: 20px;

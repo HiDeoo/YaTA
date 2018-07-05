@@ -35,4 +35,10 @@ export default {
       settings: { ...state.settings, highlights: initialState.highlights },
     }
   },
+  5: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, highlightsIgnoredUsers: initialState.highlightsIgnoredUsers },
+    }
+  },
 }

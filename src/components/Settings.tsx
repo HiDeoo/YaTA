@@ -2,6 +2,8 @@ import { Dialog, Navbar, Tab, Tabs } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { size } from 'Utils/styled'
+
 import SettingsChangelog from 'Containers/SettingsChangelog'
 import SettingsGeneral from 'Containers/SettingsGeneral'
 import SettingsHighlights from 'Containers/SettingsHighlights'
@@ -10,7 +12,7 @@ import SettingsHighlights from 'Containers/SettingsHighlights'
  * SettingsDialog component.
  */
 const SettingsDialog = styled(Dialog)`
-  height: 400px;
+  height: ${size('settings.height')}px;
 `
 
 /**

@@ -17,6 +17,8 @@ export enum Actions {
   ADD_HIGHLIGHT = 'settings/ADD_HIGHLIGHT',
   UPDATE_HIGHLIGHT = 'settings/UPDATE_HIGHLIGHT',
   REMOVE_HIGHLIGHT = 'settings/REMOVE_HIGHLIGHT',
+  ADD_HIGHLIGHTS_IGNORED_USERS = 'settings/ADD_HIGHLIGHTS_IGNORED_USERS',
+  REMOVE_HIGHLIGHTS_IGNORED_USER = 'settings/REMOVE_HIGHLIGHTS_IGNORED_USER',
 }
 
 /**
@@ -26,6 +28,7 @@ export const initialState = {
   autoConnectInDev: true,
   copyMessageOnDoubleClick: true,
   highlights: {},
+  highlightsIgnoredUsers: [],
   lastKnownVersion: null,
   showContextMenu: true,
   theme: Theme.Dark as SettingsState['theme'],
@@ -100,6 +103,21 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         highlights: otherHighlights,
+      }
+    }
+    case Actions.ADD_HIGHLIGHTS_IGNORED_USERS: {
+      return {
+        ...state,
+        highlightsIgnoredUsers: [...state.highlightsIgnoredUsers, ...action.payload.usernames],
+      }
+    }
+    case Actions.REMOVE_HIGHLIGHTS_IGNORED_USER: {
+      return {
+        ...state,
+        highlightsIgnoredUsers: _.filter(
+          state.highlightsIgnoredUsers,
+          (username) => username !== action.payload.username
+        ),
       }
     }
     default: {
@@ -177,6 +195,26 @@ export const removeHighlight = (id: string) =>
   })
 
 /**
+ * Ignores one or multiple users for highlights and mentions.
+ * @param  usernames - The usernames to ignore.
+ * @return The action.
+ */
+export const addHighlightsIgnoredUsers = (usernames: string[]) =>
+  createAction(Actions.ADD_HIGHLIGHTS_IGNORED_USERS, {
+    usernames,
+  })
+
+/**
+ * Removes an ignored user for highlights and mentions.
+ * @param  username - The username to remove.
+ * @return The action.
+ */
+export const removeHighlightsIgnoredUser = (username: string) =>
+  createAction(Actions.REMOVE_HIGHLIGHTS_IGNORED_USER, {
+    username,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -189,6 +227,8 @@ export type SettingsActions =
   | ReturnType<typeof addHighlight>
   | ReturnType<typeof updateHighlight>
   | ReturnType<typeof removeHighlight>
+  | ReturnType<typeof addHighlightsIgnoredUsers>
+  | ReturnType<typeof removeHighlightsIgnoredUser>
 
 /**
  * Settings state.
@@ -223,6 +263,11 @@ export type SettingsState = {
    * Highlights.
    */
   highlights: Highlights
+
+  /**
+   * Users ignored for highlights & mentions.
+   */
+  highlightsIgnoredUsers: string[]
 }
 
 /**

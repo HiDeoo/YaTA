@@ -1,4 +1,4 @@
-import { InputGroup, Intent } from '@blueprintjs/core'
+import { InputGroup, Intent, TagInput } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -10,9 +10,15 @@ import Highlight from 'Components/Highlight'
 import SettingsPanel from 'Components/SettingsPanel'
 import Shrug from 'Components/Shrug'
 import Key from 'Constants/key'
-import { addHighlight, removeHighlight, updateHighlight } from 'Store/ducks/settings'
+import {
+  addHighlight,
+  addHighlightsIgnoredUsers,
+  removeHighlight,
+  removeHighlightsIgnoredUser,
+  updateHighlight,
+} from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getHighlights } from 'Store/selectors/settings'
+import { getHighlights, getHighlightsIgnoredUsers } from 'Store/selectors/settings'
 import { color } from 'Utils/styled'
 
 /**
@@ -29,9 +35,27 @@ const Notice = styled.div`
 const Highlights = styled.div`
   background-color: ${color('settings.table.background')};
   border: 1px solid ${color('settings.table.border')};
-  height: calc(100% - 90px);
+  height: calc(100% - 160px);
   overflow-y: scroll;
-  margin-top: 20px;
+  margin: 20px 0;
+`
+
+/**
+ * IgnoredUsers component.
+ */
+const IgnoredUsers = styled(TagInput)`
+  max-height: 50px;
+
+  &.pt-input,
+  &.pt-tag-input,
+  & > .pt-tag-input-values {
+    max-height: 50px;
+    overflow-y: hidden;
+  }
+
+  & > .pt-tag-input-values {
+    overflow-y: scroll;
+  }
 `
 
 /**
@@ -57,7 +81,7 @@ class SettingsHighlights extends React.Component<Props, State> {
    */
   public render() {
     const { newHighlight, newHighlightIntent } = this.state
-    const { highlights } = this.props
+    const { highlights, ignoredUsers } = this.props
 
     return (
       <SettingsPanel>
@@ -84,10 +108,24 @@ class SettingsHighlights extends React.Component<Props, State> {
               ))
             : this.renderNoHighlight()}
         </Highlights>
+        <IgnoredUsers
+          fill
+          leftIcon="user"
+          onAdd={this.onAddIgnoredUser}
+          onRemove={this.onRemoveIgnoredUser}
+          placeholder="Ignore highlights from users… (space separated list)"
+          separator=" "
+          inputValue=""
+          values={ignoredUsers}
+        />
       </SettingsPanel>
     )
   }
 
+  /**
+   * Renders when no highlight are defined.
+   * @return Element to render.
+   */
   private renderNoHighlight() {
     return (
       <Center>
@@ -95,6 +133,22 @@ class SettingsHighlights extends React.Component<Props, State> {
         <p>No highlight yet!</p>
       </Center>
     )
+  }
+
+  /**
+   * Triggered when one or more ignored user(s) are added.
+   * @param usernames - The ignored usernames.
+   */
+  private onAddIgnoredUser = (usernames: string[]) => {
+    this.props.addHighlightsIgnoredUsers(_.map(usernames, _.toLower))
+  }
+
+  /**
+   * Triggered when an ignored user is removed.
+   * @param username - The ignored username.
+   */
+  private onRemoveIgnoredUser = (username: string) => {
+    this.props.removeHighlightsIgnoredUser(username)
   }
 
   /**
@@ -144,8 +198,9 @@ class SettingsHighlights extends React.Component<Props, State> {
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     highlights: getHighlights(state),
+    ignoredUsers: getHighlightsIgnoredUsers(state),
   }),
-  { addHighlight, removeHighlight, updateHighlight }
+  { addHighlight, addHighlightsIgnoredUsers, removeHighlight, removeHighlightsIgnoredUser, updateHighlight }
 )(SettingsHighlights)
 
 /**
@@ -153,6 +208,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 type StateProps = {
   highlights: ReturnType<typeof getHighlights>
+  ignoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
 }
 
 /**
@@ -160,7 +216,9 @@ type StateProps = {
  */
 type DispatchProps = {
   addHighlight: typeof addHighlight
+  addHighlightsIgnoredUsers: typeof addHighlightsIgnoredUsers
   removeHighlight: typeof removeHighlight
+  removeHighlightsIgnoredUser: typeof removeHighlightsIgnoredUser
   updateHighlight: typeof updateHighlight
 }
 

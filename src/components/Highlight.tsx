@@ -9,7 +9,7 @@ import { Highlight as HighlightType } from 'Store/ducks/settings'
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  padding: 10px 10px 0 10px;
+  padding: 10px 4px 0 10px;
 
   &:last-child {
     padding-bottom: 10px;

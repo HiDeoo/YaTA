@@ -53,3 +53,13 @@ export const getAutoConnectInDev = createSelector([getSettingsState], (settings)
  * @return The highlights.
  */
 export const getHighlights = createSelector([getSettingsState], (settings) => settings.highlights)
+
+/**
+ * Returns the highlights ignored users.
+ * @param  state - The Redux state.
+ * @return The ignored users.
+ */
+export const getHighlightsIgnoredUsers = createSelector(
+  [getSettingsState],
+  (settings) => settings.highlightsIgnoredUsers
+)

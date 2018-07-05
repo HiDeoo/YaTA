@@ -52,6 +52,9 @@ export default {
   notice: {
     color: Colors.GRAY2,
   },
+  settings: {
+    height: 500,
+  },
   tooltip: {
     background: Colors.DARK_GRAY1,
   },
