@@ -16,7 +16,7 @@ const dark = {
   },
   follow: {
     meta: Colors.GRAY3,
-    strong: Colors.GRAY5,
+    strong: Colors.LIGHT_GRAY1,
   },
   history: {
     background: Colors.DARK_GRAY4,

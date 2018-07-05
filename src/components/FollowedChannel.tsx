@@ -12,6 +12,7 @@ import { color, size } from 'Utils/styled'
  * Wrapper component.
  */
 const Wrapper = styled(Card)`
+  border: 2px solid transparent;
   height: ${size('follows.height')}px;
 
   &.pt-card {
