@@ -24,6 +24,11 @@ const ClipRegExp = /https:\/\/clips\.twitch\.tv\/(\w+)/g
  * Message class representing either a chat message, an action (/me) or a whisper.
  */
 export default class Message implements Serializable<SerializedMessage> {
+  public static badges: RawBadges | null = null
+  public static emotesProviders: EmotesProviders = {}
+  public static bots: string[] = []
+  public static cheermotes: RawCheermote[] | null = null
+
   public user: Chatter
   public color: string | null
   private badges: string | null
@@ -45,21 +50,14 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param message - The received message.
    * @param userstate - The associated user state.
    * @param self - Defines if the message was sent by ourself.
-   * @param badges - The known badges if any.
-   * @param emotesProviders - Additional emotes providers.
    * @param currentUsername - The name of the current user.
-   * @param bots - Known bots.
-   * @param [cheermotes=null] - The cheermotes.
+   * @param parseOptions - Parsing options.
    */
   constructor(
     message: string,
     userstate: UserState,
     self: boolean,
-    badges: RawBadges | null,
-    emotesProviders: EmotesProviders,
     currentUsername: string,
-    bots: string[],
-    cheermotes: RawCheermote[] | null = null,
     parseOptions: MessageParseOptions
   ) {
     this.parseOptions = parseOptions
@@ -74,11 +72,8 @@ export default class Message implements Serializable<SerializedMessage> {
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
 
-    this.badges = this.parseBadges(userstate, badges, bots)
-
-    const sanitizedCheermotes = !_.isNil(userstate.bits) && userstate.bits > 0 ? cheermotes : null
-
-    this.message = this.parseMessage(message, userstate, emotesProviders, currentUsername, sanitizedCheermotes)
+    this.badges = this.parseBadges(userstate)
+    this.message = this.parseMessage(message, userstate, currentUsername)
   }
 
   /**
@@ -115,20 +110,18 @@ export default class Message implements Serializable<SerializedMessage> {
   /**
    * Parses badges.
    * @param  userstate - The userstate.
-   * @param  badges - The known badges for the associated channeL.
-   * @param  bots - Known bots.
    * @return Parsed badges.
    */
-  private parseBadges(userstate: UserState, badges: RawBadges | null, bots: string[]) {
+  private parseBadges(userstate: UserState) {
     const parsedBadges: string[] = []
 
-    if (_.includes(bots, userstate.username)) {
+    if (_.includes(Message.bots, userstate.username)) {
       parsedBadges.push('<img class="badge" src="https://cdn.betterttv.net/tags/bot.png" />')
     }
 
-    if (!_.isNil(badges) && _.size(userstate.badges)) {
+    if (!_.isNil(Message.badges) && _.size(userstate.badges)) {
       _.forEach(userstate.badges, (version, name) => {
-        const set = _.get(badges, name)
+        const set = _.get(Message.badges, name)
 
         if (_.isNil(set)) {
           return
@@ -155,31 +148,23 @@ export default class Message implements Serializable<SerializedMessage> {
    * Parses a message for emotes, mentions, links, etc.
    * @param message - The message to parse.
    * @param userstate - The userstate.
-   * @param emotesProviders - Additional emotes providers.
    * @param currentUsername - The name of the current user.
-   * @param [cheermotes] - The cheermotes.
    */
-  private parseMessage(
-    message: string,
-    userstate: UserState,
-    emotesProviders: EmotesProviders,
-    currentUsername: string,
-    cheermotes?: RawCheermote[] | null
-  ) {
+  private parseMessage(message: string, userstate: UserState, currentUsername: string) {
     const emotes = userstate.emotes || {}
 
     this.parseClips(message)
-    this.parseAdditionalEmotes(message, emotes, emotesProviders)
+    this.parseAdditionalEmotes(message, emotes)
 
     let parsedMessage = message.split('')
 
-    parsedMessage = this.parseEmotes(parsedMessage, emotes, emotesProviders)
+    parsedMessage = this.parseEmotes(parsedMessage, emotes)
     parsedMessage = this.parseMentions(message, parsedMessage, currentUsername)
 
     let parsedMessageStr = escape(parsedMessage).join('')
 
-    if (!_.isNil(cheermotes) && !_.isNil(userstate.bits)) {
-      parsedMessageStr = this.parseCheermotes(parsedMessageStr, cheermotes, userstate.bits)
+    if (!_.isNil(userstate.bits) && !_.isNil(Message.cheermotes) && userstate.bits > 0) {
+      parsedMessageStr = this.parseCheermotes(parsedMessageStr, userstate.bits)
     }
 
     return linkifyHtml(parsedMessageStr, {
@@ -193,10 +178,9 @@ export default class Message implements Serializable<SerializedMessage> {
    * Parses a message for additional emotes.
    * @param message - The message to parse.
    * @param emotes - The message emotes.
-   * @param emotesProviders - Additional emotes providers.
    */
-  private parseAdditionalEmotes(message: string, emotes: Emotes, emotesProviders: EmotesProviders) {
-    _.forEach(emotesProviders, (provider) => {
+  private parseAdditionalEmotes(message: string, emotes: Emotes) {
+    _.forEach(Message.emotesProviders, (provider) => {
       const providerEmotes = provider.getMessageEmotes(message)
 
       if (_.size(providerEmotes) > 0) {
@@ -208,10 +192,9 @@ export default class Message implements Serializable<SerializedMessage> {
   /**
    * Parses a message for cheermotes.
    * @param message - The message to parse.
-   * @param cheermotes - The cheermotes.
    * @param totalBits - The number of bits in the message.
    */
-  private parseCheermotes(message: string, cheermotes: RawCheermote[], totalBits: number) {
+  private parseCheermotes(message: string, totalBits: number) {
     const parsedMessage = message.split('')
 
     const cheermoteBackground: CheermoteImageBackground = this.parseOptions.theme === Theme.Dark ? 'dark' : 'light'
@@ -220,7 +203,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
     let usedBits = 0
 
-    _.forEach(cheermotes, (cheermote) => {
+    _.forEach(Message.cheermotes, (cheermote) => {
       const pattern = `(^|\\b)(${cheermote.prefix}(\\d+))(\\b|$)`
       const regExp = new RegExp(pattern, 'gmi')
       let match
@@ -250,15 +233,17 @@ export default class Message implements Serializable<SerializedMessage> {
           const potentialUsedBits = usedBits + currentBits
 
           if (potentialUsedBits <= totalBits) {
-            const start = match.index + match[1].length
-            const end = start + match[2].length + (match[4].length === 0 ? match[4].length : match[4].length - 1)
+            const beforeStr = match[1]
+            const cheerName = match[2]
+            const afterStr = match[4]
+
+            const start = match.index + beforeStr.length
+            const end = start + cheerName.length + (afterStr.length === 0 ? afterStr.length : afterStr.length - 1)
 
             const url = images['1']
             const srcset = `${images['1']} 1x,${images['2']} 2x,${images['4']} 4x`
 
-            const str = `<img class="emote cheer" src="${url}" srcset="${srcset}" alt="${
-              match[2]
-            }" /><span class="cheer" style="color: ${color}">${bits}</span>`
+            const str = `<img class="emote cheer" src="${url}" srcset="${srcset}" alt="${cheerName}" /><span class="cheer" style="color: ${color}">${bits}</span>`
 
             replacements.push({ str, start, end })
 
@@ -283,9 +268,8 @@ export default class Message implements Serializable<SerializedMessage> {
    * Parses a message for emotes.
    * @param parsedMessage - The message being parsed.
    * @param emotes - The message emotes.
-   * @param emotesProviders - Additional emotes providers.
    */
-  private parseEmotes(parsedMessage: string[], emotes: Emotes, emotesProviders: EmotesProviders) {
+  private parseEmotes(parsedMessage: string[], emotes: Emotes) {
     _.forEach(emotes, (ranges, id) => {
       const [providerPrefix, emoteId] = id.split('-')
 
@@ -309,7 +293,7 @@ export default class Message implements Serializable<SerializedMessage> {
             indexes[0]
           ] = `<img class="emote" src="${url}${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
         } else {
-          parsedMessage[indexes[0]] = emotesProviders[providerPrefix].getEmoteTag(emoteId, emoteName)
+          parsedMessage[indexes[0]] = Message.emotesProviders[providerPrefix].getEmoteTag(emoteId, emoteName)
         }
       })
     })
@@ -349,15 +333,18 @@ export default class Message implements Serializable<SerializedMessage> {
 
     // tslint:disable-next-line:no-conditional-assignment
     while ((match = regExp.exec(message)) != null) {
-      if (match[1].toLowerCase() !== currentUsername.toLowerCase()) {
+      const mentionStr = match[0]
+      const username = match[1]
+
+      if (username.toLowerCase() !== currentUsername.toLowerCase()) {
         const startIndex = match.index
-        const endIndex = startIndex + match[0].length
+        const endIndex = startIndex + mentionStr.length
 
         for (let i = startIndex; i < endIndex; ++i) {
           parsedMessage[i] = ''
         }
 
-        parsedMessage[startIndex] = `<span class="mention">${match[0]}</span>`
+        parsedMessage[startIndex] = `<span class="mention">${mentionStr}</span>`
       }
     }
 

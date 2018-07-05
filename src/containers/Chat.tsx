@@ -19,12 +19,11 @@ import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
-import { EmotesProviders } from 'Libs/EmotesProvider'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
-import Twitch, { RawBadges, RawCheermote } from 'Libs/Twitch'
+import Twitch from 'Libs/Twitch'
 import { AppState, resetAppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState, clearChatters } from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
@@ -48,10 +47,6 @@ export class ChatClient extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
-  private badges: RawBadges | null = null
-  private emotesProviders: EmotesProviders = {}
-  private bots: string[] = []
-  private cheermotes: RawCheermote[] | null = null
 
   /**
    * Creates a new instance of the component.
@@ -217,20 +212,18 @@ export class ChatClient extends React.Component<Props, State> {
     this.props.updateRoomState(state.serialize())
 
     try {
-      this.badges = await Twitch.fetchBadges(state.roomId)
-      this.cheermotes = (await Twitch.fetchCheermotes()).actions
+      Message.badges = await Twitch.fetchBadges(state.roomId)
+      Message.cheermotes = (await Twitch.fetchCheermotes()).actions
 
       if (!_.isNil(this.props.channel)) {
         const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
 
-        const provider = emotesAndBots.emotes
+        Message.emotesProviders[emotesAndBots.emotes.prefix] = emotesAndBots.emotes
 
-        this.emotesProviders[provider.prefix] = provider
-
-        this.props.updateEmoteSets('bttv', provider.getEmoteSets())
+        this.props.updateEmoteSets('bttv', emotesAndBots.emotes.getEmoteSets())
 
         if (!_.isNil(emotesAndBots.bots)) {
-          this.bots.push(...emotesAndBots.bots)
+          Message.bots.push(...emotesAndBots.bots)
         }
       }
     } catch (error) {
@@ -670,17 +663,7 @@ export class ChatClient extends React.Component<Props, State> {
 
         const { theme } = this.props
 
-        parsedMessage = new Message(
-          message,
-          userstate,
-          self,
-          this.badges,
-          this.emotesProviders,
-          this.props.loginDetails!.username,
-          this.bots,
-          userstate['message-type'] === LogType.Cheer ? this.cheermotes : undefined,
-          { theme }
-        )
+        parsedMessage = new Message(message, userstate, self, this.props.loginDetails!.username, { theme })
 
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)
