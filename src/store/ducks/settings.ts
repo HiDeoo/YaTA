@@ -222,8 +222,13 @@ export type SettingsState = {
   /**
    * Highlights.
    */
-  highlights: { [key in Highlight['id']]: Highlight }
+  highlights: Highlights
 }
+
+/**
+ * Highlights.
+ */
+export type Highlights = { [key in Highlight['id']]: Highlight }
 
 /**
  * Highlight.

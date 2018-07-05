@@ -124,7 +124,7 @@ class SettingsHighlights extends React.Component<Props, State> {
       const { newHighlight } = this.state
 
       if (this.validatePattern(newHighlight)) {
-        this.props.addHighlight({ id: shortid.generate(), pattern: newHighlight })
+        this.props.addHighlight({ id: shortid.generate(), pattern: newHighlight.toLowerCase() })
 
         this.setState(initialState)
       }
@@ -137,7 +137,7 @@ class SettingsHighlights extends React.Component<Props, State> {
    * @return `true` when the pattern is valid.
    */
   private validatePattern = (pattern: string) => {
-    return PatternRegExp.test(pattern) && !_.includes(_.map(this.props.highlights, 'pattern'), pattern)
+    return PatternRegExp.test(pattern) && !_.includes(_.map(this.props.highlights, 'pattern'), pattern.toLowerCase())
   }
 }
 

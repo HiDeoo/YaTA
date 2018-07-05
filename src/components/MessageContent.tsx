@@ -32,6 +32,13 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
   span.cheer {
     font-weight: bold;
   }
+
+  .highlight {
+    background-color: ${color('log.highlight.background')};
+    border-radius: 2px;
+    color: ${color('log.highlight.color')};
+    padding: 1px 3px 2px 3px;
+  }
 `
 
 /**

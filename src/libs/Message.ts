@@ -7,6 +7,7 @@ import Theme from 'Constants/theme'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { EmotesProviders } from 'Libs/EmotesProvider'
 import { CheermoteImageBackground, RawBadges, RawCheermote, RawCheermoteImage, RawClip } from 'Libs/Twitch'
+import { Highlights } from 'Store/ducks/settings'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -28,6 +29,7 @@ export default class Message implements Serializable<SerializedMessage> {
   public static emotesProviders: EmotesProviders = {}
   public static bots: string[] = []
   public static cheermotes: RawCheermote[] | null = null
+  public static highlights: Highlights = {}
 
   public user: Chatter
   public color: string | null
@@ -158,10 +160,11 @@ export default class Message implements Serializable<SerializedMessage> {
     this.parseClips(message)
     this.parseAdditionalEmotes(message, emotes)
 
-    let parsedMessage = message.split('')
+    const parsedMessage = message.split('')
 
-    parsedMessage = this.parseEmotes(parsedMessage, emotes)
-    parsedMessage = this.parseMentions(message, parsedMessage, currentUsername)
+    this.parseEmotes(parsedMessage, emotes)
+    this.parseHighlights(message, parsedMessage)
+    this.parseMentions(message, parsedMessage, currentUsername)
 
     let parsedMessageStr = escape(parsedMessage).join('')
 
@@ -299,8 +302,6 @@ export default class Message implements Serializable<SerializedMessage> {
         }
       })
     })
-
-    return parsedMessage
   }
 
   /**
@@ -349,8 +350,35 @@ export default class Message implements Serializable<SerializedMessage> {
         parsedMessage[startIndex] = `<span class="mention">${mentionStr}</span>`
       }
     }
+  }
 
-    return parsedMessage
+  /**
+   * Parses a message for highlights.
+   * @param message - The raw message.
+   * @param parsedMessage - The message being parsed.
+   */
+  private parseHighlights(message: string, parsedMessage: string[]) {
+    if (!this.self) {
+      _.forEach(Message.highlights, (highlight) => {
+        const pattern = `(?<!\\S)(${highlight.pattern})(?!\\S)`
+        const regExp = new RegExp(pattern, 'gmi')
+        let match
+
+        // tslint:disable-next-line:no-conditional-assignment
+        while ((match = regExp.exec(message)) != null) {
+          const highlightStr = match[1]
+
+          const startIndex = match.index
+          const endIndex = startIndex + highlightStr.length
+
+          for (let i = startIndex; i < endIndex; ++i) {
+            parsedMessage[i] = ''
+          }
+
+          parsedMessage[startIndex] = `<span class="highlight">${highlightStr}</span>`
+        }
+      })
+    }
   }
 
   /**

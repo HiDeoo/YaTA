@@ -120,7 +120,7 @@ export default class Highlight extends React.Component<Props, State> {
     const { highlight, update, validate } = this.props
 
     if (pattern.length > 0 && validate(pattern)) {
-      update(highlight.id, pattern)
+      update(highlight.id, pattern.toLowerCase())
     } else {
       this.setState(({ prevPropsPattern }) => ({ pattern: prevPropsPattern, patternIntent: Intent.NONE }))
     }

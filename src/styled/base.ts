@@ -38,6 +38,10 @@ export default {
   },
   log: {
     hPadding: 10,
+    highlight: {
+      background: Colors.GOLD5,
+      color: Colors.DARK_GRAY1,
+    },
     minHeight: 28,
   },
   message: {

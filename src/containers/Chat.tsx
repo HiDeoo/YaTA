@@ -31,7 +31,7 @@ import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
-import { getAutoConnectInDev, getTheme } from 'Store/selectors/settings'
+import { getAutoConnectInDev, getHighlights, getTheme } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 
 /**
@@ -85,6 +85,8 @@ export class ChatClient extends React.Component<Props, State> {
       return
     }
 
+    Message.highlights = this.props.highlights
+
     this.client.on(Event.Connecting, this.onConnecting)
     this.client.on(Event.Connected, this.onConnected)
     this.client.on(Event.Logon, this.onLogon)
@@ -131,8 +133,18 @@ export class ChatClient extends React.Component<Props, State> {
    * @param  nextState - The next state.
    * @return The client should never update except if failing.
    */
-  public shouldComponentUpdate(_nextProps: Props, nextState: State) {
-    return this.state.clientDidFail !== nextState.clientDidFail
+  public shouldComponentUpdate(nextProps: Props, nextState: State) {
+    return this.state.clientDidFail !== nextState.clientDidFail || this.props.highlights !== nextProps.highlights
+  }
+
+  /**
+   * Lifecycle: componentDidUpdate.
+   * @param prevProps - The previous props.
+   */
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.highlights !== this.props.highlights) {
+      Message.highlights = this.props.highlights
+    }
   }
 
   /**
@@ -693,6 +705,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
+    highlights: getHighlights(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
     theme: getTheme(state),
@@ -721,6 +734,7 @@ type StateProps = {
   channel: AppState['channel']
   chatters: ChattersState['byId']
   chattersMap: ChattersState['byName']
+  highlights: ReturnType<typeof getHighlights>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
   theme: ReturnType<typeof getTheme>

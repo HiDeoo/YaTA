@@ -19,7 +19,7 @@ const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
   background-color: ${ifProp('mentionned', color('log.mention.self.background'), 'inherit')};
   border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
   opacity: ${ifProp('purged', 0.5, 1.0)};
-  padding: 4px ${size('log.hPadding')}px 4px 7px;
+  padding: 4px ${size('log.hPadding')}px 1px 7px;
 
   & > .pt-popover-wrapper {
     .pt-button {
