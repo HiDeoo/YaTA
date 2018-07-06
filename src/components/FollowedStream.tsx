@@ -21,6 +21,22 @@ const Wrapper = styled(Card)`
 `
 
 /**
+ * Preview component.
+ */
+const Preview = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 45px;
+  width: 80px;
+
+  & > img {
+    height: 45px;
+    object-fit: cover;
+    width: 80px;
+  }
+`
+
+/**
  * Details component.
  */
 const Details = styled(FlexContent)`
@@ -64,9 +80,9 @@ export default class FollowedStream extends React.Component<Props> {
     return (
       <Wrapper interactive onClick={this.onClick}>
         <FlexLayout>
-          <div>
+          <Preview>
             <img src={stream.preview.small} />
-          </div>
+          </Preview>
           <Details>
             <Title ellipsize>{stream.channel.status}</Title>
             <Meta>

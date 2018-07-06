@@ -23,6 +23,7 @@ import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/s
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
+import { getPauseAutoScroll } from 'Store/selectors/logs'
 import { getAutoConnectInDev, getLastKnownVersion, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import dark from 'Styled/dark'
@@ -84,7 +85,16 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { showSettings, settingSelectedTab } = this.state
-    const { channel, isLoggedIn, location, autoConnectInDev, shouldReadChangelog, status, theme } = this.props
+    const {
+      channel,
+      isLoggedIn,
+      location,
+      autoConnectInDev,
+      pauseAutoScroll,
+      shouldReadChangelog,
+      status,
+      theme,
+    } = this.props
     const { pathname } = location
 
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
@@ -95,21 +105,24 @@ class App extends React.Component<Props, State> {
       return <Redirect to="/" />
     }
 
+    const channelState = { pauseAutoScroll }
+
     return (
       <ThemeProvider theme={theme === Theme.Dark ? dark : light}>
         <FlexLayout vertical>
           <Header
+            autoConnectInDev={autoConnectInDev}
             channel={channel}
             goHome={this.goHome}
             highlightChangelog={shouldReadChangelog}
             isLoggedIn={isLoggedIn}
             logout={this.props.resetUser}
             page={pathname}
-            autoConnectInDev={autoConnectInDev}
+            channelState={channelState}
             status={status}
+            toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
             toggleChangelog={this.toggleChangelog}
             toggleChatters={this.props.toggleChatters}
-            toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
             toggleSettings={this.toggleSettings}
           />
           <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
@@ -187,6 +200,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     isLoggedIn: getIsLoggedIn(state),
     lastKnownVersion: getLastKnownVersion(state),
     loginDetails: getLoginDetails(state),
+    pauseAutoScroll: getPauseAutoScroll(state),
     shouldReadChangelog: getShouldReadChangelog(state),
     status: getStatus(state),
     theme: getTheme(state),
@@ -203,6 +217,7 @@ type StateProps = {
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: SettingsState['lastKnownVersion']
   loginDetails: ReturnType<typeof getLoginDetails>
+  pauseAutoScroll: ReturnType<typeof getPauseAutoScroll>
   shouldReadChangelog: AppState['shouldReadChangelog']
   status: AppState['status']
   theme: SettingsState['theme']

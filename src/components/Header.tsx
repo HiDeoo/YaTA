@@ -2,6 +2,7 @@ import {
   Alignment,
   Button,
   Colors,
+  Icon,
   Navbar,
   NavbarDivider,
   NavbarGroup,
@@ -106,6 +107,7 @@ export default class Header extends React.Component<Props> {
           {this.renderStatus()}
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
+          {this.renderChannelState()}
           {this.renderChannelControls()}
           {this.renderDebugTools()}
           {page !== Page.Home && (
@@ -132,13 +134,40 @@ export default class Header extends React.Component<Props> {
   }
 
   /**
+   * Render the channel state if necessary.
+   * @return Element to render.
+   */
+  private renderChannelState() {
+    if (!this.shouldRenderChannelELements()) {
+      return null
+    }
+
+    const { pauseAutoScroll } = this.props.channelState
+
+    if (!pauseAutoScroll) {
+      return null
+    }
+
+    return (
+      <>
+        {pauseAutoScroll && (
+          <Tooltip content="Auto scrolling disabled" position={Position.BOTTOM}>
+            <Icon icon="pause" color={Colors.RED4} />
+          </Tooltip>
+        )}
+        <NavbarDivider />
+      </>
+    )
+  }
+
+  /**
    * Render the channel controls if necessary.
    * @return Element to render.
    */
   private renderChannelControls() {
-    const { page, toggleChatters } = this.props
+    const { toggleChatters } = this.props
 
-    if (page === Page.Home || page === Page.Auth || page === Page.Login) {
+    if (!this.shouldRenderChannelELements()) {
       return null
     }
 
@@ -217,6 +246,16 @@ export default class Header extends React.Component<Props> {
       </>
     )
   }
+
+  /**
+   * Determines if we should render channel specific elements.
+   * @return `true` when we should render them.
+   */
+  private shouldRenderChannelELements() {
+    const { page } = this.props
+
+    return page !== Page.Home && page !== Page.Auth && page !== Page.Login
+  }
 }
 
 /**
@@ -225,6 +264,7 @@ export default class Header extends React.Component<Props> {
 type Props = {
   autoConnectInDev: boolean
   channel: AppState['channel']
+  channelState: ChannelState
   goHome: () => void
   highlightChangelog: boolean
   isLoggedIn: boolean
@@ -235,4 +275,11 @@ type Props = {
   toggleChangelog: () => void
   toggleChatters: () => void
   toggleSettings: () => void
+}
+
+/**
+ * Channel state.
+ */
+type ChannelState = {
+  pauseAutoScroll: boolean
 }

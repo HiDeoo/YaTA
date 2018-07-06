@@ -20,6 +20,7 @@ import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, AppState, setChannel, toggleChatters, updateHistoryIndex } from 'Store/ducks/app'
 import { ignoreUser } from 'Store/ducks/chatters'
+import { pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel, getEmotes, getHistory, getHistoryIndex, getShowChatters, getStatus } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
@@ -86,6 +87,7 @@ class Channel extends React.Component<Props, State> {
         <Logs
           logs={logs}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          pauseAutoScroll={this.props.pauseAutoScroll}
           showContextMenu={showContextMenu}
           focusChatter={this.focusChatter}
           copyToClipboard={this.copyToClipboard}
@@ -375,7 +377,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     showContextMenu: getShowContextMenu(state),
     status: getStatus(state),
   }),
-  { addToHistory, ignoreUser, setChannel, toggleChatters, updateHistoryIndex }
+  { addToHistory, ignoreUser, pauseAutoScroll, setChannel, toggleChatters, updateHistoryIndex }
 )(Channel)
 
 /**
@@ -402,6 +404,7 @@ type StateProps = {
 type DispatchProps = {
   addToHistory: typeof addToHistory
   ignoreUser: typeof ignoreUser
+  pauseAutoScroll: typeof pauseAutoScroll
   setChannel: typeof setChannel
   toggleChatters: typeof toggleChatters
   updateHistoryIndex: typeof updateHistoryIndex

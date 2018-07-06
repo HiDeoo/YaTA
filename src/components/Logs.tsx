@@ -93,7 +93,13 @@ export default class Logs extends React.Component<Props> {
     const offset = scrollHeight - scrollTop
 
     // Allow for a little bit of threshold.
-    this.pauseAutoScroll = offset - clientHeight > 10
+    const pauseAutoScroll = offset - clientHeight > 10
+
+    if (pauseAutoScroll !== this.pauseAutoScroll) {
+      this.pauseAutoScroll = pauseAutoScroll
+
+      this.props.pauseAutoScroll(this.pauseAutoScroll)
+    }
   }
 
   /**
@@ -169,6 +175,7 @@ type Props = {
   copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
+  pauseAutoScroll: (pause: boolean) => void
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
   whisper: (username: string) => void

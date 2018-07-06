@@ -6,6 +6,13 @@ import { isMessage } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 
 /**
+ * Returns the logs state.
+ * @param  state - The Redux state.
+ * @return The logs state.
+ */
+const getLogsState = (state: ApplicationState) => state.logs
+
+/**
  * Returns all the logs organized by ids.
  * @param  state - The Redux state.
  * @return The logs.
@@ -46,3 +53,10 @@ export const getLogsByIds = (state: ApplicationState, ids: string[]) => {
 
   return logs
 }
+
+/**
+ * Returns if auto scrolling is disabled or not.
+ * @param  state - The Redux state.
+ * @return `true` when disabled.
+ */
+export const getPauseAutoScroll = createSelector([getLogsState], (logs) => logs.pauseAutoScroll)

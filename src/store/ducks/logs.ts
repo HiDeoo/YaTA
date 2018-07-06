@@ -51,6 +51,7 @@ export enum Actions {
   ADD = 'logs/ADD',
   PURGE = 'logs/PURGE',
   CLEAR = 'logs/CLEAR',
+  PAUSE_AUTO_SCROLL = 'logs/PAUSE_AUTO_SCROLL',
 }
 
 /**
@@ -59,6 +60,7 @@ export enum Actions {
 export const initialState = {
   allIds: [],
   byId: {},
+  pauseAutoScroll: false,
 }
 
 /**
@@ -100,6 +102,12 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
     case Actions.CLEAR: {
       return initialState
     }
+    case Actions.PAUSE_AUTO_SCROLL: {
+      return {
+        ...state,
+        pauseAutoScroll: action.payload.pause,
+      }
+    }
     default: {
       return state
     }
@@ -135,9 +143,23 @@ export const purgeLogs = (logs: string[]) =>
 export const clearLogs = () => createAction(Actions.CLEAR)
 
 /**
+ * Pauses auto-scroll.
+ * @param  pause - `true` to pause.
+ * @return The action.
+ */
+export const pauseAutoScroll = (pause: boolean) =>
+  createAction(Actions.PAUSE_AUTO_SCROLL, {
+    pause,
+  })
+
+/**
  * Logs actions.
  */
-export type LogsActions = ReturnType<typeof addLog> | ReturnType<typeof purgeLogs> | ReturnType<typeof clearLogs>
+export type LogsActions =
+  | ReturnType<typeof addLog>
+  | ReturnType<typeof purgeLogs>
+  | ReturnType<typeof clearLogs>
+  | ReturnType<typeof pauseAutoScroll>
 
 /**
  * Logs state.
@@ -152,6 +174,11 @@ export type LogsState = {
    * All logs ordered by ids.
    */
   allIds: string[]
+
+  /**
+   * Defines if auto-scroll is paused or not.
+   */
+  pauseAutoScroll: boolean
 }
 
 /**
