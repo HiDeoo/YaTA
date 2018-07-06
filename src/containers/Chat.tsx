@@ -47,6 +47,7 @@ export class ChatClient extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
+  private didFetchExternalRessources = false
 
   /**
    * Creates a new instance of the component.
@@ -159,6 +160,8 @@ export class ChatClient extends React.Component<Props, State> {
    * Lifecycle: componentWillUnmount.
    */
   public async componentWillUnmount() {
+    this.didFetchExternalRessources = false
+
     this.props.resetAppState()
     this.props.clearLogs()
     this.props.clearChatters()
@@ -231,24 +234,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     this.props.updateRoomState(state.serialize())
 
-    try {
-      Message.badges = await Twitch.fetchBadges(state.roomId)
-      Message.cheermotes = (await Twitch.fetchCheermotes()).actions
-
-      if (!_.isNil(this.props.channel)) {
-        const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
-
-        Message.emotesProviders[emotesAndBots.emotes.prefix] = emotesAndBots.emotes
-
-        this.props.updateEmoteSets('bttv', emotesAndBots.emotes.getEmoteSets())
-
-        if (!_.isNil(emotesAndBots.bots)) {
-          Message.bots.push(...emotesAndBots.bots)
-        }
-      }
-    } catch (error) {
-      //
-    }
+    this.fetchExternalRessources(state.roomId)
   }
 
   /**
@@ -643,6 +629,37 @@ export class ChatClient extends React.Component<Props, State> {
     )
 
     this.props.updateEmoteSets('twitch', emoteSets)
+  }
+
+  /**
+   * Fetches external ressources (if not yet fetched) for a specific channel.
+   * @param channelId - The channel id.
+   */
+  private async fetchExternalRessources(channelId: string) {
+    if (this.didFetchExternalRessources) {
+      return
+    }
+
+    try {
+      Message.badges = await Twitch.fetchBadges(channelId)
+      Message.cheermotes = (await Twitch.fetchCheermotes()).actions
+
+      if (!_.isNil(this.props.channel)) {
+        const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
+
+        Message.emotesProviders[emotesAndBots.emotes.prefix] = emotesAndBots.emotes
+
+        this.props.updateEmoteSets('bttv', emotesAndBots.emotes.getEmoteSets())
+
+        if (!_.isNil(emotesAndBots.bots)) {
+          Message.bots.push(...emotesAndBots.bots)
+        }
+
+        this.didFetchExternalRessources = true
+      }
+    } catch (error) {
+      //
+    }
   }
 
   /**
