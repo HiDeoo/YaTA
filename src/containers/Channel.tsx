@@ -1,14 +1,20 @@
-import { Intent, Spinner } from '@blueprintjs/core'
+import { Button, Intent, NavbarDivider, Spinner } from '@blueprintjs/core'
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
+import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
 import * as ReactTooltip from 'react-tooltip'
+import { compose } from 'recompose'
+import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Chatters from 'Components/Chatters'
 import FlexLayout from 'Components/FlexLayout'
+import { withHeader, WithHeaderProps } from 'Components/Header'
+import HeaderChannelState from 'Components/HeaderChannelState'
+import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs from 'Components/Logs'
 import ReadyState from 'Constants/readyState'
@@ -22,12 +28,29 @@ import { addToHistory, AppState, setChannel, toggleChatters, updateHistoryIndex 
 import { ignoreUser } from 'Store/ducks/chatters'
 import { pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getEmotes, getHistory, getHistoryIndex, getShowChatters, getStatus } from 'Store/selectors/app'
+import {
+  getChannel,
+  getEmotes,
+  getHistory,
+  getHistoryIndex,
+  getRoomState,
+  getShowChatters,
+  getStatus,
+} from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
-import { getLogs } from 'Store/selectors/logs'
+import { getLogs, getPauseAutoScroll } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import { sanitizeUrlForPreview } from 'Utils/preview'
+
+/**
+ * ChannelLink component.
+ */
+const ChannelLink = styled.a.attrs({
+  target: '_blank',
+})`
+  color: inherit !important;
+`
 
 /**
  * RegExp used to identify links to preview.
@@ -58,9 +81,36 @@ class Channel extends React.Component<Props, State> {
    * Lifecycle: componentDidMount.
    */
   public componentDidMount() {
+    const channel = this.props.match.params.channel.toLowerCase()
+
     if (this.props.match.params.channel !== this.props.channel) {
-      this.props.setChannel(this.props.match.params.channel.toLowerCase())
+      this.props.setChannel(channel)
     }
+
+    this.props.setHeaderTitleComponent(<ChannelLink href={`https://twitch.tv/${channel}`}>{channel}</ChannelLink>)
+
+    this.setHeaderRightComponent()
+  }
+
+  /**
+   * Lifecycle: componentDidUpdate.
+   * @param prevProps - The previous props.
+   */
+  public componentDidUpdate(prevProps: Props) {
+    const { isAutoScrollPaused: prevIsAutoScrollPaused, roomState: prevRoomState } = prevProps
+    const { isAutoScrollPaused, roomState } = this.props
+
+    if (prevIsAutoScrollPaused !== isAutoScrollPaused || prevRoomState !== roomState) {
+      this.setHeaderRightComponent()
+    }
+  }
+
+  /**
+   * Lifecycle: componentWillUnmount.
+   */
+  public componentWillUnmount() {
+    this.props.setHeaderTitleComponent(null)
+    this.props.setHeaderRightComponent(null)
   }
 
   /**
@@ -81,6 +131,9 @@ class Channel extends React.Component<Props, State> {
 
     return (
       <FlexLayout vertical innerRef={this.Logs}>
+        <Helmet>
+          <title>{channel} - YaTA</title>
+        </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
         <Chatters visible={showChatters} toggle={this.props.toggleChatters} channel={channel} />
         <Chat ref={this.chatClient} />
@@ -116,6 +169,26 @@ class Channel extends React.Component<Props, State> {
         />
       </FlexLayout>
     )
+  }
+
+  /**
+   * Sets the header right component.
+   * @return Element to render.
+   */
+  private setHeaderRightComponent() {
+    const { isAutoScrollPaused, roomState } = this.props
+
+    const headerRightComponent = (
+      <>
+        <HeaderChannelState isAutoScrollPaused={isAutoScrollPaused} roomState={roomState} />
+        <HeaderTooltip content="Chatters List">
+          <Button onClick={this.props.toggleChatters} icon="people" minimal title="Chatters List" />
+        </HeaderTooltip>
+        <NavbarDivider />
+      </>
+    )
+
+    this.props.setHeaderRightComponent(headerRightComponent)
   }
 
   /**
@@ -362,23 +435,33 @@ class Channel extends React.Component<Props, State> {
   }
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => ({
-    channel: getChannel(state),
-    chatters: getChatters(state),
-    copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
-    emotes: getEmotes(state),
-    history: getHistory(state),
-    historyIndex: getHistoryIndex(state),
-    isMod: getIsMod(state),
-    loginDetails: getLoginDetails(state),
-    logs: getLogs(state),
-    showChatters: getShowChatters(state),
-    showContextMenu: getShowContextMenu(state),
-    status: getStatus(state),
-  }),
-  { addToHistory, ignoreUser, pauseAutoScroll, setChannel, toggleChatters, updateHistoryIndex }
-)(Channel)
+/**
+ * Component enhancer.
+ */
+const enhance = compose<Props, {}>(
+  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+    (state) => ({
+      channel: getChannel(state),
+      chatters: getChatters(state),
+      copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+      emotes: getEmotes(state),
+      history: getHistory(state),
+      historyIndex: getHistoryIndex(state),
+      isAutoScrollPaused: getPauseAutoScroll(state),
+      isMod: getIsMod(state),
+      loginDetails: getLoginDetails(state),
+      logs: getLogs(state),
+      roomState: getRoomState(state),
+      showChatters: getShowChatters(state),
+      showContextMenu: getShowContextMenu(state),
+      status: getStatus(state),
+    }),
+    { addToHistory, ignoreUser, pauseAutoScroll, setChannel, toggleChatters, updateHistoryIndex }
+  ),
+  withHeader
+)
+
+export default enhance(Channel)
 
 /**
  * React Props.
@@ -390,9 +473,11 @@ type StateProps = {
   emotes: ReturnType<typeof getEmotes>
   history: AppState['history']
   historyIndex: AppState['historyIndex']
+  isAutoScrollPaused: ReturnType<typeof getPauseAutoScroll>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
+  roomState: ReturnType<typeof getRoomState>
   showChatters: AppState['showChatters']
   showContextMenu: ReturnType<typeof getShowContextMenu>
   status: AppState['status']
@@ -413,7 +498,7 @@ type DispatchProps = {
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps extends WithHeaderProps {
   match: match<{
     channel: string
   }>

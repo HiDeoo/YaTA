@@ -2,7 +2,6 @@ import {
   Alignment,
   Button,
   Colors,
-  Icon,
   Navbar,
   NavbarDivider,
   NavbarGroup,
@@ -17,17 +16,11 @@ import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 
+import HeaderTooltip from 'Components/HeaderTooltip'
 import Page from 'Constants/page'
 import Status from 'Constants/status'
-import { SerializedRoomState } from 'Libs/RoomState'
 import { AppState } from 'Store/ducks/app'
-
-/**
- * ChannelLink component.
- */
-const ChannelLink = styled.a`
-  color: inherit !important;
-`
+import { enumIncludes } from 'Utils/typescript'
 
 /**
  * StatusSpinner component.
@@ -62,15 +55,42 @@ const Switch = styled(_Switch)`
 `
 
 /**
- * StateTooltip component.
+ * Header configuration.
  */
-const StateTooltip = styled(Tooltip)`
-  margin-right: 10px;
+export const defaultHeaderConfiguration: HeaderConfiguration = {
+  rightComponent: null,
+  setRightComponent: () => undefined,
+  setTitleComponent: () => undefined,
+  titleComponent: null,
+}
 
-  & + .pt-navbar-divider {
-    margin-left: 0;
+/**
+ * Header context
+ */
+const HeaderContext = React.createContext(defaultHeaderConfiguration)
+export const HeaderProvider = HeaderContext.Provider
+export const HeaderConsumer = HeaderContext.Consumer
+
+/**
+ * Header HOC wrapping a component and giving it access to header configuration setters.
+ */
+export function withHeader<OriginalProps extends object>(
+  UnwrappedComponent: React.ComponentType<OriginalProps & WithHeaderProps>
+) {
+  return function WithHeaderConfiguration(props: OriginalProps) {
+    return (
+      <HeaderConsumer>
+        {({ setRightComponent, setTitleComponent }) => (
+          <UnwrappedComponent
+            {...props}
+            setHeaderRightComponent={setRightComponent}
+            setHeaderTitleComponent={setTitleComponent}
+          />
+        )}
+      </HeaderConsumer>
+    )
   }
-`
+}
 
 /**
  * Header Component.
@@ -81,151 +101,44 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const {
-      channel,
-      goHome,
-      highlightChangelog,
-      isLoggedIn,
-      logout,
-      page,
-      toggleChangelog,
-      toggleSettings,
-    } = this.props
-
-    const showChannelName = page !== Page.Home && !_.isNil(channel)
-
-    const headerTitle = `${showChannelName ? `${channel} - ` : ''}YaTA`
-
-    const title = (
-      <span>
-        {showChannelName && (
-          <>
-            <ChannelLink target="_blank" href={`https://twitch.tv/${channel}`}>
-              {channel}
-            </ChannelLink>{' '}
-            -{' '}
-          </>
-        )}Yata
-      </span>
-    )
+    const { goHome, highlightChangelog, isLoggedIn, logout, page, toggleChangelog, toggleSettings } = this.props
 
     return (
       <Navbar>
+        <Helmet>
+          <title>YaTA</title>
+        </Helmet>
         <NavbarGroup align={Alignment.LEFT}>
-          <Helmet>
-            <title>{headerTitle}</title>
-          </Helmet>
-          <NavbarHeading>{title}</NavbarHeading>
+          <NavbarHeading>
+            <HeaderConsumer>
+              {({ titleComponent }) => (!_.isNil(titleComponent) ? <span>{titleComponent} - </span> : null)}
+            </HeaderConsumer>YaTA
+          </NavbarHeading>
           {this.renderStatus()}
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
-          {this.renderChannelState()}
-          {this.renderChannelControls()}
+          <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
           {this.renderDebugTools()}
           {page !== Page.Home && (
-            <Tooltip content="Home" position={Position.BOTTOM}>
+            <HeaderTooltip content="Home">
               <Button onClick={goHome} icon="home" minimal title="Home" />
-            </Tooltip>
+            </HeaderTooltip>
           )}
           {highlightChangelog && (
-            <Tooltip content="New version available! Check the changelog." position={Position.BOTTOM}>
+            <HeaderTooltip content="New version available! Check the changelog.">
               <Changelog onClick={toggleChangelog} icon="lightbulb" minimal title="Changelog" />
-            </Tooltip>
+            </HeaderTooltip>
           )}
-          <Tooltip content="Settings" position={Position.BOTTOM}>
+          <HeaderTooltip content="Settings">
             <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal title="Settings" />
-          </Tooltip>
+          </HeaderTooltip>
           {isLoggedIn && (
-            <Tooltip content="Log out" position={Position.BOTTOM}>
+            <HeaderTooltip content="Log out">
               <Button onClick={logout} icon="log-out" minimal title="Log out" />
-            </Tooltip>
+            </HeaderTooltip>
           )}
         </NavbarGroup>
       </Navbar>
-    )
-  }
-
-  /**
-   * Render the channel state if necessary.
-   * @return Element to render.
-   */
-  private renderChannelState() {
-    if (!this.shouldRenderChannelELements()) {
-      return null
-    }
-
-    const { pauseAutoScroll, roomState } = this.props.channelState
-
-    const r9k = _.get(roomState, 'r9k', false)
-    const emoteOnly = _.get(roomState, 'emoteOnly', false)
-    const followersOnly = _.get(roomState, 'followersOnly', false)
-    const followersOnlyDuration = _.get(roomState, 'followersOnlyDuration', 0) as number
-    const slow = _.get(roomState, 'slow', false)
-    const slowDuration = _.get(roomState, 'slowDuration', 0) as number
-    const subsOnly = _.get(roomState, 'subsOnly', false)
-
-    if (!pauseAutoScroll && !r9k && !emoteOnly && !followersOnly && !slow && !subsOnly) {
-      return null
-    }
-
-    return (
-      <>
-        {pauseAutoScroll && (
-          <StateTooltip content="Auto scrolling disabled" position={Position.BOTTOM}>
-            <Icon icon="pause" color={Colors.RED4} />
-          </StateTooltip>
-        )}
-        {subsOnly && (
-          <StateTooltip content="Subscriber-only" position={Position.BOTTOM}>
-            <Icon icon="dollar" />
-          </StateTooltip>
-        )}
-        {slow && (
-          <StateTooltip content={`Slow mode (${slowDuration}s)`} position={Position.BOTTOM}>
-            <Icon icon="outdated" />
-          </StateTooltip>
-        )}
-        {followersOnly && (
-          <StateTooltip
-            content={`Follower-only${followersOnlyDuration > 0 ? ` (${followersOnlyDuration}m)` : ''}`}
-            position={Position.BOTTOM}
-          >
-            <Icon icon="follower" />
-          </StateTooltip>
-        )}
-        {emoteOnly && (
-          <StateTooltip content="Emote-only" position={Position.BOTTOM}>
-            <Icon icon="media" />
-          </StateTooltip>
-        )}
-        {r9k && (
-          <StateTooltip content="R9K" position={Position.BOTTOM}>
-            <Icon icon="multi-select" />
-          </StateTooltip>
-        )}
-        <NavbarDivider />
-      </>
-    )
-  }
-
-  /**
-   * Render the channel controls if necessary.
-   * @return Element to render.
-   */
-  private renderChannelControls() {
-    const { toggleChatters } = this.props
-
-    if (!this.shouldRenderChannelELements()) {
-      return null
-    }
-
-    return (
-      <>
-        <Tooltip content="Chatters List" position={Position.BOTTOM}>
-          <Button onClick={toggleChatters} icon="people" minimal title="Chatters List" />
-        </Tooltip>
-        <NavbarDivider />
-      </>
     )
   }
 
@@ -242,9 +155,9 @@ export default class Header extends React.Component<Props> {
 
     return (
       <>
-        <Tooltip content="Auto-Connect (dev only)" position={Position.BOTTOM}>
+        <HeaderTooltip content="Auto-Connect (dev only)">
           <Switch checked={autoConnectInDev} onChange={toggleAutoConnectInDev} />
-        </Tooltip>
+        </HeaderTooltip>
         <NavbarDivider />
       </>
     )
@@ -257,7 +170,7 @@ export default class Header extends React.Component<Props> {
   private renderStatus() {
     const { page, status } = this.props
 
-    if (page === Page.Home || status === Status.Default || status === Status.Connected) {
+    if (enumIncludes(Page, page) || status === Status.Default || status === Status.Connected) {
       return null
     }
 
@@ -294,16 +207,6 @@ export default class Header extends React.Component<Props> {
       </>
     )
   }
-
-  /**
-   * Determines if we should render channel specific elements.
-   * @return `true` when we should render them.
-   */
-  private shouldRenderChannelELements() {
-    const { page } = this.props
-
-    return page !== Page.Home && page !== Page.Auth && page !== Page.Login
-  }
 }
 
 /**
@@ -311,8 +214,6 @@ export default class Header extends React.Component<Props> {
  */
 type Props = {
   autoConnectInDev: boolean
-  channel: AppState['channel']
-  channelState: ChannelState
   goHome: () => void
   highlightChangelog: boolean
   isLoggedIn: boolean
@@ -321,14 +222,23 @@ type Props = {
   status: AppState['status']
   toggleAutoConnectInDev: () => void
   toggleChangelog: () => void
-  toggleChatters: () => void
   toggleSettings: () => void
 }
 
 /**
- * Channel state.
+ * React Props.
  */
-type ChannelState = {
-  pauseAutoScroll: boolean
-  roomState: SerializedRoomState | null
+export type WithHeaderProps = {
+  setHeaderRightComponent: HeaderConfiguration['setRightComponent']
+  setHeaderTitleComponent: HeaderConfiguration['setTitleComponent']
+}
+
+/**
+ * Header configuration.
+ */
+type HeaderConfiguration = {
+  rightComponent: JSX.Element | null
+  setRightComponent: (component: JSX.Element | null) => void
+  setTitleComponent: (component: JSX.Element | null) => void
+  titleComponent: JSX.Element | null
 }

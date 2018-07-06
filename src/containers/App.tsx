@@ -10,7 +10,7 @@ import { ThemeProvider } from 'styled-components'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Follows from 'Components/Follows'
-import Header from 'Components/Header'
+import Header, { defaultHeaderConfiguration, HeaderProvider } from 'Components/Header'
 import Login from 'Components/Login'
 import Settings, { SettingsTab } from 'Components/Settings'
 import Page from 'Constants/page'
@@ -18,12 +18,11 @@ import Theme from 'Constants/theme'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Twitch from 'Libs/Twitch'
-import { AppState, setShouldReadChangelog, toggleChatters } from 'Store/ducks/app'
+import { AppState, setShouldReadChangelog } from 'Store/ducks/app'
 import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getRoomState, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
-import { getPauseAutoScroll } from 'Store/selectors/logs'
+import { getShouldReadChangelog, getStatus } from 'Store/selectors/app'
 import { getAutoConnectInDev, getLastKnownVersion, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import dark from 'Styled/dark'
@@ -32,7 +31,11 @@ import light from 'Styled/light'
 /**
  * React State.
  */
-const initialState = { showSettings: false, settingSelectedTab: SettingsTab.General }
+const initialState = {
+  headerConfiguration: defaultHeaderConfiguration,
+  settingSelectedTab: SettingsTab.General,
+  showSettings: false,
+}
 type State = Readonly<typeof initialState>
 
 /**
@@ -47,6 +50,23 @@ class App extends React.Component<Props, State> {
    */
   constructor(props: Props) {
     super(props)
+
+    this.state = {
+      ...initialState,
+      headerConfiguration: {
+        ...initialState.headerConfiguration,
+        setRightComponent: (component) => {
+          this.setState(({ headerConfiguration }) => ({
+            headerConfiguration: { ...headerConfiguration, rightComponent: component },
+          }))
+        },
+        setTitleComponent: (component) => {
+          this.setState(({ headerConfiguration }) => ({
+            headerConfiguration: { ...headerConfiguration, titleComponent: component },
+          }))
+        },
+      },
+    }
 
     this.installTheme()
     this.setUpTwitchApi()
@@ -85,17 +105,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { showSettings, settingSelectedTab } = this.state
-    const {
-      channel,
-      isLoggedIn,
-      location,
-      autoConnectInDev,
-      pauseAutoScroll,
-      roomState,
-      shouldReadChangelog,
-      status,
-      theme,
-    } = this.props
+    const { isLoggedIn, location, autoConnectInDev, shouldReadChangelog, status, theme } = this.props
     const { pathname } = location
 
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
@@ -106,36 +116,33 @@ class App extends React.Component<Props, State> {
       return <Redirect to="/" />
     }
 
-    const channelState = { pauseAutoScroll, roomState }
-
     return (
       <ThemeProvider theme={theme === Theme.Dark ? dark : light}>
-        <FlexLayout vertical>
-          <Header
-            autoConnectInDev={autoConnectInDev}
-            channel={channel}
-            goHome={this.goHome}
-            highlightChangelog={shouldReadChangelog}
-            isLoggedIn={isLoggedIn}
-            logout={this.props.resetUser}
-            page={pathname}
-            channelState={channelState}
-            status={status}
-            toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
-            toggleChangelog={this.toggleChangelog}
-            toggleChatters={this.props.toggleChatters}
-            toggleSettings={this.toggleSettings}
-          />
-          <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
-          <FlexContent>
-            <Switch>
-              <Route exact path="/" component={Follows} />
-              <Route path="/auth" component={Auth} />
-              <Route path="/login" component={Login} />
-              <Route path="/:channel" component={Channel} />
-            </Switch>
-          </FlexContent>
-        </FlexLayout>
+        <HeaderProvider value={this.state.headerConfiguration}>
+          <FlexLayout vertical>
+            <Header
+              autoConnectInDev={autoConnectInDev}
+              goHome={this.goHome}
+              highlightChangelog={shouldReadChangelog}
+              isLoggedIn={isLoggedIn}
+              logout={this.props.resetUser}
+              page={pathname}
+              status={status}
+              toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
+              toggleChangelog={this.toggleChangelog}
+              toggleSettings={this.toggleSettings}
+            />
+            <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
+            <FlexContent>
+              <Switch>
+                <Route exact path="/" component={Follows} />
+                <Route path="/auth" component={Auth} />
+                <Route path="/login" component={Login} />
+                <Route path="/:channel" component={Channel} />
+              </Switch>
+            </FlexContent>
+          </FlexLayout>
+        </HeaderProvider>
       </ThemeProvider>
     )
   }
@@ -197,17 +204,14 @@ class App extends React.Component<Props, State> {
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     autoConnectInDev: getAutoConnectInDev(state),
-    channel: getChannel(state),
     isLoggedIn: getIsLoggedIn(state),
     lastKnownVersion: getLastKnownVersion(state),
     loginDetails: getLoginDetails(state),
-    pauseAutoScroll: getPauseAutoScroll(state),
-    roomState: getRoomState(state),
     shouldReadChangelog: getShouldReadChangelog(state),
     status: getStatus(state),
     theme: getTheme(state),
   }),
-  { resetUser, setVersion, setShouldReadChangelog, toggleAutoConnectInDev, toggleChatters }
+  { resetUser, setVersion, setShouldReadChangelog, toggleAutoConnectInDev }
 )(App)
 
 /**
@@ -215,12 +219,9 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  */
 type StateProps = {
   autoConnectInDev: SettingsState['autoConnectInDev']
-  channel: AppState['channel']
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: SettingsState['lastKnownVersion']
   loginDetails: ReturnType<typeof getLoginDetails>
-  pauseAutoScroll: ReturnType<typeof getPauseAutoScroll>
-  roomState: ReturnType<typeof getRoomState>
   shouldReadChangelog: AppState['shouldReadChangelog']
   status: AppState['status']
   theme: SettingsState['theme']
@@ -234,7 +235,6 @@ type DispatchProps = {
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
   toggleAutoConnectInDev: typeof toggleAutoConnectInDev
-  toggleChatters: typeof toggleChatters
 }
 
 /**
