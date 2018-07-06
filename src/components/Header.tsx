@@ -8,7 +8,6 @@ import {
   NavbarHeading,
   Spinner,
   Switch as _Switch,
-  Tooltip,
 } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'

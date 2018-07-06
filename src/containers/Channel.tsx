@@ -272,7 +272,7 @@ class Channel extends React.Component<Props, State> {
     const { channel, isMod, loginDetails } = this.props
 
     const userIsBroadcaster = !_.isNil(loginDetails) && !_.isNil(channel) && loginDetails.username === channel
-    const chatterIsBroadcaster = !_.isNil(channel) && chatter.userName === channel
+    const chatterIsBroadcaster = chatter.isBroadcaster
     const chatterIsSelf = chatter.isSelf
     const chatterIsMod = chatter.isMod
 
