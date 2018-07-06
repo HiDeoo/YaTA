@@ -24,7 +24,14 @@ import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
-import { AppState, resetAppState, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
+import {
+  AppState,
+  resetAppState,
+  setLastWhisperSender,
+  updateEmoteSets,
+  updateRoomState,
+  updateStatus,
+} from 'Store/ducks/app'
 import { addChatterWithMessage, ChattersState, clearChatters } from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
@@ -86,7 +93,7 @@ export class ChatClient extends React.Component<Props, State> {
       return
     }
 
-    Message.highlights = this.props.highlights
+    this.updateHighlights()
 
     this.client.on(Event.Connecting, this.onConnecting)
     this.client.on(Event.Connected, this.onConnected)
@@ -147,12 +154,11 @@ export class ChatClient extends React.Component<Props, State> {
    * @param prevProps - The previous props.
    */
   public componentDidUpdate(prevProps: Props) {
-    if (prevProps.highlights !== this.props.highlights) {
-      Message.highlights = this.props.highlights
-    }
-
-    if (prevProps.highlightsIgnoredUsers.length !== this.props.highlightsIgnoredUsers.length) {
-      Message.highlightsIgnoredUsers = this.props.highlightsIgnoredUsers
+    if (
+      prevProps.highlights !== this.props.highlights ||
+      prevProps.highlightsIgnoredUsers.length !== this.props.highlightsIgnoredUsers.length
+    ) {
+      this.updateHighlights()
     }
   }
 
@@ -357,6 +363,10 @@ export class ChatClient extends React.Component<Props, State> {
 
       if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
         this.props.addChatterWithMessage(serializedMessage.user, serializedMessage.id)
+      }
+
+      if (serializedMessage.type === LogType.Whisper && !self) {
+        this.props.setLastWhisperSender(serializedMessage.user.userName)
       }
     }
   }
@@ -663,6 +673,14 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
+   * Update highlights and highlights ignored users used when parsing messages.
+   */
+  private updateHighlights() {
+    Message.highlights = this.props.highlights
+    Message.highlightsIgnoredUsers = this.props.highlightsIgnoredUsers
+  }
+
+  /**
    * Parses a message.
    * @param message - The received message.
    * @param userstate - The associated user state.
@@ -743,6 +761,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     clearLogs,
     purgeLogs,
     resetAppState,
+    setLastWhisperSender,
     setModerator,
     updateEmoteSets,
     updateRoomState,
@@ -777,6 +796,7 @@ type DispatchProps = {
   clearLogs: typeof clearLogs
   purgeLogs: typeof purgeLogs
   resetAppState: typeof resetAppState
+  setLastWhisperSender: typeof setLastWhisperSender
   setModerator: typeof setModerator
   updateRoomState: typeof updateRoomState
   updateEmoteSets: typeof updateEmoteSets

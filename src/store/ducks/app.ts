@@ -17,6 +17,7 @@ export enum Actions {
   UPDATE_HISTORY_INDEX = 'app/UPDATE_HISTORY_INDEX',
   UPDATE_EMOTE_SETS = 'app/UPDATE_EMOTE_SETS',
   RESET_APP_STATE = 'app/RESET_APP_STATE',
+  SET_LAST_WHISPER_SENDER = 'app/SET_LAST_WHISPER_SENDER',
 }
 
 /**
@@ -27,6 +28,7 @@ export const initialState = {
   emoteSets: {},
   history: [],
   historyIndex: -1,
+  lastWhisperSender: '',
   roomState: null,
   shouldReadChangelog: false,
   showChatters: false,
@@ -99,6 +101,12 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
       return {
         ...initialState,
         shouldReadChangelog: state.shouldReadChangelog,
+      }
+    }
+    case Actions.SET_LAST_WHISPER_SENDER: {
+      return {
+        ...state,
+        lastWhisperSender: action.payload.username,
       }
     }
     default: {
@@ -194,6 +202,16 @@ export const updateEmoteSets = (prefix: string, emotes: string[]) =>
 export const resetAppState = () => createAction(Actions.RESET_APP_STATE)
 
 /**
+ * Sets the username of the last user that sent us a whisper.
+ * @param  username - The user name.
+ * @return The action.
+ */
+export const setLastWhisperSender = (username: string) =>
+  createAction(Actions.SET_LAST_WHISPER_SENDER, {
+    username,
+  })
+
+/**
  * App actions.
  */
 export type AppActions =
@@ -206,6 +224,7 @@ export type AppActions =
   | ReturnType<typeof updateHistoryIndex>
   | ReturnType<typeof updateEmoteSets>
   | ReturnType<typeof resetAppState>
+  | ReturnType<typeof setLastWhisperSender>
 
 /**
  * App state.
@@ -252,4 +271,9 @@ export type AppState = {
   emoteSets: {
     [key: string]: string[]
   }
+
+  /**
+   * The username of the last user that sent us a whisper.
+   */
+  lastWhisperSender: string
 }

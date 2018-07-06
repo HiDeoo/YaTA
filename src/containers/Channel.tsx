@@ -34,6 +34,7 @@ import {
   getEmotes,
   getHistory,
   getHistoryIndex,
+  getLastWhisperSender,
   getRoomState,
   getShowChatters,
   getStatus,
@@ -61,7 +62,12 @@ const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
 /**
  * RegExp used to identify whisper command (/w user message).
  */
-const WhisperRegExp = /^\/w (\S+) (.+)/g
+const WhisperRegExp = /^\/w (\S+) (.+)/
+
+/**
+ * RegExp used to identify whisper reply command (/r).
+ */
+const WhisperReplyRegExp = /^\/r /
 
 /**
  * React State.
@@ -236,7 +242,14 @@ class Channel extends React.Component<Props, State> {
    * Triggered when input value is modified.
    */
   private onChangeInputValue = (value: string) => {
-    this.setState(() => ({ inputValue: value }))
+    if (WhisperReplyRegExp.test(value)) {
+      const { lastWhisperSender } = this.props
+      const inputValue = `/w ${this.props.lastWhisperSender}${lastWhisperSender.length > 0 ? ' ' : ''}`
+
+      this.setState(() => ({ inputValue }))
+    } else {
+      this.setState(() => ({ inputValue: value }))
+    }
   }
 
   /**
@@ -361,7 +374,7 @@ class Channel extends React.Component<Props, State> {
         const message = this.state.inputValue
 
         if (Twitch.isWhisperCommand(message)) {
-          const matches = WhisperRegExp.exec(message)
+          const matches = message.match(WhisperRegExp)
 
           if (!_.isNil(matches)) {
             const username = matches[1]
@@ -562,6 +575,7 @@ const enhance = compose<Props, {}>(
       historyIndex: getHistoryIndex(state),
       isAutoScrollPaused: getPauseAutoScroll(state),
       isMod: getIsMod(state),
+      lastWhisperSender: getLastWhisperSender(state),
       loginDetails: getLoginDetails(state),
       logs: getLogs(state),
       roomState: getRoomState(state),
@@ -588,6 +602,7 @@ type StateProps = {
   historyIndex: AppState['historyIndex']
   isAutoScrollPaused: ReturnType<typeof getPauseAutoScroll>
   isMod: ReturnType<typeof getIsMod>
+  lastWhisperSender: ReturnType<typeof getLastWhisperSender>
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
   roomState: ReturnType<typeof getRoomState>
