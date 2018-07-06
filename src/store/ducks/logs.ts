@@ -14,7 +14,7 @@ import { createAction } from 'Utils/redux'
  * @return `true` when logs should be rotated.
  */
 function shouldRotateLogs(state: LogsState) {
-  return state.allIds.length > Logs.Max + Logs.Threshold
+  return !state.pauseAutoScroll && state.allIds.length > Logs.Max + Logs.Threshold
 }
 
 /**
