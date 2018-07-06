@@ -171,6 +171,16 @@ declare module 'twitch-js' {
     whisper(username: string, message: string): void
     timeout(channel: string, username: string, length: number, reason?: string): void
     ban(channel: string, username: string, reason?: string): void
+    r9kbeta(channel: string): void
+    r9kbetaoff(channel: string): void
+    slow(channel: string, duration?: number): void
+    slowoff(channel: string): void
+    followersonly(channel: string, duration?: number): void
+    followersonlyoff(channel: string): void
+    subscribers(channel: string): void
+    subscribersoff(channel: string): void
+    emoteonly(channel: string): void
+    emoteonlyoff(channel: string): void
   }
 
   namespace Client {

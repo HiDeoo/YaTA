@@ -14,6 +14,7 @@ import Chatters from 'Components/Chatters'
 import FlexLayout from 'Components/FlexLayout'
 import { withHeader, WithHeaderProps } from 'Components/Header'
 import HeaderChannelState from 'Components/HeaderChannelState'
+import HeaderModerationTools from 'Components/HeaderModerationTools'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs from 'Components/Logs'
@@ -97,10 +98,10 @@ class Channel extends React.Component<Props, State> {
    * @param prevProps - The previous props.
    */
   public componentDidUpdate(prevProps: Props) {
-    const { isAutoScrollPaused: prevIsAutoScrollPaused, roomState: prevRoomState } = prevProps
-    const { isAutoScrollPaused, roomState } = this.props
+    const { isAutoScrollPaused: prevIsAutoScrollPaused, isMod: prevIsMod, roomState: prevRoomState } = prevProps
+    const { isAutoScrollPaused, isMod, roomState } = this.props
 
-    if (prevIsAutoScrollPaused !== isAutoScrollPaused || prevRoomState !== roomState) {
+    if (prevIsAutoScrollPaused !== isAutoScrollPaused || prevRoomState !== roomState || prevIsMod !== isMod) {
       this.setHeaderRightComponent()
     }
   }
@@ -176,11 +177,22 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   private setHeaderRightComponent() {
-    const { isAutoScrollPaused, roomState } = this.props
+    const { isAutoScrollPaused, isMod, roomState } = this.props
 
     const headerRightComponent = (
       <>
         <HeaderChannelState isAutoScrollPaused={isAutoScrollPaused} roomState={roomState} />
+        {isMod &&
+          !_.isNil(roomState) && (
+            <HeaderModerationTools
+              roomState={roomState}
+              toggleR9k={this.toggleR9k}
+              toggleSlowMode={this.toggleSlowMode}
+              toggleFollowersOnly={this.toggleFollowersOnly}
+              toggleSubsOnly={this.toggleSubsOnly}
+              toggleEmoteOnly={this.toggleEmoteOnly}
+            />
+          )}
         <HeaderTooltip content="Chatters List">
           <Button onClick={this.props.toggleChatters} icon="people" minimal title="Chatters List" />
         </HeaderTooltip>
@@ -431,6 +443,107 @@ class Channel extends React.Component<Props, State> {
 
     if (!_.isNil(this.input.current)) {
       this.input.current.focus()
+    }
+  }
+
+  /**
+   * Toggles the R9K mode.
+   */
+  private toggleR9k = async () => {
+    const { channel, roomState } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
+      try {
+        if (roomState.r9k) {
+          await client.r9kbetaoff(channel)
+        } else {
+          await client.r9kbeta(channel)
+        }
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Toggles the slow mode.
+   */
+  private toggleSlowMode = async () => {
+    const { channel, roomState } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
+      try {
+        if (roomState.slow) {
+          await client.slowoff(channel)
+        } else {
+          // Don't use the default twitch-js value, use the default from Twitch.
+          await client.slow(channel, 120)
+        }
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Toggles the followers-only mode.
+   */
+  private toggleFollowersOnly = async () => {
+    const { channel, roomState } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
+      try {
+        if (roomState.followersOnly) {
+          await client.followersonlyoff(channel)
+        } else {
+          await client.followersonly(channel)
+        }
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Toggles the subscribers-only mode.
+   */
+  private toggleSubsOnly = async () => {
+    const { channel, roomState } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
+      try {
+        if (roomState.subsOnly) {
+          await client.subscribersoff(channel)
+        } else {
+          await client.subscribers(channel)
+        }
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Toggles the emote-only mode.
+   */
+  private toggleEmoteOnly = async () => {
+    const { channel, roomState } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
+      try {
+        if (roomState.emoteOnly) {
+          await client.emoteonlyoff(channel)
+        } else {
+          await client.emoteonly(channel)
+        }
+      } catch (error) {
+        //
+      }
     }
   }
 }

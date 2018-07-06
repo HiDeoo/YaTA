@@ -6,7 +6,6 @@ import {
   NavbarDivider,
   NavbarGroup,
   NavbarHeading,
-  Position,
   Spinner,
   Switch as _Switch,
   Tooltip,
