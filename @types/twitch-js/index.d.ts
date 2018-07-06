@@ -43,11 +43,11 @@ declare module 'twitch-js' {
   export type RoomState = {
     'broadcaster-lang'?: string | null
     'emote-only'?: boolean
-    'followers-only'?: string
+    'followers-only'?: string | boolean
     r9k?: boolean
     rituals?: boolean
     'room-id': string
-    slow?: boolean
+    slow?: boolean | string
     'subs-only'?: boolean
     channel: string
   }

@@ -158,12 +158,13 @@ export default class Header extends React.Component<Props> {
 
     const r9k = _.get(roomState, 'r9k', false)
     const emoteOnly = _.get(roomState, 'emoteOnly', false)
-    const followersOnly = _.get(roomState, 'followersOnly', '-1')
-    const isFollowersOnly = !(_.isString(followersOnly) && followersOnly === '-1')
+    const followersOnly = _.get(roomState, 'followersOnly', false)
+    const followersOnlyDuration = _.get(roomState, 'followersOnlyDuration', 0) as number
     const slow = _.get(roomState, 'slow', false)
+    const slowDuration = _.get(roomState, 'slowDuration', 0) as number
     const subsOnly = _.get(roomState, 'subsOnly', false)
 
-    if (!pauseAutoScroll && !r9k && !emoteOnly && !isFollowersOnly && !slow && !subsOnly) {
+    if (!pauseAutoScroll && !r9k && !emoteOnly && !followersOnly && !slow && !subsOnly) {
       return null
     }
 
@@ -180,12 +181,15 @@ export default class Header extends React.Component<Props> {
           </StateTooltip>
         )}
         {slow && (
-          <StateTooltip content="Slow mode" position={Position.BOTTOM}>
+          <StateTooltip content={`Slow mode (${slowDuration}s)`} position={Position.BOTTOM}>
             <Icon icon="outdated" />
           </StateTooltip>
         )}
-        {isFollowersOnly && (
-          <StateTooltip content="Follower-only" position={Position.BOTTOM}>
+        {followersOnly && (
+          <StateTooltip
+            content={`Follower-only${followersOnlyDuration > 0 ? ` (${followersOnlyDuration}m)` : ''}`}
+            position={Position.BOTTOM}
+          >
             <Icon icon="follower" />
           </StateTooltip>
         )}
