@@ -67,3 +67,10 @@ export const getHistoryIndex = createSelector([getAppState], (app) => app.histor
 export const getEmotes = createSelector([getEmoteSetsState], (sets) => {
   return _.flatten(_.values(sets)).sort()
 })
+
+/**
+ * Returns the room state.
+ * @param  state - The Redux state.
+ * @return The room state.
+ */
+export const getRoomState = createSelector([getAppState], (app) => app.roomState)

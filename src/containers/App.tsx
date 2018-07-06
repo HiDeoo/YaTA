@@ -22,7 +22,7 @@ import { AppState, setShouldReadChangelog, toggleChatters } from 'Store/ducks/ap
 import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
-import { getChannel, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
+import { getChannel, getRoomState, getShouldReadChangelog, getStatus } from 'Store/selectors/app'
 import { getPauseAutoScroll } from 'Store/selectors/logs'
 import { getAutoConnectInDev, getLastKnownVersion, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
@@ -91,6 +91,7 @@ class App extends React.Component<Props, State> {
       location,
       autoConnectInDev,
       pauseAutoScroll,
+      roomState,
       shouldReadChangelog,
       status,
       theme,
@@ -105,7 +106,7 @@ class App extends React.Component<Props, State> {
       return <Redirect to="/" />
     }
 
-    const channelState = { pauseAutoScroll }
+    const channelState = { pauseAutoScroll, roomState }
 
     return (
       <ThemeProvider theme={theme === Theme.Dark ? dark : light}>
@@ -201,6 +202,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     lastKnownVersion: getLastKnownVersion(state),
     loginDetails: getLoginDetails(state),
     pauseAutoScroll: getPauseAutoScroll(state),
+    roomState: getRoomState(state),
     shouldReadChangelog: getShouldReadChangelog(state),
     status: getStatus(state),
     theme: getTheme(state),
@@ -218,6 +220,7 @@ type StateProps = {
   lastKnownVersion: SettingsState['lastKnownVersion']
   loginDetails: ReturnType<typeof getLoginDetails>
   pauseAutoScroll: ReturnType<typeof getPauseAutoScroll>
+  roomState: ReturnType<typeof getRoomState>
   shouldReadChangelog: AppState['shouldReadChangelog']
   status: AppState['status']
   theme: SettingsState['theme']

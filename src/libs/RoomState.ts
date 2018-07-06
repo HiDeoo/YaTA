@@ -59,7 +59,7 @@ export type SerializedRoomState = {
   roomId: string
   language?: string | null
   emoteOnly?: boolean
-  followersOnly?: string
+  followersOnly?: string | boolean
   r9k?: boolean
   rituals?: boolean
   slow?: boolean

@@ -19,6 +19,7 @@ import styled from 'styled-components'
 
 import Page from 'Constants/page'
 import Status from 'Constants/status'
+import { SerializedRoomState } from 'Libs/RoomState'
 import { AppState } from 'Store/ducks/app'
 
 /**
@@ -58,6 +59,17 @@ const Changelog = styled(Button)`
 const Switch = styled(_Switch)`
   margin-left: 6px;
   margin-top: 9px;
+`
+
+/**
+ * StateTooltip component.
+ */
+const StateTooltip = styled(Tooltip)`
+  margin-right: 10px;
+
+  & + .pt-navbar-divider {
+    margin-left: 0;
+  }
 `
 
 /**
@@ -142,18 +154,50 @@ export default class Header extends React.Component<Props> {
       return null
     }
 
-    const { pauseAutoScroll } = this.props.channelState
+    const { pauseAutoScroll, roomState } = this.props.channelState
 
-    if (!pauseAutoScroll) {
+    const r9k = _.get(roomState, 'r9k', false)
+    const emoteOnly = _.get(roomState, 'emoteOnly', false)
+    const followersOnly = _.get(roomState, 'followersOnly', '-1')
+    const isFollowersOnly = !(_.isString(followersOnly) && followersOnly === '-1')
+    const slow = _.get(roomState, 'slow', false)
+    const subsOnly = _.get(roomState, 'subsOnly', false)
+
+    if (!pauseAutoScroll && !r9k && !emoteOnly && !isFollowersOnly && !slow && !subsOnly) {
       return null
     }
 
     return (
       <>
         {pauseAutoScroll && (
-          <Tooltip content="Auto scrolling disabled" position={Position.BOTTOM}>
+          <StateTooltip content="Auto scrolling disabled" position={Position.BOTTOM}>
             <Icon icon="pause" color={Colors.RED4} />
-          </Tooltip>
+          </StateTooltip>
+        )}
+        {subsOnly && (
+          <StateTooltip content="Subscriber-only" position={Position.BOTTOM}>
+            <Icon icon="dollar" />
+          </StateTooltip>
+        )}
+        {slow && (
+          <StateTooltip content="Slow mode" position={Position.BOTTOM}>
+            <Icon icon="outdated" />
+          </StateTooltip>
+        )}
+        {isFollowersOnly && (
+          <StateTooltip content="Follower-only" position={Position.BOTTOM}>
+            <Icon icon="follower" />
+          </StateTooltip>
+        )}
+        {emoteOnly && (
+          <StateTooltip content="Emote-only" position={Position.BOTTOM}>
+            <Icon icon="media" />
+          </StateTooltip>
+        )}
+        {r9k && (
+          <StateTooltip content="R9K" position={Position.BOTTOM}>
+            <Icon icon="multi-select" />
+          </StateTooltip>
         )}
         <NavbarDivider />
       </>
@@ -282,4 +326,5 @@ type Props = {
  */
 type ChannelState = {
   pauseAutoScroll: boolean
+  roomState: SerializedRoomState | null
 }
