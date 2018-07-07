@@ -22,6 +22,7 @@ import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
 import Chat, { ChatClient } from 'Containers/Chat'
 import Details from 'Containers/Details'
+import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
@@ -151,8 +152,9 @@ class Channel extends React.Component<Props, State> {
           showContextMenu={showContextMenu}
           focusChatter={this.focusChatter}
           copyToClipboard={this.copyToClipboard}
+          actionHandler={this.handleAction}
           canModerate={this.canModerate}
-          whisper={this.whisper}
+          whisper={this.prepareWhisper}
           timeout={this.timeout}
           ban={this.ban}
         />
@@ -168,11 +170,12 @@ class Channel extends React.Component<Props, State> {
         <Details
           chatter={focusedChatter}
           unfocus={this.unfocusChatter}
-          whisper={this.whisper}
+          whisper={this.prepareWhisper}
           timeout={this.timeout}
           block={this.block}
           ban={this.ban}
           canModerate={this.canModerate}
+          actionHandler={this.handleAction}
         />
       </FlexLayout>
     )
@@ -249,6 +252,51 @@ class Channel extends React.Component<Props, State> {
       this.setState(() => ({ inputValue }))
     } else {
       this.setState(() => ({ inputValue: value }))
+    }
+  }
+
+  /**
+   * Handle a user defined action.
+   * @param action - The action to execute.
+   * @param [chatter=this.state.focusedChatter] - The chatter on who the action is triggered.
+   */
+  private handleAction = async (
+    action: SerializedAction,
+    chatter: SerializedChatter | null = this.state.focusedChatter
+  ) => {
+    const { channel } = this.props
+
+    if (_.isNil(channel) || _.isNil(chatter)) {
+      return
+    }
+
+    const placeholders = {
+      [ActionPlaceholder.Channel]: channel,
+      [ActionPlaceholder.Username]: chatter.userName,
+    }
+
+    try {
+      const text = Action.parse(action, placeholders)
+
+      if (action.type === ActionType.Say) {
+        await this.say(text)
+      } else if (action.type === ActionType.Whisper && !_.isNil(action.recipient)) {
+        await this.whisper(action.recipient, text)
+      } else if (action.type === ActionType.Prepare) {
+        this.setState(() => ({ inputValue: text }))
+
+        if (!_.isNil(this.input.current)) {
+          this.input.current.focus()
+        }
+      } else if (action.type === ActionType.Open) {
+        window.open(text)
+      }
+    } catch (error) {
+      Toaster.show({
+        icon: 'error',
+        intent: Intent.DANGER,
+        message: 'Something went wrong! Check your action configuration.',
+      })
     }
   }
 
@@ -363,7 +411,7 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Sends a message.
+   * Sends a message or a whisper from the chat input.
    */
   private sendMessage = async () => {
     const { channel } = this.props
@@ -380,21 +428,48 @@ class Channel extends React.Component<Props, State> {
             const username = matches[1]
             const whisper = matches[2]
 
-            const chatClient = this.chatClient.current.getWrappedInstance() as ChatClient
-            chatClient.nextWhisperRecipient = username
-
-            await client.whisper(username, whisper)
+            await this.whisper(username, whisper)
           }
         } else {
-          await client.say(channel, message)
-
-          this.props.addToHistory(message)
+          await this.say(message)
         }
 
         this.setState(() => ({ inputValue: '' }))
       } catch (error) {
         //
       }
+    }
+  }
+
+  /**
+   * Sends a message.
+   * @param message - The message to send.
+   */
+  private async say(message: string) {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      await client.say(channel, message)
+
+      this.props.addToHistory(message)
+    }
+  }
+
+  /**
+   * Sends a whisper.
+   * @param username - The recipient.
+   * @param whisper - The whisper to send.
+   */
+  private async whisper(username: string, whisper: string) {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      const chatClient = this.chatClient.current.getWrappedInstance() as ChatClient
+      chatClient.nextWhisperRecipient = username
+
+      await client.whisper(username, whisper)
     }
   }
 
@@ -451,7 +526,7 @@ class Channel extends React.Component<Props, State> {
    * Prepare a whisper by setting the input to the whisper command.
    * @param username - The username to whisper.
    */
-  private whisper = (username: string) => {
+  private prepareWhisper = (username: string) => {
     this.setState(() => ({ inputValue: `/w ${username} ` }))
 
     if (!_.isNil(this.input.current)) {

@@ -5,6 +5,8 @@ import styled from 'styled-components'
 
 import Clip from 'Components/Clip'
 import MessageContent from 'Components/MessageContent'
+import ActionMenuItems from 'Containers/ActionMenuItems'
+import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { RawClip } from 'Libs/Twitch'
@@ -145,7 +147,7 @@ export default class Message extends React.Component<Props> {
    * @return Element to render.
    */
   private renderContextMenu() {
-    const { canModerate, message, showContextMenu } = this.props
+    const { actionHandler, canModerate, message, showContextMenu } = this.props
 
     if (!showContextMenu) {
       return null
@@ -161,6 +163,7 @@ export default class Message extends React.Component<Props> {
         )}
         <MenuItem icon="clipboard" text="Copy message" onClick={this.copyMessage} />
         <MenuItem icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
+        <ActionMenuItems startDivider actionHandler={actionHandler} chatter={message.user} />
         {canModerate(message.user) && (
           <>
             <MenuDivider />
@@ -307,6 +310,7 @@ export default class Message extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  actionHandler: ActionHandler
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   copyMessageOnDoubleClick: boolean

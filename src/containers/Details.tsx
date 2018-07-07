@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Classes, Dialog, Icon, Intent, Spinner } from '@blueprintjs/core'
+import { Button, ButtonGroup, Classes, Dialog, Icon, Intent, Popover, Spinner } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -7,6 +7,8 @@ import styled from 'styled-components'
 import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
 import History from 'Components/History'
+import ActionMenuItems from 'Containers/ActionMenuItems'
+import { ActionHandler, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
@@ -213,6 +215,9 @@ class Details extends React.Component<Props, State> {
             icon="history"
             href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.userName}`}
           />
+          <Popover content={<ActionMenuItems actionHandler={this.actionHandler} wrap />} usePortal={false}>
+            <Button icon="caret-down" />
+          </Popover>
         </Tools>
       </>
     )
@@ -319,6 +324,18 @@ class Details extends React.Component<Props, State> {
 
     unfocus()
   }
+
+  /**
+   * Handle an action triggered from the details screen.
+   * @param action - The action to execute.
+   */
+  private actionHandler = (action: SerializedAction) => {
+    const { actionHandler, unfocus } = this.props
+
+    actionHandler(action, undefined)
+
+    unfocus()
+  }
 }
 
 export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownProps: OwnProps) => {
@@ -340,6 +357,7 @@ type StateProps = {
  * React Props.
  */
 type OwnProps = {
+  actionHandler: ActionHandler
   ban: (username: string) => void
   block: (targetId: string) => void
   canModerate: (chatter: SerializedChatter) => boolean

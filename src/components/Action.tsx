@@ -1,8 +1,9 @@
-import { Button, Colors, Icon, IconName, Intent, Text } from '@blueprintjs/core'
+import { Button, Colors, Icon, Intent, Text } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
+import ActionIconMap from 'Constants/actionIconMap'
 import { ActionType, SerializedAction } from 'Libs/Action'
 
 /**
@@ -50,16 +51,6 @@ const ActionText = styled(Text).attrs({
   font-style: italic;
   max-width: 280px;
 `
-
-/**
- * Action icons mapping.
- */
-const ActionIconMap: { [key: string]: IconName } = {
-  [ActionType.Open]: 'document-open',
-  [ActionType.Prepare]: 'form',
-  [ActionType.Say]: 'chat',
-  [ActionType.Whisper]: 'envelope',
-}
 
 /**
  * Action Component.

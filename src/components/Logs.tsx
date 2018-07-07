@@ -9,6 +9,7 @@ import Message from 'Components/Message'
 import Notice from 'Components/Notice'
 import Notification from 'Components/Notification'
 import Whisper from 'Components/Whisper'
+import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
@@ -120,6 +121,7 @@ export default class Logs extends React.Component<Props> {
     let LogComponent: JSX.Element | null = null
 
     const {
+      actionHandler,
       ban,
       canModerate,
       copyMessageOnDoubleClick,
@@ -138,6 +140,7 @@ export default class Logs extends React.Component<Props> {
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
+          actionHandler={actionHandler}
           focusChatter={focusChatter}
           canModerate={canModerate}
           timeout={timeout}
@@ -169,6 +172,7 @@ export default class Logs extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  actionHandler: ActionHandler
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   copyMessageOnDoubleClick: boolean

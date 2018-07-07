@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import * as shortid from 'shortid'
 
+import { SerializedChatter } from 'Libs/Chatter'
 import { Serializable } from 'Utils/typescript'
 
 /**
@@ -43,6 +44,18 @@ export default class Action implements Serializable<SerializedAction> {
     const valid = isWhisperAction ? textAndNameValid && recipientValid : textAndNameValid
 
     return { name: nameValid, recipient: recipientValid, text: textValid, valid }
+  }
+
+  /**
+   * Parses an action text and replace placeholders.
+   * @param  action - The action to parse.
+   * @param  placeholders - Available placholders.
+   * @return The parsed action text.
+   */
+  public static parse(action: SerializedAction, replacements: ActionReplacement) {
+    const compiledTemplate = _.template(action.text)
+
+    return compiledTemplate(replacements)
   }
 
   /**
@@ -113,6 +126,11 @@ export enum ActionPlaceholder {
 }
 
 /**
+ * Action placeholders replacement values..
+ */
+type ActionReplacement = { [key in ActionPlaceholder]: string }
+
+/**
  * Types of action available.
  */
 export enum ActionType {
@@ -132,3 +150,8 @@ export type SerializedAction = {
   type: ActionType
   recipient?: string
 }
+
+/**
+ * Action handler.
+ */
+export type ActionHandler = (action: SerializedAction, chatter?: SerializedChatter | null) => void
