@@ -55,8 +55,8 @@ export const getLogsByIds = (state: ApplicationState, ids: string[]) => {
 }
 
 /**
- * Returns if auto scrolling is disabled or not.
+ * Returns if auto scrolling is paused or not.
  * @param  state - The Redux state.
  * @return `true` when disabled.
  */
-export const getPauseAutoScroll = createSelector([getLogsState], (logs) => logs.pauseAutoScroll)
+export const getIsAutoScrollPaused = createSelector([getLogsState], (logs) => logs.isAutoScrollPaused)

@@ -40,7 +40,7 @@ import {
   getStatus,
 } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
-import { getLogs, getPauseAutoScroll } from 'Store/selectors/logs'
+import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import { sanitizeUrlForPreview } from 'Utils/preview'
@@ -573,7 +573,7 @@ const enhance = compose<Props, {}>(
       emotes: getEmotes(state),
       history: getHistory(state),
       historyIndex: getHistoryIndex(state),
-      isAutoScrollPaused: getPauseAutoScroll(state),
+      isAutoScrollPaused: getIsAutoScrollPaused(state),
       isMod: getIsMod(state),
       lastWhisperSender: getLastWhisperSender(state),
       loginDetails: getLoginDetails(state),
@@ -600,7 +600,7 @@ type StateProps = {
   emotes: ReturnType<typeof getEmotes>
   history: AppState['history']
   historyIndex: AppState['historyIndex']
-  isAutoScrollPaused: ReturnType<typeof getPauseAutoScroll>
+  isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>
   isMod: ReturnType<typeof getIsMod>
   lastWhisperSender: ReturnType<typeof getLastWhisperSender>
   loginDetails: ReturnType<typeof getLoginDetails>
