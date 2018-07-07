@@ -38,7 +38,13 @@ import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
-import { getAutoConnectInDev, getHighlights, getHighlightsIgnoredUsers, getTheme } from 'Store/selectors/settings'
+import {
+  getAutoConnectInDev,
+  getHideWhispers,
+  getHighlights,
+  getHighlightsIgnoredUsers,
+  getTheme,
+} from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 
 /**
@@ -357,6 +363,10 @@ export class ChatClient extends React.Component<Props, State> {
         } catch (error) {
           //
         }
+      }
+
+      if (serializedMessage.type === LogType.Whisper && this.props.hideWhispers) {
+        return
       }
 
       this.props.addLog(serializedMessage)
@@ -748,6 +758,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
+    hideWhispers: getHideWhispers(state),
     highlights: getHighlights(state),
     highlightsIgnoredUsers: getHighlightsIgnoredUsers(state),
     isMod: getIsMod(state),
@@ -779,6 +790,7 @@ type StateProps = {
   channel: AppState['channel']
   chatters: ChattersState['byId']
   chattersMap: ChattersState['byName']
+  hideWhispers: ReturnType<typeof getHideWhispers>
   highlights: ReturnType<typeof getHighlights>
   highlightsIgnoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
   isMod: ReturnType<typeof getIsMod>

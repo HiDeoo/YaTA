@@ -47,4 +47,10 @@ export default {
       settings: { ...state.settings, actions: initialState.actions },
     }
   },
+  7: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, hideWhispers: initialState.hideWhispers },
+    }
+  },
 }

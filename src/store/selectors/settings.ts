@@ -70,3 +70,10 @@ export const getHighlightsIgnoredUsers = createSelector(
  * @return The actions.
  */
 export const getActions = createSelector([getSettingsState], (settings) => settings.actions)
+
+/**
+ * Returns the 'Hide whispers' setting.
+ * @param  state - The Redux state.
+ * @return The 'Hide whispers' setting.
+ */
+export const getHideWhispers = createSelector([getSettingsState], (settings) => settings.hideWhispers)

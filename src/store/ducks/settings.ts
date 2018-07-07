@@ -23,6 +23,7 @@ export enum Actions {
   ADD_ACTION = 'settings/ADD_ACTION',
   REMOVE_ACTION = 'settings/REMOVE_ACTION',
   UPDATE_ACTION = 'settings/UPDATE_ACTION',
+  TOGGLE_HIDE_WHISPERS = 'settings/TOGGLE_HIDE_WHISPERS',
 }
 
 /**
@@ -32,6 +33,7 @@ export const initialState = {
   actions: {},
   autoConnectInDev: true,
   copyMessageOnDoubleClick: true,
+  hideWhispers: false,
   highlights: {},
   highlightsIgnoredUsers: [],
   lastKnownVersion: null,
@@ -149,6 +151,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         actions: { ...state.actions, [id]: { ...state.actions[id], ...updatedAction } },
+      }
+    }
+    case Actions.TOGGLE_HIDE_WHISPERS: {
+      return {
+        ...state,
+        hideWhispers: !state.hideWhispers,
       }
     }
     default: {
@@ -278,6 +286,12 @@ export const updateAction = (id: string, action: SerializedAction) =>
   })
 
 /**
+ * Toggle the 'Hide whispers' setting.
+ * @return The action.
+ */
+export const toggleHideWhispers = () => createAction(Actions.TOGGLE_HIDE_WHISPERS)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -295,6 +309,7 @@ export type SettingsActions =
   | ReturnType<typeof addAction>
   | ReturnType<typeof removeAction>
   | ReturnType<typeof updateAction>
+  | ReturnType<typeof toggleHideWhispers>
 
 /**
  * Settings state.
@@ -339,6 +354,11 @@ export type SettingsState = {
    * Actions.
    */
   actions: SerializedActions
+
+  /**
+   * Hides whispers (received & sent).
+   */
+  hideWhispers: boolean
 }
 
 /**

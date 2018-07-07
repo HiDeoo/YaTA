@@ -5,9 +5,15 @@ import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
 import Theme from 'Constants/theme'
-import { SettingsState, toggleCopyMessageOnDoubleClick, toggleShowContextMenu, toggleTheme } from 'Store/ducks/settings'
+import {
+  SettingsState,
+  toggleCopyMessageOnDoubleClick,
+  toggleHideWhispers,
+  toggleShowContextMenu,
+  toggleTheme,
+} from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getCopyMessageOnDoubleClick, getShowContextMenu, getTheme } from 'Store/selectors/settings'
+import { getCopyMessageOnDoubleClick, getHideWhispers, getShowContextMenu, getTheme } from 'Store/selectors/settings'
 
 /**
  * ConfirmationControls component.
@@ -42,7 +48,7 @@ class SettingsGeneral extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { copyMessageOnDoubleClick, showContextMenu, theme } = this.props
+    const { copyMessageOnDoubleClick, hideWhispers, showContextMenu, theme } = this.props
     const { isThemeConfirmationOpened } = this.state
 
     return (
@@ -57,6 +63,7 @@ class SettingsGeneral extends React.Component<Props> {
           onChange={this.props.toggleCopyMessageOnDoubleClick}
         />
         <Switch checked={showContextMenu} label="Show context menu" onChange={this.props.toggleShowContextMenu} />
+        <Switch checked={hideWhispers} label="Hide whispers" onChange={this.props.toggleHideWhispers} />
       </SettingsPanel>
     )
   }
@@ -113,10 +120,11 @@ class SettingsGeneral extends React.Component<Props> {
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+    hideWhispers: getHideWhispers(state),
     showContextMenu: getShowContextMenu(state),
     theme: getTheme(state),
   }),
-  { toggleCopyMessageOnDoubleClick, toggleShowContextMenu, toggleTheme }
+  { toggleCopyMessageOnDoubleClick, toggleHideWhispers, toggleShowContextMenu, toggleTheme }
 )(SettingsGeneral)
 
 /**
@@ -124,6 +132,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 type StateProps = {
   copyMessageOnDoubleClick: SettingsState['copyMessageOnDoubleClick']
+  hideWhispers: SettingsState['hideWhispers']
   showContextMenu: SettingsState['showContextMenu']
   theme: SettingsState['theme']
 }
@@ -133,6 +142,7 @@ type StateProps = {
  */
 type DispatchProps = {
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
+  toggleHideWhispers: typeof toggleHideWhispers
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleTheme: typeof toggleTheme
 }
