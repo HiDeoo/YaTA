@@ -32,7 +32,7 @@ export default {
     typeColor: Colors.GRAY3,
   },
   follows: {
-    height: 66,
+    height: 68,
     margin: 10,
     width: 350,
   },
