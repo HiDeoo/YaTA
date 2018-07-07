@@ -654,6 +654,14 @@ export class ChatClient extends React.Component<Props, State> {
     }
 
     try {
+      const channel = await Twitch.fetchChannel(channelId)
+
+      if (!_.isNil(channel.status) && channel.status.length > 0) {
+        const notice = new Notice(`Current title: ${channel.status}`, null, true)
+
+        this.props.addLog(notice.serialize())
+      }
+
       Message.badges = await Twitch.fetchBadges(channelId)
       Message.cheermotes = (await Twitch.fetchCheermotes()).actions
 

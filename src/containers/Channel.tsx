@@ -95,9 +95,7 @@ class Channel extends React.Component<Props, State> {
       this.props.setChannel(channel)
     }
 
-    this.props.setHeaderTitleComponent(<ChannelLink href={`https://twitch.tv/${channel}`}>{channel}</ChannelLink>)
-
-    this.setHeaderRightComponent()
+    this.setHeaderComponents()
   }
 
   /**
@@ -109,7 +107,7 @@ class Channel extends React.Component<Props, State> {
     const { isAutoScrollPaused, isMod, roomState } = this.props
 
     if (prevIsAutoScrollPaused !== isAutoScrollPaused || prevRoomState !== roomState || prevIsMod !== isMod) {
-      this.setHeaderRightComponent()
+      this.setHeaderComponents()
     }
   }
 
@@ -182,11 +180,11 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Sets the header right component.
+   * Sets the header components.
    * @return Element to render.
    */
-  private setHeaderRightComponent() {
-    const { isAutoScrollPaused, isMod, roomState } = this.props
+  private setHeaderComponents() {
+    const { channel, isAutoScrollPaused, isMod, roomState } = this.props
 
     const headerRightComponent = (
       <>
@@ -208,6 +206,10 @@ class Channel extends React.Component<Props, State> {
         <NavbarDivider />
       </>
     )
+
+    if (!_.isNil(channel)) {
+      this.props.setHeaderTitleComponent(<ChannelLink href={`https://twitch.tv/${channel}`}>{channel}</ChannelLink>)
+    }
 
     this.props.setHeaderRightComponent(headerRightComponent)
   }
