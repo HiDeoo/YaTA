@@ -1,4 +1,4 @@
-import { InputGroup, Intent, TagInput } from '@blueprintjs/core'
+import { Intent, TagInput } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Highlight from 'Components/Highlight'
+import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
 import Shrug from 'Components/Shrug'
 import Key from 'Constants/key'
@@ -86,14 +87,12 @@ class SettingsHighlights extends React.Component<Props, State> {
     return (
       <SettingsPanel>
         <Notice>Case-insensitive & username included by default.</Notice>
-        <InputGroup
+        <SettingsInput
           intent={newHighlightIntent}
           placeholder="Add a new highlight…"
           value={newHighlight}
           onChange={this.onChangeNewHighlight}
           onKeyDown={this.onKeyDownNewHighlight}
-          autoCorrect="off"
-          spellCheck={false}
         />
         <Highlights>
           {_.size(highlights) > 0
@@ -153,6 +152,7 @@ class SettingsHighlights extends React.Component<Props, State> {
 
   /**
    * Triggered when the new highlight value is modified.
+   * @param event - The associated event.
    */
   private onChangeNewHighlight = (event: React.FormEvent<HTMLInputElement>) => {
     const newHighlight = event.currentTarget.value
@@ -170,6 +170,7 @@ class SettingsHighlights extends React.Component<Props, State> {
 
   /**
    * Triggered when a key is pressed down in the new highlight input.
+   * @param event - The associated event.
    */
   private onKeyDownNewHighlight = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === Key.Enter) {

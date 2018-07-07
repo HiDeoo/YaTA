@@ -26,19 +26,28 @@ const ConfirmationCancelButton = styled(Button)`
 `
 
 /**
+ * React State.
+ */
+const initialState = { isThemeConfirmationOpened: false }
+type State = Readonly<typeof initialState>
+
+/**
  * SettingsGeneral Component.
  */
 class SettingsGeneral extends React.Component<Props> {
+  public state: State = initialState
+
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { copyMessageOnDoubleClick, isThemeConfirmationOpened, showContextMenu, theme } = this.props
+    const { copyMessageOnDoubleClick, showContextMenu, theme } = this.props
+    const { isThemeConfirmationOpened } = this.state
 
     return (
       <SettingsPanel>
-        <Popover isOpen={isThemeConfirmationOpened} popoverClassName={Classes.POPOVER_CONTENT_SIZING}>
+        <Popover isOpen={isThemeConfirmationOpened} popoverClassName={Classes.POPOVER_CONTENT_SIZING} usePortal={false}>
           <Switch checked={theme === Theme.Dark} label="Dark theme" onChange={this.onToggleTheme} />
           {this.renderThemeConfirmation()}
         </Popover>
@@ -77,7 +86,7 @@ class SettingsGeneral extends React.Component<Props> {
    * Triggered when the theme toggling is cancelled.
    */
   private onCancelToggleTheme = () => {
-    this.props.setThemeConfirmationOpened(false)
+    this.setState(() => ({ isThemeConfirmationOpened: false }))
   }
 
   /**
@@ -85,7 +94,7 @@ class SettingsGeneral extends React.Component<Props> {
    */
   private onToggleTheme = () => {
     if (this.props.theme === Theme.Dark) {
-      this.props.setThemeConfirmationOpened(true)
+      this.setState(() => ({ isThemeConfirmationOpened: true }))
     } else {
       this.props.toggleTheme()
     }
@@ -95,13 +104,13 @@ class SettingsGeneral extends React.Component<Props> {
    * Triggered when the theme toggling is confirmed.
    */
   private onConfirmToggleTheme = () => {
-    this.props.setThemeConfirmationOpened(false)
+    this.setState(() => ({ isThemeConfirmationOpened: false }))
 
     this.props.toggleTheme()
   }
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     showContextMenu: getShowContextMenu(state),
@@ -131,12 +140,4 @@ type DispatchProps = {
 /**
  * React Props.
  */
-type OwnProps = {
-  isThemeConfirmationOpened: boolean
-  setThemeConfirmationOpened: (opened: boolean) => void
-}
-
-/**
- * React Props.
- */
-type Props = StateProps & DispatchProps & OwnProps
+type Props = StateProps & DispatchProps

@@ -3,6 +3,7 @@ import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
 import Theme from 'Constants/theme'
+import { SerializedAction } from 'Libs/Action'
 import { createAction, RehydrateAction } from 'Utils/redux'
 
 /**
@@ -19,12 +20,16 @@ export enum Actions {
   REMOVE_HIGHLIGHT = 'settings/REMOVE_HIGHLIGHT',
   ADD_HIGHLIGHTS_IGNORED_USERS = 'settings/ADD_HIGHLIGHTS_IGNORED_USERS',
   REMOVE_HIGHLIGHTS_IGNORED_USER = 'settings/REMOVE_HIGHLIGHTS_IGNORED_USER',
+  ADD_ACTION = 'settings/ADD_ACTION',
+  REMOVE_ACTION = 'settings/REMOVE_ACTION',
+  UPDATE_ACTION = 'settings/UPDATE_ACTION',
 }
 
 /**
  * Initial state.
  */
 export const initialState = {
+  actions: {},
   autoConnectInDev: true,
   copyMessageOnDoubleClick: true,
   highlights: {},
@@ -118,6 +123,32 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
           state.highlightsIgnoredUsers,
           (username) => username !== action.payload.username
         ),
+      }
+    }
+    case Actions.ADD_ACTION: {
+      const { action: newAction } = action.payload
+
+      return {
+        ...state,
+        actions: { ...state.actions, [newAction.id]: newAction },
+      }
+    }
+    case Actions.REMOVE_ACTION: {
+      const { id } = action.payload
+
+      const { [id]: actionToRemove, ...otherActions } = state.actions
+
+      return {
+        ...state,
+        actions: otherActions,
+      }
+    }
+    case Actions.UPDATE_ACTION: {
+      const { id, action: updatedAction } = action.payload
+
+      return {
+        ...state,
+        actions: { ...state.actions, [id]: { ...state.actions[id], ...updatedAction } },
       }
     }
     default: {
@@ -215,6 +246,38 @@ export const removeHighlightsIgnoredUser = (username: string) =>
   })
 
 /**
+ * Add an Action.
+ * @param  action - The new action.
+ * @return The action.
+ */
+export const addAction = (action: SerializedAction) =>
+  createAction(Actions.ADD_ACTION, {
+    action,
+  })
+
+/**
+ * Removes an action.
+ * @param  id - The action id.
+ * @return The action.
+ */
+export const removeAction = (id: string) =>
+  createAction(Actions.REMOVE_ACTION, {
+    id,
+  })
+
+/**
+ * Update an action.
+ * @param  id - The action id.
+ * @param  pattern - The updated action.
+ * @return The action.
+ */
+export const updateAction = (id: string, action: SerializedAction) =>
+  createAction(Actions.UPDATE_ACTION, {
+    action,
+    id,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -229,6 +292,9 @@ export type SettingsActions =
   | ReturnType<typeof removeHighlight>
   | ReturnType<typeof addHighlightsIgnoredUsers>
   | ReturnType<typeof removeHighlightsIgnoredUser>
+  | ReturnType<typeof addAction>
+  | ReturnType<typeof removeAction>
+  | ReturnType<typeof updateAction>
 
 /**
  * Settings state.
@@ -268,6 +334,11 @@ export type SettingsState = {
    * Users ignored for highlights & mentions.
    */
   highlightsIgnoredUsers: string[]
+
+  /**
+   * Actions.
+   */
+  actions: SerializedActions
 }
 
 /**
@@ -282,3 +353,8 @@ export type Highlight = {
   id: string
   pattern: string
 }
+
+/**
+ * Actions.
+ */
+export type SerializedActions = { [key in SerializedAction['id']]: SerializedAction }

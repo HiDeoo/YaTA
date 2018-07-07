@@ -63,3 +63,10 @@ export const getHighlightsIgnoredUsers = createSelector(
   [getSettingsState],
   (settings) => settings.highlightsIgnoredUsers
 )
+
+/**
+ * Returns the actions.
+ * @param  state - The Redux state.
+ * @return The actions.
+ */
+export const getActions = createSelector([getSettingsState], (settings) => settings.actions)

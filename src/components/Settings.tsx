@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { size } from 'Utils/styled'
 
+import SettingsActions from 'Containers/SettingsActions'
 import SettingsChangelog from 'Containers/SettingsChangelog'
 import SettingsGeneral from 'Containers/SettingsGeneral'
 import SettingsHighlights from 'Containers/SettingsHighlights'
@@ -28,68 +29,33 @@ const SettingsNavbar = styled(Navbar)`
 export enum SettingsTab {
   General = 'general',
   Highlights = 'highlights',
+  Actions = 'actions',
   Changelog = 'changelog',
 }
 
 /**
- * React State.
- */
-const initialState = { isThemeConfirmationOpened: false }
-type State = Readonly<typeof initialState>
-
-/**
  * Settings Component.
  */
-export default class Settings extends React.Component<Props, State> {
-  public state: State = initialState
-
+export default class Settings extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { isThemeConfirmationOpened } = this.state
-    const { visible, defaultTab } = this.props
+    const { defaultTab, toggle, visible } = this.props
 
     return (
-      <SettingsDialog isOpen={visible} onClose={this.onClose} icon="cog" title="Settings">
+      <SettingsDialog isOpen={visible} onClose={toggle} icon="cog" title="Settings">
         <SettingsNavbar>
           <Tabs id="settings-navbar" large defaultSelectedTabId={defaultTab}>
-            <Tab
-              id={SettingsTab.General}
-              title="General"
-              panel={
-                <SettingsGeneral
-                  isThemeConfirmationOpened={isThemeConfirmationOpened}
-                  setThemeConfirmationOpened={this.setThemeConfirmationOpened}
-                />
-              }
-            />
+            <Tab id={SettingsTab.General} title="General" panel={<SettingsGeneral />} />
             <Tab id={SettingsTab.Highlights} title="Highlights" panel={<SettingsHighlights />} />
+            <Tab id={SettingsTab.Actions} title="Actions" panel={<SettingsActions />} />
             <Tab id={SettingsTab.Changelog} title="Changelog" panel={<SettingsChangelog />} />
           </Tabs>
         </SettingsNavbar>
       </SettingsDialog>
     )
-  }
-
-  /**
-   * Sets the opened status of the theme confirmation.
-   * @param opened - Defines if the confirmation is opened or not.
-   */
-  private setThemeConfirmationOpened = (opened: boolean) => {
-    this.setState(() => ({ isThemeConfirmationOpened: opened }))
-  }
-
-  /**
-   * Triggered when the settings should be closed.
-   */
-  private onClose = () => {
-    if (!this.state.isThemeConfirmationOpened) {
-      this.setState(() => initialState)
-
-      this.props.toggle()
-    }
   }
 }
 

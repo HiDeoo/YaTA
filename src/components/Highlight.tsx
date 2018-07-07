@@ -27,7 +27,7 @@ const Pattern = styled(EditableText)`
  * DeleteButton component.
  */
 const DeleteButton = styled(Button)`
-  margin-top: -7px;
+  margin-top: -5px;
   margin-left: 5px;
 `
 
@@ -80,7 +80,7 @@ export default class Highlight extends React.Component<Props, State> {
             onConfirm={this.onConfirm}
           />
         </span>
-        <DeleteButton minimal icon="delete" intent={Intent.DANGER} onClick={this.onClickRemove} />
+        <DeleteButton minimal icon="trash" intent={Intent.DANGER} onClick={this.onClickRemove} />
       </Wrapper>
     )
   }
