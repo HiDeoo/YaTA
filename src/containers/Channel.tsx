@@ -26,7 +26,7 @@ import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Ac
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
-import { addToHistory, AppState, setChannel, toggleChatters, updateHistoryIndex } from 'Store/ducks/app'
+import { addToHistory, setChannel, toggleChatters, updateHistoryIndex } from 'Store/ducks/app'
 import { ignoreUser } from 'Store/ducks/chatters'
 import { pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
@@ -669,21 +669,21 @@ export default enhance(Channel)
  * React Props.
  */
 type StateProps = {
-  channel: AppState['channel']
+  channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   emotes: ReturnType<typeof getEmotes>
-  history: AppState['history']
-  historyIndex: AppState['historyIndex']
+  history: ReturnType<typeof getHistory>
+  historyIndex: ReturnType<typeof getHistoryIndex>
   isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>
   isMod: ReturnType<typeof getIsMod>
   lastWhisperSender: ReturnType<typeof getLastWhisperSender>
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
   roomState: ReturnType<typeof getRoomState>
-  showChatters: AppState['showChatters']
+  showChatters: ReturnType<typeof getShowChatters>
   showContextMenu: ReturnType<typeof getShowContextMenu>
-  status: AppState['status']
+  status: ReturnType<typeof getStatus>
 }
 
 /**

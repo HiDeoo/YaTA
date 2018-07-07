@@ -24,15 +24,8 @@ import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
-import {
-  AppState,
-  resetAppState,
-  setLastWhisperSender,
-  updateEmoteSets,
-  updateRoomState,
-  updateStatus,
-} from 'Store/ducks/app'
-import { addChatterWithMessage, ChattersState, clearChatters } from 'Store/ducks/chatters'
+import { resetAppState, setLastWhisperSender, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
+import { addChatterWithMessage, clearChatters } from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -787,9 +780,9 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 type StateProps = {
   autoConnectInDev: ReturnType<typeof getAutoConnectInDev>
-  channel: AppState['channel']
-  chatters: ChattersState['byId']
-  chattersMap: ChattersState['byName']
+  channel: ReturnType<typeof getChannel>
+  chatters: ReturnType<typeof getChatters>
+  chattersMap: ReturnType<typeof getChattersMap>
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlights: ReturnType<typeof getHighlights>
   highlightsIgnoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>

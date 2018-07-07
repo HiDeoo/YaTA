@@ -1,12 +1,12 @@
-import { Button, Classes, Intent, Popover, Switch } from '@blueprintjs/core'
+import { Button, Classes, Intent, Popover } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
+import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
 import {
-  SettingsState,
   toggleCopyMessageOnDoubleClick,
   toggleHideWhispers,
   toggleShowContextMenu,
@@ -62,8 +62,18 @@ class SettingsGeneral extends React.Component<Props> {
           label="Copy message on double click"
           onChange={this.props.toggleCopyMessageOnDoubleClick}
         />
-        <Switch checked={showContextMenu} label="Show context menu" onChange={this.props.toggleShowContextMenu} />
-        <Switch checked={hideWhispers} label="Hide whispers" onChange={this.props.toggleHideWhispers} />
+        <Switch
+          description="Menu next to each message to quickly access various actions."
+          checked={showContextMenu}
+          label="Show context menu"
+          onChange={this.props.toggleShowContextMenu}
+        />
+        <Switch
+          description="You will still be able to send whispers."
+          checked={hideWhispers}
+          label="Hide whispers"
+          onChange={this.props.toggleHideWhispers}
+        />
       </SettingsPanel>
     )
   }
@@ -131,10 +141,10 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  * React Props.
  */
 type StateProps = {
-  copyMessageOnDoubleClick: SettingsState['copyMessageOnDoubleClick']
-  hideWhispers: SettingsState['hideWhispers']
-  showContextMenu: SettingsState['showContextMenu']
-  theme: SettingsState['theme']
+  copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
+  hideWhispers: ReturnType<typeof getHideWhispers>
+  showContextMenu: ReturnType<typeof getShowContextMenu>
+  theme: ReturnType<typeof getTheme>
 }
 
 /**

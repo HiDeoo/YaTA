@@ -18,8 +18,8 @@ import Theme from 'Constants/theme'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Twitch from 'Libs/Twitch'
-import { AppState, setShouldReadChangelog } from 'Store/ducks/app'
-import { SettingsState, setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
+import { setShouldReadChangelog } from 'Store/ducks/app'
+import { setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getShouldReadChangelog, getStatus } from 'Store/selectors/app'
@@ -218,13 +218,13 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  * React Props.
  */
 type StateProps = {
-  autoConnectInDev: SettingsState['autoConnectInDev']
+  autoConnectInDev: ReturnType<typeof getAutoConnectInDev>
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
-  lastKnownVersion: SettingsState['lastKnownVersion']
+  lastKnownVersion: ReturnType<typeof getLastKnownVersion>
   loginDetails: ReturnType<typeof getLoginDetails>
-  shouldReadChangelog: AppState['shouldReadChangelog']
-  status: AppState['status']
-  theme: SettingsState['theme']
+  shouldReadChangelog: ReturnType<typeof getShouldReadChangelog>
+  status: ReturnType<typeof getStatus>
+  theme: ReturnType<typeof getTheme>
 }
 
 /**

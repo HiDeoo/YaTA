@@ -36,6 +36,7 @@ const light = {
     border: Colors.BLUE4,
   },
   settings: {
+    description: Colors.GRAY1,
     table: {
       background: Colors.LIGHT_GRAY2,
       border: Colors.GRAY5,
