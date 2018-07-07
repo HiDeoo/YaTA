@@ -12,7 +12,6 @@ export enum Actions {
   UPDATE_STATUS = 'app/UPDATE_STATUS',
   UPDATE_ROOM_STATE = 'app/UPDATE_ROOM_STATE',
   SET_SHOULD_READ_CHANGELOG = 'app/SET_SHOULD_READ_CHANGELOG',
-  TOGGLE_CHATTERS = 'app/TOGGLE_CHATTERS',
   ADD_TO_HISTORY = 'app/ADD_TO_HISTORY',
   UPDATE_HISTORY_INDEX = 'app/UPDATE_HISTORY_INDEX',
   UPDATE_EMOTE_SETS = 'app/UPDATE_EMOTE_SETS',
@@ -31,7 +30,6 @@ export const initialState = {
   lastWhisperSender: '',
   roomState: null,
   shouldReadChangelog: false,
-  showChatters: false,
   status: Status.Default,
 }
 
@@ -68,12 +66,6 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
       return {
         ...state,
         shouldReadChangelog: action.payload.shouldRead,
-      }
-    }
-    case Actions.TOGGLE_CHATTERS: {
-      return {
-        ...state,
-        showChatters: !state.showChatters,
       }
     }
     case Actions.ADD_TO_HISTORY: {
@@ -158,12 +150,6 @@ export const setShouldReadChangelog = (shouldRead: boolean) =>
   })
 
 /**
- * Toggles the chatters list.
- * @return The action.
- */
-export const toggleChatters = () => createAction(Actions.TOGGLE_CHATTERS)
-
-/**
  * Adds a message to the history.
  * @param  message - The message to add.
  * @return The action.
@@ -219,7 +205,6 @@ export type AppActions =
   | ReturnType<typeof updateStatus>
   | ReturnType<typeof updateRoomState>
   | ReturnType<typeof setShouldReadChangelog>
-  | ReturnType<typeof toggleChatters>
   | ReturnType<typeof addToHistory>
   | ReturnType<typeof updateHistoryIndex>
   | ReturnType<typeof updateEmoteSets>
@@ -249,11 +234,6 @@ export type AppState = {
    * Defines if the user is using a new version of the application and should read the associated changelog.
    */
   shouldReadChangelog: boolean
-
-  /**
-   * Defines if we should show the chatters list or not.
-   */
-  showChatters: boolean
 
   /**
    * Messages sent by the current user.

@@ -26,7 +26,7 @@ import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Ac
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
-import { addToHistory, setChannel, toggleChatters, updateHistoryIndex } from 'Store/ducks/app'
+import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
 import { ignoreUser } from 'Store/ducks/chatters'
 import { pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
@@ -37,7 +37,6 @@ import {
   getHistoryIndex,
   getLastWhisperSender,
   getRoomState,
-  getShowChatters,
   getStatus,
 } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
@@ -73,7 +72,7 @@ const WhisperReplyRegExp = /^\/r /
 /**
  * React State.
  */
-const initialState = { inputValue: '', focusedChatter: null as SerializedChatter | null }
+const initialState = { inputValue: '', focusedChatter: null as SerializedChatter | null, showChatters: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -124,8 +123,8 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { channel, copyMessageOnDoubleClick, logs, showChatters, showContextMenu } = this.props
-    const { focusedChatter } = this.state
+    const { channel, copyMessageOnDoubleClick, logs, showContextMenu } = this.props
+    const { focusedChatter, showChatters } = this.state
 
     if (_.isNil(channel)) {
       return (
@@ -141,7 +140,7 @@ class Channel extends React.Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
-        <Chatters visible={showChatters} toggle={this.props.toggleChatters} channel={channel} />
+        <Chatters visible={showChatters} toggle={this.toggleChatters} channel={channel} />
         <Chat ref={this.chatClient} />
         <Logs
           logs={logs}
@@ -201,7 +200,7 @@ class Channel extends React.Component<Props, State> {
             />
           )}
         <HeaderTooltip content="Chatters List">
-          <Button onClick={this.props.toggleChatters} icon="people" minimal title="Chatters List" />
+          <Button onClick={this.toggleChatters} icon="people" minimal title="Chatters List" />
         </HeaderTooltip>
         <NavbarDivider />
       </>
@@ -255,6 +254,13 @@ class Channel extends React.Component<Props, State> {
     } else {
       this.setState(() => ({ inputValue: value }))
     }
+  }
+
+  /**
+   * Toggles the chatters list.
+   */
+  private toggleChatters = () => {
+    this.setState(({ showChatters }) => ({ showChatters: !showChatters }))
   }
 
   /**
@@ -656,11 +662,10 @@ const enhance = compose<Props, {}>(
       loginDetails: getLoginDetails(state),
       logs: getLogs(state),
       roomState: getRoomState(state),
-      showChatters: getShowChatters(state),
       showContextMenu: getShowContextMenu(state),
       status: getStatus(state),
     }),
-    { addToHistory, ignoreUser, pauseAutoScroll, setChannel, toggleChatters, updateHistoryIndex }
+    { addToHistory, ignoreUser, pauseAutoScroll, setChannel, updateHistoryIndex }
   ),
   withHeader
 )
@@ -683,7 +688,6 @@ type StateProps = {
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
   roomState: ReturnType<typeof getRoomState>
-  showChatters: ReturnType<typeof getShowChatters>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   status: ReturnType<typeof getStatus>
 }
@@ -696,7 +700,6 @@ type DispatchProps = {
   ignoreUser: typeof ignoreUser
   pauseAutoScroll: typeof pauseAutoScroll
   setChannel: typeof setChannel
-  toggleChatters: typeof toggleChatters
   updateHistoryIndex: typeof updateHistoryIndex
 }
 
