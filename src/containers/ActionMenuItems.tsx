@@ -1,9 +1,9 @@
-import { Menu, MenuDivider } from '@blueprintjs/core'
+import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import ActionMenuItem from 'Components//ActionMenuItem'
+import ActionMenuItem from 'Components/ActionMenuItem'
 import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { ApplicationState } from 'Store/reducers'
@@ -21,6 +21,14 @@ class ActionMenuItems extends React.Component<Props> {
     const { actionHandler, actions, chatter, endDivider, startDivider, wrap } = this.props
 
     if (_.size(actions) === 0) {
+      if (wrap) {
+        return (
+          <Menu>
+            <MenuItem disabled text="No action configured yet!" />
+          </Menu>
+        )
+      }
+
       return null
     }
 

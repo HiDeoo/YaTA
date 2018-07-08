@@ -4,6 +4,7 @@ import { REHYDRATE } from 'redux-persist/lib/constants'
 
 import Theme from 'Constants/theme'
 import { SerializedAction } from 'Libs/Action'
+import { SerializedHighlight } from 'Libs/Highlight'
 import { createAction, RehydrateAction } from 'Utils/redux'
 
 /**
@@ -206,7 +207,7 @@ export const toggleAutoConnectInDev = () => createAction(Actions.TOGGLE_AUTO_CON
  * @param  highlight - The new highlight.
  * @return The action.
  */
-export const addHighlight = (highlight: Highlight) =>
+export const addHighlight = (highlight: SerializedHighlight) =>
   createAction(Actions.ADD_HIGHLIGHT, {
     highlight,
   })
@@ -364,15 +365,7 @@ export type SettingsState = {
 /**
  * Highlights.
  */
-export type Highlights = { [key in Highlight['id']]: Highlight }
-
-/**
- * Highlight.
- */
-export type Highlight = {
-  id: string
-  pattern: string
-}
+export type Highlights = { [key in SerializedHighlight['id']]: SerializedHighlight }
 
 /**
  * Actions.

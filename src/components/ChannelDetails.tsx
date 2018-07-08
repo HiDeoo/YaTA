@@ -1,4 +1,4 @@
-import { Colors, Spinner, Text } from '@blueprintjs/core'
+import { Colors, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -6,7 +6,8 @@ import styled from 'styled-components'
 import Center from 'Components/Center'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
-import Shrug from 'Components/Shrug'
+import NonIdealState from 'Components/NonIdealState'
+import Spinner from 'Components/Spinner'
 import Twitch, { RawStream, RawVideo } from 'Libs/Twitch'
 import { color } from 'Utils/styled'
 
@@ -185,7 +186,11 @@ export default class ChannelDetails extends React.Component<Props, State> {
     }
 
     if (_.isUndefined(stream) && _.isUndefined(videos)) {
-      return this.renderFetching()
+      return (
+        <Wrapper>
+          <Spinner />
+        </Wrapper>
+      )
     }
 
     return (
@@ -240,10 +245,7 @@ export default class ChannelDetails extends React.Component<Props, State> {
       return (
         <VodsWrapper>
           {this.renderVodsSection()}
-          <Center>
-            <Shrug />
-            <p>No vods yet!</p>
-          </Center>
+          <NonIdealState small title="No vods yet!" details="Maybe try again in a while." />
         </VodsWrapper>
       )
     }
@@ -287,25 +289,7 @@ export default class ChannelDetails extends React.Component<Props, State> {
   private renderError() {
     return (
       <Wrapper>
-        <Center>
-          <Shrug />
-          <h3>Something went wrong!</h3>
-          <p>Please try again in a few minutes.</p>
-        </Center>
-      </Wrapper>
-    )
-  }
-
-  /**
-   * Renders fetching details.
-   * @return Element to render.
-   */
-  private renderFetching() {
-    return (
-      <Wrapper>
-        <Center>
-          <Spinner />
-        </Center>
+        <NonIdealState small title="Something went wrong!" details="Please try again in a few minutes" />
       </Wrapper>
     )
   }

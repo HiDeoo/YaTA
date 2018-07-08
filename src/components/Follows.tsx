@@ -1,13 +1,12 @@
-import { InputGroup, Spinner } from '@blueprintjs/core'
+import { InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router'
 import styled from 'styled-components'
 
-import Center from 'Components/Center'
-import FollowedChannel from 'Components/FollowedChannel'
-import FollowedStream from 'Components/FollowedStream'
-import Shrug from 'Components/Shrug'
+import Follow from 'Components/Follow'
+import NonIdealState from 'Components/NonIdealState'
+import Spinner from 'Components/Spinner'
 import Twitch, { RawChannel, RawStream } from 'Libs/Twitch'
 import { size } from 'Utils/styled'
 
@@ -86,22 +85,19 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
     }
 
     if (_.isNil(follows)) {
-      return (
-        <Center>
-          <Spinner large />
-        </Center>
-      )
+      return <Spinner large />
     }
 
     if (follows.length === 0) {
       return (
-        <Center>
-          <Shrug />
-          <h1>Looks like you're alone!</h1>
-          <p>
-            Maybe try to find streamers you like on <a href="https://twitch.tv">Twitch</a>.
-          </p>
-        </Center>
+        <NonIdealState
+          title="Looks like you're alone!"
+          details={
+            <>
+              Maybe try to find streamers you like on <a href="https://twitch.tv">Twitch</a>.
+            </>
+          }
+        />
       )
     }
 
@@ -114,15 +110,9 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
         <Search placeholder="Filter…" type="search" leftIcon="search" value={filter} onChange={this.onChangeFilter} />
         <Wrapper>
           <Grid>
-            {_.map(
-              followsToRender,
-              (follow) =>
-                Twitch.isStream(follow) ? (
-                  <FollowedStream key={follow._id} stream={follow} goToChannel={this.goToChannel} />
-                ) : (
-                  <FollowedChannel key={follow._id} channel={follow} goToChannel={this.goToChannel} />
-                )
-            )}
+            {_.map(followsToRender, (follow) => (
+              <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />
+            ))}
           </Grid>
         </Wrapper>
       </>

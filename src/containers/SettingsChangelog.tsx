@@ -1,22 +1,13 @@
-import { Spinner } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import FlexLayout from 'Components/FlexLayout'
 import SettingsPanel from 'Components/SettingsPanel'
+import Spinner from 'Components/Spinner'
 import { setShouldReadChangelog } from 'Store/ducks/app'
 import { setVersion } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-
-/**
- * LoadingChangelog component.
- */
-const LoadingChangelog = styled(FlexLayout)`
-  justify-content: center;
-  padding-top: 70px;
-`
 
 /**
  * Changelog component.
@@ -94,9 +85,7 @@ class SettingsChangelog extends React.Component<Props, State> {
     if (_.isNil(changelog)) {
       return (
         <SettingsPanel>
-          <LoadingChangelog>
-            <Spinner />
-          </LoadingChangelog>
+          <Spinner />
         </SettingsPanel>
       )
     }

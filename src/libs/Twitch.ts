@@ -162,10 +162,10 @@ export default class Twitch {
    * Fetches videos for a channel.
    * @param  id - The channel id.
    * @param  [limit=10] - Number of videos to return.
-   * @param  [type=archive] - Type of videos to return.
+   * @param  [type=BroadcastType.Archive] - Type of videos to return.
    * @return The channel videos.
    */
-  public static async fetchChannelVideos(id: string, limit = 10, type: BroadcastType = 'archive'): Promise<RawVideos> {
+  public static async fetchChannelVideos(id: string, limit = 10, type = BroadcastType.Archive): Promise<RawVideos> {
     const url = new URL(`${baseKrakenUrl}/channels/${id}/videos`)
     url.searchParams.append('limit', limit.toString())
     url.searchParams.append('broadcast_type', type)
@@ -625,4 +625,8 @@ type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
 /**
  * Twitch broadcast type.
  */
-type BroadcastType = 'archive' | 'highlight' | 'upload'
+export enum BroadcastType {
+  Archive = 'archive',
+  Highlight = 'highlight',
+  Upload = 'upload',
+}

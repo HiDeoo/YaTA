@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import Center from 'Components/Center'
-import Shrug from 'Components/Shrug'
+import NonIdealState from 'Components/NonIdealState'
 
 /**
  * React State.
@@ -34,13 +33,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
     const { hasError } = this.state
 
     if (hasError) {
-      return (
-        <Center>
-          <Shrug />
-          <h1>Something went wrong!</h1>
-          <p>Try reloading the application.</p>
-        </Center>
-      )
+      return <NonIdealState title="Something went wrong!" details="Try reloading the application." />
     }
 
     return this.props.children

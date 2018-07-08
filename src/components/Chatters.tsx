@@ -1,11 +1,11 @@
-import { Dialog, InputGroup, Spinner } from '@blueprintjs/core'
+import { Dialog, InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
-import Center from 'Components/Center'
-import Shrug from 'Components/Shrug'
+import NonIdealState from 'Components/NonIdealState'
+import Spinner from 'Components/Spinner'
 import Twitch, { RawChatters } from 'Libs/Twitch'
 import base from 'Styled/base'
 import { color } from 'Utils/styled'
@@ -108,13 +108,13 @@ export default class Chatters extends React.Component<Props, State> {
     let content: JSX.Element
 
     if (didFail) {
-      content = this.renderError()
+      content = <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
     } else if (!_.isNil(count) && count === 0) {
-      content = this.renderEmpty()
+      content = <NonIdealState title="Looks like you're alone!" details="Maybe try again in a few minutes." />
     } else if (!_.isNil(count)) {
       content = this.renderList()
     } else {
-      content = this.renderFetching()
+      content = <Spinner />
     }
 
     const title = `Chatters List${!_.isNil(count) ? ` - ${count}` : ''}`
@@ -185,55 +185,7 @@ export default class Chatters extends React.Component<Props, State> {
    * Renders an empty filtered list.
    * @return Element to render.
    */
-  private noRowsRenderer = () => {
-    return (
-      <Center>
-        <Shrug />
-        <h1>No result!</h1>
-        <p>Please try again with a new query.</p>
-      </Center>
-    )
-  }
-
-  /**
-   * Renders an error when fetching the chatters list.
-   * @return Element to render.
-   */
-  private renderError() {
-    return (
-      <Center>
-        <Shrug />
-        <h1>Something went wrong!</h1>
-        <p>Please try again in a few minutes.</p>
-      </Center>
-    )
-  }
-
-  /**
-   * Renders an empty chatters list.
-   * @return Element to render.
-   */
-  private renderEmpty() {
-    return (
-      <Center>
-        <Shrug />
-        <h1>Looks like you're alone!</h1>
-        <p>Maybe try again in a few minutes.</p>
-      </Center>
-    )
-  }
-
-  /**
-   * Renders loading the chatters list.
-   * @return Element to render.
-   */
-  private renderFetching() {
-    return (
-      <Center>
-        <Spinner />
-      </Center>
-    )
-  }
+  private noRowsRenderer = () => <NonIdealState title="No result!" details="Please try again with a new query." />
 
   /**
    * Triggered when the filter input is modified.

@@ -1,9 +1,8 @@
-import { Spinner } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
-import Center from 'Components/Center'
+import Spinner from 'Components/Spinner'
 import Twitch from 'Libs/Twitch'
 import { setTokens } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -47,11 +46,7 @@ class Auth extends React.Component<Props, State> {
       return <Redirect to="/" />
     }
 
-    return (
-      <Center>
-        <Spinner large />
-      </Center>
-    )
+    return <Spinner large />
   }
 }
 

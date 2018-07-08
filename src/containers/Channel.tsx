@@ -1,4 +1,4 @@
-import { Button, Intent, NavbarDivider, Popover, Spinner } from '@blueprintjs/core'
+import { Button, Intent, NavbarDivider, Popover } from '@blueprintjs/core'
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -9,7 +9,6 @@ import * as ReactTooltip from 'react-tooltip'
 import { compose } from 'recompose'
 import styled from 'styled-components'
 
-import Center from 'Components/Center'
 import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
 import FlexLayout from 'Components/FlexLayout'
@@ -19,10 +18,11 @@ import HeaderModerationTools from 'Components/HeaderModerationTools'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs from 'Components/Logs'
+import Spinner from 'Components/Spinner'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
 import Chat, { ChatClient } from 'Containers/Chat'
-import Details from 'Containers/Details'
+import ChatterDetails from 'Containers/ChatterDetails'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import Toaster from 'Libs/Toaster'
@@ -128,11 +128,7 @@ class Channel extends React.Component<Props, State> {
     const { focusedChatter, showChatters } = this.state
 
     if (_.isNil(channel)) {
-      return (
-        <Center>
-          <Spinner large />
-        </Center>
-      )
+      return <Spinner large />
     }
 
     return (
@@ -165,7 +161,7 @@ class Channel extends React.Component<Props, State> {
           getCompletions={this.getCompletions}
           getHistory={this.getHistory}
         />
-        <Details
+        <ChatterDetails
           chatter={focusedChatter}
           unfocus={this.unfocusChatter}
           whisper={this.prepareWhisper}

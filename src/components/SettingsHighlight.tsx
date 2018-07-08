@@ -3,7 +3,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Key from 'Constants/key'
-import { Highlight as HighlightType } from 'Store/ducks/settings'
+import { SerializedHighlight } from 'Libs/Highlight'
 
 /**
  * Wrapper component.
@@ -38,9 +38,9 @@ const initialState = { prevPropsPattern: '', pattern: '', patternIntent: Intent.
 type State = Readonly<typeof initialState>
 
 /**
- * Highlight Component.
+ * SettingsHighlight Component.
  */
-export default class Highlight extends React.Component<Props, State> {
+export default class SettingsHighlight extends React.Component<Props, State> {
   /**
    * Lifecycle: getDerivedStateFromProps.
    * @param  nextProps - The next props.
@@ -140,7 +140,7 @@ export default class Highlight extends React.Component<Props, State> {
  * React Props.
  */
 type Props = {
-  highlight: HighlightType
+  highlight: SerializedHighlight
   remove: (id: string) => void
   update: (id: string, pattern: string) => void
   validate: (pattern: string) => boolean

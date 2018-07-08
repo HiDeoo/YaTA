@@ -58,9 +58,9 @@ const initialState = { details: null as RawChannel | null, didFailToFetchDetails
 type State = Readonly<typeof initialState>
 
 /**
- * Details Component.
+ * ChatterDetails Component.
  */
-class Details extends React.Component<Props, State> {
+class ChatterDetails extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -344,7 +344,7 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
   return {
     messages: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterMessages(state, ownProps.chatter.id)) : null,
   }
-})(Details)
+})(ChatterDetails)
 
 /**
  * React Props.

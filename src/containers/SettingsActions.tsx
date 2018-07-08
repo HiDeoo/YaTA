@@ -6,10 +6,9 @@ import styled from 'styled-components'
 
 import ActionRow from 'Components/Action'
 import ActionTypeMenuItem from 'Components/ActionTypeMenuItem'
-import Center from 'Components/Center'
+import NonIdealState from 'Components/NonIdealState'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
-import Shrug from 'Components/Shrug'
 import Action, { ActionPlaceholder, ActionType } from 'Libs/Action'
 import { addAction, removeAction, updateAction } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
@@ -121,17 +120,19 @@ class SettingsActions extends React.Component<Props, State> {
           {this.renderButtons()}
         </Inline>
         <Actions>
-          {_.size(actions) > 0
-            ? _.map(actions, (action) => (
-                <ActionRow
-                  key={action.id}
-                  editing={editing}
-                  action={action}
-                  remove={this.props.removeAction}
-                  edit={this.edit}
-                />
-              ))
-            : this.renderNoaction()}
+          {_.size(actions) > 0 ? (
+            _.map(actions, (action) => (
+              <ActionRow
+                key={action.id}
+                editing={editing}
+                action={action}
+                remove={this.props.removeAction}
+                edit={this.edit}
+              />
+            ))
+          ) : (
+            <NonIdealState small title="No action yet!" details="Try adding some above." />
+          )}
         </Actions>
       </SettingsPanel>
     )
@@ -167,19 +168,6 @@ class SettingsActions extends React.Component<Props, State> {
         {placeholder}
         {'}}'}
       </Placeholder>
-    )
-  }
-
-  /**
-   * Renders when no action are defined.
-   * @return Element to render.
-   */
-  private renderNoaction() {
-    return (
-      <Center>
-        <Shrug />
-        <p>No action yet!</p>
-      </Center>
     )
   }
 

@@ -2,15 +2,14 @@ import { Intent, TagInput } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import * as shortid from 'shortid'
 import styled from 'styled-components'
 
-import Center from 'Components/Center'
-import Highlight from 'Components/Highlight'
+import NonIdealState from 'Components/NonIdealState'
+import SettingsHighlight from 'Components/SettingsHighlight'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
-import Shrug from 'Components/Shrug'
 import Key from 'Constants/key'
+import Highlight from 'Libs/Highlight'
 import {
   addHighlight,
   addHighlightsIgnoredUsers,
@@ -60,11 +59,6 @@ const IgnoredUsers = styled(TagInput)`
 `
 
 /**
- * RegExp used to identify a valid highlight pattern.
- */
-const PatternRegExp = /^[\w\-]+$/
-
-/**
  * React State.
  */
 const initialState = { newHighlight: '', newHighlightIntent: Intent.NONE }
@@ -95,17 +89,19 @@ class SettingsHighlights extends React.Component<Props, State> {
           onKeyDown={this.onKeyDownNewHighlight}
         />
         <Highlights>
-          {_.size(highlights) > 0
-            ? _.map(highlights, (highlight) => (
-                <Highlight
-                  key={highlight.id}
-                  highlight={highlight}
-                  validate={this.validatePattern}
-                  update={this.props.updateHighlight}
-                  remove={this.props.removeHighlight}
-                />
-              ))
-            : this.renderNoHighlight()}
+          {_.size(highlights) > 0 ? (
+            _.map(highlights, (highlight) => (
+              <SettingsHighlight
+                key={highlight.id}
+                highlight={highlight}
+                validate={this.validate}
+                update={this.props.updateHighlight}
+                remove={this.props.removeHighlight}
+              />
+            ))
+          ) : (
+            <NonIdealState small title="No highlight yet!" details="Try adding some above." />
+          )}
         </Highlights>
         <IgnoredUsers
           fill
@@ -118,19 +114,6 @@ class SettingsHighlights extends React.Component<Props, State> {
           values={ignoredUsers}
         />
       </SettingsPanel>
-    )
-  }
-
-  /**
-   * Renders when no highlight are defined.
-   * @return Element to render.
-   */
-  private renderNoHighlight() {
-    return (
-      <Center>
-        <Shrug />
-        <p>No highlight yet!</p>
-      </Center>
     )
   }
 
@@ -161,7 +144,7 @@ class SettingsHighlights extends React.Component<Props, State> {
 
     if (newHighlight.length === 0) {
       newHighlightIntent = Intent.NONE
-    } else if (this.validatePattern(newHighlight)) {
+    } else if (this.validate(newHighlight)) {
       newHighlightIntent = Intent.SUCCESS
     }
 
@@ -178,8 +161,10 @@ class SettingsHighlights extends React.Component<Props, State> {
 
       const { newHighlight } = this.state
 
-      if (this.validatePattern(newHighlight)) {
-        this.props.addHighlight({ id: shortid.generate(), pattern: newHighlight.toLowerCase() })
+      if (this.validate(newHighlight)) {
+        const highlight = new Highlight(newHighlight)
+
+        this.props.addHighlight(highlight.serialize())
 
         this.setState(initialState)
       }
@@ -187,12 +172,12 @@ class SettingsHighlights extends React.Component<Props, State> {
   }
 
   /**
-   * Validates a highlight pattern.
-   * @param pattern - The pattern to validate.
-   * @return `true` when the pattern is valid.
+   * Validates a highlight.
+   * @param  pattern - The highlight pattern to validate.
+   * @return `true` if the highlight is valid.
    */
-  private validatePattern = (pattern: string) => {
-    return PatternRegExp.test(pattern) && !_.includes(_.map(this.props.highlights, 'pattern'), pattern.toLowerCase())
+  private validate = (pattern: string) => {
+    return Highlight.validate(pattern, this.props.highlights)
   }
 }
 
