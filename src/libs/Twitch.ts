@@ -17,6 +17,11 @@ const baseKrakenUrl = 'https://api.twitch.tv/kraken'
 const baseTmiUrl = 'https://tmi.twitch.tv'
 
 /**
+ * Twitch base Helix URL.
+ */
+const baseHelixUrl = 'https://api.twitch.tv/helix'
+
+/**
  * RegExp used to identify whisper command (/w user message).
  */
 const WhisperRegExp = /^\/w \S+ .+/
@@ -47,7 +52,7 @@ export default class Twitch {
     url.searchParams.set('client_id', REACT_APP_TWITCH_CLIENT_ID)
     url.searchParams.set('redirect_uri', REACT_APP_TWITCH_REDIRECT_URI)
     url.searchParams.set('response_type', 'token id_token')
-    url.searchParams.set('scope', 'openid chat_login user_read user_blocks_edit')
+    url.searchParams.set('scope', 'openid chat_login user_read user_blocks_edit clips:edit')
 
     return url
   }
@@ -171,6 +176,24 @@ export default class Twitch {
     url.searchParams.append('broadcast_type', type)
 
     const response = await Twitch.fetch(url.toString())
+
+    return response.json()
+  }
+
+  /**
+   * Creates a clip.
+   * @param  id - The channel id.
+   * @param  [withDelay=false] - Add a delay before capturing the clip.
+   * @return The new clip details.
+   */
+  public static async createClip(id: string, withDelay = false): Promise<RawNewClips> {
+    const url = new URL(`${baseHelixUrl}/clips`)
+    url.searchParams.append('broadcaster_id', id)
+    url.searchParams.append('has_delay', withDelay.toString())
+
+    const response = await Twitch.fetch(url.toString(), Twitch.getAuthHeader(true), {
+      method: 'POST',
+    })
 
     return response.json()
   }
@@ -324,14 +347,15 @@ export default class Twitch {
 
   /**
    * Returns an auth header that can be used for authenticated request or throw.
+   * @param  [useHelix=false] - Defines if the API call will use the new Twitch API or not.
    * @return The header.
    */
-  private static getAuthHeader() {
+  private static getAuthHeader(useHelix = false) {
     if (_.isNil(Twitch.token)) {
       throw new Error('Missing token for authenticated request.')
     }
 
-    return { Authorization: `OAuth ${Twitch.token}` }
+    return { Authorization: `${useHelix ? 'Bearer' : 'OAuth'} ${Twitch.token}` }
   }
 }
 
@@ -603,6 +627,13 @@ type RawPreview = {
   medium: string
   small: string
   template: string
+}
+
+/**
+ * Twitch new clip.
+ */
+type RawNewClips = {
+  data: Array<{ edit_url: string; id: string }>
 }
 
 /**

@@ -198,6 +198,11 @@ class Channel extends React.Component<Props, State> {
               toggleEmoteOnly={this.toggleEmoteOnly}
             />
           )}
+        {!_.isNil(roomState) && (
+          <HeaderTooltip content="Create Clip">
+            <Button onClick={this.clip} icon="film" minimal title="Create Clip" />
+          </HeaderTooltip>
+        )}
         <Popover>
           <HeaderTooltip content="Channel Details">
             <Button icon="eye-open" minimal title="Channel Details" />
@@ -644,6 +649,39 @@ class Channel extends React.Component<Props, State> {
         }
       } catch (error) {
         //
+      }
+    }
+  }
+
+  /**
+   * Clips the current stream.
+   */
+  private clip = async () => {
+    const { roomState } = this.props
+
+    if (_.isNil(roomState)) {
+      return
+    }
+
+    try {
+      const response = await Twitch.createClip(roomState.roomId)
+
+      if (!_.isNil(_.get(response, 'status'))) {
+        const { message } = JSON.parse(_.get(response, 'message'))
+
+        throw new Error(message)
+      }
+
+      if (response.data.length > 0) {
+        window.open(response.data[0].edit_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Toaster.show({
+          icon: 'error',
+          intent: Intent.DANGER,
+          message: error.message,
+        })
       }
     }
   }
