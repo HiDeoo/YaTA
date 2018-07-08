@@ -6772,6 +6772,10 @@ react-side-effect@^1.1.0:
     exenv "^1.2.1"
     shallowequal "^1.0.1"
 
+react-timeago@4.1.9:
+  version "4.1.9"
+  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-4.1.9.tgz#a5dee4ac072299a9a5ca5a61f56177a80f83c1fb"
+
 react-tooltip@3.6.1:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.6.1.tgz#2ca993baa50d7e0271b8d13c6024445a883842eb"

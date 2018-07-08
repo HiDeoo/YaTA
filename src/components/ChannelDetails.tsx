@@ -1,6 +1,7 @@
 import { Colors, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
+import TimeAgo from 'react-timeago'
 import styled from 'styled-components'
 
 import Center from 'Components/Center'
@@ -52,8 +53,10 @@ const Preview = styled.img`
  * StreamDetails component.
  */
 const StreamDetails = styled(FlexContent)`
+  height: 68px;
+
   & > div {
-    margin: 6px 0;
+    margin: 2px 0;
     width: 145px;
   }
 `
@@ -229,6 +232,9 @@ export default class ChannelDetails extends React.Component<Props, State> {
           </Title>
           <Game>{stream.channel.game}</Game>
           <Meta>{stream.viewers} viewers</Meta>
+          <Meta>
+            Started <TimeAgo date={new Date(stream.created_at)} />
+          </Meta>
         </StreamDetails>
       </Stream>
     )
