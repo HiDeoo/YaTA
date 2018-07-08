@@ -316,7 +316,7 @@ export default class Twitch {
    * @param  additionalHeaders -  Additional headers to pass down to the query.
    * @return The response.
    */
-  private static fetch(url: string, additionalHeaders?: { [key: string]: string }, options: RequestInit = {}) {
+  private static async fetch(url: string, additionalHeaders?: { [key: string]: string }, options: RequestInit = {}) {
     const headers = new Headers({
       Accept: 'application/vnd.twitchtv.v5+json',
       'Client-ID': process.env.REACT_APP_TWITCH_CLIENT_ID,
@@ -330,7 +330,17 @@ export default class Twitch {
 
     const request = new Request(url, { ...options, headers })
 
-    return fetch(request)
+    const response = await fetch(request)
+
+    if (response.status !== 200) {
+      const json = await response.json()
+
+      const { message } = JSON.parse(_.get(json, 'message'))
+
+      throw new Error(message)
+    }
+
+    return response
   }
 
   /**

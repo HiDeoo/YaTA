@@ -666,14 +666,10 @@ class Channel extends React.Component<Props, State> {
     try {
       const response = await Twitch.createClip(roomState.roomId)
 
-      if (!_.isNil(_.get(response, 'status'))) {
-        const { message } = JSON.parse(_.get(response, 'message'))
-
-        throw new Error(message)
-      }
-
       if (response.data.length > 0) {
         window.open(response.data[0].edit_url)
+      } else {
+        throw new Error('Something went wrong while creating the clip!')
       }
     } catch (error) {
       if (error instanceof Error) {
