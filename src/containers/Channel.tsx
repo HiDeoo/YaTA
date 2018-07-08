@@ -1,4 +1,4 @@
-import { Button, Intent, NavbarDivider, Spinner } from '@blueprintjs/core'
+import { Button, Intent, NavbarDivider, Popover, Spinner } from '@blueprintjs/core'
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -10,6 +10,7 @@ import { compose } from 'recompose'
 import styled from 'styled-components'
 
 import Center from 'Components/Center'
+import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
 import FlexLayout from 'Components/FlexLayout'
 import { withHeader, WithHeaderProps } from 'Components/Header'
@@ -72,7 +73,7 @@ const WhisperReplyRegExp = /^\/r /
 /**
  * React State.
  */
-const initialState = { inputValue: '', focusedChatter: null as SerializedChatter | null, showChatters: false }
+const initialState = { focusedChatter: null as SerializedChatter | null, inputValue: '', showChatters: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -185,6 +186,8 @@ class Channel extends React.Component<Props, State> {
   private setHeaderComponents() {
     const { channel, isAutoScrollPaused, isMod, roomState } = this.props
 
+    const channelId = _.get(roomState, 'roomId')
+
     const headerRightComponent = (
       <>
         <HeaderChannelState isAutoScrollPaused={isAutoScrollPaused} roomState={roomState} />
@@ -199,6 +202,12 @@ class Channel extends React.Component<Props, State> {
               toggleEmoteOnly={this.toggleEmoteOnly}
             />
           )}
+        <Popover>
+          <HeaderTooltip content="Channel Details">
+            <Button icon="eye-open" minimal title="Channel Details" />
+          </HeaderTooltip>
+          <ChannelDetails channelId={channelId} />
+        </Popover>
         <HeaderTooltip content="Chatters List">
           <Button onClick={this.toggleChatters} icon="people" minimal title="Chatters List" />
         </HeaderTooltip>

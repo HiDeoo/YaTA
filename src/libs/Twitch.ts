@@ -148,6 +148,34 @@ export default class Twitch {
   }
 
   /**
+   * Fetches details about a stream.
+   * @param  id - The channel id.
+   * @return The stream details.
+   */
+  public static async fetchStream(id: string): Promise<{ stream: RawStream | null }> {
+    const response = await Twitch.fetch(`${baseKrakenUrl}/streams/${id}`)
+
+    return response.json()
+  }
+
+  /**
+   * Fetches videos for a channel.
+   * @param  id - The channel id.
+   * @param  [limit=10] - Number of videos to return.
+   * @param  [type=archive] - Type of videos to return.
+   * @return The channel videos.
+   */
+  public static async fetchChannelVideos(id: string, limit = 10, type: BroadcastType = 'archive'): Promise<RawVideos> {
+    const url = new URL(`${baseKrakenUrl}/channels/${id}/videos`)
+    url.searchParams.append('limit', limit.toString())
+    url.searchParams.append('broadcast_type', type)
+
+    const response = await Twitch.fetch(url.toString())
+
+    return response.json()
+  }
+
+  /**
    * Fetches cheermotes.
    * @return The cheermotes.
    */
@@ -502,12 +530,7 @@ export type RawStream = {
   delay: number
   game: number
   is_playlist: boolean
-  preview: {
-    large: string
-    medium: string
-    small: string
-    template: string
-  }
+  preview: RawPreview
   stream_type: string
   video_height: number
   viewers: number
@@ -539,6 +562,50 @@ type RawCheermoteTier = {
 }
 
 /**
+ * Twitch videos.
+ */
+export type RawVideos = {
+  videos: RawVideo[]
+  _total: number
+}
+
+export type RawVideo = {
+  animated_preview_url: string
+  broadcast_id: number
+  broadcast_type: BroadcastType
+  channel: RawChannel
+  communities: string[]
+  created_at: string
+  description: string | null
+  description_html: string | null
+  game: string
+  language: string
+  length: number
+  preview: RawPreview
+  published_at: string
+  recorded_at: string
+  restriction: string
+  status: string
+  tag_list: string
+  title: string
+  url: string
+  viewable: string
+  viewable_at: string | null
+  views: number
+  _id: string
+}
+
+/**
+ * Twitch preview.
+ */
+type RawPreview = {
+  large: string
+  medium: string
+  small: string
+  template: string
+}
+
+/**
  * Twitch Cheermote images.
  */
 type RawCheermoteImages = { [key in CheermoteImageType]: RawCheermoteImage }
@@ -554,3 +621,8 @@ export type RawCheermoteImage = { [key in CheermoteImageScales]: string }
 export type CheermoteImageBackground = 'dark' | 'light'
 type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
+
+/**
+ * Twitch broadcast type.
+ */
+type BroadcastType = 'archive' | 'highlight' | 'upload'
