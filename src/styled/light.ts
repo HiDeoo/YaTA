@@ -34,6 +34,7 @@ const light = {
   notification: {
     background: Colors.LIGHT_GRAY3,
     border: Colors.BLUE4,
+    message: Colors.GRAY1,
   },
   settings: {
     description: Colors.GRAY1,

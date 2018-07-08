@@ -34,6 +34,7 @@ const dark = {
   notification: {
     background: Colors.DARK_GRAY2,
     border: Colors.BLUE4,
+    message: Colors.GRAY4,
   },
   settings: {
     description: Colors.GRAY3,

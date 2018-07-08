@@ -18,6 +18,7 @@ const Wrapper = styled.div`
  * Message component.
  */
 const Message = styled.div`
+  color: ${color('notification.message')};
   font-style: italic;
   margin-top: 4px;
 `
