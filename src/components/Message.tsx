@@ -108,8 +108,8 @@ export default class Message extends React.Component<Props> {
           {message.user.displayName}
           {message.user.showUsername && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
-        {this.renderClips()}
         <MessageContent message={message} />
+        {this.renderClips()}
       </Wrapper>
     )
   }

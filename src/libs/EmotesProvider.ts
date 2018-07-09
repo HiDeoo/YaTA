@@ -1,13 +1,13 @@
 import * as _ from 'lodash'
 import { Emotes } from 'twitch-js'
-
-import { getWordsIndexesMatching } from 'Utils/string'
+import { Word } from 'unistring'
 
 /**
  * EmotesProvider class.
  */
 export default class EmotesProvider<ExternalEmote extends Emote> {
   public prefix: string
+  public emotesSets: string[]
   private emotes: ExternalEmote[]
   private urlTemplate: string
   private urlCompiledTemplate: _.TemplateExecutor
@@ -23,6 +23,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     this.prefix = prefix
     this.emotes = emotes
     this.urlTemplate = urlTemplate
+    this.emotesSets = _.map(this.emotes, 'code')
 
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
@@ -31,20 +32,20 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
 
   /**
    * Returns the emotes included in a message.
-   * @param  message - The message to parse.
+   * @param  words - The message words.
    * @return The emotes.
    */
-  public getMessageEmotes(message: string): Emotes {
+  public getMessageEmotes(words: Word[]): Emotes {
     return _.reduce(
       this.emotes,
       (emotes, emote) => {
-        const indexes = getWordsIndexesMatching(message, emote.code)
+        const wordsMatchingEmote = _.filter(words, (word) => word.text === emote.code)
 
-        if (indexes.length === 0) {
+        if (wordsMatchingEmote.length === 0) {
           return emotes
         }
 
-        const ranges = _.map(indexes, (index) => [index, index + emote.code.length - 1].join('-'))
+        const ranges = _.map(wordsMatchingEmote, (word) => [word.index, word.index + emote.code.length - 1].join('-'))
 
         emotes[`${this.prefix}-${emote.id}`] = ranges
 
@@ -68,14 +69,6 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     const srcset = `${url1x} 1x,${url2x} 2x,${url4x} 4x`
 
     return `<img class="emote" data-tip="${name}" src="${url1x}" srcset="${srcset}" alt="${name}" />`
-  }
-
-  /**
-   * Returns the associated emote sets.
-   * @return The emote sets.
-   */
-  public getEmoteSets() {
-    return _.map(this.emotes, 'code')
   }
 }
 

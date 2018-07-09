@@ -29,7 +29,7 @@ export function escape(html: string | string[]) {
     return escapeArray(html)
   }
 
-  return escapeArray(html.split('')).join('')
+  return escapeArray(Array.from(html)).join('')
 }
 
 /**

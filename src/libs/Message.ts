@@ -1,6 +1,7 @@
 import linkifyHtml from 'linkifyjs/html'
 import * as _ from 'lodash'
 import { Emotes, UserState } from 'twitch-js'
+import Unistring, { Word } from 'unistring'
 
 import LogType from 'Constants/logType'
 import Theme from 'Constants/theme'
@@ -10,11 +11,6 @@ import { CheermoteImageBackground, RawBadges, RawCheermote, RawCheermoteImage, R
 import { Highlights } from 'Store/ducks/settings'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
-
-/**
- * RegExp used to identify any mention (starting with @).
- */
-const MentionRegExp = /@([a-zA-Z\d_]+)/g
 
 /**
  * RegExp used to identify a clip link.
@@ -160,15 +156,15 @@ export default class Message implements Serializable<SerializedMessage> {
    */
   private parseMessage(message: string, userstate: UserState, currentUsername: string) {
     const emotes = userstate.emotes || {}
+    const words = Unistring.getWords(message)
 
-    this.parseClips(message)
-    this.parseAdditionalEmotes(message, emotes)
+    const parsedMessage = Array.from(message)
 
-    const parsedMessage = message.split('')
-
+    this.parseAdditionalEmotes(words, emotes)
     this.parseEmotes(parsedMessage, emotes)
-    this.parseHighlights(message, parsedMessage)
-    this.parseMentions(message, parsedMessage, currentUsername)
+    this.parseHighlights(words, parsedMessage)
+    this.parseMentions(words, parsedMessage, currentUsername)
+    this.parseClips(message)
 
     let parsedMessageStr = escape(parsedMessage).join('')
 
@@ -185,12 +181,12 @@ export default class Message implements Serializable<SerializedMessage> {
 
   /**
    * Parses a message for additional emotes.
-   * @param message - The message to parse.
+   * @param words - The message words.
    * @param emotes - The message emotes.
    */
-  private parseAdditionalEmotes(message: string, emotes: Emotes) {
+  private parseAdditionalEmotes(words: Word[], emotes: Emotes) {
     _.forEach(Message.emotesProviders, (provider) => {
-      const providerEmotes = provider.getMessageEmotes(message)
+      const providerEmotes = provider.getMessageEmotes(words)
 
       if (_.size(providerEmotes) > 0) {
         _.merge(emotes, providerEmotes)
@@ -200,11 +196,12 @@ export default class Message implements Serializable<SerializedMessage> {
 
   /**
    * Parses a message for cheermotes.
-   * @param message - The message to parse.
-   * @param totalBits - The number of bits in the message.
+   * @param  message - The message to parse.
+   * @param  totalBits - The number of bits in the message.
+   * @return The message with cheermotes parsed.
    */
   private parseCheermotes(message: string, totalBits: number) {
-    const parsedMessage = message.split('')
+    const parsedMessage = Array.from(message)
 
     const cheermoteBackground: CheermoteImageBackground = this.parseOptions.theme === Theme.Dark ? 'dark' : 'light'
 
@@ -310,69 +307,57 @@ export default class Message implements Serializable<SerializedMessage> {
 
   /**
    * Parses a message for mentions.
-   * @param message - The raw message.
+   * @param words - The message words.
    * @param parsedMessage - The message being parsed.
    * @param currentUsername - The name of the current user.
    */
-  private parseMentions(message: string, parsedMessage: string[], currentUsername: string) {
-    const pattern = `(?<!\\S)(@?${currentUsername})(?!\\S)`
-    let regExp = new RegExp(pattern, 'gmi')
-    let match
-
-    if (!this.ignoreHighlight) {
-      // tslint:disable-next-line:no-conditional-assignment
-      while ((match = regExp.exec(message)) != null) {
+  private parseMentions(words: Word[], parsedMessage: string[], currentUsername: string) {
+    _.forEach(words, (word, index) => {
+      if (!this.ignoreHighlight && word.text.toLowerCase() === currentUsername) {
         this.mentionned = true
 
-        const startIndex = match.index
-        const withAtSign = message.charAt(match.index) === '@'
-        const endIndex = startIndex + currentUsername.length + (withAtSign ? 1 : 0)
+        const previousWord = index > 0 ? words[index - 1] : null
+        const withAtSign = !_.isNil(previousWord) && previousWord.text === '@'
+
+        const startIndex = withAtSign ? word.index - 1 : word.index
+        const endIndex = word.index + currentUsername.length
 
         for (let i = startIndex; i < endIndex; ++i) {
           parsedMessage[i] = ''
         }
 
         parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${currentUsername}</span>`
-      }
-    }
+      } else if (word.text === '@') {
+        const nextWord = index < words.length - 1 ? words[index + 1] : null
 
-    regExp = MentionRegExp
+        if (!_.isNil(nextWord)) {
+          const startIndex = word.index
+          const endIndex = nextWord.index + nextWord.length
 
-    // tslint:disable-next-line:no-conditional-assignment
-    while ((match = regExp.exec(message)) != null) {
-      const mentionStr = match[0]
-      const username = match[1]
+          for (let i = startIndex; i < endIndex; ++i) {
+            parsedMessage[i] = ''
+          }
 
-      if (username.toLowerCase() !== currentUsername.toLowerCase()) {
-        const startIndex = match.index
-        const endIndex = startIndex + mentionStr.length
-
-        for (let i = startIndex; i < endIndex; ++i) {
-          parsedMessage[i] = ''
+          parsedMessage[startIndex] = `<span class="mention">${word.text}${nextWord.text}</span>`
         }
-
-        parsedMessage[startIndex] = `<span class="mention">${mentionStr}</span>`
       }
-    }
+    })
   }
 
   /**
    * Parses a message for highlights.
-   * @param message - The raw message.
+   * @param words - The message words.
    * @param parsedMessage - The message being parsed.
    */
-  private parseHighlights(message: string, parsedMessage: string[]) {
+  private parseHighlights(words: Word[], parsedMessage: string[]) {
     if (!this.ignoreHighlight) {
       _.forEach(Message.highlights, (highlight) => {
-        const pattern = `(?<!\\S)(${highlight.pattern})(?!\\S)`
-        const regExp = new RegExp(pattern, 'gmi')
-        let match
+        const wordsMatchingHighlight = _.filter(words, (word) => word.text.toLowerCase() === highlight.pattern)
 
-        // tslint:disable-next-line:no-conditional-assignment
-        while ((match = regExp.exec(message)) != null) {
-          const highlightStr = match[1]
+        _.forEach(wordsMatchingHighlight, (word) => {
+          const highlightStr = word.text
 
-          const startIndex = match.index
+          const startIndex = word.index
           const endIndex = startIndex + highlightStr.length
 
           for (let i = startIndex; i < endIndex; ++i) {
@@ -380,7 +365,7 @@ export default class Message implements Serializable<SerializedMessage> {
           }
 
           parsedMessage[startIndex] = `<span class="highlight">${highlightStr}</span>`
-        }
+        })
       })
     }
   }

@@ -670,7 +670,7 @@ export class ChatClient extends React.Component<Props, State> {
 
         Message.emotesProviders[emotesAndBots.emotes.prefix] = emotesAndBots.emotes
 
-        this.props.updateEmoteSets('bttv', emotesAndBots.emotes.getEmoteSets())
+        this.props.updateEmoteSets('bttv', emotesAndBots.emotes.emotesSets)
 
         if (!_.isNil(emotesAndBots.bots)) {
           Message.bots.push(...emotesAndBots.bots)
