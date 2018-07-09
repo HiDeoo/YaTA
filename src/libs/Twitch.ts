@@ -2,24 +2,24 @@ import * as _ from 'lodash'
 import jose from 'node-jose'
 
 /**
- * Twitch base auth URL.
+ * Twitch various APIs.
  */
-const baseAuthUrl = 'https://id.twitch.tv/oauth2'
+enum TwitchApi {
+  Auth = 'https://id.twitch.tv',
+  Badges = 'https://badges.twitch.tv/v1/badges',
+  Helix = 'https://api.twitch.tv/helix',
+  Kraken = 'https://api.twitch.tv/kraken',
+  Tmi = 'https://tmi.twitch.tv',
+}
 
 /**
- * Twitch base kraken URL.
+ * Twitch broadcast type.
  */
-const baseKrakenUrl = 'https://api.twitch.tv/kraken'
-
-/**
- * Twitch base tmi URL.
- */
-const baseTmiUrl = 'https://tmi.twitch.tv'
-
-/**
- * Twitch base Helix URL.
- */
-const baseHelixUrl = 'https://api.twitch.tv/helix'
+export enum BroadcastType {
+  Archive = 'archive',
+  Highlight = 'highlight',
+  Upload = 'upload',
+}
 
 /**
  * RegExp used to identify whisper command (/w user message).
@@ -45,22 +45,22 @@ export default class Twitch {
    * @return The auth URL.
    */
   public static getAuthURL() {
-    const url = new URL(`${baseAuthUrl}/authorize`)
-
     const { REACT_APP_TWITCH_CLIENT_ID, REACT_APP_TWITCH_REDIRECT_URI } = process.env
 
-    url.searchParams.set('client_id', REACT_APP_TWITCH_CLIENT_ID)
-    url.searchParams.set('redirect_uri', REACT_APP_TWITCH_REDIRECT_URI)
-    url.searchParams.set('response_type', 'token id_token')
-    url.searchParams.set('scope', 'openid chat_login user_read user_blocks_edit clips:edit')
+    const params = {
+      client_id: REACT_APP_TWITCH_CLIENT_ID,
+      redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
+      response_type: 'token id_token',
+      scope: 'openid chat_login user_read user_blocks_edit clips:edit',
+    }
 
-    return url
+    return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
   }
 
   /**
    * Returns the auth response token.
    * @param hash - The URL hash to parse
-   * @return The parsed tokens
+   * @return The parsed tokens.
    */
   public static getAuthTokens(hash: string) {
     const params = new URLSearchParams(hash.substring(1))
@@ -89,7 +89,7 @@ export default class Twitch {
 
     const idToken = JSON.parse(jws.payload.toString()) as IdToken
 
-    if (_.get(idToken, 'aud') !== process.env.REACT_APP_TWITCH_CLIENT_ID || _.get(idToken, 'iss') !== baseAuthUrl) {
+    if (_.get(idToken, 'aud') !== process.env.REACT_APP_TWITCH_CLIENT_ID || _.get(idToken, 'iss') !== TwitchApi.Auth) {
       throw new Error('Unable to verify ID token.')
     }
 
@@ -123,8 +123,8 @@ export default class Twitch {
    */
   public static async fetchBadges(channelId: string): Promise<RawBadges> {
     const response = await Promise.all([
-      (await Twitch.fetch('https://badges.twitch.tv/v1/badges/global/display')).json(),
-      (await Twitch.fetch(`https://badges.twitch.tv/v1/badges/channels/${channelId}/display`)).json(),
+      (await Twitch.fetch(TwitchApi.Badges, '/global/display')).json(),
+      (await Twitch.fetch(TwitchApi.Badges, `/channels/${channelId}/display`)).json(),
     ])
 
     return { ...response[0].badge_sets, ...response[1].badge_sets }
@@ -136,7 +136,7 @@ export default class Twitch {
    * @return The user details.
    */
   public static async fetchUser(id: string): Promise<RawUser> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/users/${id}`)
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${id}`)
 
     return response.json()
   }
@@ -147,7 +147,7 @@ export default class Twitch {
    * @return The channel details.
    */
   public static async fetchChannel(id: string): Promise<RawChannel> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/channels/${id}`)
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`)
 
     return response.json()
   }
@@ -158,7 +158,7 @@ export default class Twitch {
    * @return The stream details.
    */
   public static async fetchStream(id: string): Promise<{ stream: RawStream | null }> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/streams/${id}`)
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/streams/${id}`)
 
     return response.json()
   }
@@ -171,11 +171,12 @@ export default class Twitch {
    * @return The channel videos.
    */
   public static async fetchChannelVideos(id: string, limit = 10, type = BroadcastType.Archive): Promise<RawVideos> {
-    const url = new URL(`${baseKrakenUrl}/channels/${id}/videos`)
-    url.searchParams.append('limit', limit.toString())
-    url.searchParams.append('broadcast_type', type)
+    const params = {
+      broadcast_type: type,
+      limit: limit.toString(),
+    }
 
-    const response = await Twitch.fetch(url.toString())
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}/videos`, params)
 
     return response.json()
   }
@@ -187,13 +188,12 @@ export default class Twitch {
    * @return The new clip details.
    */
   public static async createClip(id: string, withDelay = false): Promise<RawNewClips> {
-    const url = new URL(`${baseHelixUrl}/clips`)
-    url.searchParams.append('broadcaster_id', id)
-    url.searchParams.append('has_delay', withDelay.toString())
+    const params = {
+      broadcaster_id: id,
+      has_delay: withDelay.toString(),
+    }
 
-    const response = await Twitch.fetch(url.toString(), Twitch.getAuthHeader(true), {
-      method: 'POST',
-    })
+    const response = await Twitch.fetch(TwitchApi.Helix, '/clips', params, true, RequestMethod.Post)
 
     return response.json()
   }
@@ -203,7 +203,7 @@ export default class Twitch {
    * @return The cheermotes.
    */
   public static async fetchCheermotes(): Promise<{ actions: RawCheermote[] }> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/bits/actions`)
+    const response = await Twitch.fetch(TwitchApi.Kraken, '/bits/actions')
 
     return response.json()
   }
@@ -214,7 +214,7 @@ export default class Twitch {
    * @return The clip details.
    */
   public static async fetchClip(slug: string): Promise<RawClip> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/clips/${slug}`)
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/clips/${slug}`)
 
     return response.json()
   }
@@ -236,8 +236,8 @@ export default class Twitch {
    * @return The chatter.
    */
   public static async fetchChatters(channel: string): Promise<RawChattersDetails> {
-    const response = await Twitch.fetch(
-      `https://cors-anywhere.herokuapp.com/${baseTmiUrl}/group/user/${channel}/chatters`
+    const response = await fetch(
+      `https://cors-anywhere.herokuapp.com/${Twitch.getUrl(TwitchApi.Tmi, `/group/user/${channel}/chatters`)}`
     )
 
     return response.json()
@@ -248,11 +248,12 @@ export default class Twitch {
    * @return The follows.
    */
   public static async fetchAuthenticatedUserFollows(): Promise<RawFollows> {
-    const url = new URL(`${baseKrakenUrl}/users/${Twitch.userId}/follows/channels`)
-    url.searchParams.append('limit', '100')
-    url.searchParams.append('sortby', 'last_broadcast')
+    const params = {
+      limit: '100',
+      sortby: 'last_broadcast',
+    }
 
-    const response = await Twitch.fetch(url.toString(), Twitch.getAuthHeader())
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${Twitch.userId}/follows/channels`, params, true)
 
     return response.json()
   }
@@ -262,11 +263,12 @@ export default class Twitch {
    * @return The streams.
    */
   public static async fetchAuthenticatedUserStreams(): Promise<RawStreams> {
-    const url = new URL(`${baseKrakenUrl}/streams/followed`)
-    url.searchParams.append('limit', '100')
-    url.searchParams.append('stream_type', 'live')
+    const params = {
+      limit: '100',
+      stream_type: 'live',
+    }
 
-    const response = await Twitch.fetch(url.toString(), Twitch.getAuthHeader())
+    const response = await Twitch.fetch(TwitchApi.Kraken, '/streams/followed', params, true)
 
     return response.json()
   }
@@ -276,7 +278,7 @@ export default class Twitch {
    * @return The user details.
    */
   public static async fetchAuthenticatedUser(): Promise<AuthenticatedUserDetails> {
-    const response = await Twitch.fetch(`${baseKrakenUrl}/user`, Twitch.getAuthHeader())
+    const response = await Twitch.fetch(TwitchApi.Kraken, '/user', undefined, true)
 
     return response.json()
   }
@@ -288,11 +290,11 @@ export default class Twitch {
    */
   public static async blockUser(targetId: string): Promise<RawBlockerUser> {
     const response = await Twitch.fetch(
-      `${baseKrakenUrl}/users/${Twitch.userId}/blocks/${targetId}`,
-      Twitch.getAuthHeader(),
-      {
-        method: 'PUT',
-      }
+      TwitchApi.Kraken,
+      `/users/${Twitch.userId}/blocks/${targetId}`,
+      undefined,
+      true,
+      RequestMethod.Put
     )
 
     return response.json()
@@ -311,24 +313,52 @@ export default class Twitch {
   private static userId: string | null
 
   /**
+   * Returns the URL for a request.
+   * @param  api - The Twitch API to use.
+   * @param  endpoint - The endpoint to fetch.
+   * @param  searchParams - Additional search parameters.
+   * @return The URL.
+   */
+  private static getUrl(api: TwitchApi, endpoint: string, searchParams: { [key: string]: string } = {}) {
+    const url = new URL(`${api}${endpoint}`)
+
+    _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
+
+    return url.toString()
+  }
+
+  /**
    * Fetches an URL.
-   * @param  url - The URL to fetch.
-   * @param  additionalHeaders -  Additional headers to pass down to the query.
+   * @param  api - The Twitch API to use.
+   * @param  endpoint - The endpoint to fetch.
+   * @param  searchParams - Additional search parameters.
+   * @param  authenticated - Defines if the endpoint requires authentication or not.
+   * @param  options - Additionals request options.
    * @return The response.
    */
-  private static async fetch(url: string, additionalHeaders?: { [key: string]: string }, options: RequestInit = {}) {
+  private static async fetch(
+    api: TwitchApi,
+    endpoint: string,
+    searchParams: { [key: string]: string } = {},
+    authenticated = false,
+    method = RequestMethod.Get
+  ) {
+    const url = Twitch.getUrl(api, endpoint, searchParams)
+
     const headers = new Headers({
       Accept: 'application/vnd.twitchtv.v5+json',
       'Client-ID': process.env.REACT_APP_TWITCH_CLIENT_ID,
     })
 
-    if (_.size(additionalHeaders) > 0) {
-      _.forEach(additionalHeaders, (value, name) => {
+    if (authenticated) {
+      const authHeader = Twitch.getAuthHeader(api)
+
+      _.forEach(authHeader, (value, name) => {
         headers.append(name, value)
       })
     }
 
-    const request = new Request(url, { ...options, headers })
+    const request = new Request(url, { method, headers })
 
     const response = await fetch(request)
 
@@ -348,7 +378,7 @@ export default class Twitch {
    * @return The JWK.
    */
   private static async fetchJWK() {
-    const jwkReponse = await fetch('https://id.twitch.tv/oauth2/keys')
+    const jwkReponse = await fetch(Twitch.getUrl(TwitchApi.Auth, '/oauth2/keys'))
 
     const jwk = await jwkReponse.json()
 
@@ -356,16 +386,16 @@ export default class Twitch {
   }
 
   /**
-   * Returns an auth header that can be used for authenticated request or throw.
-   * @param  [useHelix=false] - Defines if the API call will use the new Twitch API or not.
+   * Returns an auth header that can be used for authenticated request.
+   * @param  api - The API to get an auth token for.
    * @return The header.
    */
-  private static getAuthHeader(useHelix = false) {
+  private static getAuthHeader(api: TwitchApi) {
     if (_.isNil(Twitch.token)) {
       throw new Error('Missing token for authenticated request.')
     }
 
-    return { Authorization: `${useHelix ? 'Bearer' : 'OAuth'} ${Twitch.token}` }
+    return { Authorization: `${api === TwitchApi.Helix ? 'Bearer' : 'OAuth'} ${Twitch.token}` }
   }
 }
 
@@ -664,10 +694,10 @@ type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
 
 /**
- * Twitch broadcast type.
+ * Twitch API allowed method.
  */
-export enum BroadcastType {
-  Archive = 'archive',
-  Highlight = 'highlight',
-  Upload = 'upload',
+enum RequestMethod {
+  Get = 'GET',
+  Post = 'POST',
+  Put = 'PUT',
 }
