@@ -65,7 +65,14 @@ class SettingsBackup extends React.Component<Props, State> {
         </div>
         <Section>Restore</Section>
         <div>
-          <FileInput disabled={importing} text="Choose file..." onInputChange={this.onClickImport} />
+          <FileInput
+            disabled={importing}
+            text="Choose file..."
+            onInputChange={this.onClickImport}
+            inputProps={{
+              accept: '.bkp',
+            }}
+          />
         </div>
       </SettingsPanel>
     )
@@ -79,7 +86,7 @@ class SettingsBackup extends React.Component<Props, State> {
       type: 'text/plain;charset=utf-8;',
     })
 
-    FileSaver.saveAs(blob, 'yata.json')
+    FileSaver.saveAs(blob, 'yata.bkp')
   }
 
   /**
