@@ -15,7 +15,7 @@ import { color, ifProp, size } from 'Utils/styled'
 const Wrapper = withSCProps<WrapperProps & ICardProps, HTMLDivElement>(styled(Card))`
   background-color: ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.05)', 'inherit')} !important;
   border: 2px solid ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.4)', 'transparent')};
-  height: ${size('follows.height')}px;
+  height: ${size('follows.height')};
 
   &.pt-card {
     padding: 10px;

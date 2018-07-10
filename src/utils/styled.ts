@@ -31,8 +31,13 @@ export function color(path: string) {
  * Returns a theme size value.
  * The path will be prefixed with `theme.`.
  * @param  path - The path of the theme value.
+ * @param  [unit='px'] - The size unit which default to pixel.
  * @return The size value getter.
  */
-export function size(path: string) {
-  return (props: object) => _.get(props, `theme.${path}`) as number
+export function size(path: string, unit: string | undefined = 'px') {
+  if (_.isNil(unit)) {
+    return (props: object) => _.get(props, `theme.${path}`) as number
+  }
+
+  return (props: object) => `${_.get(props, `theme.${path}`)}${unit}` as string
 }

@@ -34,7 +34,7 @@ const Wrapper = styled.div`
  * Message component.
  */
 const Message = styled.div`
-  min-height: ${size('log.minHeight')}px;
+  min-height: ${size('log.minHeight')};
   padding: 4px 8px;
 `
 

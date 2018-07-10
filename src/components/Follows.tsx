@@ -23,11 +23,11 @@ const Wrapper = styled.div`
  */
 const Grid = styled.div`
   display: grid;
-  grid-auto-rows: ${size('follows.height')}px;
-  grid-column-gap: ${size('follows.margin')}px;
-  grid-row-gap: ${size('follows.margin')}px;
-  grid-template-columns: repeat(auto-fit, minmax(${size('follows.width')}px, 1fr));
-  padding: ${size('follows.margin')}px;
+  grid-auto-rows: ${size('follows.height')};
+  grid-column-gap: ${size('follows.margin')};
+  grid-row-gap: ${size('follows.margin')};
+  grid-template-columns: repeat(auto-fit, minmax(${size('follows.width')}, 1fr));
+  padding: ${size('follows.margin')};
 `
 
 /**

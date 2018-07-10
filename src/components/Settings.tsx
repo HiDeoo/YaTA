@@ -13,7 +13,7 @@ import SettingsHighlights from 'Containers/SettingsHighlights'
  * SettingsDialog component.
  */
 const SettingsDialog = styled(Dialog)`
-  height: ${size('settings.height')}px;
+  height: ${size('settings.height')};
 `
 
 /**

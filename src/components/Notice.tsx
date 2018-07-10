@@ -10,7 +10,7 @@ import { color, size } from 'Utils/styled'
  */
 const Wrapper = styled.div`
   color: ${color('notice.color')};
-  padding: 0 ${size('log.hPadding')}px;
+  padding: 0 ${size('log.hPadding')};
 `
 
 /**

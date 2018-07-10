@@ -11,7 +11,7 @@ import { color, size } from 'Utils/styled'
 const Wrapper = styled.div`
   background-color: ${color('notification.background')};
   border-left: 3px solid ${color('notification.border')};
-  padding: 4px ${size('log.hPadding')}px 4px calc(${size('log.hPadding')}px - 1px);
+  padding: 4px ${size('log.hPadding')} 4px calc(${size('log.hPadding')} - 1px);
 `
 
 /**
