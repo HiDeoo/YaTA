@@ -40,3 +40,28 @@ export function escape(html: string | string[]) {
 export function replaceImgTagByAlt(str: string) {
   return str.replace(/<img.*?alt="(.*?)"[^\>]+>/g, '$1')
 }
+
+/**
+ * Reads the content of a file as a text string.
+ * @param  file - The file to read.
+ * @return The file content.
+ */
+export function readTextFile(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader()
+
+    fileReader.onabort = reject
+    fileReader.onerror = reject
+    fileReader.onload = (event) => {
+      const target = event.target
+
+      if (!_.isNil(target)) {
+        resolve(target.result)
+      } else {
+        reject()
+      }
+    }
+
+    fileReader.readAsText(file)
+  })
+}

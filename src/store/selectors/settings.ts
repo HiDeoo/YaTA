@@ -77,3 +77,10 @@ export const getActions = createSelector([getSettingsState], (settings) => setti
  * @return The 'Hide whispers' setting.
  */
 export const getHideWhispers = createSelector([getSettingsState], (settings) => settings.hideWhispers)
+
+/**
+ * Returns all settings available for a backup.
+ * @param  state - The Redux state.
+ * @return The settings.
+ */
+export const getSettingsBackup = (state: ApplicationState) => state.settings

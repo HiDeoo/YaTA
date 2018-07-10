@@ -25,6 +25,7 @@ export enum Actions {
   REMOVE_ACTION = 'settings/REMOVE_ACTION',
   UPDATE_ACTION = 'settings/UPDATE_ACTION',
   TOGGLE_HIDE_WHISPERS = 'settings/TOGGLE_HIDE_WHISPERS',
+  RESTORE = 'settings/RESTORE',
 }
 
 /**
@@ -160,6 +161,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         hideWhispers: !state.hideWhispers,
       }
     }
+    case Actions.RESTORE: {
+      return {
+        ...state,
+        ...action.payload.json,
+      }
+    }
     default: {
       return state
     }
@@ -293,6 +300,16 @@ export const updateAction = (id: string, action: SerializedAction) =>
 export const toggleHideWhispers = () => createAction(Actions.TOGGLE_HIDE_WHISPERS)
 
 /**
+ * Restores settings from a backup.
+ * @param  json - The JSON backup.
+ * @return The action.
+ */
+export const restoreSettings = (json: SettingsState) =>
+  createAction(Actions.RESTORE, {
+    json,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -311,6 +328,7 @@ export type SettingsActions =
   | ReturnType<typeof removeAction>
   | ReturnType<typeof updateAction>
   | ReturnType<typeof toggleHideWhispers>
+  | ReturnType<typeof restoreSettings>
 
 /**
  * Settings state.

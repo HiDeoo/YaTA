@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { size } from 'Utils/styled'
 
 import SettingsActions from 'Containers/SettingsActions'
+import SettingsBackup from 'Containers/SettingsBackup'
 import SettingsChangelog from 'Containers/SettingsChangelog'
 import SettingsGeneral from 'Containers/SettingsGeneral'
 import SettingsHighlights from 'Containers/SettingsHighlights'
@@ -31,6 +32,7 @@ export enum SettingsTab {
   Highlights = 'highlights',
   Actions = 'actions',
   Changelog = 'changelog',
+  Backup = 'backup',
 }
 
 /**
@@ -52,6 +54,7 @@ export default class Settings extends React.Component<Props> {
             <Tab id={SettingsTab.Highlights} title="Highlights" panel={<SettingsHighlights />} />
             <Tab id={SettingsTab.Actions} title="Actions" panel={<SettingsActions />} />
             <Tab id={SettingsTab.Changelog} title="Changelog" panel={<SettingsChangelog />} />
+            <Tab id={SettingsTab.Backup} title="Backup" panel={<SettingsBackup />} />
           </Tabs>
         </SettingsNavbar>
       </SettingsDialog>
