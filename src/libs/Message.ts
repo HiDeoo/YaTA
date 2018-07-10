@@ -186,6 +186,10 @@ export default class Message implements Serializable<SerializedMessage> {
    */
   private parseAdditionalEmotes(words: Word[], emotes: Emotes) {
     _.forEach(Message.emotesProviders, (provider) => {
+      if (provider.prefix === 'twitch') {
+        return
+      }
+
       const providerEmotes = provider.getMessageEmotes(words)
 
       if (_.size(providerEmotes) > 0) {
@@ -291,16 +295,11 @@ export default class Message implements Serializable<SerializedMessage> {
 
         const emoteName = name.join('')
 
-        if (_.isNil(emoteId)) {
-          const url = 'https://static-cdn.jtvnw.net/emoticons/v1/'
-          const srcset = `${url}${id}/1.0 1x,${url}${id}/2.0 2x,${url}${id}/3.0 4x`
+        const isTwitchEmote = _.isNil(emoteId)
 
-          parsedMessage[
-            indexes[0]
-          ] = `<img class="emote" data-tip="${emoteName}" src="${url}${id}/1.0" srcset="${srcset}" alt="${emoteName}" />`
-        } else {
-          parsedMessage[indexes[0]] = Message.emotesProviders[providerPrefix].getEmoteTag(emoteId, emoteName)
-        }
+        const provider = Message.emotesProviders[isTwitchEmote ? 'twitch' : providerPrefix]
+
+        parsedMessage[indexes[0]] = provider.getEmoteTag(isTwitchEmote ? id : emoteId, emoteName)
       })
     })
   }

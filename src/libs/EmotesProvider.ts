@@ -7,8 +7,8 @@ import { Word } from 'unistring'
  */
 export default class EmotesProvider<ExternalEmote extends Emote> {
   public prefix: string
-  public emotesSets: string[]
-  private emotes: ExternalEmote[]
+  public emotes: ExternalEmote[]
+  private sizePrefix: string
   private urlTemplate: string
   private urlCompiledTemplate: _.TemplateExecutor
 
@@ -18,12 +18,13 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @param prefix - Provider prefix.
    * @param emotes - The additional emotes.
    * @param urlTemplate - The provider url template.
+   * @param sizePrefix - The size prefix.
    */
-  constructor(prefix: string, emotes: ExternalEmote[], urlTemplate: string) {
+  constructor(prefix: string, emotes: ExternalEmote[], urlTemplate: string, sizePrefix: string) {
     this.prefix = prefix
     this.emotes = emotes
+    this.sizePrefix = sizePrefix
     this.urlTemplate = urlTemplate
-    this.emotesSets = _.map(this.emotes, 'code')
 
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
@@ -62,18 +63,27 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return The emote tag.
    */
   public getEmoteTag(id: string, name: string) {
-    const url1x = this.urlCompiledTemplate({ id, image: '1x' })
-    const url2x = this.urlCompiledTemplate({ id, image: '2x' })
-    const url4x = this.urlCompiledTemplate({ id, image: '3x' })
+    const url1x = this.urlCompiledTemplate({ id, image: this.getSizePath(1) })
+    const url2x = this.urlCompiledTemplate({ id, image: this.getSizePath(2) })
+    const url4x = this.urlCompiledTemplate({ id, image: this.getSizePath(3) })
 
     const srcset = `${url1x} 1x,${url2x} 2x,${url4x} 4x`
 
     return `<img class="emote" data-tip="${name}" src="${url1x}" srcset="${srcset}" alt="${name}" />`
   }
+
+  /**
+   * Returns the size path used by the provider.
+   * @param  size - The size.
+   * @return The size path.
+   */
+  private getSizePath(size: number) {
+    return `${size.toString()}${this.sizePrefix}`
+  }
 }
 
 /**
- * Extra emote.
+ * Base Twitch emote.
  */
 export type Emote = {
   id: string

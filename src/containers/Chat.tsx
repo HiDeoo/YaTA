@@ -19,12 +19,13 @@ import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
+import EmotesProvider, { Emote } from 'Libs/EmotesProvider'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
-import { resetAppState, setLastWhisperSender, updateEmoteSets, updateRoomState, updateStatus } from 'Store/ducks/app'
+import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
 import { addChatterWithMessage, clearChatters } from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
@@ -633,15 +634,26 @@ export class ChatClient extends React.Component<Props, State> {
    * @param sets - The emote sets.
    */
   private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
-    const emoteSets = _.flatten(
-      _.map(sets, (set) => {
-        return _.map(set, (emote) => {
-          return emote.code
-        })
-      })
+    const emotes = _.flatten(_.map(sets, (set) => set))
+
+    const provider = new EmotesProvider(
+      'twitch',
+      emotes,
+      'https://static-cdn.jtvnw.net/emoticons/v1/{{id}}/{{image}}',
+      '.0'
     )
 
-    this.props.updateEmoteSets('twitch', emoteSets)
+    this.addEmotesProvider(provider)
+  }
+
+  /**
+   * Adds (or updates) an emotes provider.
+   * @param provider - The emotes provider to add.
+   */
+  private addEmotesProvider(provider: EmotesProvider<Emote>) {
+    Message.emotesProviders[provider.prefix] = provider
+
+    this.props.updateEmotes(provider.prefix, provider.emotes)
   }
 
   /**
@@ -668,9 +680,7 @@ export class ChatClient extends React.Component<Props, State> {
       if (!_.isNil(this.props.channel)) {
         const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
 
-        Message.emotesProviders[emotesAndBots.emotes.prefix] = emotesAndBots.emotes
-
-        this.props.updateEmoteSets('bttv', emotesAndBots.emotes.emotesSets)
+        this.addEmotesProvider(emotesAndBots.emotes)
 
         if (!_.isNil(emotesAndBots.bots)) {
           Message.bots.push(...emotesAndBots.bots)
@@ -775,7 +785,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     resetAppState,
     setLastWhisperSender,
     setModerator,
-    updateEmoteSets,
+    updateEmotes,
     updateRoomState,
     updateStatus,
   },
@@ -812,7 +822,7 @@ type DispatchProps = {
   setLastWhisperSender: typeof setLastWhisperSender
   setModerator: typeof setModerator
   updateRoomState: typeof updateRoomState
-  updateEmoteSets: typeof updateEmoteSets
+  updateEmotes: typeof updateEmotes
   updateStatus: typeof updateStatus
 }
 

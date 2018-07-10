@@ -11,13 +11,6 @@ import { ApplicationState } from 'Store/reducers'
 const getAppState = (state: ApplicationState) => state.app
 
 /**
- * Returns the emote sets state.
- * @param  state - The Redux state.
- * @return The emote sets state.
- */
-const getEmoteSetsState = (state: ApplicationState) => state.app.emoteSets
-
-/**
  * Returns the current channel.
  * @param  state - The Redux state.
  * @return The current channel.
@@ -57,8 +50,8 @@ export const getHistoryIndex = createSelector([getAppState], (app) => app.histor
  * @param  state - The Redux state.
  * @return The emotes.
  */
-export const getEmotes = createSelector([getEmoteSetsState], (sets) => {
-  return _.flatten(_.values(sets)).sort()
+export const getEmotes = createSelector([getAppState], (app) => {
+  return _.sortBy(_.flatten(_.values(app.emotes)), 'code')
 })
 
 /**

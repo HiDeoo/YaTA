@@ -1,4 +1,5 @@
 declare module 'twitch-js' {
+  import { Emote } from 'Libs/EmotesProvider'
   import Event from 'Constants/event'
   import LogType from 'Constants/logType'
   import ReadyState from 'Constants/readyState'
@@ -95,7 +96,7 @@ declare module 'twitch-js' {
   }
 
   export type EmoteSets = {
-    [key: number]: Array<{ code: string; id: number }>
+    [key: number]: Array<Emote>
   }
 
   export class Client {

@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
 
 import Status from 'Constants/status'
+import { Emote } from 'Libs/EmotesProvider'
 import { SerializedRoomState } from 'Libs/RoomState'
 import { createAction } from 'Utils/redux'
 
@@ -14,7 +15,7 @@ export enum Actions {
   SET_SHOULD_READ_CHANGELOG = 'app/SET_SHOULD_READ_CHANGELOG',
   ADD_TO_HISTORY = 'app/ADD_TO_HISTORY',
   UPDATE_HISTORY_INDEX = 'app/UPDATE_HISTORY_INDEX',
-  UPDATE_EMOTE_SETS = 'app/UPDATE_EMOTE_SETS',
+  UPDATE_EMOTES = 'app/UPDATE_EMOTES',
   RESET_APP_STATE = 'app/RESET_APP_STATE',
   SET_LAST_WHISPER_SENDER = 'app/SET_LAST_WHISPER_SENDER',
 }
@@ -24,7 +25,7 @@ export enum Actions {
  */
 export const initialState = {
   channel: null,
-  emoteSets: {},
+  emotes: {},
   history: [],
   historyIndex: -1,
   lastWhisperSender: '',
@@ -81,12 +82,12 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
         historyIndex: action.payload.index,
       }
     }
-    case Actions.UPDATE_EMOTE_SETS: {
+    case Actions.UPDATE_EMOTES: {
       const { prefix, emotes } = action.payload
 
       return {
         ...state,
-        emoteSets: { ...state.emoteSets, [prefix]: emotes },
+        emotes: { ...state.emotes, [prefix]: emotes },
       }
     }
     case Actions.RESET_APP_STATE: {
@@ -170,13 +171,13 @@ export const updateHistoryIndex = (index: number) =>
   })
 
 /**
- * Updates an emote sets.
+ * Updates emotes.
  * @param  prefix - The emote provider prefix.
  * @param  emotes - The emotes.
  * @return The action.
  */
-export const updateEmoteSets = (prefix: string, emotes: string[]) =>
-  createAction(Actions.UPDATE_EMOTE_SETS, {
+export const updateEmotes = (prefix: string, emotes: Emote[]) =>
+  createAction(Actions.UPDATE_EMOTES, {
     emotes,
     prefix,
   })
@@ -207,7 +208,7 @@ export type AppActions =
   | ReturnType<typeof setShouldReadChangelog>
   | ReturnType<typeof addToHistory>
   | ReturnType<typeof updateHistoryIndex>
-  | ReturnType<typeof updateEmoteSets>
+  | ReturnType<typeof updateEmotes>
   | ReturnType<typeof resetAppState>
   | ReturnType<typeof setLastWhisperSender>
 
@@ -246,10 +247,10 @@ export type AppState = {
   historyIndex: number
 
   /**
-   * Emote sets.
+   * Emotes.
    */
-  emoteSets: {
-    [key: string]: string[]
+  emotes: {
+    [key: string]: Emote[]
   }
 
   /**

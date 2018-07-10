@@ -29,7 +29,7 @@ export default class Bttv {
 
     const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? response[1].bots : null
 
-    const emotes = new EmotesProvider('bttv', rawEmotes, response[0].urlTemplate)
+    const emotes = new EmotesProvider('bttv', rawEmotes, response[0].urlTemplate, 'x')
 
     return {
       bots,

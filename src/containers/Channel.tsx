@@ -380,8 +380,8 @@ class Channel extends React.Component<Props, State> {
 
     if (!excludeEmotes) {
       emoteCompletions = _.filter(emotes, (emote) => {
-        return emote.toLowerCase().startsWith(sanitizedWord)
-      })
+        return emote.code.toLowerCase().startsWith(sanitizedWord)
+      }).map((emote) => emote.code)
     }
 
     return [...emoteCompletions, ...usernameCompletions]
