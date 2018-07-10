@@ -59,3 +59,18 @@ export default {
     background: Colors.DARK_GRAY1,
   },
 }
+
+/**
+ * Twitch username colors default mapping.
+ */
+export const TwitchUserColorMap = {
+  '#0000FF': '#4966da',
+  '#008000': '#128212',
+  '#00FF7F': '#0ede76',
+  '#1E90FF': '#2986e0',
+  '#8A2BE2': '#ac52ff',
+  '#9ACD32': '#8ab13b',
+  '#B22222': '#bf3434',
+  '#FF0000': '#ff2138',
+  '#FF4500': '#dc3c00',
+}

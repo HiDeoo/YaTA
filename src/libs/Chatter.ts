@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import { UserState } from 'twitch-js'
 
-import base from 'Styled/base'
+import base, { TwitchUserColorMap } from 'Styled/base'
 import { Serializable } from 'Utils/typescript'
 
 /**
@@ -27,7 +27,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
     this.displayName = userstate['display-name']
     this.id = userstate['user-id']
     this.userName = userstate.username
-    this.color = userstate.color
+    this.color = this.sanitizeDefaultColor(userstate.color)
     this.isBroadcaster = _.has(userstate.badges, 'broadcaster')
     this.isMod = userstate.mod || this.isBroadcaster
     this.showUserName = this.displayName.toLocaleLowerCase() !== this.userName.toLocaleLowerCase()
@@ -62,6 +62,19 @@ export default class Chatter implements Serializable<SerializedChatter> {
       showUsername: this.showUserName,
       userName: this.userName,
     }
+  }
+
+  /**
+   * Sanitizes Twitch default colors if necessary.
+   * @param  color - The color to sanitize.
+   * @return The sanitized color.
+   */
+  private sanitizeDefaultColor(color: string | null) {
+    if (_.isNil(color)) {
+      return color
+    }
+
+    return _.get(TwitchUserColorMap, color, color)
   }
 }
 
