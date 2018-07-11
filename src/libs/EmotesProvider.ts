@@ -3,10 +3,53 @@ import { Emotes } from 'twitch-js'
 import { Word } from 'unistring'
 
 /**
+ * Various emotes providers.
+ */
+export enum EmoteProviderPrefix {
+  Bttv = 'bttv',
+  Twitch = 'twitch',
+}
+
+/**
+ * Twitch RegExp emotes map.
+ */
+const TwitchRegExpEmotesMap = {
+  'B-?\\)': 'B)',
+  'R-?\\)': 'R)',
+  '[oO](_|\\.)[oO]': 'O_o',
+  '\\&gt\\;\\(': '>(',
+  '\\&lt\\;3': '<3',
+  '\\:-?(o|O)': ':O',
+  '\\:-?(p|P)': ':P',
+  '\\:-?D': ':D',
+  '\\:-?[\\\\/]': ':/',
+  '\\:-?[z|Z|\\|]': ':|',
+  '\\:-?\\(': ':(',
+  '\\:-?\\)': ':)',
+  '\\;-?(p|P)': ';P',
+  '\\;-?\\)': ';)',
+}
+
+/**
  * EmotesProvider class.
  */
 export default class EmotesProvider<ExternalEmote extends Emote> {
-  public prefix: string
+  /**
+   * Sanitizes Twitch emotes by removing RegExp emotes code.
+   * @param  emotes - The emotes to sanitize.
+   * @return The sanitized emotes.
+   */
+  public static sanitizeTwitchEmotes(emotes: Emote[]): Emote[] {
+    return _.map(emotes, (emote) => {
+      if (!_.has(TwitchRegExpEmotesMap, emote.code)) {
+        return emote
+      }
+
+      return { ...emote, code: TwitchRegExpEmotesMap[emote.code] }
+    })
+  }
+
+  public prefix: EmoteProviderPrefix
   public emotes: ExternalEmote[]
   private sizePrefix: string
   private urlTemplate: string
@@ -20,7 +63,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @param urlTemplate - The provider url template.
    * @param sizePrefix - The size prefix.
    */
-  constructor(prefix: string, emotes: ExternalEmote[], urlTemplate: string, sizePrefix: string) {
+  constructor(prefix: EmoteProviderPrefix, emotes: ExternalEmote[], urlTemplate: string, sizePrefix: string) {
     this.prefix = prefix
     this.emotes = emotes
     this.sizePrefix = sizePrefix
@@ -57,19 +100,34 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
   }
 
   /**
-   * Returns the HTML emotes tag for an emote.
+   * Returns the HTML tag for an emote.
    * @param  id - The emote id.
    * @param  name - The emote name.
    * @return The emote tag.
    */
   public getEmoteTag(id: string, name: string) {
+    const { src, srcset } = this.getEmoteTagUrls(id)
+
+    return `<img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" />`
+  }
+
+  /**
+   * Returns the URLs used by the HTML tag for an emote.
+   * @param  id - The emote id.
+   * @return The emote tag URLs.
+   */
+  public getEmoteTagUrls(id: string): EmoteTagUrls {
     const url1x = this.urlCompiledTemplate({ id, image: this.getSizePath(1) })
     const url2x = this.urlCompiledTemplate({ id, image: this.getSizePath(2) })
     const url4x = this.urlCompiledTemplate({ id, image: this.getSizePath(3) })
 
-    const srcset = `${url1x} 1x,${url2x} 2x,${url4x} 4x`
-
-    return `<img class="emote" data-tip="${name}" src="${url1x}" srcset="${srcset}" alt="${name}" />`
+    return {
+      '1x': url1x,
+      '2x': url2x,
+      '4x': url4x,
+      src: url1x,
+      srcset: `${url1x} 1x,${url2x} 2x,${url4x} 4x`,
+    }
   }
 
   /**
@@ -95,4 +153,15 @@ export type Emote = {
  */
 export type EmotesProviders = {
   [key: string]: EmotesProvider<Emote>
+}
+
+/**
+ * URLs used by an emote HTML tag.
+ */
+export type EmoteTagUrls = {
+  '1x': string
+  '2x': string
+  '4x': string
+  src: string
+  srcset: string
 }

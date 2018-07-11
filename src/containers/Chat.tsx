@@ -19,7 +19,7 @@ import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
-import EmotesProvider, { Emote } from 'Libs/EmotesProvider'
+import EmotesProvider, { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
@@ -634,10 +634,10 @@ export class ChatClient extends React.Component<Props, State> {
    * @param sets - The emote sets.
    */
   private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
-    const emotes = _.flatten(_.map(sets, (set) => set))
+    const emotes = EmotesProvider.sanitizeTwitchEmotes(_.flatten(_.map(sets, (set) => set)))
 
     const provider = new EmotesProvider(
-      'twitch',
+      EmoteProviderPrefix.Twitch,
       emotes,
       'https://static-cdn.jtvnw.net/emoticons/v1/{{id}}/{{image}}',
       '.0'

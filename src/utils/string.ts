@@ -11,6 +11,16 @@ const WordStartRegExp = /[\w]+$/
 const WordEndRegExp = /^\w+/
 
 /**
+ * RegExp used to identify a whitespace at the beginning of a string.
+ */
+const WhiteSpaceStartRegExp = /^\s/
+
+/**
+ * RegExp used to identify a whitespace at the end of a string.
+ */
+const WhiteSpaceEndRegExp = /\s$/
+
+/**
  * Extracts the word from a string at a specific position.
  * @param  str - The string.
  * @param  position - The position of the word.
@@ -24,4 +34,22 @@ export function getWordAtPosition(str: string, position: number) {
   const wordEnd = position + (_.isNil(end) ? 0 : end[0].length)
 
   return { word: str.substring(wordStart, wordEnd), start: wordStart, end: wordEnd }
+}
+
+/**
+ * Checks if a string starts with a whitespace character.
+ * @param  str - The string.
+ * @return `true` if the string starts with a whitespace character
+ */
+export function startWithWhiteSpace(str: string) {
+  return WhiteSpaceStartRegExp.test(str)
+}
+
+/**
+ * Checks if a string ends with a whitespace character.
+ * @param  str - The string.
+ * @return `true` if the string ends with a whitespace character
+ */
+export function endWithWhiteSpace(str: string) {
+  return WhiteSpaceEndRegExp.test(str)
 }

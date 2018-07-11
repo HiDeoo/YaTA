@@ -14,6 +14,10 @@ const light = {
   clips: {
     meta: Colors.GRAY1,
   },
+  emotePicker: {
+    background: Colors.LIGHT_GRAY5,
+    border: Colors.LIGHT_GRAY1,
+  },
   follow: {
     meta: Colors.GRAY1,
     strong: Colors.DARK_GRAY5,

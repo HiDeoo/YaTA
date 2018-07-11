@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-import EmotesProvider, { Emote } from 'Libs/EmotesProvider'
+import EmotesProvider, { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
 
 /**
  * Bttv base API URL.
@@ -29,7 +29,7 @@ export default class Bttv {
 
     const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? response[1].bots : null
 
-    const emotes = new EmotesProvider('bttv', rawEmotes, response[0].urlTemplate, 'x')
+    const emotes = new EmotesProvider(EmoteProviderPrefix.Bttv, rawEmotes, response[0].urlTemplate, 'x')
 
     return {
       bots,

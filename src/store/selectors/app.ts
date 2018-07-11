@@ -67,3 +67,20 @@ export const getRoomState = createSelector([getAppState], (app) => app.roomState
  * @return The username.
  */
 export const getLastWhisperSender = createSelector([getAppState], (app) => app.lastWhisperSender)
+
+/**
+ * Returns all the emotes sets available.
+ * @param  state - The Redux state.
+ * @return The emotes sets.
+ */
+export const getEmotesSets = createSelector([getAppState], (app) => {
+  return _.reduce(
+    app.emotes,
+    (emotes, setEmotes, setPrefix) => {
+      emotes[setPrefix] = _.sortBy(setEmotes, (emote) => emote.code.toLowerCase())
+
+      return emotes
+    },
+    {}
+  )
+})

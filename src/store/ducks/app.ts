@@ -1,7 +1,7 @@
 import { Reducer } from 'redux'
 
 import Status from 'Constants/status'
-import { Emote } from 'Libs/EmotesProvider'
+import { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
 import { SerializedRoomState } from 'Libs/RoomState'
 import { createAction } from 'Utils/redux'
 
@@ -176,7 +176,7 @@ export const updateHistoryIndex = (index: number) =>
  * @param  emotes - The emotes.
  * @return The action.
  */
-export const updateEmotes = (prefix: string, emotes: Emote[]) =>
+export const updateEmotes = (prefix: EmoteProviderPrefix, emotes: Emote[]) =>
   createAction(Actions.UPDATE_EMOTES, {
     emotes,
     prefix,
@@ -249,9 +249,7 @@ export type AppState = {
   /**
    * Emotes.
    */
-  emotes: {
-    [key: string]: Emote[]
-  }
+  emotes: { [key: string]: Emote[] }
 
   /**
    * The username of the last user that sent us a whisper.

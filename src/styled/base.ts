@@ -31,6 +31,14 @@ export default {
     height: 24,
     typeColor: Colors.GRAY3,
   },
+  emotePicker: {
+    cellGutter: 0,
+    cellSize: 38,
+    height: 300,
+    maxSize: 28,
+    padding: 10,
+    width: 306,
+  },
   follows: {
     height: 68,
     margin: 10,

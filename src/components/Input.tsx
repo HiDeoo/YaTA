@@ -6,8 +6,10 @@ import styled from 'styled-components'
 
 import Key from 'Constants/key'
 import Message from 'Constants/message'
+import EmotePicker from 'Containers//EmotePicker'
+import { Emote } from 'Libs/EmotesProvider'
 import Twitch from 'Libs/Twitch'
-import { getWordAtPosition } from 'Utils/string'
+import { endWithWhiteSpace, getWordAtPosition, startWithWhiteSpace } from 'Utils/string'
 import { color } from 'Utils/styled'
 
 /**
@@ -17,6 +19,7 @@ const Wrapper = styled.div`
   background-color: ${color('chatInput.background')};
   border-top: 1px solid ${color('chatInput.border')};
   padding: 10px;
+  position: relative;
 `
 
 /**
@@ -41,14 +44,14 @@ const TextArea = styled.textarea`
     font-size: 13px;
     height: 50px;
     line-height: 20px;
-    padding: 5px 10px;
+    padding: 5px 42px 10px 5px;
   }
 `
 
 /**
  * React State.
  */
-const initialState = { toasts: [] as IToastOptions[], intent: '' }
+const initialState = { toasts: [] as IToastOptions[], intent: '', lastKnownCursor: null as CursorPosition | null }
 type State = Readonly<typeof initialState>
 
 /**
@@ -137,9 +140,11 @@ export default class Input extends React.Component<Props, State> {
           disabled={disabled}
           className={classes}
           innerRef={this.input}
+          onBlur={this.onBlurInput}
           onChange={this.onChangeInputValue}
           onKeyDown={this.onKeyDownInputValue}
         />
+        <EmotePicker onPick={this.onPickEmote} />
       </Wrapper>
     )
   }
@@ -150,6 +155,57 @@ export default class Input extends React.Component<Props, State> {
   public focus() {
     if (!_.isNil(this.input.current)) {
       this.input.current.focus()
+    }
+  }
+
+  /**
+   * Triggered when an emote is picked.
+   * @param emote - The picked emote.
+   * @param withShiftKey - `true` if the Shift key was pressed when picking the emote.
+   */
+  private onPickEmote = (emote: Emote, withShiftKey: boolean) => {
+    const { lastKnownCursor } = this.state
+    const { value } = this.props
+
+    let newValue = value
+
+    if (_.isNil(lastKnownCursor)) {
+      newValue = `${newValue}${!endWithWhiteSpace(newValue) && newValue.length !== 0 ? ' ' : ''}${emote.code} `
+
+      this.newCursor = newValue.length + 1
+    } else {
+      const { selectionStart, selectionEnd } = lastKnownCursor
+
+      const before = newValue.substring(0, selectionStart)
+      const after = newValue.substring(selectionEnd)
+
+      newValue = `${before}${!endWithWhiteSpace(before) && before.length !== 0 ? ' ' : ''}${emote.code}${
+        !startWithWhiteSpace(after) ? ' ' : ''
+      }${after}`
+
+      this.newCursor = selectionStart + emote.code.length + 1
+
+      const newSelectionStart = this.newCursor
+      const newSelectionEnd = selectionEnd + emote.code.length + 1
+
+      this.setState(() => ({ lastKnownCursor: { selectionStart: newSelectionStart, selectionEnd: newSelectionEnd } }))
+    }
+
+    if (!withShiftKey) {
+      this.focus()
+    }
+
+    this.props.onChange(newValue)
+  }
+
+  /**
+   * Triggered when the input lose focus.
+   */
+  private onBlurInput = () => {
+    if (!_.isNil(this.input.current)) {
+      const { selectionStart, selectionEnd } = this.input.current
+
+      this.setState(() => ({ lastKnownCursor: { selectionStart, selectionEnd } }))
     }
   }
 
@@ -265,4 +321,12 @@ type Props = {
   onChange: (value: string) => void
   onSubmit: () => void
   value: string
+}
+
+/**
+ * Cursor position.
+ */
+type CursorPosition = {
+  selectionEnd: number
+  selectionStart: number
 }
