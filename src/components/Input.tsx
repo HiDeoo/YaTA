@@ -44,7 +44,7 @@ const TextArea = styled.textarea`
     font-size: 13px;
     height: 50px;
     line-height: 20px;
-    padding: 5px 42px 10px 5px;
+    padding: 5px 42px 5px 10px;
   }
 `
 
@@ -111,7 +111,14 @@ export default class Input extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props) {
     requestAnimationFrame(() => {
-      if (!_.isNil(this.newCursor) && prevProps.value !== this.props.value && !_.isNil(this.input.current)) {
+      const { disabled: prevDisabled, value: prevValue } = prevProps
+      const { disabled, value } = this.props
+
+      if (prevDisabled !== disabled && !_.isNil(this.input.current)) {
+        this.input.current.focus()
+      }
+
+      if (!_.isNil(this.newCursor) && prevValue !== value && !_.isNil(this.input.current)) {
         this.input.current.setSelectionRange(this.newCursor, this.newCursor)
 
         this.newCursor = null
