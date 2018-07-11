@@ -23,9 +23,12 @@ export default class Bttv {
 
     const isChannelRegistered = response[1].status === 200
 
-    const rawEmotes: BttvEmote[] = isChannelRegistered
+    let rawEmotes: BttvEmote[] = isChannelRegistered
       ? [...response[0].emotes, ...response[1].emotes]
       : response[0].emotes
+
+    // Remove Night's emotes.
+    rawEmotes = _.filter(rawEmotes, (emote) => _.get(emote.restrictions, 'emoticonSet') !== 'night')
 
     const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? response[1].bots : null
 

@@ -83,7 +83,13 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     return _.reduce(
       this.emotes,
       (emotes, emote) => {
-        const wordsMatchingEmote = _.filter(words, (word) => word.text === emote.code)
+        const wordsMatchingEmote = _.filter(words, (word, index) => {
+          if (word.text === '(' || word.text === ':') {
+            return this.getPotentialNextWord(words, index) === emote.code
+          }
+
+          return word.text === emote.code
+        })
 
         if (wordsMatchingEmote.length === 0) {
           return emotes
@@ -137,6 +143,16 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    */
   private getSizePath(size: number) {
     return `${size.toString()}${this.sizePrefix}`
+  }
+
+  /**
+   * Returns a potentially splitted word.
+   * @param  words - The message words.
+   * @param  index - The starting index.
+   * @return The potentially splitted word.
+   */
+  private getPotentialNextWord(words: Word[], index: number) {
+    return `${_.get(words[index], 'text')}${_.get(words[index + 1], 'text')}${_.get(words[index + 2], 'text')}`
   }
 }
 
