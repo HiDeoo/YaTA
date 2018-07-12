@@ -5,7 +5,7 @@ import jose from 'node-jose'
  * Twitch various APIs.
  */
 enum TwitchApi {
-  Auth = 'https://id.twitch.tv',
+  Auth = 'https://id.twitch.tv/oauth2',
   Badges = 'https://badges.twitch.tv/v1/badges',
   Helix = 'https://api.twitch.tv/helix',
   Kraken = 'https://api.twitch.tv/kraken',
@@ -378,7 +378,7 @@ export default class Twitch {
    * @return The JWK.
    */
   private static async fetchJWK() {
-    const jwkReponse = await fetch(Twitch.getUrl(TwitchApi.Auth, '/oauth2/keys'))
+    const jwkReponse = await fetch(Twitch.getUrl(TwitchApi.Auth, '/keys'))
 
     const jwk = await jwkReponse.json()
 
