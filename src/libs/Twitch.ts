@@ -1,5 +1,4 @@
 import * as _ from 'lodash'
-import jose from 'node-jose'
 
 /**
  * Twitch various APIs.
@@ -82,6 +81,8 @@ export default class Twitch {
    */
   public static async verifyIdToken(token: string) {
     const jwk = await Twitch.fetchJWK()
+
+    const jose = await import('node-jose')
 
     const keystore = await jose.JWK.asKeyStore(jwk)
 

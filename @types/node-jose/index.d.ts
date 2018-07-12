@@ -19,5 +19,5 @@ declare module 'node-jose' {
     JWS: JWS
   }
 
-  export default _default
+  export = _default
 }
