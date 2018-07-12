@@ -53,6 +53,7 @@ type State = Readonly<typeof initialState>
  */
 class Follows extends React.Component<RouteComponentProps<{}>, State> {
   public state: State = initialState
+  private search: HTMLInputElement | null = null
 
   /**
    * Lifecycle: componentDidMount.
@@ -67,7 +68,14 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
       const onlineStreams = _.map(streams, 'channel.name')
       const offlineFollows = _.filter(follows, (follow) => !_.includes(onlineStreams, follow.name))
 
-      this.setState(() => ({ follows: [...streams, ...offlineFollows], didFail: false }))
+      this.setState(
+        () => ({ follows: [...streams, ...offlineFollows], didFail: false }),
+        () => {
+          if (!_.isNil(this.search)) {
+            this.search.focus()
+          }
+        }
+      )
     } catch (error) {
       this.setState(() => ({ didFail: true }))
     }
@@ -107,7 +115,14 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
 
     return (
       <>
-        <Search placeholder="Filter…" type="search" leftIcon="search" value={filter} onChange={this.onChangeFilter} />
+        <Search
+          placeholder="Filter…"
+          type="search"
+          leftIcon="search"
+          value={filter}
+          onChange={this.onChangeFilter}
+          inputRef={this.setSearchElementRef}
+        />
         <Wrapper>
           <Grid>
             {_.map(followsToRender, (follow) => (
@@ -135,8 +150,9 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
 
       filteredFollows = _.filter(follows, (follow) => {
         const name = Twitch.isStream(follow) ? follow.channel.name : follow.name
+        const title = _.defaultTo(Twitch.isStream(follow) ? follow.channel.status : follow.status, '')
 
-        return name.includes(sanitizedFilter)
+        return name.includes(sanitizedFilter) || title.toLowerCase().includes(sanitizedFilter)
       })
     }
 
@@ -148,6 +164,14 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
    */
   private goToChannel = (channel: string) => {
     this.props.history.push(`/${channel}`)
+  }
+
+  /**
+   * Sets the search input ref.
+   * @param ref - The reference to the inner input element.
+   */
+  private setSearchElementRef = (ref: HTMLInputElement | null) => {
+    this.search = ref
   }
 }
 
