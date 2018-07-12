@@ -1,4 +1,4 @@
-import { Button, Icon, Menu, MenuItem, Popover, Position } from '@blueprintjs/core'
+import { Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
@@ -28,10 +28,11 @@ export default class HeaderModerationTools extends React.Component<Props> {
    * @return Element to render.
    */
   private renderMenu() {
-    const { toggleR9k, toggleSlowMode, toggleFollowersOnly, toggleSubsOnly, toggleEmoteOnly } = this.props
+    const { clearChat, toggleR9k, toggleSlowMode, toggleFollowersOnly, toggleSubsOnly, toggleEmoteOnly } = this.props
 
     return (
       <Menu>
+        <MenuDivider title="Mode" />
         <MenuItem
           icon={this.getStateMenuIcon('r9k')}
           text="R9K"
@@ -62,6 +63,8 @@ export default class HeaderModerationTools extends React.Component<Props> {
           labelElement={<Icon icon="media" />}
           onClick={toggleEmoteOnly}
         />
+        <MenuDivider title="Tools" />
+        <MenuItem icon="eraser" text="Clear chat" onClick={clearChat} />
       </Menu>
     )
   }
@@ -80,6 +83,7 @@ export default class HeaderModerationTools extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  clearChat: () => void
   roomState: SerializedRoomState
   toggleR9k: () => void
   toggleSlowMode: () => void

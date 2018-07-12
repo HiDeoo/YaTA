@@ -190,6 +190,7 @@ class Channel extends React.Component<Props, State> {
         {isMod &&
           !_.isNil(roomState) && (
             <HeaderModerationTools
+              clearChat={this.clearChat}
               roomState={roomState}
               toggleR9k={this.toggleR9k}
               toggleSlowMode={this.toggleSlowMode}
@@ -549,6 +550,22 @@ class Channel extends React.Component<Props, State> {
 
     if (!_.isNil(this.input.current)) {
       this.input.current.focus()
+    }
+  }
+
+  /**
+   * Clears the chat.
+   */
+  private clearChat = async () => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.clear(channel)
+      } catch (error) {
+        //
+      }
     }
   }
 

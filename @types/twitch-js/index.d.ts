@@ -182,6 +182,7 @@ declare module 'twitch-js' {
     subscribersoff(channel: string): void
     emoteonly(channel: string): void
     emoteonlyoff(channel: string): void
+    clear(channel: string): void
   }
 
   namespace Client {
