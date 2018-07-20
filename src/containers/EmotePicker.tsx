@@ -11,7 +11,7 @@ import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import NonIdealState from 'Components/NonIdealState'
 import { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import Message from 'Libs/Message'
+import Resources from 'Libs/Resources'
 import { ApplicationState } from 'Store/reducers'
 import { getEmotesSets } from 'Store/selectors/app'
 import base from 'Styled/base'
@@ -221,7 +221,13 @@ class EmotePicker extends React.Component<Props, State> {
       )
     }
 
-    const urls = this.getProvider().getEmoteTagUrls(hovered.id)
+    const provider = this.getProvider()
+
+    if (_.isNil(provider)) {
+      return <Preview />
+    }
+
+    const urls = provider.getEmoteTagUrls(hovered.id)
 
     return (
       <Preview>
@@ -249,8 +255,9 @@ class EmotePicker extends React.Component<Props, State> {
    */
   private emoteRenderer: GridCellRenderer = ({ columnIndex, key, rowIndex, style }) => {
     const emote = _.get(this.getEmotesSet(), this.columnCount * rowIndex + columnIndex)
+    const provider = this.getProvider()
 
-    if (_.isNil(emote)) {
+    if (_.isNil(emote) || _.isNil(provider)) {
       return null
     }
 
@@ -259,7 +266,7 @@ class EmotePicker extends React.Component<Props, State> {
         key={key}
         style={style}
         emote={emote}
-        urls={this.getProvider().getEmoteTagUrls(emote.id)}
+        urls={provider.getEmoteTagUrls(emote.id)}
         onMouseEnter={this.onMouseEnterEmote}
         onMouseLeave={this.onMouseLeaveEmote}
         onClick={this.onPickEmote}
@@ -272,7 +279,7 @@ class EmotePicker extends React.Component<Props, State> {
    * @return The provider.
    */
   private getProvider() {
-    return Message.emotesProviders[this.state.prefix]
+    return Resources.manager().getEmotesProvider(this.state.prefix)
   }
 
   /**
@@ -280,14 +287,14 @@ class EmotePicker extends React.Component<Props, State> {
    * @param  prefix - The emote provider prefix.
    * @return The emote provider icon.
    */
-  private getProviderIcon(prefix: string): string | null {
-    const provider = _.get(Message.emotesProviders, prefix)
+  private getProviderIcon(prefix: EmoteProviderPrefix): string | null {
+    const provider = Resources.manager().getEmotesProvider(prefix)
 
     if (_.isNil(provider)) {
       return null
     }
 
-    return Message.emotesProviders[prefix].getEmoteTagUrls(EmoteProviderIconMap[prefix])['1x']
+    return provider.getEmoteTagUrls(EmoteProviderIconMap[prefix])['1x']
   }
 
   /**

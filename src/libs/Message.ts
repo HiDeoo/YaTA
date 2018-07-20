@@ -6,9 +6,9 @@ import Unistring, { Word } from 'unistring'
 import LogType from 'Constants/logType'
 import Theme from 'Constants/theme'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
-import { EmotesProviders } from 'Libs/EmotesProvider'
-import { CheermoteImageBackground, RawBadges, RawCheermote, RawCheermoteImage, RawClip } from 'Libs/Twitch'
-import { Highlights } from 'Store/ducks/settings'
+import { EmoteProviderPrefix } from 'Libs/EmotesProvider'
+import Resources from 'Libs/Resources'
+import { CheermoteImageBackground, RawCheermoteImage, RawClip } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
 
@@ -21,13 +21,6 @@ const ClipRegExp = /https:\/\/clips\.twitch\.tv\/(\w+)/g
  * Message class representing either a chat message, an action (/me) or a whisper.
  */
 export default class Message implements Serializable<SerializedMessage> {
-  public static badges: RawBadges | null = null
-  public static emotesProviders: EmotesProviders = {}
-  public static bots: string[] = []
-  public static cheermotes: RawCheermote[] | null = null
-  public static highlights: Highlights = {}
-  public static highlightsIgnoredUsers: string[] = []
-
   public user: Chatter
   public color: string | null
   private badges: string | null
@@ -64,7 +57,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.user = new Chatter(userstate)
     this.type = userstate['message-type']
 
-    this.ignoreHighlight = self || _.includes(Message.highlightsIgnoredUsers, this.user.userName)
+    this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
@@ -112,13 +105,13 @@ export default class Message implements Serializable<SerializedMessage> {
   private parseBadges(userstate: UserState) {
     const parsedBadges: string[] = []
 
-    if (_.includes(Message.bots, userstate.username)) {
+    if (Resources.manager().isBot(userstate.username)) {
       parsedBadges.push('<img class="badge" data-tip="Bot" src="https://cdn.betterttv.net/tags/bot.png" />')
     }
 
-    if (!_.isNil(Message.badges) && _.size(userstate.badges)) {
+    if (_.size(userstate.badges) > 0) {
       _.forEach(userstate.badges, (version, name) => {
-        const set = _.get(Message.badges, name)
+        const set = _.get(Resources.manager().getBadges(), name)
 
         if (_.isNil(set)) {
           return
@@ -163,7 +156,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
     let parsedMessageStr = escape(parsedMessage).join('')
 
-    if (!_.isNil(userstate.bits) && !_.isNil(Message.cheermotes) && userstate.bits > 0) {
+    if (!_.isNil(userstate.bits) && userstate.bits > 0) {
       parsedMessageStr = this.parseCheermotes(parsedMessageStr, userstate.bits)
     }
 
@@ -180,17 +173,19 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param emotes - The message emotes.
    */
   private parseAdditionalEmotes(words: Word[], emotes: Emotes) {
-    _.forEach(Message.emotesProviders, (provider) => {
-      if (provider.prefix === 'twitch') {
-        return
-      }
+    Resources.manager()
+      .getEmotesProviders()
+      .forEach((provider) => {
+        if (provider.prefix === 'twitch') {
+          return
+        }
 
-      const providerEmotes = provider.getMessageEmotes(words)
+        const providerEmotes = provider.getMessageEmotes(words)
 
-      if (_.size(providerEmotes) > 0) {
-        _.merge(emotes, providerEmotes)
-      }
-    })
+        if (_.size(providerEmotes) > 0) {
+          _.merge(emotes, providerEmotes)
+        }
+      })
   }
 
   /**
@@ -208,7 +203,7 @@ export default class Message implements Serializable<SerializedMessage> {
 
     let usedBits = 0
 
-    _.forEach(Message.cheermotes, (cheermote) => {
+    _.forEach(Resources.manager().getCheermotes(), (cheermote) => {
       const pattern = `(^|\\b)(${cheermote.prefix}(\\d+))(\\b|$)`
       const regExp = new RegExp(pattern, 'gmi')
       let match
@@ -292,9 +287,13 @@ export default class Message implements Serializable<SerializedMessage> {
 
         const isTwitchEmote = _.isNil(emoteId)
 
-        const provider = Message.emotesProviders[isTwitchEmote ? 'twitch' : providerPrefix]
+        const provider = Resources.manager().getEmotesProvider(
+          isTwitchEmote ? EmoteProviderPrefix.Twitch : (providerPrefix as EmoteProviderPrefix)
+        )
 
-        parsedMessage[indexes[0]] = provider.getEmoteTag(isTwitchEmote ? id : emoteId, emoteName)
+        if (!_.isNil(provider)) {
+          parsedMessage[indexes[0]] = provider.getEmoteTag(isTwitchEmote ? id : emoteId, emoteName)
+        }
       })
     })
   }
@@ -345,7 +344,7 @@ export default class Message implements Serializable<SerializedMessage> {
    */
   private parseHighlights(words: Word[], parsedMessage: string[]) {
     if (!this.ignoreHighlight) {
-      _.forEach(Message.highlights, (highlight) => {
+      _.forEach(Resources.manager().getHighlights(), (highlight) => {
         const wordsMatchingHighlight = _.filter(words, (word) => word.text.toLowerCase() === highlight.pattern)
 
         _.forEach(wordsMatchingHighlight, (word) => {

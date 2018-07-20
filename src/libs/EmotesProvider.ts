@@ -161,13 +161,6 @@ export type Emote = {
 }
 
 /**
- * List of emotes providers keyed by prefix.
- */
-export type EmotesProviders = {
-  [key: string]: EmotesProvider<Emote>
-}
-
-/**
  * URLs used by an emote HTML tag.
  */
 export type EmoteTagUrls = {

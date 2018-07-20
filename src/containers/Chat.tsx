@@ -23,6 +23,7 @@ import EmotesProvider, { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
+import Resources from 'Libs/Resources'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
@@ -651,7 +652,7 @@ export class ChatClient extends React.Component<Props, State> {
    * @param provider - The emotes provider to add.
    */
   private addEmotesProvider(provider: EmotesProvider<Emote>) {
-    Message.emotesProviders[provider.prefix] = provider
+    Resources.manager().addEmotesProvider(provider)
 
     this.props.updateEmotes(provider.prefix, provider.emotes)
   }
@@ -674,8 +675,8 @@ export class ChatClient extends React.Component<Props, State> {
         this.props.addLog(notice.serialize())
       }
 
-      Message.badges = await Twitch.fetchBadges(channelId)
-      Message.cheermotes = (await Twitch.fetchCheermotes()).actions
+      Resources.manager().setBadges(await Twitch.fetchBadges(channelId))
+      Resources.manager().setCheermotes((await Twitch.fetchCheermotes()).actions)
 
       if (!_.isNil(this.props.channel)) {
         const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
@@ -683,7 +684,7 @@ export class ChatClient extends React.Component<Props, State> {
         this.addEmotesProvider(emotesAndBots.emotes)
 
         if (!_.isNil(emotesAndBots.bots)) {
-          Message.bots.push(...emotesAndBots.bots)
+          Resources.manager().addBots(emotesAndBots.bots)
         }
 
         this.didFetchExternalRessources = true
@@ -694,11 +695,12 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Update highlights and highlights ignored users used when parsing messages.
+   * Updates highlights and highlights ignored users used when parsing messages.
    */
   private updateHighlights() {
-    Message.highlights = this.props.highlights
-    Message.highlightsIgnoredUsers = this.props.highlightsIgnoredUsers
+    const { highlights, highlightsIgnoredUsers } = this.props
+
+    Resources.manager().setHighlights(highlights, highlightsIgnoredUsers)
   }
 
   /**
