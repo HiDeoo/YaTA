@@ -1,7 +1,12 @@
 <p align="center">
   <img alt="YaTA" src="https://i.imgur.com/tai1mEA.png" width="128">
   <h1 align="center">YaTA - Yet another Twitch App</h1>
-  <br />
+</p>
+
+<p align="center">
+  <a href="https://circleci.com/gh/HiDeoo/YaTA"><img alt="Build Status" src="https://circleci.com/gh/HiDeoo/YaTA.png?style=shield&circle-token=3e5f415ca17efc0c2ba4ad5de222eac5d90561f4"></a>
+  <a href="https://github.com/HiDeoo/YaTA/blob/master/LICENSE"><img alt="License" src="https://badgen.now.sh/badge/license/MIT/blue"></a>
+  <br /><br />
 </p>
 
 **YaTA is a very opinionated [Twitch](https://www.twitch.tv) chat client.**
