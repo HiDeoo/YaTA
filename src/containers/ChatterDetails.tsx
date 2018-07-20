@@ -54,7 +54,7 @@ const Tools = styled.div`
 /**
  * React State.
  */
-const initialState = { details: null as RawChannel | null, didFailToFetchDetails: false }
+const initialState = { details: null as RawChannel | null, error: undefined as Error | undefined }
 type State = Readonly<typeof initialState>
 
 /**
@@ -81,9 +81,9 @@ class ChatterDetails extends React.Component<Props, State> {
           details = await Twitch.fetchChannel(user._id)
         }
 
-        this.setState(() => ({ details, didFailToFetchDetails: false }))
+        this.setState(() => ({ details, error: undefined }))
       } catch (error) {
-        this.setState(() => ({ didFailToFetchDetails: true }))
+        this.setState(() => ({ error }))
       }
     }
   }
@@ -170,11 +170,13 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderDetails() {
-    const { details, didFailToFetchDetails } = this.state
+    const { details, error } = this.state
     const { chatter } = this.props
 
-    if (_.isNil(chatter) || didFailToFetchDetails) {
+    if (_.isNil(chatter)) {
       return null
+    } else if (!_.isNil(error)) {
+      throw error
     }
 
     if (_.isNil(details)) {

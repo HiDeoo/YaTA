@@ -1,7 +1,6 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
 import * as shortid from 'shortid'
 import tmi, {
   Client as TwitchClient,
@@ -45,7 +44,7 @@ import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 /**
  * React State.
  */
-const initialState = { clientDidFail: false }
+const initialState = { error: undefined as Error | undefined }
 type State = Readonly<typeof initialState>
 
 /**
@@ -66,7 +65,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     if (_.isNil(props.loginDetails)) {
       this.state = {
-        clientDidFail: true,
+        error: new Error('No login details provided.'),
       }
     }
 
@@ -82,14 +81,14 @@ export class ChatClient extends React.Component<Props, State> {
    * Lifecycle: componentDidMount.
    */
   public async componentDidMount() {
-    if (this.state.clientDidFail) {
+    if (!_.isNil(this.state.error)) {
       return
     }
 
     const { autoConnectInDev, channel } = this.props
 
     if (_.isNil(channel)) {
-      this.setState(() => ({ clientDidFail: true }))
+      this.setState(() => ({ error: new Error('No channel provided.') }))
 
       return
     }
@@ -131,7 +130,17 @@ export class ChatClient extends React.Component<Props, State> {
         await this.client.connect()
         await this.client.join(channel)
       } catch (error) {
-        this.setState(() => ({ clientDidFail: true }))
+        let theError: Error
+
+        if (_.isString(error)) {
+          theError = new Error(error)
+        } else if (_.isError(error)) {
+          theError = error
+        } else {
+          theError = new Error('Something went wrong.')
+        }
+
+        this.setState(() => ({ error: theError }))
       }
     }
   }
@@ -144,7 +153,7 @@ export class ChatClient extends React.Component<Props, State> {
    */
   public shouldComponentUpdate(nextProps: Props, nextState: State) {
     return (
-      this.state.clientDidFail !== nextState.clientDidFail ||
+      this.state.error !== nextState.error ||
       this.props.highlights !== nextProps.highlights ||
       this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length
     )
@@ -189,8 +198,10 @@ export class ChatClient extends React.Component<Props, State> {
    * @return The client should not render anything.
    */
   public render() {
-    if (this.state.clientDidFail) {
-      return <Redirect to="/" />
+    const { error } = this.state
+
+    if (!_.isNil(error)) {
+      throw error
     }
 
     return null

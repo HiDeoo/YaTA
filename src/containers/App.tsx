@@ -111,9 +111,9 @@ class App extends React.Component<Props, State> {
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
 
     if (!isLoggedIn && !isLoggingIn) {
-      return <Redirect to="/login" />
+      return <Redirect to={Page.Login} />
     } else if (isLoggedIn && isLoggingIn) {
-      return <Redirect to="/" />
+      return <Redirect to={Page.Home} />
     }
 
     return (
@@ -135,10 +135,10 @@ class App extends React.Component<Props, State> {
             <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
             <FlexContent>
               <Switch>
-                <Route exact path="/" component={Follows} />
-                <Route path="/auth" component={Auth} />
-                <Route path="/login" component={Login} />
-                <Route path="/:channel" component={Channel} />
+                <Route exact path={Page.Home} component={Follows} />
+                <Route path={Page.Auth} component={Auth} />
+                <Route path={Page.Login} component={Login} />
+                <Route path={Page.Channel} component={Channel} />
               </Switch>
             </FlexContent>
           </FlexLayout>

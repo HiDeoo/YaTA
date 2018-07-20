@@ -3,8 +3,8 @@ import { Provider } from 'react-redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import ErrorBoundary from 'Components/ErrorBoundary'
 import App from 'Containers/App'
+import ErrorBoundary from 'Containers/ErrorBoundary'
 import { StoreConfiguration } from 'Store'
 
 /**
@@ -15,15 +15,15 @@ const Wrapper: React.SFC<Props> = ({ storeConfiguration }) => {
   const { persistor, store } = storeConfiguration
 
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
+    <Provider store={store}>
+      <ErrorBoundary>
         <PersistGate persistor={persistor}>
           <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Route component={App} />
           </BrowserRouter>
         </PersistGate>
-      </Provider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </Provider>
   )
 }
 

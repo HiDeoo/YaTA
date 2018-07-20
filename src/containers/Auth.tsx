@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
 import Spinner from 'Components/Spinner'
+import Page from 'Constants/page'
 import Twitch from 'Libs/Twitch'
 import { setTokens } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -41,9 +42,9 @@ class Auth extends React.Component<Props, State> {
    */
   public render() {
     if (this.state.authDidFail) {
-      return <Redirect to="/login" />
+      return <Redirect to={Page.Login} />
     } else if (this.props.isLoggedIn) {
-      return <Redirect to="/" />
+      return <Redirect to={Page.Home} />
     }
 
     return <Spinner large />

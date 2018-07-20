@@ -41,7 +41,7 @@ const Search = styled(InputGroup)`
  * React State.
  */
 const initialState = {
-  didFail: false,
+  error: undefined as Error | undefined,
   filter: '',
   filteredFollows: null as Array<RawChannel | RawStream> | null,
   follows: null as Array<RawChannel | RawStream> | null,
@@ -69,7 +69,7 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
       const offlineFollows = _.filter(follows, (follow) => !_.includes(onlineStreams, follow.name))
 
       this.setState(
-        () => ({ follows: [...streams, ...offlineFollows], didFail: false }),
+        () => ({ follows: [...streams, ...offlineFollows] }),
         () => {
           if (!_.isNil(this.search)) {
             this.search.focus()
@@ -77,7 +77,7 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
         }
       )
     } catch (error) {
-      this.setState(() => ({ didFail: true }))
+      this.setState(() => ({ error }))
     }
   }
 
@@ -86,10 +86,10 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
    * @return Element to render.
    */
   public render() {
-    const { didFail, follows } = this.state
+    const { error, follows } = this.state
 
-    if (didFail) {
-      throw new Error('Unable to fetch follows.')
+    if (!_.isNil(error)) {
+      throw error
     }
 
     if (_.isNil(follows)) {
