@@ -151,7 +151,7 @@ export default class Input extends React.Component<Props, State> {
           onChange={this.onChangeInputValue}
           onKeyDown={this.onKeyDownInputValue}
         />
-        <EmotePicker onPick={this.onPickEmote} />
+        <EmotePicker onPick={this.onPickEmote} onCancel={this.onCancelEmote} />
       </Wrapper>
     )
   }
@@ -163,6 +163,13 @@ export default class Input extends React.Component<Props, State> {
     if (!_.isNil(this.input.current)) {
       this.input.current.focus()
     }
+  }
+
+  /**
+   * Triggered when the emote picker is closed without picking an emote.
+   */
+  private onCancelEmote = () => {
+    this.focus()
   }
 
   /**

@@ -392,6 +392,8 @@ class EmotePicker extends React.Component<Props, State> {
       () => {
         if (nextOpenState && !_.isNil(this.search)) {
           this.search.focus()
+        } else if (!nextOpenState) {
+          this.props.onCancel()
         }
       }
     )
@@ -421,6 +423,7 @@ type StateProps = {
  * React Props.
  */
 type OwnProps = {
+  onCancel: () => void
   onPick: (emote: Emote, withShiftKey: boolean) => void
 }
 
