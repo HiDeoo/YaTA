@@ -49,10 +49,6 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     })
   }
 
-  public prefix: EmoteProviderPrefix
-  public emotes: ExternalEmote[]
-  private sizePrefix: string
-  private urlTemplate: string
   private urlCompiledTemplate: _.TemplateExecutor
 
   /**
@@ -63,15 +59,15 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @param urlTemplate - The provider url template.
    * @param sizePrefix - The size prefix.
    */
-  constructor(prefix: EmoteProviderPrefix, emotes: ExternalEmote[], urlTemplate: string, sizePrefix: string) {
-    this.prefix = prefix
-    this.emotes = emotes
-    this.sizePrefix = sizePrefix
-    this.urlTemplate = urlTemplate
-
+  constructor(
+    public prefix: EmoteProviderPrefix,
+    public emotes: ExternalEmote[],
+    urlTemplate: string,
+    private sizePrefix: string
+  ) {
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
-    this.urlCompiledTemplate = _.template(this.urlTemplate)
+    this.urlCompiledTemplate = _.template(urlTemplate)
   }
 
   /**

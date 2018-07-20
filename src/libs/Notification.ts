@@ -9,9 +9,6 @@ import { Serializable } from 'Utils/typescript'
  */
 export default class Notification implements Serializable<SerializedNotification> {
   private id: string
-  private event: NotificationEvent
-  private title: string
-  private message?: string
 
   /**
    * Creates a new notice.
@@ -20,11 +17,8 @@ export default class Notification implements Serializable<SerializedNotification
    * @param event - The associated event.
    * @param [message] - An additional notification message.
    */
-  constructor(title: string, event: NotificationEvent, message?: string) {
+  constructor(private title: string, private event: NotificationEvent, private message?: string) {
     this.id = shortid.generate()
-    this.event = event
-    this.title = title
-    this.message = message
   }
 
   /**

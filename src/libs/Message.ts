@@ -33,7 +33,6 @@ export default class Message implements Serializable<SerializedMessage> {
   private badges: string | null
   private id: string
   private date: string
-  private self: boolean
   private message: string
   private type: LogType
   private time: string
@@ -41,7 +40,6 @@ export default class Message implements Serializable<SerializedMessage> {
   private mentionned: boolean = false
   private hasClip: boolean = false
   private clips: Clips = {}
-  private parseOptions: MessageParseOptions
   private ignoreHighlight: boolean
 
   /**
@@ -56,20 +54,17 @@ export default class Message implements Serializable<SerializedMessage> {
   constructor(
     message: string,
     userstate: UserState,
-    self: boolean,
+    private self: boolean,
     currentUsername: string,
-    parseOptions: MessageParseOptions
+    private parseOptions: MessageParseOptions
   ) {
-    this.parseOptions = parseOptions
-
-    this.self = self
     this.id = userstate.id
     this.color = userstate.color
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate)
     this.type = userstate['message-type']
 
-    this.ignoreHighlight = this.self || _.includes(Message.highlightsIgnoredUsers, this.user.userName)
+    this.ignoreHighlight = self || _.includes(Message.highlightsIgnoredUsers, this.user.userName)
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`

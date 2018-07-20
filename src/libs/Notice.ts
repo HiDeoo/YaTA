@@ -11,9 +11,6 @@ import { Serializable } from 'Utils/typescript'
  */
 export default class Notice implements Serializable<SerializedNotice> {
   private id: string
-  private message: string
-  private event: Event | null
-  private linkify: boolean
 
   /**
    * Creates a new notice.
@@ -22,11 +19,8 @@ export default class Notice implements Serializable<SerializedNotice> {
    * @param event - The associated event if any.
    * @param linkify - Defines if the notice can include links or not.
    */
-  constructor(message: string, event: Event | null = null, linkify = false) {
+  constructor(private message: string, private event: Event | null = null, private linkify = false) {
     this.id = shortid.generate()
-    this.message = message
-    this.event = event
-    this.linkify = linkify
   }
 
   /**

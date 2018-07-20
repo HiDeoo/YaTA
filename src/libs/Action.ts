@@ -71,12 +71,6 @@ export default class Action implements Serializable<SerializedAction> {
     return editing ? value.length > 0 && valid : valid
   }
 
-  private id: string
-  private name: string
-  private text: string
-  private type: ActionType
-  private recipient?: string
-
   /**
    * Creates a new action instance.
    * @class
@@ -86,13 +80,13 @@ export default class Action implements Serializable<SerializedAction> {
    * @param [recipient] - The action recipient.
    * @param [id] - The action id.
    */
-  constructor(type: ActionType, name: string, text: string, recipient?: string, id = shortid.generate()) {
-    this.id = id
-    this.name = name
-    this.text = text
-    this.type = type
-    this.recipient = recipient
-  }
+  constructor(
+    private type: ActionType,
+    private name: string,
+    private text: string,
+    private recipient?: string,
+    private id = shortid.generate()
+  ) {}
 
   /**
    * Serializes an action.
