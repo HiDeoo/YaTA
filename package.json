@@ -1,6 +1,9 @@
 {
   "name": "yata",
   "version": "0.1.0",
+  "description": "Twitch chat client",
+  "author": "HiDeo",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "2.3.1",
@@ -85,5 +88,19 @@
       "prettier --write",
       "git add"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiDeoo/YaTA"
+  },
+  "keywords": [
+    "twitch",
+    "chat",
+    "client"
+  ],
+  "bugs": {
+    "url": "https://github.com/HiDeoo/YaTA/issues"
+  },
+  "contributors": [],
+  "homepage": "https://github.com/HiDeoo/YaTA"
 }
