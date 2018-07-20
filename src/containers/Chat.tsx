@@ -73,7 +73,7 @@ export class ChatClient extends React.Component<Props, State> {
       channels: [],
       connection: { reconnect: true },
       identity: props.loginDetails || undefined,
-      options: { clientId: process.env.REACT_APP_TWITCH_CLIENT_ID, debug: true },
+      options: { clientId: process.env.REACT_APP_TWITCH_CLIENT_ID, debug: false },
     })
   }
 
