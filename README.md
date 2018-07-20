@@ -1,6 +1,7 @@
 <p align="center">
   <img alt="YaTA" src="https://i.imgur.com/tai1mEA.png" width="128">
-  <h1 align="center" style="padding-bottom: 30px;">YaTA - Yet another Twitch App</h1>
+  <h1 align="center">YaTA - Yet another Twitch App</h1>
+  <br />
 </p>
 
 **YaTA is a very opinionated [Twitch](https://www.twitch.tv) chat client.**
