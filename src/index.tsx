@@ -6,7 +6,6 @@ import { injectGlobal } from 'styled-components'
 import Wrapper from 'Components/Wrapper'
 import configureStore, { StoreConfiguration } from 'Store'
 import base from 'Styled/base'
-import registerServiceWorker from './registerServiceWorker'
 
 import 'node_modules/@blueprintjs/core/lib/css/blueprint.css'
 import 'node_modules/normalize.css/normalize.css'
