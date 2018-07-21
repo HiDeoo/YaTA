@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router'
 import * as shortid from 'shortid'
 import tmi, {
   Client as TwitchClient,
@@ -14,6 +15,7 @@ import tmi, {
 
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
+import Page from 'Constants/page'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
@@ -201,6 +203,10 @@ export class ChatClient extends React.Component<Props, State> {
     const { error } = this.state
 
     if (!_.isNil(error)) {
+      if (error.message.includes('No response from Twitch')) {
+        return <Redirect to={Page.Home} />
+      }
+
       throw error
     }
 
