@@ -96,11 +96,6 @@ renderApplication(Wrapper, storeConfiguration)
 FocusStyleManager.onlyShowFocusOnTabs()
 
 /**
- * Registers service worker.
- */
-registerServiceWorker()
-
-/**
  * Props accepting a store configuration
  * @prop storeConfiguration - The store configuration
  */
