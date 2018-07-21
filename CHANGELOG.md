@@ -2,6 +2,7 @@
 
 ### 🐛 Bug Fix
 
+- Mark Moobot as a known bot.
 - Fix an issue with some BetterTTV emotes.
 - Improve error handling for unavailable channels.
 

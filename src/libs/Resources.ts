@@ -23,7 +23,7 @@ export default class Resources {
   private static instance: Resources
 
   private badges: RawBadges = {}
-  private bots: Set<string> = new Set()
+  private bots: Set<string> = new Set(['moobot'])
   private cheermotes: RawCheermote[] = []
   private emotesProviders: Map<EmoteProviderPrefix, EmotesProvider<Emote>> = new Map()
   private highlights: Highlights = {}
