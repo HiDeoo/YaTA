@@ -33,13 +33,17 @@ const Changelog = styled.div`
     &:first-child {
       margin-top: 0;
     }
+
+    & + h3 {
+      margin-top: 15px;
+    }
   }
 
   & h3,
   .pt-dark & h3 {
     border: 0;
     font-size: 1rem;
-    margin: 20px 0;
+    margin: 20px 0 15px 0;
   }
 `
 
