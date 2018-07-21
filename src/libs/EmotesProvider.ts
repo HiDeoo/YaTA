@@ -80,7 +80,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
       this.emotes,
       (emotes, emote) => {
         const wordsMatchingEmote = _.filter(words, (word, index) => {
-          if (word.text === '(' || word.text === ':') {
+          if (word.text === '(' || word.text === ':' || word.text === 'D') {
             return this.getPotentialNextWord(words, index) === emote.code
           }
 
@@ -148,7 +148,11 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return The potentially splitted word.
    */
   private getPotentialNextWord(words: Word[], index: number) {
-    return `${_.get(words[index], 'text')}${_.get(words[index + 1], 'text')}${_.get(words[index + 2], 'text')}`
+    return `${_.get(words[index], 'text')}${_.get(words[index + 1], 'text', '')}${_.get(
+      words[index + 2],
+      'text',
+      ''
+    )}`.trim()
   }
 }
 
