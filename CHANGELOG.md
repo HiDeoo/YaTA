@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue preventing messages to display when purging old ones.
+
 # 0.1.1
 
 ### 🐛 Bug Fix

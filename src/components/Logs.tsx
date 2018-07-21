@@ -15,15 +15,6 @@ import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks
 import base from 'Styled/base'
 
 /**
- * Message measures cache.
- */
-const messageMeasureCache = new CellMeasurerCache({
-  defaultHeight: base.log.minHeight,
-  fixedWidth: true,
-  minHeight: base.log.minHeight,
-})
-
-/**
  * Wrapper component.
  */
 const Wrapper = styled(FlexContent)`
@@ -37,6 +28,22 @@ const Wrapper = styled(FlexContent)`
  */
 export default class Logs extends React.Component<Props> {
   private pauseAutoScroll: boolean = false
+  private logMeasureCache: CellMeasurerCache
+
+  /**
+   * Creates a new instance of the component.
+   * @param props - The props of the component.
+   */
+  constructor(props: Props) {
+    super(props)
+
+    this.logMeasureCache = new CellMeasurerCache({
+      defaultHeight: base.log.minHeight,
+      fixedWidth: true,
+      keyMapper: (index) => _.get(this.props.logs[index], 'id'),
+      minHeight: base.log.minHeight,
+    })
+  }
 
   /**
    * Lifecycle: componentDidUpdate.
@@ -59,12 +66,12 @@ export default class Logs extends React.Component<Props> {
         <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
-              deferredMeasurementCache={messageMeasureCache}
+              deferredMeasurementCache={this.logMeasureCache}
               height={height}
               overscanRowCount={10}
               rowCount={logs.length}
-              rowHeight={messageMeasureCache.rowHeight}
-              rowRenderer={this.messageRenderer}
+              rowHeight={this.logMeasureCache.rowHeight}
+              rowRenderer={this.logRenderer}
               onScroll={this.onScroll}
               scrollToIndex={scrollToIndex}
               width={width}
@@ -104,10 +111,10 @@ export default class Logs extends React.Component<Props> {
   }
 
   /**
-   * Clears the measures cache when resize the window.
+   * Clears the measures cache when resizing the window.
    */
   private onResize = () => {
-    messageMeasureCache.clearAll()
+    this.logMeasureCache.clearAll()
   }
 
   /**
@@ -115,7 +122,7 @@ export default class Logs extends React.Component<Props> {
    * @param  listRowProps - The props to add to the row being rendered.
    * @return Element to render.
    */
-  private messageRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
+  private logRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
     const log = this.props.logs[index]
 
     let LogComponent: JSX.Element | null = null
@@ -161,7 +168,7 @@ export default class Logs extends React.Component<Props> {
     }
 
     return (
-      <CellMeasurer cache={messageMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
+      <CellMeasurer cache={this.logMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
         {LogComponent}
       </CellMeasurer>
     )
