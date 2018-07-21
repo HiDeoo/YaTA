@@ -25,7 +25,7 @@
 
 ## Usage
 
-[Go to the website!](https://github.com/HiDeoo/YaTA)
+**[Go to the website!](https://yata.now.sh)**
 
 ## Contribute
 

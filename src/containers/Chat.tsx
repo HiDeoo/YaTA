@@ -71,7 +71,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     this.client = tmi.client({
       channels: [],
-      connection: { reconnect: true },
+      connection: { reconnect: true, secure: true },
       identity: props.loginDetails || undefined,
       options: { clientId: process.env.REACT_APP_TWITCH_CLIENT_ID, debug: false },
     })

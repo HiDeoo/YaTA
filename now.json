@@ -1,0 +1,5 @@
+{
+  "name": "yata",
+  "alias": "yata",
+  "dotenv": ".env.production.local"
+}
