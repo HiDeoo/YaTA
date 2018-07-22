@@ -1,4 +1,4 @@
-import { Button, Intent, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core'
+import { Button, Colors, Intent, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -26,6 +26,38 @@ const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
   & > .pt-popover-wrapper {
     .pt-button {
       margin-top: -3px;
+    }
+  }
+`
+
+/**
+ * MenuButton component.
+ */
+const MenuButton = styled(Button)`
+  &.pt-button.pt-minimal,
+  .pt-dark &.pt-button.pt-minimal {
+    height: 16px;
+    min-height: 16px;
+    min-width: 24px;
+    padding: 0;
+    position: relative;
+    width: 24px;
+
+    & > svg {
+      color: ${Colors.GRAY2};
+      position: absolute;
+      left: 7px;
+      top: 3px;
+    }
+
+    &.pt-active,
+    &:active,
+    &:hover {
+      background: initial;
+
+      & > svg {
+        color: ${Colors.LIGHT_GRAY1};
+      }
     }
   }
 `
@@ -182,7 +214,7 @@ export default class Message extends React.Component<Props> {
 
     return (
       <Popover content={menu} lazy>
-        <Button icon="menu" minimal />
+        <MenuButton icon="menu" minimal />
       </Popover>
     )
   }
