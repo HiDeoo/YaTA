@@ -21,7 +21,7 @@
     "eject": "react-scripts-ts eject",
     "precommit": "lint-staged",
     "deploy": "now --public",
-    "now-start": "serve -s build"
+    "now-start": "serve"
   },
   "dependencies": {
     "@blueprintjs/core": "2.3.1",
