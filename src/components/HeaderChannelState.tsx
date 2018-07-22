@@ -5,6 +5,30 @@ import styled from 'styled-components'
 
 import HeaderTooltip from 'Components/HeaderTooltip'
 import { SerializedRoomState } from 'Libs/RoomState'
+import { size } from 'Utils/styled'
+
+/**
+ * TwitchState component.
+ */
+const TwitchState = styled.div`
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-gap: ${size('twitchState.gap')} ${size('twitchState.gap')};
+  grid-template-columns: repeat(auto-fill, ${size('twitchState.size')});
+  grid-template-rows: ${size('twitchState.size')} ${size('twitchState.size')};
+  margin-right: 5px;
+
+  & > span {
+    height: ${size('twitchState.size')};
+    margin-right: 0;
+    width: ${size('twitchState.size')};
+
+    & svg {
+      height: ${size('twitchState.size')};
+      width: ${size('twitchState.size')};
+    }
+  }
+`
 
 /**
  * Tooltip component.
@@ -36,7 +60,9 @@ export default class HeaderChannelState extends React.Component<Props> {
     const slowDuration = _.get(roomState, 'slowDuration', 0) as number
     const subsOnly = _.get(roomState, 'subsOnly', false)
 
-    if (!isAutoScrollPaused && !r9k && !emoteOnly && !followersOnly && !slow && !subsOnly) {
+    const showTwitchState = r9k || emoteOnly || followersOnly || slow || subsOnly
+
+    if (!isAutoScrollPaused && !showTwitchState) {
       return null
     }
 
@@ -47,30 +73,34 @@ export default class HeaderChannelState extends React.Component<Props> {
             <Icon icon="pause" color={Colors.RED4} />
           </Tooltip>
         )}
-        {subsOnly && (
-          <Tooltip content="Subscriber-only">
-            <Icon icon="dollar" />
-          </Tooltip>
-        )}
-        {slow && (
-          <Tooltip content={`Slow mode (${slowDuration}s)`}>
-            <Icon icon="outdated" />
-          </Tooltip>
-        )}
-        {followersOnly && (
-          <Tooltip content={`Follower-only${followersOnlyDuration > 0 ? ` (${followersOnlyDuration}m)` : ''}`}>
-            <Icon icon="follower" />
-          </Tooltip>
-        )}
-        {emoteOnly && (
-          <Tooltip content="Emote-only">
-            <Icon icon="media" />
-          </Tooltip>
-        )}
-        {r9k && (
-          <Tooltip content="R9K">
-            <Icon icon="multi-select" />
-          </Tooltip>
+        {showTwitchState && (
+          <TwitchState>
+            {subsOnly && (
+              <Tooltip content="Subscriber-only">
+                <Icon icon="dollar" />
+              </Tooltip>
+            )}
+            {slow && (
+              <Tooltip content={`Slow mode (${slowDuration}s)`}>
+                <Icon icon="outdated" />
+              </Tooltip>
+            )}
+            {followersOnly && (
+              <Tooltip content={`Follower-only${followersOnlyDuration > 0 ? ` (${followersOnlyDuration}m)` : ''}`}>
+                <Icon icon="follower" />
+              </Tooltip>
+            )}
+            {emoteOnly && (
+              <Tooltip content="Emote-only">
+                <Icon icon="media" />
+              </Tooltip>
+            )}
+            {r9k && (
+              <Tooltip content="R9K">
+                <Icon icon="multi-select" />
+              </Tooltip>
+            )}
+          </TwitchState>
         )}
         <NavbarDivider />
       </>

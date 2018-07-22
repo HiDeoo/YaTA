@@ -66,6 +66,10 @@ export default {
   tooltip: {
     background: Colors.DARK_GRAY1,
   },
+  twitchState: {
+    gap: 6,
+    size: 12,
+  },
 }
 
 /**
