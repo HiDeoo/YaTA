@@ -229,6 +229,10 @@ class Channel extends React.Component<Props, State> {
    * @return The tooltip content.
    */
   private getTooltipContent = () => {
+    if (!_.isNil(this.state.focusedChatter)) {
+      return null
+    }
+
     if (!_.isNil(this.Logs.current)) {
       const wrapper = this.Logs.current
 

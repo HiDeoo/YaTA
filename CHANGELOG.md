@@ -5,6 +5,7 @@
 - Fix an issue preventing messages to display when purging old ones.
 - Show proper message when successfully creating a clip.
 - Fix an issue when copying messages with emotes.
+- Disable content tooltips in history.
 
 # 0.1.1
 
