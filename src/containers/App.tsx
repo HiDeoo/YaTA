@@ -1,4 +1,5 @@
 import { Classes, Colors } from '@blueprintjs/core'
+import bowser from 'bowser'
 import { History } from 'history'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -127,6 +128,7 @@ class App extends React.Component<Props, State> {
               isLoggedIn={isLoggedIn}
               logout={this.props.resetUser}
               page={pathname}
+              reportBug={this.reportBug}
               status={status}
               toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
               toggleChangelog={this.toggleChangelog}
@@ -198,6 +200,31 @@ class App extends React.Component<Props, State> {
    */
   private goHome = () => {
     this.props.history.push(Page.Home)
+  }
+
+  /**
+   * Opens the report issue page on Github.
+   */
+  private reportBug = () => {
+    const { REACT_APP_BUGS_URL, REACT_APP_VERSION } = process.env
+    const {
+      parsedResult: { browser, os },
+    } = bowser.getParser(window.navigator.userAgent)
+
+    const body = `<!---
+Thanks for filing an issue 😄 !
+Please provide as much details as possible, including screenshots if necessary.
+-->
+
+#### Environment
+
+| Software         | Version
+| ---------------- | -------
+| YaTA             | ${REACT_APP_VERSION}
+| Browser          | ${browser.name} ${browser.version}
+| Operating System | ${os.name} ${os.version}`
+
+    window.open(`${REACT_APP_BUGS_URL}/new?body=${encodeURIComponent(body)}`)
   }
 }
 

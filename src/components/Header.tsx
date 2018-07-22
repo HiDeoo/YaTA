@@ -99,7 +99,16 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { goHome, highlightChangelog, isLoggedIn, logout, page, toggleChangelog, toggleSettings } = this.props
+    const {
+      goHome,
+      highlightChangelog,
+      isLoggedIn,
+      logout,
+      page,
+      reportBug,
+      toggleChangelog,
+      toggleSettings,
+    } = this.props
 
     return (
       <Navbar>
@@ -117,6 +126,9 @@ export default class Header extends React.Component<Props> {
         <NavbarGroup align={Alignment.RIGHT}>
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
           {this.renderDebugTools()}
+          <HeaderTooltip content="Report bug">
+            <Button onClick={reportBug} icon="issue" minimal title="Report bug" />
+          </HeaderTooltip>
           {page !== Page.Home && (
             <HeaderTooltip content="Home">
               <Button onClick={goHome} icon="home" minimal title="Home" />
@@ -217,6 +229,7 @@ type Props = {
   isLoggedIn: boolean
   logout: () => void
   page: string
+  reportBug: () => void
   status: AppState['status']
   toggleAutoConnectInDev: () => void
   toggleChangelog: () => void
