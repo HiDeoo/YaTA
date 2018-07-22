@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Fix an issue preventing messages to display when purging old ones.
+- Show proper message when successfully creating a clip.
 - Fix an issue when copying messages with emotes.
 
 # 0.1.1
