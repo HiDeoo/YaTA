@@ -53,7 +53,8 @@ const Preview = styled.img`
  * StreamDetails component.
  */
 const StreamDetails = styled(FlexContent)`
-  height: 68px;
+  height: 70px;
+  overflow: hidden;
 
   & > div {
     margin: 2px 0;
