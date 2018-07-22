@@ -38,7 +38,7 @@ export function escape(html: string | string[]) {
  * @return The sanitized string.
  */
 export function replaceImgTagByAlt(str: string) {
-  return str.replace(/<img.*?alt="(.*?)"[^\>]+>/g, '$1')
+  return str.replace(/<img.*?alt="(.*?)"[^\>]?>/g, '$1')
 }
 
 /**
