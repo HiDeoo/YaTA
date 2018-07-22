@@ -148,11 +148,10 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return The potentially splitted word.
    */
   private getPotentialNextWord(words: Word[], index: number) {
-    return `${_.get(words[index], 'text')}${_.get(words[index + 1], 'text', '')}${_.get(
-      words[index + 2],
-      'text',
-      ''
-    )}`.trim()
+    return _.get(words[index], 'text')
+      .concat(_.get(words[index + 1], 'text', ''))
+      .concat(_.get(words[index + 2], 'text', ''))
+      .trim()
   }
 }
 
