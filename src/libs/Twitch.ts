@@ -364,9 +364,14 @@ export default class Twitch {
     const response = await fetch(request)
 
     if (response.status !== 200) {
-      const jsonString = await response.text()
+      const json = await response.json()
 
-      const message = _.get(JSON.parse(jsonString), 'message', 'Something went wrong.')
+      const originalMessage = _.get(json, 'message', 'Something went wrong.')
+
+      const message =
+        originalMessage.charAt(0) === '{'
+          ? _.get(JSON.parse(originalMessage), 'message', 'Something went wrong.')
+          : originalMessage
 
       throw new Error(message)
     }
