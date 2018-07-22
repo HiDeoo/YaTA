@@ -9,7 +9,7 @@ import { ifProp } from 'Utils/styled'
 const FlexLayout = withSCProps<Props, HTMLElement>(styled.section)`
   display: flex;
   flex-direction: ${ifProp('vertical', 'column', 'row')};
-  height: 100%;
+  height: ${ifProp('vertical', '100%', 'auto')};
 `
 
 export default FlexLayout

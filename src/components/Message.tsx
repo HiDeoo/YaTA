@@ -22,12 +22,6 @@ const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
   border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
   opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')} 1px 7px;
-
-  & > .pt-popover-wrapper {
-    .pt-button {
-      margin-top: -3px;
-    }
-  }
 `
 
 /**
@@ -41,6 +35,7 @@ const MenuButton = styled(Button)`
     min-width: 24px;
     padding: 0;
     position: relative;
+    vertical-align: top;
     width: 24px;
 
     & > svg {

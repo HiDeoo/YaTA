@@ -37,7 +37,7 @@ export default {
     height: 300,
     maxSize: 28,
     padding: 10,
-    width: 306,
+    width: 344,
   },
   follows: {
     height: 68,
