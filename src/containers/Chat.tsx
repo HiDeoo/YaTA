@@ -180,6 +180,7 @@ export class ChatClient extends React.Component<Props, State> {
   public async componentWillUnmount() {
     this.didFetchExternalRessources = false
 
+    this.props.setModerator(false)
     this.props.resetAppState()
     this.props.clearLogs()
     this.props.clearChatters()
