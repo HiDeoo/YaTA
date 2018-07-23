@@ -10,6 +10,7 @@
 
 - Fix various scrollbars related issues.
 - Improve copy on double click behavior.
+- Tweak slightly emote rendering mechanism to fix various issues.
 - Improve room state layout when only 1 room mode is enabled.
 
 # 0.1.2

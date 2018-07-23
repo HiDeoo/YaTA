@@ -110,7 +110,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
   public getEmoteTag(id: string, name: string) {
     const { src, srcset } = this.getEmoteTagUrls(id)
 
-    return `<img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" />`
+    return `<span class="emoteWrapper"><img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" /></span>`
   }
 
   /**

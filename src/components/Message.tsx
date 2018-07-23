@@ -74,6 +74,7 @@ const Badges = styled.span`
   .badge {
     display: inline-block;
     margin-top: -1px;
+    min-width: 18px;
     padding-right: 4px;
     vertical-align: middle;
 

@@ -13,6 +13,11 @@ import { color } from 'Utils/styled'
 const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
   color: ${(props) => props.color};
 
+  .emoteWrapper {
+    display: inline-block;
+    min-width: 28px;
+  }
+
   .emote {
     display: inline-block;
     margin-top: -3px;
