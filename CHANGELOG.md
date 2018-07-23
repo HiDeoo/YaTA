@@ -7,6 +7,7 @@
 ### 🐛 Bug Fix
 
 - Fix various scrollbars related issues.
+- Improve copy on double click behavior.
 
 # 0.1.2
 

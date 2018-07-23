@@ -234,6 +234,12 @@ export default class Message extends React.Component<Props> {
   private onDoubleClick = () => {
     if (this.props.copyMessageOnDoubleClick) {
       this.copyMessage()
+
+      const selection = window.getSelection()
+
+      if (selection.toString().trim().length === 0) {
+        selection.empty()
+      }
     }
   }
 
