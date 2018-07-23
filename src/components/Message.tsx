@@ -72,14 +72,15 @@ const Time = styled.span`
  */
 const Badges = styled.span`
   .badge {
+    border-radius: 2px;
     display: inline-block;
     margin-top: -1px;
     min-width: 18px;
-    padding-right: 4px;
+    margin-right: 4px;
     vertical-align: middle;
 
     &:last-of-type {
-      padding-right: 6px;
+      margin-right: 6px;
     }
   }
 `
