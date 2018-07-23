@@ -25,7 +25,7 @@ const Content = styled.div`
 const Icon = styled.img.attrs({
   alt: 'YaTA',
   src: Logo,
-  srcset: `${Logo} 1x,${Logo2x} 2x`,
+  srcSet: `${Logo} 1x,${Logo2x} 2x`,
 })`
   background-color: ${Colors.DARK_GRAY5};
   border-radius: 50%;
