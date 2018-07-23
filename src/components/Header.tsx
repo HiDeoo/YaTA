@@ -127,24 +127,24 @@ export default class Header extends React.Component<Props> {
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
           {this.renderDebugTools()}
           <HeaderTooltip content="Report bug">
-            <Button onClick={reportBug} icon="issue" minimal title="Report bug" />
+            <Button onClick={reportBug} icon="issue" minimal />
           </HeaderTooltip>
           {page !== Page.Home && (
             <HeaderTooltip content="Home">
-              <Button onClick={goHome} icon="home" minimal title="Home" />
+              <Button onClick={goHome} icon="home" minimal />
             </HeaderTooltip>
           )}
           {highlightChangelog && (
             <HeaderTooltip content="New version available! Check the changelog.">
-              <Changelog onClick={toggleChangelog} icon="lightbulb" minimal title="Changelog" />
+              <Changelog onClick={toggleChangelog} icon="lightbulb" minimal />
             </HeaderTooltip>
           )}
           <HeaderTooltip content="Settings">
-            <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal title="Settings" />
+            <Button disabled={!isLoggedIn} onClick={toggleSettings} icon="cog" minimal />
           </HeaderTooltip>
           {isLoggedIn && (
             <HeaderTooltip content="Log out">
-              <Button onClick={logout} icon="log-out" minimal title="Log out" />
+              <Button onClick={logout} icon="log-out" minimal />
             </HeaderTooltip>
           )}
         </NavbarGroup>

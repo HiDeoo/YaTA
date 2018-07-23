@@ -17,7 +17,7 @@ export default class HeaderModerationTools extends React.Component<Props> {
     return (
       <Popover content={this.renderMenu()} position={Position.BOTTOM}>
         <HeaderTooltip content="Moderation Tools">
-          <Button icon="wrench" minimal title="Moderation Tools" />
+          <Button icon="wrench" minimal />
         </HeaderTooltip>
       </Popover>
     )

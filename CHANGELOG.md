@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Fix a scrollbar issue when running with zoom enabled.
+- Remove duplicated tooltips in the header.
 
 # 0.2.0
 

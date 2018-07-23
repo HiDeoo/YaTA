@@ -201,17 +201,17 @@ class Channel extends React.Component<Props, State> {
           )}
         {!_.isNil(roomState) && (
           <HeaderTooltip content="Create Clip">
-            <Button onClick={this.clip} icon="film" minimal title="Create Clip" />
+            <Button onClick={this.clip} icon="film" minimal />
           </HeaderTooltip>
         )}
         <Popover>
           <HeaderTooltip content="Channel Details">
-            <Button icon="eye-open" minimal title="Channel Details" />
+            <Button icon="eye-open" minimal />
           </HeaderTooltip>
           <ChannelDetails channelId={channelId} />
         </Popover>
         <HeaderTooltip content="Chatters List">
-          <Button onClick={this.toggleChatters} icon="people" minimal title="Chatters List" />
+          <Button onClick={this.toggleChatters} icon="people" minimal />
         </HeaderTooltip>
         <NavbarDivider />
       </>
