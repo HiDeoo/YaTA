@@ -28,6 +28,7 @@ const Wrapper = styled(FlexContent)`
  * Logs Component.
  */
 export default class Logs extends React.Component<Props> {
+  public list = React.createRef<List>()
   private pauseAutoScroll: boolean = false
   private logMeasureCache: CellMeasurerCache
 
@@ -67,6 +68,7 @@ export default class Logs extends React.Component<Props> {
         <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
+              ref={this.list}
               deferredMeasurementCache={this.logMeasureCache}
               height={height}
               overscanRowCount={10}

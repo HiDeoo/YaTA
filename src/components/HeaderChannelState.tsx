@@ -1,4 +1,4 @@
-import { Colors, Icon, NavbarDivider } from '@blueprintjs/core'
+import { Button, Colors, Icon, NavbarDivider } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -43,6 +43,15 @@ const Tooltip = styled(HeaderTooltip)`
 `
 
 /**
+ * PauseButton component.
+ */
+const PauseButton = styled(Button)`
+  & > svg.pt-icon {
+    color: ${Colors.RED4} !important;
+  }
+`
+
+/**
  * HeaderChannelState Component.
  */
 export default class HeaderChannelState extends React.Component<Props> {
@@ -51,7 +60,7 @@ export default class HeaderChannelState extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { isAutoScrollPaused, roomState } = this.props
+    const { isAutoScrollPaused, unpauseAutoScroll, roomState } = this.props
 
     const r9k = _.get(roomState, 'r9k', false)
     const emoteOnly = _.get(roomState, 'emoteOnly', false)
@@ -85,7 +94,7 @@ export default class HeaderChannelState extends React.Component<Props> {
       <>
         {isAutoScrollPaused && (
           <Tooltip content="Auto scrolling disabled">
-            <Icon icon="pause" color={Colors.RED4} />
+            <PauseButton icon="pause" minimal onClick={unpauseAutoScroll} />
           </Tooltip>
         )}
         {showTwitchState && (
@@ -129,6 +138,7 @@ export default class HeaderChannelState extends React.Component<Props> {
 type Props = {
   isAutoScrollPaused: boolean
   roomState: SerializedRoomState | null
+  unpauseAutoScroll: () => void
 }
 
 /**

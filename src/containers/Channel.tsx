@@ -82,7 +82,8 @@ type State = Readonly<typeof initialState>
 class Channel extends React.Component<Props, State> {
   public state: State = initialState
   public chatClient = React.createRef<any>()
-  private Logs = React.createRef<HTMLElement>()
+  private logsWrapper = React.createRef<HTMLElement>()
+  private logsComponent = React.createRef<Logs>()
   private input = React.createRef<Input>()
 
   /**
@@ -132,7 +133,7 @@ class Channel extends React.Component<Props, State> {
     }
 
     return (
-      <FlexLayout vertical innerRef={this.Logs}>
+      <FlexLayout vertical innerRef={this.logsWrapper}>
         <Helmet>
           <title>{channel} - YaTA</title>
         </Helmet>
@@ -151,6 +152,7 @@ class Channel extends React.Component<Props, State> {
           whisper={this.prepareWhisper}
           timeout={this.timeout}
           ban={this.ban}
+          ref={this.logsComponent}
         />
         <Input
           ref={this.input}
@@ -186,7 +188,11 @@ class Channel extends React.Component<Props, State> {
 
     const headerRightComponent = (
       <>
-        <HeaderChannelState isAutoScrollPaused={isAutoScrollPaused} roomState={roomState} />
+        <HeaderChannelState
+          isAutoScrollPaused={isAutoScrollPaused}
+          roomState={roomState}
+          unpauseAutoScroll={this.unpauseAutoScroll}
+        />
         {isMod &&
           !_.isNil(roomState) && (
             <HeaderModerationTools
@@ -233,8 +239,8 @@ class Channel extends React.Component<Props, State> {
       return null
     }
 
-    if (!_.isNil(this.Logs.current)) {
-      const wrapper = this.Logs.current
+    if (!_.isNil(this.logsWrapper.current)) {
+      const wrapper = this.logsWrapper.current
 
       const nodes = wrapper.querySelectorAll(':hover')
       const node = nodes.item(nodes.length - 1)
@@ -268,6 +274,15 @@ class Channel extends React.Component<Props, State> {
       this.setState(() => ({ inputValue }))
     } else {
       this.setState(() => ({ inputValue: value }))
+    }
+  }
+
+  /**
+   * Re-enables auto-scrolling.
+   */
+  private unpauseAutoScroll = () => {
+    if (!_.isNil(this.logsComponent.current) && !_.isNil(this.logsComponent.current.list.current)) {
+      this.logsComponent.current.list.current.scrollToRow(this.props.logs.length)
     }
   }
 

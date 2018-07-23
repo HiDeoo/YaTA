@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Clicking the "Auto scrolling disabled" button now scrolls down to the latest message.
+
 ### 🐛 Bug Fix
 
 - Fix a scrollbar issue when running with zoom enabled.

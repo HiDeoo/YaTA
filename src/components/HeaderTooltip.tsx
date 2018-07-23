@@ -6,9 +6,9 @@ import styled from 'styled-components'
  * CustomTooltip component.
  */
 const CustomTooltip = styled(Tooltip)`
-  button > svg,
-  button > svg > title,
-  button > svg > path {
+  svg,
+  svg > title,
+  svg > path {
     pointer-events: none;
   }
 `
