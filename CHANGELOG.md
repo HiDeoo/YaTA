@@ -9,6 +9,7 @@
 
 - Fix a scrollbar issue when running with zoom enabled.
 - Remove duplicated tooltips in the header.
+- Fix an issue with long words & URLs not properly wrapping.
 
 # 0.2.0
 
