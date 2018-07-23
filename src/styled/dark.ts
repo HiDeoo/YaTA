@@ -40,6 +40,10 @@ const dark = {
     border: Colors.BLUE4,
     message: Colors.GRAY4,
   },
+  permissions: {
+    color: Colors.GRAY5,
+    detail: Colors.GRAY3,
+  },
   settings: {
     description: Colors.GRAY3,
     table: {

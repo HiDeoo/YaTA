@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add tooltips in the chatter details view.
+- Add permissions overview on the login page.
 
 ### 🐛 Bug Fix
 
