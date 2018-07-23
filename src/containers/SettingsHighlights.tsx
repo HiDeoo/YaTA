@@ -80,7 +80,7 @@ class SettingsHighlights extends React.Component<Props, State> {
 
     return (
       <SettingsPanel>
-        <Notice>Case-insensitive & username included by default.</Notice>
+        <Notice>Case-insensitive. Username included by default.</Notice>
         <SettingsInput
           intent={newHighlightIntent}
           placeholder="Add a new highlight…"
@@ -108,7 +108,7 @@ class SettingsHighlights extends React.Component<Props, State> {
           leftIcon="user"
           onAdd={this.onAddIgnoredUser}
           onRemove={this.onRemoveIgnoredUser}
-          placeholder="Ignore highlights from users… (space separated list)"
+          placeholder="Ignore highlights from users… (space-separated list)"
           separator=" "
           inputValue=""
           values={ignoredUsers}
