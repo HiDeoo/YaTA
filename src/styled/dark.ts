@@ -7,6 +7,9 @@ import base from 'Styled/base'
  * Dark theme.
  */
 const dark = {
+  about: {
+    description: Colors.GRAY4,
+  },
   chatInput: {
     background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY5,

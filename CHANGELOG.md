@@ -4,6 +4,7 @@
 
 - Add tooltips in the chatter details view.
 - Add permissions overview on the login page.
+- Add About panel.
 
 ### 🐛 Bug Fix
 
