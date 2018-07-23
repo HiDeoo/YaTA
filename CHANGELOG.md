@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix a scrollbar issue when running with zoom enabled.
+
 # 0.2.0
 
 ### 🚀 New Feature

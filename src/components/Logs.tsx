@@ -20,6 +20,7 @@ import base from 'Styled/base'
 const Wrapper = styled(FlexContent)`
   font-size: 0.82rem;
   line-height: 1.4rem;
+  overflow: hidden;
   padding: 8px 0;
 `
 
