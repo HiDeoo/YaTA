@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Clicking the "Auto scrolling disabled" button now scrolls down to the latest message.
+- Add a proper warning when trying to whisper yourself.
 
 ### 🐛 Bug Fix
 

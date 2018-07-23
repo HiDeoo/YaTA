@@ -23,7 +23,7 @@ export enum BroadcastType {
 /**
  * RegExp used to identify whisper command (/w user message).
  */
-const WhisperRegExp = /^\/w \S+ .+/
+const WhisperRegExp = /^\/w (\S+) (.+)/
 
 /**
  * Twitch class.
@@ -111,11 +111,20 @@ export default class Twitch {
   }
 
   /**
-   * Determines if a message is a whisper command (/w user message).
-   * @return `true` if the value is a whisper.
+   * Parses a message as a whisper command (/w user message).
+   * @return The whisper details or `null` if the message is not a whisper.
    */
-  public static isWhisperCommand(message: string) {
-    return WhisperRegExp.test(message)
+  public static parseWhisperCommand(message: string) {
+    const matches = message.match(WhisperRegExp)
+
+    if (!_.isNil(matches)) {
+      const username = matches[1]
+      const whisper = matches[2]
+
+      return { username, message: whisper }
+    }
+
+    return null
   }
 
   /**

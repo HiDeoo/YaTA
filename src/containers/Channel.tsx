@@ -61,11 +61,6 @@ const ChannelLink = styled.a.attrs({
 const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
 
 /**
- * RegExp used to identify whisper command (/w user message).
- */
-const WhisperRegExp = /^\/w (\S+) (.+)/
-
-/**
  * RegExp used to identify whisper reply command (/r).
  */
 const WhisperReplyRegExp = /^\/r /
@@ -125,7 +120,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { channel, copyMessageOnDoubleClick, logs, showContextMenu } = this.props
+    const { channel, copyMessageOnDoubleClick, loginDetails, logs, showContextMenu } = this.props
     const { focusedChatter, showChatters } = this.state
 
     if (_.isNil(channel)) {
@@ -162,6 +157,7 @@ class Channel extends React.Component<Props, State> {
           onSubmit={this.sendMessage}
           getCompletions={this.getCompletions}
           getHistory={this.getHistory}
+          username={_.get(loginDetails, 'username')}
         />
         <ChatterDetails
           chatter={focusedChatter}
@@ -458,16 +454,10 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         const message = this.state.inputValue
+        const whisper = Twitch.parseWhisperCommand(message)
 
-        if (Twitch.isWhisperCommand(message)) {
-          const matches = message.match(WhisperRegExp)
-
-          if (!_.isNil(matches)) {
-            const username = matches[1]
-            const whisper = matches[2]
-
-            await this.whisper(username, whisper)
-          }
+        if (!_.isNil(whisper)) {
+          await this.whisper(whisper.username, whisper.message)
         } else {
           await this.say(message)
         }

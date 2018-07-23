@@ -72,15 +72,26 @@ export default class Input extends React.Component<Props, State> {
     let intent = ''
 
     const { value } = nextProps
+    const whisper = Twitch.parseWhisperCommand(value)
 
-    if (Twitch.isWhisperCommand(value)) {
-      toasts.push({
-        icon: 'inbox',
-        intent: Intent.SUCCESS,
-        message: "You're about to send a whisper.",
-      })
+    if (!_.isNil(whisper)) {
+      if (!_.isNil(nextProps.username) && nextProps.username === whisper.username.toLowerCase()) {
+        toasts.push({
+          icon: 'inbox',
+          intent: Intent.DANGER,
+          message: 'You cannot whisper yourself.',
+        })
 
-      intent = Classes.INTENT_SUCCESS
+        intent = Classes.INTENT_DANGER
+      } else {
+        toasts.push({
+          icon: 'inbox',
+          intent: Intent.SUCCESS,
+          message: "You're about to send a whisper.",
+        })
+
+        intent = Classes.INTENT_SUCCESS
+      }
     } else if (value.length > Message.Max) {
       toasts.push({
         icon: 'warning-sign',
@@ -338,6 +349,7 @@ type Props = {
   getHistory: (previous?: boolean) => string | null
   onChange: (value: string) => void
   onSubmit: () => void
+  username?: string
   value: string
 }
 
