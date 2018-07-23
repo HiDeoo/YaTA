@@ -32,8 +32,8 @@ export enum SettingsTab {
   General = 'general',
   Highlights = 'highlights',
   Actions = 'actions',
-  Changelog = 'changelog',
   Backup = 'backup',
+  Changelog = 'changelog',
   About = 'about',
 }
 
@@ -55,8 +55,8 @@ export default class Settings extends React.Component<Props> {
             <Tab id={SettingsTab.General} title="General" panel={<SettingsGeneral />} />
             <Tab id={SettingsTab.Highlights} title="Highlights" panel={<SettingsHighlights />} />
             <Tab id={SettingsTab.Actions} title="Actions" panel={<SettingsActions />} />
-            <Tab id={SettingsTab.Changelog} title="Changelog" panel={<SettingsChangelog />} />
             <Tab id={SettingsTab.Backup} title="Backup" panel={<SettingsBackup />} />
+            <Tab id={SettingsTab.Changelog} title="Changelog" panel={<SettingsChangelog />} />
             <Tab id={SettingsTab.About} title="About" panel={<SettingsAbout />} />
           </Tabs>
         </SettingsNavbar>
