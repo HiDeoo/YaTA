@@ -5,17 +5,18 @@ import styled from 'styled-components'
 
 import HeaderTooltip from 'Components/HeaderTooltip'
 import { SerializedRoomState } from 'Libs/RoomState'
-import { size } from 'Utils/styled'
+import { withSCProps } from 'Utils/react'
+import { ifProp, size } from 'Utils/styled'
 
 /**
  * TwitchState component.
  */
-const TwitchState = styled.div`
+const TwitchState = withSCProps<TwitchStateProps, HTMLDivElement>(styled.div)`
   display: inline-grid;
   grid-auto-flow: column;
   grid-gap: ${size('twitchState.gap')} ${size('twitchState.gap')};
   grid-template-columns: repeat(auto-fill, ${size('twitchState.size')});
-  grid-template-rows: ${size('twitchState.size')} ${size('twitchState.size')};
+  grid-template-rows: repeat(${ifProp('unique', 1, 2)}, ${size('twitchState.size')});
   margin-right: 5px;
 
   & > span {
@@ -66,6 +67,20 @@ export default class HeaderChannelState extends React.Component<Props> {
       return null
     }
 
+    const states = [r9k, emoteOnly, followersOnly, slow, subsOnly]
+
+    const visibleStateCount = _.reduce(
+      states,
+      (count, state) => {
+        if (state) {
+          count += 1
+        }
+
+        return count
+      },
+      0
+    )
+
     return (
       <>
         {isAutoScrollPaused && (
@@ -74,7 +89,7 @@ export default class HeaderChannelState extends React.Component<Props> {
           </Tooltip>
         )}
         {showTwitchState && (
-          <TwitchState>
+          <TwitchState unique={visibleStateCount === 1}>
             {subsOnly && (
               <Tooltip content="Subscriber-only">
                 <Icon icon="dollar" />
@@ -114,4 +129,11 @@ export default class HeaderChannelState extends React.Component<Props> {
 type Props = {
   isAutoScrollPaused: boolean
   roomState: SerializedRoomState | null
+}
+
+/**
+ * React Props.
+ */
+type TwitchStateProps = {
+  unique: boolean
 }

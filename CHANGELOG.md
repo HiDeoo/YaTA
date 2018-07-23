@@ -8,6 +8,7 @@
 
 - Fix various scrollbars related issues.
 - Improve copy on double click behavior.
+- Improve room state layout when only 1 room mode is enabled.
 
 # 0.1.2
 
