@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Add tooltips in the chatter details view.
+
 # 0.1.2
 
 ### 🐛 Bug Fix

@@ -1,4 +1,15 @@
-import { Button, ButtonGroup, Classes, Dialog, Icon, Intent, Popover, Spinner } from '@blueprintjs/core'
+import {
+  Button,
+  ButtonGroup,
+  Classes,
+  Dialog,
+  Icon,
+  Intent,
+  Popover,
+  Position,
+  Spinner,
+  Tooltip,
+} from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -19,15 +30,20 @@ import { getLogsByIds } from 'Store/selectors/logs'
  * DetailsRow component.
  */
 const DetailsRow = styled(FlexLayout)`
-  align-items: center;
+  align-items: right;
   margin-bottom: 15px;
+`
 
-  & > div {
-    margin-right: 25px;
+/**
+ * DetailTooltip component.
+ */
+const DetailTooltip = styled(Tooltip).attrs({
+  position: Position.BOTTOM,
+})`
+  margin-right: 25px;
 
-    & > svg {
-      margin-right: 6px;
-    }
+  & svg {
+    margin-right: 6px;
   }
 `
 
@@ -190,15 +206,21 @@ class ChatterDetails extends React.Component<Props, State> {
     return (
       <>
         <DetailsRow>
-          <div>
-            <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
-          </div>
-          <div>
-            <Icon icon="eye-open" /> {details.views}
-          </div>
-          <div>
-            <Icon icon="follower" /> {details.followers}
-          </div>
+          <DetailTooltip content="Creation date">
+            <>
+              <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
+            </>
+          </DetailTooltip>
+          <DetailTooltip content="Views">
+            <>
+              <Icon icon="eye-open" /> {details.views}
+            </>
+          </DetailTooltip>
+          <DetailTooltip content="Followers">
+            <>
+              <Icon icon="follower" /> {details.followers}
+            </>
+          </DetailTooltip>
         </DetailsRow>
         {!chatter.isSelf && (
           <Tools>
