@@ -36,7 +36,7 @@ const Highlights = styled.div`
   background-color: ${color('settings.table.background')};
   border: 1px solid ${color('settings.table.border')};
   height: calc(100% - 160px);
-  overflow-y: scroll;
+  overflow-y: auto;
   margin: 20px 0;
 `
 
@@ -54,7 +54,7 @@ const IgnoredUsers = styled(TagInput)`
   }
 
   & > .pt-tag-input-values {
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 `
 

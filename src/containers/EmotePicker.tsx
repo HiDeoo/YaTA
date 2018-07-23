@@ -49,6 +49,10 @@ const Emotes = styled(FlexContent)`
   border-bottom: 1px solid ${color('emotePicker.border')};
   border-top: 1px solid ${color('emotePicker.border')};
   background-color: ${color('emotePicker.background')};
+
+  & > div::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 /**

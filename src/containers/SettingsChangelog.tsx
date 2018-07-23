@@ -15,7 +15,7 @@ import { ApplicationState } from 'Store/reducers'
 const Changelog = styled.div`
   font-size: 0.8rem;
   line-height: 1.2rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   & h1,
   & h2,

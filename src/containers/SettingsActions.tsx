@@ -57,7 +57,7 @@ const Actions = styled.div`
   background-color: ${color('settings.table.background')};
   border: 1px solid ${color('settings.table.border')};
   height: calc(100% - 130px);
-  overflow-y: scroll;
+  overflow-y: auto;
   margin-top: 20px;
 `
 

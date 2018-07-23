@@ -8,7 +8,7 @@ import base from 'Styled/base'
 const SettingsPanel = styled.div`
   height: ${base.settings.height - 80}px;
   margin: -20px -15px 0 -15px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 20px;
 `
 

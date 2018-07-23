@@ -5,7 +5,7 @@ import styled from 'styled-components'
  */
 const FlexContent = styled.section`
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 
 export default FlexContent

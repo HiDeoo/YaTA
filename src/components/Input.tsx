@@ -46,6 +46,10 @@ const TextArea = styled.textarea`
     line-height: 20px;
     padding: 5px 42px 5px 10px;
   }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 /**
