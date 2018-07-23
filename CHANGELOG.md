@@ -4,6 +4,10 @@
 
 - Add tooltips in the chatter details view.
 
+### 🐛 Bug Fix
+
+- Fix various scrollbars related issues.
+
 # 0.1.2
 
 ### 🐛 Bug Fix
