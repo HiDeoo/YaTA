@@ -9,6 +9,7 @@
 - Add a new setting (enabled by default) to automatically focus the input field when focusing the application.
 - Add new indicators when auto-scrolling is disabled.
 - Display the username in a context menu to easily identify the targeted user.
+- Add a new setting (disabled by default) to always show the viewer count.
 
 ### 🐛 Bug Fix
 
@@ -16,6 +17,7 @@
 - Fix an UI issue with clips having a very long title.
 - Fix an issue with dead keys.
 - Prevent isolated @ characters to be identified as mentions.
+- Prevent highlighting of your username in URLs.
 
 # 0.2.1
 

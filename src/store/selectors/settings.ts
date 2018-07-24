@@ -91,3 +91,10 @@ export const getSettingsBackup = (state: ApplicationState) => state.settings
  * @return The 'Automatically focus the input field' setting.
  */
 export const getAutoFocusInput = createSelector([getSettingsState], (settings) => settings.autoFocusInput)
+
+/**
+ * Returns the 'Show viewer count' setting.
+ * @param  state - The Redux state.
+ * @return The 'Show viewer count' setting.
+ */
+export const getShowViewerCount = createSelector([getSettingsState], (settings) => settings.showViewerCount)

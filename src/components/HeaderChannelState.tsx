@@ -52,6 +52,23 @@ const PauseButton = styled(Button)`
 `
 
 /**
+ * ViewerCount component.
+ */
+const ViewerCount = styled.div`
+  align-items: center;
+  color: ${Colors.GRAY3};
+  display: flex;
+  justify-content: center;
+  margin-right: 10px;
+
+  & > svg {
+    height: 11px;
+    margin-left: 6px;
+    width: 11px;
+  }
+`
+
+/**
  * HeaderChannelState Component.
  */
 export default class HeaderChannelState extends React.Component<Props> {
@@ -60,7 +77,7 @@ export default class HeaderChannelState extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { isAutoScrollPaused, roomState, scrollToNewestLog } = this.props
+    const { isAutoScrollPaused, roomState, scrollToNewestLog, viewerCount } = this.props
 
     const r9k = _.get(roomState, 'r9k', false)
     const emoteOnly = _.get(roomState, 'emoteOnly', false)
@@ -72,7 +89,7 @@ export default class HeaderChannelState extends React.Component<Props> {
 
     const showTwitchState = r9k || emoteOnly || followersOnly || slow || subsOnly
 
-    if (!isAutoScrollPaused && !showTwitchState) {
+    if (!isAutoScrollPaused && !showTwitchState && _.isNil(viewerCount)) {
       return null
     }
 
@@ -96,6 +113,15 @@ export default class HeaderChannelState extends React.Component<Props> {
           <Tooltip content="Auto scrolling disabled">
             <PauseButton icon="pause" minimal onClick={scrollToNewestLog} />
           </Tooltip>
+        )}
+        {!_.isNil(viewerCount) && (
+          <>
+            <Tooltip content="Total viewers">
+              <ViewerCount>
+                {viewerCount} <Icon icon="person" />
+              </ViewerCount>
+            </Tooltip>
+          </>
         )}
         {showTwitchState && (
           <TwitchState unique={visibleStateCount === 1}>
@@ -139,6 +165,7 @@ type Props = {
   isAutoScrollPaused: boolean
   roomState: SerializedRoomState | null
   scrollToNewestLog: () => void
+  viewerCount: number | null
 }
 
 /**

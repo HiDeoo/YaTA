@@ -310,6 +310,11 @@ export default class Message implements Serializable<SerializedMessage> {
         this.mentionned = true
 
         const previousWord = index > 0 ? words[index - 1] : null
+
+        if (!_.isNil(previousWord) && previousWord.text.trim().length > 0 && previousWord.text !== '@') {
+          return
+        }
+
         const withAtSign = !_.isNil(previousWord) && previousWord.text === '@'
 
         const startIndex = withAtSign ? word.index - 1 : word.index

@@ -43,7 +43,12 @@ import {
 } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
 import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
-import { getAutoFocusInput, getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
+import {
+  getAutoFocusInput,
+  getCopyMessageOnDoubleClick,
+  getShowContextMenu,
+  getShowViewerCount,
+} from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import { replaceImgTagByAlt } from 'Utils/html'
 import { sanitizeUrlForPreview } from 'Utils/preview'
@@ -70,7 +75,12 @@ const WhisperReplyRegExp = /^\/r /
 /**
  * React State.
  */
-const initialState = { focusedChatter: null as SerializedChatter | null, inputValue: '', showChatters: false }
+const initialState = {
+  focusedChatter: null as SerializedChatter | null,
+  inputValue: '',
+  showChatters: false,
+  viewerCount: null as number | null,
+}
 type State = Readonly<typeof initialState>
 
 /**
@@ -82,6 +92,7 @@ class Channel extends React.Component<Props, State> {
   private logsWrapper = React.createRef<HTMLElement>()
   private logsComponent = React.createRef<Logs>()
   private input = React.createRef<Input>()
+  private viewerCountMonitorId?: number
 
   /**
    * Lifecycle: componentDidMount.
@@ -101,12 +112,34 @@ class Channel extends React.Component<Props, State> {
   /**
    * Lifecycle: componentDidUpdate.
    * @param prevProps - The previous props.
+   * @param prevState - The previous state.
    */
-  public componentDidUpdate(prevProps: Props) {
-    const { isAutoScrollPaused: prevIsAutoScrollPaused, isMod: prevIsMod, roomState: prevRoomState } = prevProps
-    const { isAutoScrollPaused, isMod, roomState } = this.props
+  public componentDidUpdate(prevProps: Props, prevState: State) {
+    const {
+      isAutoScrollPaused: prevIsAutoScrollPaused,
+      isMod: prevIsMod,
+      roomState: prevRoomState,
+      showViewerCount: prevShowViewerCount,
+    } = prevProps
+    const { isAutoScrollPaused, isMod, roomState, showViewerCount } = this.props
 
-    if (prevIsAutoScrollPaused !== isAutoScrollPaused || prevRoomState !== roomState || prevIsMod !== isMod) {
+    if (prevShowViewerCount !== showViewerCount || (_.isNil(prevRoomState) && !_.isNil(roomState))) {
+      if (showViewerCount) {
+        this.startMonitoringViewerCount()
+      } else {
+        this.stopMonitoringViewerCount()
+      }
+    }
+
+    const { viewerCount: prevViewerCount } = prevState
+    const { viewerCount } = this.state
+
+    if (
+      prevIsAutoScrollPaused !== isAutoScrollPaused ||
+      prevRoomState !== roomState ||
+      prevIsMod !== isMod ||
+      prevViewerCount !== viewerCount
+    ) {
       this.setHeaderComponents()
     }
   }
@@ -119,6 +152,10 @@ class Channel extends React.Component<Props, State> {
     this.props.setHeaderRightComponent(null)
 
     window.removeEventListener('focus', this.onFocusWindow)
+
+    if (this.props.showViewerCount) {
+      this.stopMonitoringViewerCount()
+    }
   }
 
   /**
@@ -198,6 +235,7 @@ class Channel extends React.Component<Props, State> {
           isAutoScrollPaused={isAutoScrollPaused}
           roomState={roomState}
           scrollToNewestLog={this.scrollToNewestLog}
+          viewerCount={this.state.viewerCount}
         />
         {isMod &&
           !_.isNil(roomState) && (
@@ -290,6 +328,52 @@ class Channel extends React.Component<Props, State> {
     } else {
       this.setState(() => ({ inputValue: value }))
     }
+  }
+
+  /**
+   * Starts monitoring the viewer count.
+   */
+  private startMonitoringViewerCount() {
+    this.monitorViewerCount()
+
+    if (_.isNil(this.viewerCountMonitorId)) {
+      // Update every 2mins.
+      this.viewerCountMonitorId = window.setInterval(this.monitorViewerCount, 120000)
+    }
+  }
+
+  /**
+   * Stops monitoring the viewer count.
+   */
+  private stopMonitoringViewerCount() {
+    if (!_.isNil(this.viewerCountMonitorId)) {
+      window.clearInterval(this.viewerCountMonitorId)
+      this.viewerCountMonitorId = undefined
+
+      this.setState(() => ({ viewerCount: null }))
+    }
+  }
+
+  /**
+   * Monitors the viewer count.
+   */
+  private monitorViewerCount = async () => {
+    const { roomState } = this.props
+    let viewers: number | null = null
+
+    if (!_.isNil(roomState)) {
+      const channelId = _.get(roomState, 'roomId')
+
+      if (!_.isNil(channelId)) {
+        const { stream } = await Twitch.fetchStream(channelId)
+
+        if (!_.isNil(stream)) {
+          viewers = stream.viewers
+        }
+      }
+    }
+
+    this.setState(() => ({ viewerCount: viewers }))
   }
 
   /**
@@ -765,6 +849,7 @@ const enhance = compose<Props, {}>(
       logs: getLogs(state),
       roomState: getRoomState(state),
       showContextMenu: getShowContextMenu(state),
+      showViewerCount: getShowViewerCount(state),
       status: getStatus(state),
     }),
     { addToHistory, ignoreUser, pauseAutoScroll, setChannel, updateHistoryIndex }
@@ -792,6 +877,7 @@ type StateProps = {
   logs: ReturnType<typeof getLogs>
   roomState: ReturnType<typeof getRoomState>
   showContextMenu: ReturnType<typeof getShowContextMenu>
+  showViewerCount: ReturnType<typeof getShowViewerCount>
   status: ReturnType<typeof getStatus>
 }
 

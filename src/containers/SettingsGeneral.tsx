@@ -11,6 +11,7 @@ import {
   toggleCopyMessageOnDoubleClick,
   toggleHideWhispers,
   toggleShowContextMenu,
+  toggleShowViewerCount,
   toggleTheme,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
@@ -19,6 +20,7 @@ import {
   getCopyMessageOnDoubleClick,
   getHideWhispers,
   getShowContextMenu,
+  getShowViewerCount,
   getTheme,
 } from 'Store/selectors/settings'
 
@@ -55,7 +57,14 @@ class SettingsGeneral extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { autoFocusInput, copyMessageOnDoubleClick, hideWhispers, showContextMenu, theme } = this.props
+    const {
+      autoFocusInput,
+      copyMessageOnDoubleClick,
+      hideWhispers,
+      showContextMenu,
+      showViewerCount,
+      theme,
+    } = this.props
     const { isThemeConfirmationOpened } = this.state
 
     return (
@@ -86,6 +95,12 @@ class SettingsGeneral extends React.Component<Props> {
           checked={autoFocusInput}
           label="Automatically focus the input field"
           onChange={this.props.toggleAutoFocusInput}
+        />
+        <Switch
+          description="Updated every 2mins."
+          checked={showViewerCount}
+          label="Show viewer count"
+          onChange={this.props.toggleShowViewerCount}
         />
       </SettingsPanel>
     )
@@ -146,9 +161,17 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     hideWhispers: getHideWhispers(state),
     showContextMenu: getShowContextMenu(state),
+    showViewerCount: getShowViewerCount(state),
     theme: getTheme(state),
   }),
-  { toggleAutoFocusInput, toggleCopyMessageOnDoubleClick, toggleHideWhispers, toggleShowContextMenu, toggleTheme }
+  {
+    toggleAutoFocusInput,
+    toggleCopyMessageOnDoubleClick,
+    toggleHideWhispers,
+    toggleShowContextMenu,
+    toggleShowViewerCount,
+    toggleTheme,
+  }
 )(SettingsGeneral)
 
 /**
@@ -159,6 +182,7 @@ type StateProps = {
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   hideWhispers: ReturnType<typeof getHideWhispers>
   showContextMenu: ReturnType<typeof getShowContextMenu>
+  showViewerCount: ReturnType<typeof getShowViewerCount>
   theme: ReturnType<typeof getTheme>
 }
 
@@ -170,6 +194,7 @@ type DispatchProps = {
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleHideWhispers: typeof toggleHideWhispers
   toggleShowContextMenu: typeof toggleShowContextMenu
+  toggleShowViewerCount: typeof toggleShowViewerCount
   toggleTheme: typeof toggleTheme
 }
 

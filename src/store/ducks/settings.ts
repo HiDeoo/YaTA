@@ -27,6 +27,7 @@ export enum Actions {
   TOGGLE_HIDE_WHISPERS = 'settings/TOGGLE_HIDE_WHISPERS',
   RESTORE = 'settings/RESTORE',
   TOGGLE_AUTO_FOCUS_INPUT = 'settings/TOGGLE_AUTO_FOCUS_INPUT',
+  TOGGLE_SHOW_VIEWER_COUNT = 'settings/TOGGLE_SHOW_VIEWER_COUNT',
 }
 
 /**
@@ -42,6 +43,7 @@ export const initialState = {
   highlightsIgnoredUsers: [],
   lastKnownVersion: null,
   showContextMenu: true,
+  showViewerCount: false,
   theme: Theme.Dark as SettingsState['theme'],
 }
 
@@ -173,6 +175,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         autoFocusInput: !state.autoFocusInput,
+      }
+    }
+    case Actions.TOGGLE_SHOW_VIEWER_COUNT: {
+      return {
+        ...state,
+        showViewerCount: !state.showViewerCount,
       }
     }
     default: {
@@ -324,6 +332,12 @@ export const restoreSettings = (json: SettingsState) =>
 export const toggleAutoFocusInput = () => createAction(Actions.TOGGLE_AUTO_FOCUS_INPUT)
 
 /**
+ * Toggle the 'Show viewer count' setting.
+ * @return The action.
+ */
+export const toggleShowViewerCount = () => createAction(Actions.TOGGLE_SHOW_VIEWER_COUNT)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -344,6 +358,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleHideWhispers>
   | ReturnType<typeof restoreSettings>
   | ReturnType<typeof toggleAutoFocusInput>
+  | ReturnType<typeof toggleShowViewerCount>
 
 /**
  * Settings state.
@@ -398,6 +413,11 @@ export type SettingsState = {
    * Automatically focus the input field when focusing the application.
    */
   autoFocusInput: boolean
+
+  /**
+   * Shows the viewer count in the header.
+   */
+  showViewerCount: boolean
 }
 
 /**

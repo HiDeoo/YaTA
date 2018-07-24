@@ -59,4 +59,10 @@ export default {
       settings: { ...state.settings, autoFocusInput: initialState.autoFocusInput },
     }
   },
+  9: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, showViewerCount: initialState.showViewerCount },
+    }
+  },
 }
