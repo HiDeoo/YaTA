@@ -15,6 +15,7 @@ import { size } from 'Utils/styled'
  */
 const Wrapper = styled.div`
   height: calc(100% - 50px);
+  overflow-x: hidden;
   overflow-y: auto;
 `
 
