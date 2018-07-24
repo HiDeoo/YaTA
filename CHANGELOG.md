@@ -18,6 +18,7 @@
 - Fix an issue with dead keys.
 - Prevent isolated @ characters to be identified as mentions.
 - Prevent highlighting of your username in URLs.
+- Fix an issue prevent mentions & highlights to work when followed by punctuations marks.
 
 # 0.2.1
 
