@@ -14,11 +14,15 @@ import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
+import { withSCProps } from 'Utils/react'
+import { ifProp } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = styled(FlexContent)`
+const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled(FlexContent))`
+  border-bottom: 2px solid ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
+  border-top: 3px solid ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
   font-size: 0.82rem;
   line-height: 1.4rem;
   overflow: hidden;
@@ -65,7 +69,7 @@ export default class Logs extends React.Component<Props> {
     const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
 
     return (
-      <Wrapper>
+      <Wrapper pauseAutoScroll={this.pauseAutoScroll}>
         <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
@@ -226,4 +230,11 @@ type Props = {
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
   whisper: (username: string) => void
+}
+
+/**
+ * React Props.
+ */
+type WrapperProps = {
+  pauseAutoScroll: boolean
 }
