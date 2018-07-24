@@ -2,6 +2,7 @@ import {
   Button,
   ButtonGroup,
   Classes,
+  Colors,
   Dialog,
   Icon,
   Intent,
@@ -25,13 +26,20 @@ import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
+import { withSCProps } from 'Utils/react'
+import { ifProp, size } from 'Utils/styled'
 
 /**
  * DetailsRow component.
  */
-const DetailsRow = styled(FlexLayout)`
-  align-items: right;
+const DetailsRow = withSCProps<DetailsRowProps, HTMLElement>(styled(FlexLayout))`
+  align-items: center;
+  height: ${ifProp('loading', '103px', 'auto')};
   margin-bottom: 15px;
+
+  .pt-spinner.pt-small {
+    margin-right: 10px;
+  }
 `
 
 /**
@@ -44,6 +52,42 @@ const DetailTooltip = styled(Tooltip).attrs({
 
   & svg {
     margin-right: 6px;
+  }
+`
+
+/**
+ * Header component.
+ */
+const Header = styled(FlexLayout)`
+  align-items: center;
+`
+
+/**
+ * Avatar component.
+ */
+const Avatar = styled.div`
+  align-items: center;
+  background-color: ${Colors.GRAY5};
+  border-radius: 50%;
+  display: flex;
+  height: ${size('chatter.avatar.size')};
+  justify-content: center;
+  margin: ${size('chatter.avatar.margin')};
+  width: ${size('chatter.avatar.size')};
+
+  & > img {
+    border-radius: 50%;
+    display: block;
+    height: ${size('chatter.avatar.size')};
+    width: ${size('chatter.avatar.size')};
+  }
+
+  & > svg {
+    color: ${Colors.DARK_GRAY5} !important;
+    display: block;
+    height: calc(${size('chatter.avatar.size')} - 15px);
+    margin: 0 !important;
+    width: calc(${size('chatter.avatar.size')} - 15px);
   }
 `
 
@@ -90,11 +134,11 @@ class ChatterDetails extends React.Component<Props, State> {
       try {
         let details: RawChannel
 
-        if (!chatter.isSelf) {
-          details = await Twitch.fetchChannel(chatter.id)
-        } else if (chatter.isSelf) {
+        if (chatter.isSelf) {
           const user = await Twitch.fetchAuthenticatedUser()
           details = await Twitch.fetchChannel(user._id)
+        } else {
+          details = await Twitch.fetchChannel(chatter.id)
         }
 
         this.setState(() => ({ details, error: undefined }))
@@ -110,15 +154,21 @@ class ChatterDetails extends React.Component<Props, State> {
    */
   public render() {
     const { chatter } = this.props
+    const { details } = this.state
 
     if (_.isNil(chatter)) {
       return null
     }
 
-    const title = `${chatter.displayName}${chatter.showUsername ? ` (${chatter.userName})` : ''}`
+    const header = (
+      <Header>
+        <Avatar>{_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} />}</Avatar>
+        {`${chatter.displayName}${chatter.showUsername ? ` (${chatter.userName})` : ''}`}
+      </Header>
+    )
 
     return (
-      <Dialog isOpen={!_.isNil(chatter)} onClose={this.onClose} icon="user" title={title}>
+      <Dialog isOpen={!_.isNil(chatter)} onClose={this.onClose} title={header}>
         <div className={Classes.DIALOG_BODY}>
           {this.renderDetails()}
           {this.renderModerationTools()}
@@ -197,7 +247,7 @@ class ChatterDetails extends React.Component<Props, State> {
 
     if (_.isNil(details)) {
       return (
-        <DetailsRow>
+        <DetailsRow loading>
           <Spinner small /> Fetching user details…
         </DetailsRow>
       )
@@ -395,3 +445,10 @@ type OwnProps = {
  * React Props.
  */
 type Props = OwnProps & StateProps
+
+/**
+ * React Props.
+ */
+type DetailsRowProps = {
+  loading?: boolean
+}

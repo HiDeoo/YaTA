@@ -1,3 +1,13 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Add profile picture to the chatter dialog.
+
+### 🐛 Bug Fix
+
+- Improve chatter dialog UI to avoid flashes when done loading details.
+
 # 0.2.1
 
 ### 🚀 New Feature

@@ -4,6 +4,12 @@ import { Colors } from '@blueprintjs/core'
  * Base theme.
  */
 export default {
+  chatter: {
+    avatar: {
+      margin: '7px 10px 7px 0',
+      size: 40,
+    },
+  },
   chatters: [
     Colors.BLUE4,
     Colors.BLUE5,
