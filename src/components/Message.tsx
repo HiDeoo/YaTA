@@ -200,6 +200,7 @@ export default class Message extends React.Component<Props, State> {
 
     const menu = (
       <Menu>
+        <MenuDivider title={message.user.displayName} />
         {!message.user.isSelf && (
           <>
             <MenuItem icon="envelope" text="Whisper" onClick={this.onClickWhisper} />

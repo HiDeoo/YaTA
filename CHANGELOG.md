@@ -8,6 +8,7 @@
 - If enabled, whispers can be copied on double click.
 - Add a new setting (enabled by default) to automatically focus the input field when focusing the application.
 - Add new indicators when auto-scrolling is disabled.
+- Display the username in a context menu to easily identify the targeted user.
 
 ### 🐛 Bug Fix
 
