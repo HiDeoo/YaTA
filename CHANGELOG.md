@@ -4,6 +4,8 @@
 
 - Add profile picture to the chatter dialog.
 - Pause auto-scrolling temporarily when opening a context menu.
+- If enabled, messages from the user's chat history can be copied on double click.
+- If enabled, whispers can be copied on double click.
 
 ### 🐛 Bug Fix
 

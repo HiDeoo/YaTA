@@ -61,12 +61,23 @@ export default class Whisper extends React.Component<Props> {
     const usernameColor = whisper.user.color as string
 
     return (
-      <Wrapper style={style}>
+      <Wrapper style={style} onDoubleClick={this.onDoubleClick}>
         <InboxIcon icon={whisper.self ? 'document-share' : 'document-open'} />
         <Username color={whisper.self ? 'inherit' : usernameColor}>{whisper.user.displayName}</Username>
         <MessageContent message={whisper} />
       </Wrapper>
     )
+  }
+
+  /**
+   * Triggered when a message is double clicked.
+   */
+  private onDoubleClick = () => {
+    const { copyMessageOnDoubleClick, copyMessageToClipboard, whisper } = this.props
+
+    if (copyMessageOnDoubleClick) {
+      copyMessageToClipboard(whisper)
+    }
   }
 }
 
@@ -74,8 +85,10 @@ export default class Whisper extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  whisper: SerializedMessage
+  copyMessageOnDoubleClick: boolean
+  copyMessageToClipboard: (message: SerializedMessage) => void
   style: React.CSSProperties
+  whisper: SerializedMessage
 }
 
 /**

@@ -2,10 +2,10 @@ import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
-import MessageContent from 'Components/MessageContent'
+import HistoryMessage from 'Components/HistoryMessage'
 import { SerializedMessage } from 'Libs/Message'
 import base from 'Styled/base'
-import { color, size } from 'Utils/styled'
+import { color } from 'Utils/styled'
 
 /**
  * Message measures cache.
@@ -28,23 +28,6 @@ const Wrapper = styled.div`
   margin-top: 20px;
   padding: 0;
   width: 100%;
-`
-
-/**
- * Message component.
- */
-const Message = styled.div`
-  min-height: ${size('log.minHeight')};
-  padding: 4px 8px;
-`
-
-/**
- * Time component.
- */
-const Time = styled.span`
-  color: ${color('message.time.color')};
-  font-size: 0.77rem;
-  padding-right: 6px;
 `
 
 /**
@@ -91,16 +74,26 @@ export default class History extends React.Component<Props> {
    * @return Element to render.
    */
   private messageRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
-    const message = this.props.messages[index]
+    const { messages } = this.props
+    const message = messages[index]
 
     return (
       <CellMeasurer cache={messageMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-        <Message style={style}>
-          <Time>{message.time}</Time>
-          <MessageContent message={message} />
-        </Message>
+        <HistoryMessage style={style} onDoubleClick={this.onDoubleClick} message={message} />
       </CellMeasurer>
     )
+  }
+
+  /**
+   * Triggered when a message is double clicked.
+   * @param message - The message.
+   */
+  private onDoubleClick = (message: SerializedMessage) => {
+    const { copyMessageOnDoubleClick, copyMessageToClipboard } = this.props
+
+    if (copyMessageOnDoubleClick) {
+      copyMessageToClipboard(message)
+    }
   }
 }
 
@@ -108,5 +101,7 @@ export default class History extends React.Component<Props> {
  * React Props.
  */
 type Props = {
+  copyMessageOnDoubleClick: boolean
+  copyMessageToClipboard: (message: SerializedMessage) => void
   messages: SerializedMessage[]
 }

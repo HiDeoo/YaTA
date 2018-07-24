@@ -25,6 +25,7 @@ import Chat, { ChatClient } from 'Containers/Chat'
 import ChatterDetails from 'Containers/ChatterDetails'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedMessage } from 'Libs/Message'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
@@ -44,6 +45,7 @@ import { getChatters } from 'Store/selectors/chatters'
 import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
 import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
+import { replaceImgTagByAlt } from 'Utils/html'
 import { sanitizeUrlForPreview } from 'Utils/preview'
 
 /**
@@ -137,6 +139,7 @@ class Channel extends React.Component<Props, State> {
         <Chat ref={this.chatClient} />
         <Logs
           logs={logs}
+          copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           pauseAutoScroll={this.props.pauseAutoScroll}
           scrollToNewestLog={this.scrollToNewestLog}
@@ -161,14 +164,16 @@ class Channel extends React.Component<Props, State> {
           username={_.get(loginDetails, 'username')}
         />
         <ChatterDetails
-          chatter={focusedChatter}
+          copyMessageToClipboard={this.copyMessageToClipboard}
+          copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          actionHandler={this.handleAction}
+          canModerate={this.canModerate}
           unfocus={this.unfocusChatter}
           whisper={this.prepareWhisper}
+          chatter={focusedChatter}
           timeout={this.timeout}
           block={this.block}
           ban={this.ban}
-          canModerate={this.canModerate}
-          actionHandler={this.handleAction}
         />
       </FlexLayout>
     )
@@ -351,10 +356,27 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Copy a message to the clipboard if the feature is enabled.
+   * Copy a message to the clipboard.
+   * @param message - The message to copy.
    */
-  private copyToClipboard = (message: string) => {
-    copy(message)
+  private copyMessageToClipboard = (message: SerializedMessage) => {
+    const tmpDiv = document.createElement('div')
+    tmpDiv.innerHTML = replaceImgTagByAlt(message.message)
+
+    const sanitizedMessage = tmpDiv.textContent || tmpDiv.innerText || ''
+
+    this.copyToClipboard(`[${message.time}] ${message.user.displayName}: ${sanitizedMessage}`)
+
+    const selection = window.getSelection()
+    selection.empty()
+  }
+
+  /**
+   * Copies content to the clipboard.
+   * @param content - The content to copy.
+   */
+  private copyToClipboard = (content: string) => {
+    copy(content)
 
     Toaster.show({ message: 'Copied!', intent: Intent.SUCCESS, icon: 'clipboard', timeout: 1000 })
   }

@@ -10,7 +10,6 @@ import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { RawClip } from 'Libs/Twitch'
-import { replaceImgTagByAlt } from 'Utils/html'
 import { withSCProps } from 'Utils/react'
 import { color, ifProp, size } from 'Utils/styled'
 
@@ -262,17 +261,13 @@ export default class Message extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a message is doubled clicked.
+   * Triggered when a message is double clicked.
    */
   private onDoubleClick = () => {
-    if (this.props.copyMessageOnDoubleClick) {
-      this.copyMessage()
+    const { copyMessageOnDoubleClick, copyMessageToClipboard, message } = this.props
 
-      const selection = window.getSelection()
-
-      if (selection.toString().trim().length === 0) {
-        selection.empty()
-      }
+    if (copyMessageOnDoubleClick) {
+      copyMessageToClipboard(message)
     }
   }
 
@@ -289,14 +284,9 @@ export default class Message extends React.Component<Props, State> {
    * Copy the message to the clipboard.
    */
   private copyMessage = () => {
-    const { message } = this.props
+    const { copyMessageToClipboard, message } = this.props
 
-    const tmpDiv = document.createElement('div')
-    tmpDiv.innerHTML = replaceImgTagByAlt(message.message)
-
-    const sanitizedMessage = tmpDiv.textContent || tmpDiv.innerText || ''
-
-    this.props.copyToClipboard(`[${message.time}] ${message.user.displayName}: ${sanitizedMessage}`)
+    copyMessageToClipboard(message)
   }
 
   /**
@@ -380,6 +370,7 @@ type Props = {
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   copyMessageOnDoubleClick: boolean
+  copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage

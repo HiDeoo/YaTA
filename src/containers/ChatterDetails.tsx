@@ -22,6 +22,7 @@ import History from 'Components/History'
 import ActionMenuItems from 'Containers/ActionMenuItems'
 import { ActionHandler, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedMessage } from 'Libs/Message'
 import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
@@ -302,13 +303,19 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderHistory() {
-    const { messages } = this.props
+    const { copyMessageOnDoubleClick, copyMessageToClipboard, messages } = this.props
 
     if (_.isNil(messages) || messages.length === 0) {
       return null
     }
 
-    return <History messages={messages} />
+    return (
+      <History
+        messages={messages}
+        copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+        copyMessageToClipboard={copyMessageToClipboard}
+      />
+    )
   }
 
   /**
@@ -436,6 +443,8 @@ type OwnProps = {
   block: (targetId: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   chatter: SerializedChatter | null
+  copyMessageOnDoubleClick: boolean
+  copyMessageToClipboard: (message: SerializedMessage) => void
   timeout: (username: string, duration: number) => void
   unfocus: () => void
   whisper: (username: string) => void

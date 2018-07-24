@@ -11,6 +11,7 @@ import Notification from 'Components/Notification'
 import Whisper from 'Components/Whisper'
 import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
 
@@ -155,6 +156,7 @@ export default class Logs extends React.Component<Props> {
       ban,
       canModerate,
       copyMessageOnDoubleClick,
+      copyMessageToClipboard,
       copyToClipboard,
       focusChatter,
       showContextMenu,
@@ -168,6 +170,7 @@ export default class Logs extends React.Component<Props> {
           style={style}
           message={log}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          copyMessageToClipboard={copyMessageToClipboard}
           onToggleContextMenu={this.onToggleContextMenu}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
@@ -184,7 +187,14 @@ export default class Logs extends React.Component<Props> {
     } else if (isNotification(log)) {
       LogComponent = <Notification style={style} notification={log} />
     } else if (isWhisper(log)) {
-      LogComponent = <Whisper style={style} whisper={log} />
+      LogComponent = (
+        <Whisper
+          style={style}
+          whisper={log}
+          copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          copyMessageToClipboard={copyMessageToClipboard}
+        />
+      )
     }
 
     if (_.isNil(LogComponent)) {
@@ -207,6 +217,7 @@ type Props = {
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   copyMessageOnDoubleClick: boolean
+  copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
