@@ -26,6 +26,7 @@ export enum Actions {
   UPDATE_ACTION = 'settings/UPDATE_ACTION',
   TOGGLE_HIDE_WHISPERS = 'settings/TOGGLE_HIDE_WHISPERS',
   RESTORE = 'settings/RESTORE',
+  TOGGLE_AUTO_FOCUS_INPUT = 'settings/TOGGLE_AUTO_FOCUS_INPUT',
 }
 
 /**
@@ -34,6 +35,7 @@ export enum Actions {
 export const initialState = {
   actions: {},
   autoConnectInDev: true,
+  autoFocusInput: true,
   copyMessageOnDoubleClick: true,
   hideWhispers: false,
   highlights: {},
@@ -165,6 +167,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         ...action.payload.json,
+      }
+    }
+    case Actions.TOGGLE_AUTO_FOCUS_INPUT: {
+      return {
+        ...state,
+        autoFocusInput: !state.autoFocusInput,
       }
     }
     default: {
@@ -310,6 +318,12 @@ export const restoreSettings = (json: SettingsState) =>
   })
 
 /**
+ * Toggle the 'Automatically focus the input field' setting.
+ * @return The action.
+ */
+export const toggleAutoFocusInput = () => createAction(Actions.TOGGLE_AUTO_FOCUS_INPUT)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -329,6 +343,7 @@ export type SettingsActions =
   | ReturnType<typeof updateAction>
   | ReturnType<typeof toggleHideWhispers>
   | ReturnType<typeof restoreSettings>
+  | ReturnType<typeof toggleAutoFocusInput>
 
 /**
  * Settings state.
@@ -378,6 +393,11 @@ export type SettingsState = {
    * Hides whispers (received & sent).
    */
   hideWhispers: boolean
+
+  /**
+   * Automatically focus the input field when focusing the application.
+   */
+  autoFocusInput: boolean
 }
 
 /**

@@ -7,13 +7,20 @@ import SettingsPanel from 'Components/SettingsPanel'
 import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
 import {
+  toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
   toggleHideWhispers,
   toggleShowContextMenu,
   toggleTheme,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getCopyMessageOnDoubleClick, getHideWhispers, getShowContextMenu, getTheme } from 'Store/selectors/settings'
+import {
+  getAutoFocusInput,
+  getCopyMessageOnDoubleClick,
+  getHideWhispers,
+  getShowContextMenu,
+  getTheme,
+} from 'Store/selectors/settings'
 
 /**
  * ConfirmationControls component.
@@ -48,7 +55,7 @@ class SettingsGeneral extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { copyMessageOnDoubleClick, hideWhispers, showContextMenu, theme } = this.props
+    const { autoFocusInput, copyMessageOnDoubleClick, hideWhispers, showContextMenu, theme } = this.props
     const { isThemeConfirmationOpened } = this.state
 
     return (
@@ -73,6 +80,12 @@ class SettingsGeneral extends React.Component<Props> {
           checked={hideWhispers}
           label="Hide whispers"
           onChange={this.props.toggleHideWhispers}
+        />
+        <Switch
+          description="This only happens when focusing the application."
+          checked={autoFocusInput}
+          label="Automatically focus the input field"
+          onChange={this.props.toggleAutoFocusInput}
         />
       </SettingsPanel>
     )
@@ -129,18 +142,20 @@ class SettingsGeneral extends React.Component<Props> {
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
+    autoFocusInput: getAutoFocusInput(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     hideWhispers: getHideWhispers(state),
     showContextMenu: getShowContextMenu(state),
     theme: getTheme(state),
   }),
-  { toggleCopyMessageOnDoubleClick, toggleHideWhispers, toggleShowContextMenu, toggleTheme }
+  { toggleAutoFocusInput, toggleCopyMessageOnDoubleClick, toggleHideWhispers, toggleShowContextMenu, toggleTheme }
 )(SettingsGeneral)
 
 /**
  * React Props.
  */
 type StateProps = {
+  autoFocusInput: ReturnType<typeof getAutoFocusInput>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   hideWhispers: ReturnType<typeof getHideWhispers>
   showContextMenu: ReturnType<typeof getShowContextMenu>
@@ -151,6 +166,7 @@ type StateProps = {
  * React Props.
  */
 type DispatchProps = {
+  toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleHideWhispers: typeof toggleHideWhispers
   toggleShowContextMenu: typeof toggleShowContextMenu

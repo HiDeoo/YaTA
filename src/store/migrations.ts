@@ -53,4 +53,10 @@ export default {
       settings: { ...state.settings, hideWhispers: initialState.hideWhispers },
     }
   },
+  8: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, autoFocusInput: initialState.autoFocusInput },
+    }
+  },
 }

@@ -84,3 +84,10 @@ export const getHideWhispers = createSelector([getSettingsState], (settings) => 
  * @return The settings.
  */
 export const getSettingsBackup = (state: ApplicationState) => state.settings
+
+/**
+ * Returns the 'Automatically focus the input field' setting.
+ * @param  state - The Redux state.
+ * @return The 'Automatically focus the input field' setting.
+ */
+export const getAutoFocusInput = createSelector([getSettingsState], (settings) => settings.autoFocusInput)

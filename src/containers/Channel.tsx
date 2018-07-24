@@ -43,7 +43,7 @@ import {
 } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
 import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
-import { getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
+import { getAutoFocusInput, getCopyMessageOnDoubleClick, getShowContextMenu } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import { replaceImgTagByAlt } from 'Utils/html'
 import { sanitizeUrlForPreview } from 'Utils/preview'
@@ -94,6 +94,8 @@ class Channel extends React.Component<Props, State> {
     }
 
     this.setHeaderComponents()
+
+    window.addEventListener('focus', this.onFocusWindow)
   }
 
   /**
@@ -115,6 +117,8 @@ class Channel extends React.Component<Props, State> {
   public componentWillUnmount() {
     this.props.setHeaderTitleComponent(null)
     this.props.setHeaderRightComponent(null)
+
+    window.removeEventListener('focus', this.onFocusWindow)
   }
 
   /**
@@ -263,6 +267,15 @@ class Channel extends React.Component<Props, State> {
     }
 
     return ' '
+  }
+
+  /**
+   * Triggered when the application is focused.
+   */
+  private onFocusWindow = () => {
+    if (this.props.autoFocusInput && !_.isNil(this.input.current)) {
+      this.input.current.focus()
+    }
   }
 
   /**
@@ -738,6 +751,7 @@ class Channel extends React.Component<Props, State> {
 const enhance = compose<Props, {}>(
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     (state) => ({
+      autoFocusInput: getAutoFocusInput(state),
       channel: getChannel(state),
       chatters: getChatters(state),
       copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
@@ -764,6 +778,7 @@ export default enhance(Channel)
  * React Props.
  */
 type StateProps = {
+  autoFocusInput: ReturnType<typeof getAutoFocusInput>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
