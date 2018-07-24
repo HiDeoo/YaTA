@@ -40,10 +40,28 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
   }
 
   .highlight {
-    background-color: ${color('log.highlight.background')};
     border-radius: 2px;
-    color: ${color('log.highlight.color')};
     padding: 1px 3px 2px 3px;
+
+    &.Red {
+      background-color: ${color('log.highlight.Red.background')};
+      color: ${color('log.highlight.Red.color')};
+    }
+
+    &.Yellow {
+      background-color: ${color('log.highlight.Yellow.background')};
+      color: ${color('log.highlight.Yellow.color')};
+    }
+
+    &.Green {
+      background-color: ${color('log.highlight.Green.background')};
+      color: ${color('log.highlight.Green.color')};
+    }
+
+    &.Blue {
+      background-color: ${color('log.highlight.Blue.background')};
+      color: ${color('log.highlight.Blue.color')};
+    }
   }
 `
 

@@ -362,7 +362,7 @@ export default class Message implements Serializable<SerializedMessage> {
             parsedMessage[i] = ''
           }
 
-          parsedMessage[startIndex] = `<span class="highlight">${highlightStr}</span>`
+          parsedMessage[startIndex] = `<span class="highlight ${highlight.color}">${highlightStr}</span>`
         })
       })
     }

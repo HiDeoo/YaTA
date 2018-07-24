@@ -2,8 +2,9 @@ import { Button, EditableText, Intent } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import SettingsHighlightColorMenu from 'Components/SettingsHighlightColorMenu'
 import Key from 'Constants/key'
-import { SerializedHighlight } from 'Libs/Highlight'
+import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
 
 /**
  * Wrapper component.
@@ -20,7 +21,7 @@ const Wrapper = styled.div`
  * Pattern component.
  */
 const Pattern = styled(EditableText)`
-  width: calc(100% - 35px);
+  width: calc(100% - 135px);
 `
 
 /**
@@ -80,6 +81,7 @@ export default class SettingsHighlight extends React.Component<Props, State> {
             onConfirm={this.onConfirm}
           />
         </span>
+        <SettingsHighlightColorMenu small color={this.props.highlight.color} onSelect={this.onSelectColor} />
         <DeleteButton minimal icon="trash" intent={Intent.DANGER} onClick={this.onClickRemove} />
       </Wrapper>
     )
@@ -117,10 +119,10 @@ export default class SettingsHighlight extends React.Component<Props, State> {
    * @param pattern - The new pattern.
    */
   private onConfirm = (pattern: string) => {
-    const { highlight, update, validate } = this.props
+    const { highlight, updatePattern, validate } = this.props
 
     if (pattern.length > 0 && validate(pattern)) {
-      update(highlight.id, pattern.toLowerCase())
+      updatePattern(highlight.id, pattern.toLowerCase())
     } else {
       this.setState(({ prevPropsPattern }) => ({ pattern: prevPropsPattern, patternIntent: Intent.NONE }))
     }
@@ -134,6 +136,16 @@ export default class SettingsHighlight extends React.Component<Props, State> {
 
     remove(highlight.id)
   }
+
+  /**
+   * Triggered when a new color is selected.
+   * @param color - The new color name.
+   */
+  private onSelectColor = (color: HighlightColors) => {
+    const { highlight, updateColor } = this.props
+
+    updateColor(highlight.id, color)
+  }
 }
 
 /**
@@ -142,6 +154,7 @@ export default class SettingsHighlight extends React.Component<Props, State> {
 type Props = {
   highlight: SerializedHighlight
   remove: (id: string) => void
-  update: (id: string, pattern: string) => void
+  updateColor: (id: string, color: HighlightColors) => void
+  updatePattern: (id: string, pattern: string) => void
   validate: (pattern: string) => boolean
 }

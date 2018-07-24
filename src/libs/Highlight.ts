@@ -30,8 +30,9 @@ export default class Highlight implements Serializable<SerializedHighlight> {
    * Creates a new highlight instance.
    * @class
    * @param pattern - The highlight pattern.
+   * @param color - The highlight color.
    */
-  constructor(pattern: string) {
+  constructor(pattern: string, private color: HighlightColors) {
     this.id = shortid.generate()
     this.pattern = pattern.toLowerCase()
   }
@@ -42,6 +43,7 @@ export default class Highlight implements Serializable<SerializedHighlight> {
    */
   public serialize() {
     return {
+      color: this.color,
       id: this.id,
       pattern: this.pattern,
     }
@@ -52,6 +54,25 @@ export default class Highlight implements Serializable<SerializedHighlight> {
  * Serialized highlight.
  */
 export type SerializedHighlight = {
+  color: HighlightColors
   id: string
   pattern: string
+}
+
+/**
+ * Highlight color.
+ */
+export type HighlightColor = {
+  background: string
+  color: string
+}
+
+/**
+ * Highlight colors.
+ */
+export enum HighlightColors {
+  Yellow = 'Yellow',
+  Blue = 'Blue',
+  Green = 'Green',
+  Red = 'Red',
 }

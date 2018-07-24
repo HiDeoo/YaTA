@@ -1,3 +1,6 @@
+import * as _ from 'lodash'
+
+import { HighlightColors } from 'Libs/Highlight'
 import { initialState } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 
@@ -63,6 +66,24 @@ export default {
     return {
       ...state,
       settings: { ...state.settings, showViewerCount: initialState.showViewerCount },
+    }
+  },
+  10: (state: ApplicationState): ApplicationState => {
+    const newHighlights = _.reduce(
+      state.settings.highlights,
+      (highlights, highlight) => {
+        highlights[highlight.id] = !_.isNil(highlight.color)
+          ? highlight
+          : { ...highlight, color: HighlightColors.Yellow }
+
+        return highlights
+      },
+      {}
+    )
+
+    return {
+      ...state,
+      settings: { ...state.settings, highlights: newHighlights },
     }
   },
 }

@@ -4,18 +4,22 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import FlexContent from 'Components/FlexContent'
+import FlexLayout from 'Components/FlexLayout'
 import NonIdealState from 'Components/NonIdealState'
 import SettingsHighlight from 'Components/SettingsHighlight'
+import SettingsHighlightColorMenu from 'Components/SettingsHighlightColorMenu'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
 import Key from 'Constants/key'
-import Highlight from 'Libs/Highlight'
+import Highlight, { HighlightColors } from 'Libs/Highlight'
 import {
   addHighlight,
   addHighlightsIgnoredUsers,
   removeHighlight,
   removeHighlightsIgnoredUser,
-  updateHighlight,
+  updateHighlightColor,
+  updateHighlightPattern,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getHighlights, getHighlightsIgnoredUsers } from 'Store/selectors/settings'
@@ -27,6 +31,13 @@ import { color } from 'Utils/styled'
 const Notice = styled.div`
   font-style: italic;
   margin-bottom: 20px;
+`
+
+/**
+ * Form component.
+ */
+const Form = styled(FlexContent)`
+  overflow-y: initial;
 `
 
 /**
@@ -61,7 +72,7 @@ const IgnoredUsers = styled(TagInput)`
 /**
  * React State.
  */
-const initialState = { newHighlight: '', newHighlightIntent: Intent.NONE }
+const initialState = { newHighlight: '', newHighlightIntent: Intent.NONE, newColor: HighlightColors.Yellow }
 type State = Readonly<typeof initialState>
 
 /**
@@ -69,25 +80,32 @@ type State = Readonly<typeof initialState>
  */
 class SettingsHighlights extends React.Component<Props, State> {
   public state: State = initialState
+  private newHighlightInput: HTMLInputElement | null = null
 
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { newHighlight, newHighlightIntent } = this.state
+    const { newColor, newHighlight, newHighlightIntent } = this.state
     const { highlights, ignoredUsers } = this.props
 
     return (
       <SettingsPanel>
         <Notice>Case-insensitive. Username included by default.</Notice>
-        <SettingsInput
-          intent={newHighlightIntent}
-          placeholder="Add a new highlight…"
-          value={newHighlight}
-          onChange={this.onChangeNewHighlight}
-          onKeyDown={this.onKeyDownNewHighlight}
-        />
+        <FlexLayout>
+          <Form>
+            <SettingsInput
+              inputRef={this.setNewHighlightInputRef}
+              intent={newHighlightIntent}
+              placeholder="Add a new highlight…"
+              value={newHighlight}
+              onChange={this.onChangeNewHighlight}
+              onKeyDown={this.onKeyDownNewHighlight}
+            />
+          </Form>
+          <SettingsHighlightColorMenu color={newColor} onSelect={this.onSelectColor} />
+        </FlexLayout>
         <Highlights>
           {_.size(highlights) > 0 ? (
             _.map(highlights, (highlight) => (
@@ -95,7 +113,8 @@ class SettingsHighlights extends React.Component<Props, State> {
                 key={highlight.id}
                 highlight={highlight}
                 validate={this.validate}
-                update={this.props.updateHighlight}
+                updateColor={this.props.updateHighlightColor}
+                updatePattern={this.props.updateHighlightPattern}
                 remove={this.props.removeHighlight}
               />
             ))
@@ -115,6 +134,26 @@ class SettingsHighlights extends React.Component<Props, State> {
         />
       </SettingsPanel>
     )
+  }
+
+  /**
+   * Sets the new highlight input ref.
+   * @param ref - The reference to the inner input element.
+   */
+  private setNewHighlightInputRef = (ref: HTMLInputElement | null) => {
+    this.newHighlightInput = ref
+  }
+
+  /**
+   * Triggered when a new color is picked.
+   * @param newColor - The new color name.
+   */
+  private onSelectColor = (newColor: HighlightColors) => {
+    this.setState(() => ({ newColor }))
+
+    if (!_.isNil(this.newHighlightInput)) {
+      this.newHighlightInput.focus()
+    }
   }
 
   /**
@@ -159,10 +198,10 @@ class SettingsHighlights extends React.Component<Props, State> {
     if (event.key === Key.Enter) {
       event.preventDefault()
 
-      const { newHighlight } = this.state
+      const { newColor, newHighlight } = this.state
 
       if (this.validate(newHighlight)) {
-        const highlight = new Highlight(newHighlight)
+        const highlight = new Highlight(newHighlight, newColor)
 
         this.props.addHighlight(highlight.serialize())
 
@@ -186,7 +225,14 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     highlights: getHighlights(state),
     ignoredUsers: getHighlightsIgnoredUsers(state),
   }),
-  { addHighlight, addHighlightsIgnoredUsers, removeHighlight, removeHighlightsIgnoredUser, updateHighlight }
+  {
+    addHighlight,
+    addHighlightsIgnoredUsers,
+    removeHighlight,
+    removeHighlightsIgnoredUser,
+    updateHighlightColor,
+    updateHighlightPattern,
+  }
 )(SettingsHighlights)
 
 /**
@@ -205,7 +251,8 @@ type DispatchProps = {
   addHighlightsIgnoredUsers: typeof addHighlightsIgnoredUsers
   removeHighlight: typeof removeHighlight
   removeHighlightsIgnoredUser: typeof removeHighlightsIgnoredUser
-  updateHighlight: typeof updateHighlight
+  updateHighlightColor: typeof updateHighlightColor
+  updateHighlightPattern: typeof updateHighlightPattern
 }
 
 /**

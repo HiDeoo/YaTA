@@ -4,7 +4,7 @@ import { REHYDRATE } from 'redux-persist/lib/constants'
 
 import Theme from 'Constants/theme'
 import { SerializedAction } from 'Libs/Action'
-import { SerializedHighlight } from 'Libs/Highlight'
+import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
 import { createAction, RehydrateAction } from 'Utils/redux'
 
 /**
@@ -17,7 +17,8 @@ export enum Actions {
   TOGGLE_SHOW_CONTEXT_MENU = 'settings/TOGGLE_SHOW_CONTEXT_MENU',
   TOGGLE_AUTO_CONNECT_IN_DEV = 'settings/TOGGLE_AUTO_CONNECT_IN_DEV',
   ADD_HIGHLIGHT = 'settings/ADD_HIGHLIGHT',
-  UPDATE_HIGHLIGHT = 'settings/UPDATE_HIGHLIGHT',
+  UPDATE_HIGHLIGHT_PATTERN = 'settings/UPDATE_HIGHLIGHT_PATTERN',
+  UPDATE_HIGHLIGHT_COLOR = 'settings/UPDATE_HIGHLIGHT_COLOR',
   REMOVE_HIGHLIGHT = 'settings/REMOVE_HIGHLIGHT',
   ADD_HIGHLIGHTS_IGNORED_USERS = 'settings/ADD_HIGHLIGHTS_IGNORED_USERS',
   REMOVE_HIGHLIGHTS_IGNORED_USER = 'settings/REMOVE_HIGHLIGHTS_IGNORED_USER',
@@ -100,12 +101,20 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         highlights: { ...state.highlights, [highlight.id]: highlight },
       }
     }
-    case Actions.UPDATE_HIGHLIGHT: {
+    case Actions.UPDATE_HIGHLIGHT_PATTERN: {
       const { id, pattern } = action.payload
 
       return {
         ...state,
         highlights: { ...state.highlights, [id]: { ...state.highlights[id], pattern } },
+      }
+    }
+    case Actions.UPDATE_HIGHLIGHT_COLOR: {
+      const { id, color } = action.payload
+
+      return {
+        ...state,
+        highlights: { ...state.highlights, [id]: { ...state.highlights[id], color } },
       }
     }
     case Actions.REMOVE_HIGHLIGHT: {
@@ -241,10 +250,22 @@ export const addHighlight = (highlight: SerializedHighlight) =>
  * @param  pattern - The new pattern.
  * @return The action.
  */
-export const updateHighlight = (id: string, pattern: string) =>
-  createAction(Actions.UPDATE_HIGHLIGHT, {
+export const updateHighlightPattern = (id: string, pattern: string) =>
+  createAction(Actions.UPDATE_HIGHLIGHT_PATTERN, {
     id,
     pattern,
+  })
+
+/**
+ * Update an highlight color.
+ * @param  id - The highlight id.
+ * @param  color - The new color.
+ * @return The action.
+ */
+export const updateHighlightColor = (id: string, color: HighlightColors) =>
+  createAction(Actions.UPDATE_HIGHLIGHT_COLOR, {
+    color,
+    id,
   })
 
 /**
@@ -348,7 +369,8 @@ export type SettingsActions =
   | ReturnType<typeof toggleShowContextMenu>
   | ReturnType<typeof toggleAutoConnectInDev>
   | ReturnType<typeof addHighlight>
-  | ReturnType<typeof updateHighlight>
+  | ReturnType<typeof updateHighlightPattern>
+  | ReturnType<typeof updateHighlightColor>
   | ReturnType<typeof removeHighlight>
   | ReturnType<typeof addHighlightsIgnoredUsers>
   | ReturnType<typeof removeHighlightsIgnoredUser>

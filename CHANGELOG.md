@@ -1,7 +1,8 @@
-# Unreleased
+# 0.3.0
 
 ### 🚀 New Feature
 
+- Highlight colors can now be configured per highlight.
 - Add profile picture to the chatter dialog.
 - Pause auto-scrolling temporarily when opening a context menu.
 - If enabled, messages from the user's chat history can be copied on double click.
