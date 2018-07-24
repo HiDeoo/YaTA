@@ -303,7 +303,7 @@ export default class Input extends React.Component<Props, State> {
       this.splittedValueBeforeCompletion = null
     }
 
-    if (event.key === Key.Enter) {
+    if (event.key === Key.Enter && event.keyCode !== 229) {
       event.preventDefault()
 
       if (!this.validateInputValue()) {
