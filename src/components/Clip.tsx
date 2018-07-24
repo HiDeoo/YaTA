@@ -1,4 +1,4 @@
-import { Card } from '@blueprintjs/core'
+import { Card, Text } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -36,14 +36,18 @@ const Details = styled(FlexContent)`
 /**
  * Title component.
  */
-const Title = styled.div`
+const Title = styled(Text).attrs({
+  ellipsize: true,
+})`
   font-size: 0.9rem;
 `
 
 /**
  * Meta component.
  */
-const Meta = styled.div`
+const Meta = styled(Text).attrs({
+  ellipsize: true,
+})`
   color: ${color('clips.meta')};
   font-size: 0.72rem;
 `
