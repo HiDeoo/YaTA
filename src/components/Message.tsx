@@ -104,19 +104,36 @@ const Username = styled.span`
 `
 
 /**
+ * React State.
+ */
+const initialState = { isContextMenuOpened: false }
+type State = Readonly<typeof initialState>
+
+/**
  * Message Component.
  */
-export default class Message extends React.Component<Props> {
+export default class Message extends React.Component<Props, State> {
+  public state: State = initialState
+
   /**
    * Lifecycle: shouldComponentUpdate.
    * @param  nextProps - The next props.
+   * @param  nextState - The next state.
    * @return A boolean to indicate if the component should update on state or props change.
    */
-  public shouldComponentUpdate(nextProps: Props) {
+  public shouldComponentUpdate(nextProps: Props, nextState: State) {
+    const { isContextMenuOpened } = this.state
+    const { isContextMenuOpened: nextIsContextMenuOpened } = nextState
+
     const { message, style } = this.props
     const { message: nextMessage, style: nextStyle } = nextProps
 
-    return message.id !== nextMessage.id || message.purged !== nextMessage.purged || !_.isEqual(style, nextStyle)
+    return (
+      isContextMenuOpened !== nextIsContextMenuOpened ||
+      message.id !== nextMessage.id ||
+      message.purged !== nextMessage.purged ||
+      !_.isEqual(style, nextStyle)
+    )
   }
 
   /**
@@ -210,7 +227,7 @@ export default class Message extends React.Component<Props> {
     )
 
     return (
-      <Popover content={menu} lazy>
+      <Popover content={menu} lazy onInteraction={this.onToggleContextMenu} isOpen={this.state.isContextMenuOpened}>
         <MenuButton icon="menu" minimal />
       </Popover>
     )
@@ -228,6 +245,20 @@ export default class Message extends React.Component<Props> {
     }
 
     return <Badges dangerouslySetInnerHTML={{ __html: badges }} />
+  }
+
+  /**
+   * Triggered when interacting with the context menu.
+   * @param nextOpenState - `true` when opening.
+   */
+  private onToggleContextMenu = (nextOpenState: boolean) => {
+    const { isContextMenuOpened } = this.state
+
+    this.setState(() => ({ isContextMenuOpened: nextOpenState }))
+
+    if (isContextMenuOpened !== nextOpenState) {
+      this.props.onToggleContextMenu(nextOpenState)
+    }
   }
 
   /**
@@ -352,6 +383,7 @@ type Props = {
   copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage
+  onToggleContextMenu: (open: boolean) => void
   showContextMenu: boolean
   style: React.CSSProperties
   timeout: (username: string, duration: number) => void

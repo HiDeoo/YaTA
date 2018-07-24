@@ -139,6 +139,7 @@ class Channel extends React.Component<Props, State> {
           logs={logs}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           pauseAutoScroll={this.props.pauseAutoScroll}
+          scrollToNewestLog={this.scrollToNewestLog}
           showContextMenu={showContextMenu}
           focusChatter={this.focusChatter}
           copyToClipboard={this.copyToClipboard}
@@ -187,7 +188,7 @@ class Channel extends React.Component<Props, State> {
         <HeaderChannelState
           isAutoScrollPaused={isAutoScrollPaused}
           roomState={roomState}
-          unpauseAutoScroll={this.unpauseAutoScroll}
+          scrollToNewestLog={this.scrollToNewestLog}
         />
         {isMod &&
           !_.isNil(roomState) && (
@@ -274,9 +275,9 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Re-enables auto-scrolling.
+   * Scrolls to the newest log available.
    */
-  private unpauseAutoScroll = () => {
+  private scrollToNewestLog = () => {
     if (!_.isNil(this.logsComponent.current) && !_.isNil(this.logsComponent.current.list.current)) {
       this.logsComponent.current.list.current.scrollToRow(this.props.logs.length)
     }

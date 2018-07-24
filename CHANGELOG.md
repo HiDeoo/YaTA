@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add profile picture to the chatter dialog.
+- Pause auto-scrolling temporarily when opening a context menu.
 
 ### 🐛 Bug Fix
 

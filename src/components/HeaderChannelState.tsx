@@ -60,7 +60,7 @@ export default class HeaderChannelState extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { isAutoScrollPaused, unpauseAutoScroll, roomState } = this.props
+    const { isAutoScrollPaused, roomState, scrollToNewestLog } = this.props
 
     const r9k = _.get(roomState, 'r9k', false)
     const emoteOnly = _.get(roomState, 'emoteOnly', false)
@@ -94,7 +94,7 @@ export default class HeaderChannelState extends React.Component<Props> {
       <>
         {isAutoScrollPaused && (
           <Tooltip content="Auto scrolling disabled">
-            <PauseButton icon="pause" minimal onClick={unpauseAutoScroll} />
+            <PauseButton icon="pause" minimal onClick={scrollToNewestLog} />
           </Tooltip>
         )}
         {showTwitchState && (
@@ -138,7 +138,7 @@ export default class HeaderChannelState extends React.Component<Props> {
 type Props = {
   isAutoScrollPaused: boolean
   roomState: SerializedRoomState | null
-  unpauseAutoScroll: () => void
+  scrollToNewestLog: () => void
 }
 
 /**

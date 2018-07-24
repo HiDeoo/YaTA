@@ -107,9 +107,7 @@ export default class Logs extends React.Component<Props> {
     const pauseAutoScroll = offset - clientHeight > 10
 
     if (pauseAutoScroll !== this.pauseAutoScroll) {
-      this.pauseAutoScroll = pauseAutoScroll
-
-      this.props.pauseAutoScroll(this.pauseAutoScroll)
+      this.togglePauseAutoScroll(pauseAutoScroll)
     }
   }
 
@@ -118,6 +116,28 @@ export default class Logs extends React.Component<Props> {
    */
   private onResize = () => {
     this.logMeasureCache.clearAll()
+  }
+
+  /**
+   * Triggered when a message context menu is opened or closed.
+   * @param open - `true` when opening.
+   */
+  private onToggleContextMenu = (open: boolean) => {
+    this.togglePauseAutoScroll(open)
+
+    if (!open) {
+      this.props.scrollToNewestLog()
+    }
+  }
+
+  /**
+   * Pauses or un-pauses the auto scroll.
+   * @param pause - `true` when pausing.
+   */
+  private togglePauseAutoScroll(pause: boolean) {
+    this.pauseAutoScroll = pause
+
+    this.props.pauseAutoScroll(pause)
   }
 
   /**
@@ -148,6 +168,7 @@ export default class Logs extends React.Component<Props> {
           style={style}
           message={log}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          onToggleContextMenu={this.onToggleContextMenu}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
           actionHandler={actionHandler}
@@ -190,6 +211,7 @@ type Props = {
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
   pauseAutoScroll: (pause: boolean) => void
+  scrollToNewestLog: () => void
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
   whisper: (username: string) => void
