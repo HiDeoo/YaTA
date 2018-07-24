@@ -15,6 +15,7 @@
 - Improve chatter dialog UI to avoid flashes when done loading details.
 - Fix an UI issue with clips having a very long title.
 - Fix an issue with dead keys.
+- Prevent isolated @ characters to be identified as mentions.
 
 # 0.2.1
 

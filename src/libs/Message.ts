@@ -323,7 +323,7 @@ export default class Message implements Serializable<SerializedMessage> {
       } else if (word.text === '@') {
         const nextWord = index < words.length - 1 ? words[index + 1] : null
 
-        if (!_.isNil(nextWord)) {
+        if (!_.isNil(nextWord) && nextWord.text.trim().length > 0) {
           const startIndex = word.index
           const endIndex = nextWord.index + nextWord.length
 
