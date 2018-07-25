@@ -4,11 +4,13 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
+import SettingsPanelSection from 'Components/SettingsPanelSection'
 import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
 import {
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
+  toggleDisableDialogAnimations,
   toggleHideWhispers,
   toggleShowContextMenu,
   toggleShowViewerCount,
@@ -18,6 +20,7 @@ import { ApplicationState } from 'Store/reducers'
 import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
+  getDisableDialogAnimations,
   getHideWhispers,
   getShowContextMenu,
   getShowViewerCount,
@@ -60,6 +63,7 @@ class SettingsGeneral extends React.Component<Props> {
     const {
       autoFocusInput,
       copyMessageOnDoubleClick,
+      disableDialogAnimations,
       hideWhispers,
       showContextMenu,
       showViewerCount,
@@ -69,39 +73,55 @@ class SettingsGeneral extends React.Component<Props> {
 
     return (
       <SettingsPanel>
-        <Popover isOpen={isThemeConfirmationOpened} popoverClassName={Classes.POPOVER_CONTENT_SIZING} usePortal={false}>
-          <Switch checked={theme === Theme.Dark} label="Dark theme" onChange={this.onToggleTheme} />
-          {this.renderThemeConfirmation()}
-        </Popover>
-        <Switch
-          checked={copyMessageOnDoubleClick}
-          label="Copy message on double click"
-          onChange={this.props.toggleCopyMessageOnDoubleClick}
-        />
-        <Switch
-          description="Menu next to each message to quickly access various actions."
-          checked={showContextMenu}
-          label="Show context menu"
-          onChange={this.props.toggleShowContextMenu}
-        />
-        <Switch
-          description="You will still be able to send whispers."
-          checked={hideWhispers}
-          label="Hide whispers"
-          onChange={this.props.toggleHideWhispers}
-        />
-        <Switch
-          description="This only happens when focusing the application."
-          checked={autoFocusInput}
-          label="Automatically focus the input field"
-          onChange={this.props.toggleAutoFocusInput}
-        />
-        <Switch
-          description="Updated every 2mins."
-          checked={showViewerCount}
-          label="Show viewer count"
-          onChange={this.props.toggleShowViewerCount}
-        />
+        <SettingsPanelSection title="Features">
+          <Switch
+            checked={copyMessageOnDoubleClick}
+            label="Copy message on double click"
+            onChange={this.props.toggleCopyMessageOnDoubleClick}
+          />
+          <Switch
+            description="Menu next to each message to quickly access various actions."
+            checked={showContextMenu}
+            label="Show context menu"
+            onChange={this.props.toggleShowContextMenu}
+          />
+          <Switch
+            description="This only happens when focusing the application."
+            checked={autoFocusInput}
+            label="Automatically focus the input field"
+            onChange={this.props.toggleAutoFocusInput}
+          />
+        </SettingsPanelSection>
+        <SettingsPanelSection title="UI">
+          <Popover
+            isOpen={isThemeConfirmationOpened}
+            popoverClassName={Classes.POPOVER_CONTENT_SIZING}
+            usePortal={false}
+          >
+            <Switch checked={theme === Theme.Dark} label="Dark theme" onChange={this.onToggleTheme} />
+            {this.renderThemeConfirmation()}
+          </Popover>
+          <Switch
+            description="Dialogs include the chatter details & chatters list."
+            checked={disableDialogAnimations}
+            label="Disable dialog animations"
+            onChange={this.props.toggleDisableDialogAnimations}
+          />
+        </SettingsPanelSection>
+        <SettingsPanelSection title="Streamer mode">
+          <Switch
+            description="You will still be able to send whispers."
+            checked={hideWhispers}
+            label="Hide whispers"
+            onChange={this.props.toggleHideWhispers}
+          />
+          <Switch
+            description="Updated every 2mins."
+            checked={showViewerCount}
+            label="Show viewer count"
+            onChange={this.props.toggleShowViewerCount}
+          />
+        </SettingsPanelSection>
       </SettingsPanel>
     )
   }
@@ -159,6 +179,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     autoFocusInput: getAutoFocusInput(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+    disableDialogAnimations: getDisableDialogAnimations(state),
     hideWhispers: getHideWhispers(state),
     showContextMenu: getShowContextMenu(state),
     showViewerCount: getShowViewerCount(state),
@@ -167,6 +188,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   {
     toggleAutoFocusInput,
     toggleCopyMessageOnDoubleClick,
+    toggleDisableDialogAnimations,
     toggleHideWhispers,
     toggleShowContextMenu,
     toggleShowViewerCount,
@@ -180,6 +202,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 type StateProps = {
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
+  disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   hideWhispers: ReturnType<typeof getHideWhispers>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   showViewerCount: ReturnType<typeof getShowViewerCount>
@@ -192,6 +215,7 @@ type StateProps = {
 type DispatchProps = {
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
+  toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
   toggleHideWhispers: typeof toggleHideWhispers
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleShowViewerCount: typeof toggleShowViewerCount

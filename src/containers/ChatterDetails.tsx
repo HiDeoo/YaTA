@@ -27,6 +27,7 @@ import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
+import { getDisableDialogAnimations } from 'Store/selectors/settings'
 import { withSCProps } from 'Utils/react'
 import { ifProp, size } from 'Utils/styled'
 
@@ -154,7 +155,7 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { chatter } = this.props
+    const { chatter, disableDialogAnimations } = this.props
     const { details } = this.state
 
     if (_.isNil(chatter)) {
@@ -169,7 +170,12 @@ class ChatterDetails extends React.Component<Props, State> {
     )
 
     return (
-      <Dialog isOpen={!_.isNil(chatter)} onClose={this.onClose} title={header}>
+      <Dialog
+        isOpen={!_.isNil(chatter)}
+        onClose={this.onClose}
+        title={header}
+        transitionName={disableDialogAnimations ? '' : undefined}
+      >
         <div className={Classes.DIALOG_BODY}>
           {this.renderDetails()}
           {this.renderModerationTools()}
@@ -423,6 +429,7 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
   const getChatterMessages = makeGetChatterMessages()
 
   return {
+    disableDialogAnimations: getDisableDialogAnimations(state),
     messages: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterMessages(state, ownProps.chatter.id)) : null,
   }
 })(ChatterDetails)
@@ -431,6 +438,7 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
  * React Props.
  */
 type StateProps = {
+  disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   messages: ReturnType<typeof getLogsByIds> | null
 }
 

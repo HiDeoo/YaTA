@@ -98,3 +98,13 @@ export const getAutoFocusInput = createSelector([getSettingsState], (settings) =
  * @return The 'Show viewer count' setting.
  */
 export const getShowViewerCount = createSelector([getSettingsState], (settings) => settings.showViewerCount)
+
+/**
+ * Returns the 'Disable dialog animations' setting.
+ * @param  state - The Redux state.
+ * @return The 'Disable dialog animations' setting.
+ */
+export const getDisableDialogAnimations = createSelector(
+  [getSettingsState],
+  (settings) => settings.disableDialogAnimations
+)

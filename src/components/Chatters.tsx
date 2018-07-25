@@ -102,7 +102,7 @@ export default class Chatters extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { toggle, visible } = this.props
+    const { disableDialogAnimations, toggle, visible } = this.props
     const { count, didFail } = this.state
 
     let content: JSX.Element
@@ -120,7 +120,13 @@ export default class Chatters extends React.Component<Props, State> {
     const title = `Chatters List${!_.isNil(count) ? ` - ${count}` : ''}`
 
     return (
-      <Dialog isOpen={visible} onClose={toggle} icon="people" title={title}>
+      <Dialog
+        isOpen={visible}
+        onClose={toggle}
+        icon="people"
+        title={title}
+        transitionName={disableDialogAnimations ? '' : undefined}
+      >
         <Content>{content}</Content>
       </Dialog>
     )
@@ -277,6 +283,7 @@ export default class Chatters extends React.Component<Props, State> {
  */
 type Props = {
   channel: string
+  disableDialogAnimations: boolean
   toggle: () => void
   visible: boolean
 }

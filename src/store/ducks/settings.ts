@@ -29,6 +29,7 @@ export enum Actions {
   RESTORE = 'settings/RESTORE',
   TOGGLE_AUTO_FOCUS_INPUT = 'settings/TOGGLE_AUTO_FOCUS_INPUT',
   TOGGLE_SHOW_VIEWER_COUNT = 'settings/TOGGLE_SHOW_VIEWER_COUNT',
+  TOGGLE_DISABLE_DIALOG_ANIMATIONS = 'settings/TOGGLE_DISABLE_DIALOG_ANIMATIONS',
 }
 
 /**
@@ -39,6 +40,7 @@ export const initialState = {
   autoConnectInDev: true,
   autoFocusInput: true,
   copyMessageOnDoubleClick: true,
+  disableDialogAnimations: false,
   hideWhispers: false,
   highlights: {},
   highlightsIgnoredUsers: [],
@@ -190,6 +192,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         showViewerCount: !state.showViewerCount,
+      }
+    }
+    case Actions.TOGGLE_DISABLE_DIALOG_ANIMATIONS: {
+      return {
+        ...state,
+        disableDialogAnimations: !state.disableDialogAnimations,
       }
     }
     default: {
@@ -359,6 +367,12 @@ export const toggleAutoFocusInput = () => createAction(Actions.TOGGLE_AUTO_FOCUS
 export const toggleShowViewerCount = () => createAction(Actions.TOGGLE_SHOW_VIEWER_COUNT)
 
 /**
+ * Toggle the 'Disable dialog animations' setting.
+ * @return The action.
+ */
+export const toggleDisableDialogAnimations = () => createAction(Actions.TOGGLE_DISABLE_DIALOG_ANIMATIONS)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -381,6 +395,7 @@ export type SettingsActions =
   | ReturnType<typeof restoreSettings>
   | ReturnType<typeof toggleAutoFocusInput>
   | ReturnType<typeof toggleShowViewerCount>
+  | ReturnType<typeof toggleDisableDialogAnimations>
 
 /**
  * Settings state.
@@ -440,6 +455,11 @@ export type SettingsState = {
    * Shows the viewer count in the header.
    */
   showViewerCount: boolean
+
+  /**
+   * Disables dialog animations.
+   */
+  disableDialogAnimations: boolean
 }
 
 /**

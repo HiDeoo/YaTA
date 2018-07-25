@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Make the highlight color selection UI more user-friendly.
+- Add a new setting (disabled by default) to disable dialog animations.
 
 ### 🐛 Bug Fix
 

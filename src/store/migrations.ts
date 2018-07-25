@@ -86,4 +86,10 @@ export default {
       settings: { ...state.settings, highlights: newHighlights },
     }
   },
+  11: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, disableDialogAnimations: initialState.disableDialogAnimations },
+    }
+  },
 }

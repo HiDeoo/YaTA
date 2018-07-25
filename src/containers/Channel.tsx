@@ -46,6 +46,7 @@ import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
 import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
+  getDisableDialogAnimations,
   getShowContextMenu,
   getShowViewerCount,
 } from 'Store/selectors/settings'
@@ -163,8 +164,15 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { channel, copyMessageOnDoubleClick, loginDetails, logs, showContextMenu } = this.props
     const { focusedChatter, showChatters } = this.state
+    const {
+      channel,
+      copyMessageOnDoubleClick,
+      disableDialogAnimations,
+      loginDetails,
+      logs,
+      showContextMenu,
+    } = this.props
 
     if (_.isNil(channel)) {
       return <Spinner large />
@@ -176,7 +184,12 @@ class Channel extends React.Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
-        <Chatters visible={showChatters} toggle={this.toggleChatters} channel={channel} />
+        <Chatters
+          visible={showChatters}
+          toggle={this.toggleChatters}
+          channel={channel}
+          disableDialogAnimations={disableDialogAnimations}
+        />
         <Chat ref={this.chatClient} />
         <Logs
           logs={logs}
@@ -839,6 +852,7 @@ const enhance = compose<Props, {}>(
       channel: getChannel(state),
       chatters: getChatters(state),
       copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
+      disableDialogAnimations: getDisableDialogAnimations(state),
       emotes: getEmotes(state),
       history: getHistory(state),
       historyIndex: getHistoryIndex(state),
@@ -867,6 +881,7 @@ type StateProps = {
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
+  disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   emotes: ReturnType<typeof getEmotes>
   history: ReturnType<typeof getHistory>
   historyIndex: ReturnType<typeof getHistoryIndex>

@@ -52,6 +52,10 @@ const light = {
   },
   settings: {
     description: Colors.GRAY1,
+    section: {
+      border: Colors.GRAY5,
+      color: Colors.GRAY1,
+    },
     table: {
       background: Colors.LIGHT_GRAY2,
       border: Colors.GRAY5,
