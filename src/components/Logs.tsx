@@ -34,6 +34,7 @@ const Wrapper = styled(FlexContent)<WrapperProps>`
 export default class Logs extends React.Component<Props> {
   public list = React.createRef<List>()
   private pauseAutoScroll: boolean = false
+  private previousPauseAutoScroll: boolean = false
   private logMeasureCache: CellMeasurerCache
 
   /**
@@ -128,9 +129,13 @@ export default class Logs extends React.Component<Props> {
    * @param open - `true` when opening.
    */
   private onToggleContextMenu = (open: boolean) => {
-    this.togglePauseAutoScroll(open)
+    if (open) {
+      this.previousPauseAutoScroll = this.pauseAutoScroll
 
-    if (!open) {
+      this.togglePauseAutoScroll(open)
+    } else if (!open && !this.previousPauseAutoScroll) {
+      this.togglePauseAutoScroll(open)
+
       this.props.scrollToNewestLog()
     }
   }

@@ -4,12 +4,19 @@
 
 - Make the highlight color selection UI more user-friendly.
 - Add a new setting (disabled by default) to disable dialog animations.
+- Improve auto-scrolling behavior when closing a context menu:
+  - If auto-scrolling is paused when opening, closing will persist the pause.
+  - If auto-scrolling is enabled when opening, closing will scroll to the newest message.
 
 ### 🐛 Bug Fix
 
 - Improve selection handling when copying a message using double click.
 - Fix an issue with various commands (`/me`, `/w`, `/r`, _etc._) that could be sent as plain text.
 - Fix various issues with other people mentions (`@notYou`) highlighting.
+
+### ⚙️ Internal
+
+- Upgrade to Blueprint 3.0.
 
 # 0.3.0
 

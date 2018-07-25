@@ -59,6 +59,11 @@ const Changelog = styled.div`
     font-size: 1em;
     padding: 2px 5px;
   }
+
+  & ul ul,
+  .${Classes.DARK} & ul ul {
+    padding-left: 16px;
+  }
 `
 
 /**
