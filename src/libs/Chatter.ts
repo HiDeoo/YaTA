@@ -1,6 +1,8 @@
 import * as _ from 'lodash'
+import * as shortid from 'shortid'
 import { UserState } from 'twitch-js'
 
+import LogType from 'Constants/logType'
 import base, { TwitchUserColorMap } from 'Styled/base'
 import { Serializable } from 'Utils/typescript'
 
@@ -8,6 +10,29 @@ import { Serializable } from 'Utils/typescript'
  * Chatter class.
  */
 export default class Chatter implements Serializable<SerializedChatter> {
+  /**
+   * Creates a potential chatter which represents a user with only its username known.
+   * @param username - The chatter username.
+   * @return The potential chatter.
+   */
+  public static createPotentialChatter(username: string) {
+    return new Chatter({
+      badges: null,
+      'badges-raw': '',
+      color: null,
+      'display-name': username,
+      emotes: null,
+      id: shortid.generate(),
+      'message-type': LogType.Chat,
+      mod: false,
+      subscriber: false,
+      'tmi-sent-ts': Date.now().toString(),
+      'user-id': shortid.generate(),
+      'user-type': null,
+      username: username.toLowerCase(),
+    })
+  }
+
   public id: string
   public color: string | null
   public userName: string
@@ -59,7 +84,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
       isBroadcaster: this.isBroadcaster,
       isMod: this.isMod,
       isSelf: this.isSelf,
-      showUsername: this.showUserName,
+      showUserName: this.showUserName,
       userName: this.userName,
     }
   }
@@ -89,6 +114,6 @@ export type SerializedChatter = {
   isBroadcaster: boolean
   isMod: boolean
   isSelf: boolean
-  showUsername: boolean
+  showUserName: boolean
   userName: string
 }

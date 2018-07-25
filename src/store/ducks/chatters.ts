@@ -11,6 +11,7 @@ export enum Actions {
   ADD = 'chatters/ADD',
   IGNORE_USER = 'chatters/IGNORE_USER',
   CLEAR = 'chatters/CLEAR',
+  ADD_POTENTIAL = 'chatters/ADD_POTENTIAL',
 }
 
 /**
@@ -33,9 +34,19 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
       const { messageId, chatter } = action.payload
 
       if (_.isNil(_.get(state.byId, chatter.id))) {
+        let { byId } = state
+
+        const potentialUserId = _.get(state.byName, chatter.userName)
+
+        // If the user is known as a potential chatter, remove the old entry.
+        if (!_.isNil(potentialUserId)) {
+          const { [potentialUserId]: potentialUser, ...byIdWithoutPotentialChatter } = byId
+          byId = byIdWithoutPotentialChatter
+        }
+
         return {
           ...state,
-          byId: { ...state.byId, [chatter.id]: { ...chatter, messages: [messageId] } },
+          byId: { ...byId, [chatter.id]: { ...chatter, messages: [messageId] } },
           byName: { ...state.byName, [chatter.userName]: chatter.id },
         }
       }
@@ -46,6 +57,19 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
           ...state.byId,
           [chatter.id]: { ...state.byId[chatter.id], messages: [...state.byId[chatter.id].messages, messageId] },
         },
+      }
+    }
+    case Actions.ADD_POTENTIAL: {
+      const { chatter } = action.payload
+
+      if (!_.isNil(_.get(state.byName, chatter.userName))) {
+        return state
+      }
+
+      return {
+        ...state,
+        byId: { ...state.byId, [chatter.id]: { ...chatter, messages: [] } },
+        byName: { ...state.byName, [chatter.userName]: chatter.id },
       }
     }
     case Actions.IGNORE_USER: {
@@ -76,7 +100,7 @@ export default chattersReducer
 
 /**
  * Adds a chatter with a sent message id.
- * @param  user - The chatter to add.
+ * @param  chatter - The chatter to add.
  * @param  messageId - The id of the message which triggered the chatter to be added.
  * @return The action.
  */
@@ -103,12 +127,24 @@ export const ignoreUser = (id: string) =>
 export const clearChatters = () => createAction(Actions.CLEAR)
 
 /**
+ * Adds a potential chatter.
+ * @param  user - The potential chatter to add.
+ * @param  messageId - The id of the message which triggered the chatter to be added.
+ * @return The action.
+ */
+export const addPotentialChatter = (chatter: SerializedChatter) =>
+  createAction(Actions.ADD_POTENTIAL, {
+    chatter,
+  })
+
+/**
  * Chatters actions.
  */
 export type ChattersActions =
   | ReturnType<typeof addChatterWithMessage>
   | ReturnType<typeof ignoreUser>
   | ReturnType<typeof clearChatters>
+  | ReturnType<typeof addPotentialChatter>
 
 /**
  * Chatterss state.

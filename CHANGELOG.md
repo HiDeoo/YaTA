@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Make the highlight color selection UI more user-friendly.
+- Even if they've not talked in chat, new subscriber, re-subscriber, sub gifter, sub giftee, hoster, raider and people performing a ritual can now be auto-completed.
 - Add a new setting (disabled by default) to disable dialog animations.
 - Improve auto-scrolling behavior when closing a context menu:
   - If auto-scrolling is paused when opening, closing will persist the pause.

@@ -175,7 +175,7 @@ class ChatterDetails extends React.Component<Props, State> {
     const header = (
       <Header>
         <Avatar>{_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} />}</Avatar>
-        {`${chatter.displayName}${chatter.showUsername ? ` (${chatter.userName})` : ''}`}
+        {`${chatter.displayName}${chatter.showUserName ? ` (${chatter.userName})` : ''}`}
       </Header>
     )
 

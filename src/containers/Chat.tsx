@@ -20,6 +20,7 @@ import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
+import Chatter from 'Libs/Chatter'
 import EmotesProvider, { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
 import Message from 'Libs/Message'
 import Notice from 'Libs/Notice'
@@ -28,7 +29,7 @@ import Resources from 'Libs/Resources'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
-import { addChatterWithMessage, clearChatters } from 'Store/ducks/chatters'
+import { addChatterWithMessage, addPotentialChatter, clearChatters } from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -317,6 +318,7 @@ export class ChatClient extends React.Component<Props, State> {
     )
 
     this.props.addLog(notice.serialize())
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
   }
 
   /**
@@ -553,6 +555,7 @@ export class ChatClient extends React.Component<Props, State> {
     )
 
     this.props.addLog(notification.serialize())
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
   }
 
   /**
@@ -579,6 +582,7 @@ export class ChatClient extends React.Component<Props, State> {
     )
 
     this.props.addLog(notification.serialize())
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
   }
 
   /**
@@ -591,6 +595,8 @@ export class ChatClient extends React.Component<Props, State> {
     const notification = new Notification(`${username} just gifted a sub to ${recipient}!`, NotificationEvent.SubGift)
 
     this.props.addLog(notification.serialize())
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(recipient).serialize())
   }
 
   /**
@@ -605,6 +611,7 @@ export class ChatClient extends React.Component<Props, State> {
       )
 
       this.props.addLog(notification.serialize())
+      this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
     }
   }
 
@@ -616,6 +623,7 @@ export class ChatClient extends React.Component<Props, State> {
     const notification = new Notification(`${raider} is raiding with a party of ${viewers}!`, NotificationEvent.Raid)
 
     this.props.addLog(notification.serialize())
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(raider).serialize())
   }
 
   /**
@@ -768,7 +776,9 @@ export class ChatClient extends React.Component<Props, State> {
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)
 
-          parsedMessage.updateColor(_.isNil(user) ? parsedMessage.user.generateRandomColor() : user.color)
+          parsedMessage.updateColor(
+            _.isNil(user) || _.isNil(user.color) ? parsedMessage.user.generateRandomColor() : user.color
+          )
         }
 
         break
@@ -799,6 +809,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   {
     addChatterWithMessage,
     addLog,
+    addPotentialChatter,
     clearChatters,
     clearLogs,
     purgeLogs,
@@ -835,6 +846,7 @@ type StateProps = {
 type DispatchProps = {
   addLog: typeof addLog
   addChatterWithMessage: typeof addChatterWithMessage
+  addPotentialChatter: typeof addPotentialChatter
   clearChatters: typeof clearChatters
   clearLogs: typeof clearLogs
   purgeLogs: typeof purgeLogs

@@ -149,7 +149,7 @@ export default class Message extends React.Component<Props, State> {
         {this.renderBadges()}
         <Name color={usernameColor} onClick={this.onClickUsername}>
           {message.user.displayName}
-          {message.user.showUsername && <Username> ({message.user.userName})</Username>}
+          {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
         <MessageContent message={message} />
         {this.renderClips()}
