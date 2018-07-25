@@ -1,4 +1,4 @@
-import { Button, Colors, Icon, NavbarDivider } from '@blueprintjs/core'
+import { Button, Classes, Colors, Icon, NavbarDivider } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -37,7 +37,7 @@ const TwitchState = withSCProps<TwitchStateProps, HTMLDivElement>(styled.div)`
 const Tooltip = styled(HeaderTooltip)`
   margin-right: 10px;
 
-  & + .pt-navbar-divider {
+  & + .${Classes.NAVBAR_DIVIDER} {
     margin-left: 0;
   }
 `
@@ -46,7 +46,7 @@ const Tooltip = styled(HeaderTooltip)`
  * PauseButton component.
  */
 const PauseButton = styled(Button)`
-  & > svg.pt-icon {
+  & > svg.${Classes.ICON} {
     color: ${Colors.RED4} !important;
   }
 `

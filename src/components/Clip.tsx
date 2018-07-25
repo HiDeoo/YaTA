@@ -1,4 +1,4 @@
-import { Card, Text } from '@blueprintjs/core'
+import { Card, Classes, Text } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -13,7 +13,7 @@ import { color } from 'Utils/styled'
 const Wrapper = styled.div`
   margin: 6px 0;
 
-  & > .pt-card {
+  & > .${Classes.CARD} {
     padding: 6px;
   }
 `

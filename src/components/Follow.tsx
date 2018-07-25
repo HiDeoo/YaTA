@@ -1,4 +1,4 @@
-import { Card, ICardProps, Text } from '@blueprintjs/core'
+import { Card, Classes, ICardProps, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -17,7 +17,7 @@ const Wrapper = withSCProps<WrapperProps & ICardProps, HTMLDivElement>(styled(Ca
   border: 2px solid ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.4)', 'transparent')};
   height: ${size('follows.height')};
 
-  &.pt-card {
+  &.${Classes.CARD} {
     padding: 10px;
   }
 `

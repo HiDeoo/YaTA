@@ -1,10 +1,8 @@
-import { Colors } from '@blueprintjs/core'
+import { Colors, Icon } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
-import Logo from 'Images/logo.png'
-import Logo2x from 'Images/logo@2x.png'
 import { color } from 'Utils/styled'
 
 /**
@@ -18,21 +16,18 @@ const Content = styled.div`
     line-height: 1.5rem;
   }
 `
-
 /**
- * Icon component.
+ * Logo component.
  */
-const Icon = styled.img.attrs({
-  alt: 'YaTA',
-  src: Logo,
-  srcSet: `${Logo} 1x,${Logo2x} 2x`,
-})`
+const Logo = styled.div`
+  align-items: center;
   background-color: ${Colors.DARK_GRAY5};
   border-radius: 50%;
   border: 3px solid white;
   box-shadow: 1px 1px 10px 1px ${Colors.DARK_GRAY1};
-  display: block;
+  display: flex;
   height: 128px;
+  justify-content: center;
   margin: 0 auto 30px auto;
   width: 128px;
 `
@@ -70,7 +65,9 @@ const Coffee = styled.span`
 const SettingsAbout: React.SFC = () => (
   <SettingsPanel>
     <Content>
-      <Icon />
+      <Logo>
+        <Icon icon="chat" iconSize={70} color="#c2ccd6" />
+      </Logo>
       <Name>
         YaTA <em>v{process.env.REACT_APP_VERSION}</em>
       </Name>

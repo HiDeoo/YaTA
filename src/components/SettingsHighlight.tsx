@@ -35,7 +35,7 @@ const DeleteButton = styled(Button)`
 /**
  * React State.
  */
-const initialState = { prevPropsPattern: '', pattern: '', patternIntent: Intent.NONE }
+const initialState = { prevPropsPattern: '', pattern: '', patternIntent: Intent.NONE as Intent }
 type State = Readonly<typeof initialState>
 
 /**

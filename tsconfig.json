@@ -19,7 +19,6 @@
       "Components/*": ["src/components/*"],
       "Constants/*": ["src/constants/*"],
       "Containers/*": ["src/containers/*"],
-      "Images/*": ["src/images/*"],
       "Libs/*": ["src/libs/*"],
       "Store": ["src/store/index.ts"],
       "Store/*": ["src/store/*"],

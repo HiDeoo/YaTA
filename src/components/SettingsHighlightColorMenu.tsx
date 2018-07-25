@@ -1,4 +1,4 @@
-import { Button, Menu, Popover, Position } from '@blueprintjs/core'
+import { Button, Classes, Menu, Popover, Position } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -13,13 +13,13 @@ import { color, ifProp } from 'Utils/styled'
  */
 const ColorMenuButton = styled(Button)`
   margin-left: 10px;
-  margin-top: ${ifProp('minimal', '-20px', 'initial')};
+  margin-top: ${ifProp('minimal', '-8px', 'initial')};
   width: 109px;
 
-  &.pt-button {
+  &.${Classes.BUTTON} {
     justify-content: flex-end;
 
-    & .pt-button-text {
+    & .${Classes.BUTTON_TEXT} {
       align-items: center;
       display: inline-flex;
       flex: 1;

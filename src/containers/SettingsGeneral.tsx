@@ -1,4 +1,4 @@
-import { Button, Classes, Intent, Popover } from '@blueprintjs/core'
+import { Button, Classes, H5, Intent, Popover } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -133,7 +133,7 @@ class SettingsGeneral extends React.Component<Props> {
   private renderThemeConfirmation() {
     return (
       <div>
-        <h5>Confirm</h5>
+        <H5>Confirm</H5>
         <p>Are you sure you want to switch to the light theme? You might lose your eyes.</p>
         <ConfirmationControls>
           <ConfirmationCancelButton className={Classes.POPOVER_DISMISS} onClick={this.onCancelToggleTheme}>

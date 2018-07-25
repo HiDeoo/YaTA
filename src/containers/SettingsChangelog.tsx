@@ -1,3 +1,4 @@
+import { Classes } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -19,15 +20,17 @@ const Changelog = styled.div`
 
   & h1,
   & h2,
-  .pt-dark & h1,
-  .pt-dark & h3 {
+  .${Classes.DARK} & h1,
+  .${Classes.DARK} & h3 {
+    font-weight: 600;
     margin: 0;
     padding: 0;
   }
 
   & h1,
-  .pt-dark & h1 {
+  .${Classes.DARK} & h1 {
     font-size: 1.2rem;
+    line-height: 40px;
     margin-top: 20px;
 
     &:first-child {
@@ -40,10 +43,21 @@ const Changelog = styled.div`
   }
 
   & h3,
-  .pt-dark & h3 {
+  .${Classes.DARK} & h3 {
     border: 0;
     font-size: 1rem;
+    line-height: 25px;
     margin: 20px 0 15px 0;
+  }
+
+  & code,
+  .${Classes.DARK} & code {
+    background: rgba(16, 22, 26, 0.3);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.4);
+    color: #bfccd6;
+    font-size: 1em;
+    padding: 2px 5px;
   }
 `
 

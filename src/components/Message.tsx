@@ -1,4 +1,4 @@
-import { Button, Colors, Intent, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core'
+import { Button, Classes, Colors, Intent, Menu, Popover } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -27,8 +27,7 @@ const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
  * MenuButton component.
  */
 const MenuButton = styled(Button)`
-  &.pt-button.pt-minimal,
-  .pt-dark &.pt-button.pt-minimal {
+  &.${Classes.BUTTON}.${Classes.MINIMAL}, .${Classes.DARK} &.${Classes.BUTTON}.${Classes.MINIMAL} {
     height: 16px;
     min-height: 16px;
     min-width: 24px;
@@ -44,9 +43,9 @@ const MenuButton = styled(Button)`
       top: 3px;
     }
 
-    &.pt-active,
     &:active,
-    &:hover {
+    &:hover,
+    &.${Classes.ACTIVE} {
       background: initial;
 
       & > svg {
@@ -200,27 +199,27 @@ export default class Message extends React.Component<Props, State> {
 
     const menu = (
       <Menu>
-        <MenuDivider title={message.user.displayName} />
+        <Menu.Divider title={message.user.displayName} />
         {!message.user.isSelf && (
           <>
-            <MenuItem icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
-            <MenuDivider />
+            <Menu.Item icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
+            <Menu.Divider />
           </>
         )}
-        <MenuItem icon="clipboard" text="Copy message" onClick={this.copyMessage} />
-        <MenuItem icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
+        <Menu.Item icon="clipboard" text="Copy message" onClick={this.copyMessage} />
+        <Menu.Item icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
         <ActionMenuItems startDivider actionHandler={actionHandler} chatter={message.user} />
         {canModerate(message.user) && (
           <>
-            <MenuDivider />
-            <MenuItem icon="trash" text="Purge" onClick={this.onClickPurge} />
-            <MenuItem icon="time" text="Timeout">
-              <MenuItem text="10m" onClick={this.onClickTimeout10M} />
-              <MenuItem text="1h" onClick={this.onClickTimeout1H} />
-              <MenuItem text="6h" onClick={this.onClickTimeout6H} />
-              <MenuItem text="24h" onClick={this.onClickTimeout24H} />
-            </MenuItem>
-            <MenuItem icon="disable" text="Ban" intent={Intent.DANGER} onClick={this.onClickBan} />
+            <Menu.Divider />
+            <Menu.Item icon="trash" text="Purge" onClick={this.onClickPurge} />
+            <Menu.Item icon="time" text="Timeout">
+              <Menu.Item text="10m" onClick={this.onClickTimeout10M} />
+              <Menu.Item text="1h" onClick={this.onClickTimeout1H} />
+              <Menu.Item text="6h" onClick={this.onClickTimeout6H} />
+              <Menu.Item text="24h" onClick={this.onClickTimeout24H} />
+            </Menu.Item>
+            <Menu.Item icon="disable" text="Ban" intent={Intent.DANGER} onClick={this.onClickBan} />
           </>
         )}
       </Menu>

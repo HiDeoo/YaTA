@@ -27,8 +27,8 @@ const EmotePickerButton = withSCProps<EmotePickerButtonProps, HTMLButtonElement>
   cursor: pointer;
   filter: ${ifProp('isOpen', 'none', 'grayscale(100%)')};
   position: absolute;
-  right: 0px;
-  top: 10px;
+  right: 10px;
+  top: 20px;
 
   &:hover {
     filter: none;

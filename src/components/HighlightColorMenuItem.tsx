@@ -1,4 +1,4 @@
-import { MenuItem } from '@blueprintjs/core'
+import { Menu } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -30,7 +30,7 @@ export default class HighlightColorMenuItem extends React.Component<Props> {
     const { color: highlightColor, selected } = this.props
 
     return (
-      <MenuItem
+      <Menu.Item
         text={highlightColor}
         icon={selected === true ? 'tick' : 'blank'}
         onClick={this.onClick}

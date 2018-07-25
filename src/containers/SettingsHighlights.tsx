@@ -1,4 +1,4 @@
-import { Intent, TagInput } from '@blueprintjs/core'
+import { Classes, Intent, TagInput } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -57,14 +57,12 @@ const Highlights = styled.div`
 const IgnoredUsers = styled(TagInput)`
   max-height: 50px;
 
-  &.pt-input,
-  &.pt-tag-input,
-  & > .pt-tag-input-values {
+  &.${Classes.INPUT}, &.${Classes.TAG_INPUT}, & > .${Classes.TAG_INPUT_VALUES} {
     max-height: 50px;
     overflow-y: hidden;
   }
 
-  & > .pt-tag-input-values {
+  & > .${Classes.TAG_INPUT_VALUES} {
     overflow-y: auto;
   }
 `
@@ -72,7 +70,7 @@ const IgnoredUsers = styled(TagInput)`
 /**
  * React State.
  */
-const initialState = { newHighlight: '', newHighlightIntent: Intent.NONE, newColor: HighlightColors.Yellow }
+const initialState = { newHighlight: '', newHighlightIntent: Intent.NONE as Intent, newColor: HighlightColors.Yellow }
 type State = Readonly<typeof initialState>
 
 /**
@@ -179,7 +177,7 @@ class SettingsHighlights extends React.Component<Props, State> {
   private onChangeNewHighlight = (event: React.FormEvent<HTMLInputElement>) => {
     const newHighlight = event.currentTarget.value
 
-    let newHighlightIntent = Intent.DANGER
+    let newHighlightIntent: Intent = Intent.DANGER
 
     if (newHighlight.length === 0) {
       newHighlightIntent = Intent.NONE

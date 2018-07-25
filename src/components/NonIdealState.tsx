@@ -1,3 +1,4 @@
+import { Classes, H1 } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -12,7 +13,7 @@ import { ifProp } from 'Utils/styled'
 const Wrapper = withSCProps<SizeProps, HTMLDivElement>(styled(Center))`
   font-size: ${ifProp('small', 0.8, 1)}rem;
 
-  & > h1 {
+  & > h1.${Classes.HEADING} {
     font-size: ${ifProp('small', 1.5, 2)}em;
   }
 
@@ -36,7 +37,7 @@ const Shrug = withSCProps<SizeProps, HTMLDivElement>(styled.div)`
 const NonIdealState: React.SFC<Props> = ({ details, small, title }) => (
   <Wrapper small={!!small}>
     <Shrug small={!!small}>¯\_(ツ)_/¯</Shrug>
-    {!_.isNil(title) && <h1>{title}</h1>}
+    {!_.isNil(title) && <H1>{title}</H1>}
     {!_.isNil(details) && <p>{details}</p>}
   </Wrapper>
 )

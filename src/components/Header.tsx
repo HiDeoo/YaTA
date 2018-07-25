@@ -1,6 +1,7 @@
 import {
   Alignment,
   Button,
+  Classes,
   Colors,
   Navbar,
   NavbarDivider,
@@ -212,7 +213,7 @@ export default class Header extends React.Component<Props> {
     return (
       <>
         <NavbarDivider />
-        <StatusSpinner small />
+        <StatusSpinner className={Classes.SMALL} />
         <StatusMessage>{connectionStr}</StatusMessage>
       </>
     )

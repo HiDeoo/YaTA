@@ -39,7 +39,7 @@ const DetailsRow = withSCProps<DetailsRowProps, HTMLElement>(styled(FlexLayout))
   height: ${ifProp('loading', '103px', 'auto')};
   margin-bottom: 15px;
 
-  .pt-spinner.pt-small {
+  .${Classes.SPINNER}.${Classes.SMALL} {
     margin-right: 10px;
   }
 `
@@ -111,6 +111,17 @@ const Tools = styled.div`
       margin-right: 10px;
     }
   }
+`
+
+/**
+ * Hr component.
+ */
+const Hr = styled.div`
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.15);
+  box-sizing: content-box;
+  height: 0;
+  margin: 20px 0;
+  overflow: visible;
 `
 
 /**
@@ -207,7 +218,7 @@ class ChatterDetails extends React.Component<Props, State> {
 
     return (
       <>
-        <hr />
+        <Hr />
         <Tools>
           <div>
             <Button icon="trash" onClick={this.onClickPurge}>
@@ -255,7 +266,7 @@ class ChatterDetails extends React.Component<Props, State> {
     if (_.isNil(details)) {
       return (
         <DetailsRow loading>
-          <Spinner small /> Fetching user details…
+          <Spinner className={Classes.SMALL} /> Fetching user details…
         </DetailsRow>
       )
     }

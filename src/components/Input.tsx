@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 const Toast = styled(_Toast)`
   margin-bottom: 60px !important;
 
-  .pt-button-group {
+  .${Classes.BUTTON_GROUP} {
     display: none;
   }
 `
@@ -40,7 +40,7 @@ const TextArea = styled.textarea`
   outline: none;
   resize: none;
 
-  &.pt-input.pt-large {
+  &.${Classes.INPUT}.${Classes.LARGE} {
     font-size: 13px;
     height: 50px;
     line-height: 20px;

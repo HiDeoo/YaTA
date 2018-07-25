@@ -1,4 +1,4 @@
-import { Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position } from '@blueprintjs/core'
+import { Button, Icon, Menu, Popover, Position } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
@@ -32,39 +32,39 @@ export default class HeaderModerationTools extends React.Component<Props> {
 
     return (
       <Menu>
-        <MenuDivider title="Mode" />
-        <MenuItem
+        <Menu.Divider title="Mode" />
+        <Menu.Item
           icon={this.getStateMenuIcon('r9k')}
           text="R9K"
           labelElement={<Icon icon="multi-select" />}
           onClick={toggleR9k}
         />
-        <MenuItem
+        <Menu.Item
           icon={this.getStateMenuIcon('slow')}
           text="Slow mode"
           labelElement={<Icon icon="outdated" />}
           onClick={toggleSlowMode}
         />
-        <MenuItem
+        <Menu.Item
           icon={this.getStateMenuIcon('followersOnly')}
           text="Follower-only"
           labelElement={<Icon icon="follower" />}
           onClick={toggleFollowersOnly}
         />
-        <MenuItem
+        <Menu.Item
           icon={this.getStateMenuIcon('subsOnly')}
           text="Subscribers-only"
           labelElement={<Icon icon="dollar" />}
           onClick={toggleSubsOnly}
         />
-        <MenuItem
+        <Menu.Item
           icon={this.getStateMenuIcon('emoteOnly')}
           text="Emote-only"
           labelElement={<Icon icon="media" />}
           onClick={toggleEmoteOnly}
         />
-        <MenuDivider title="Tools" />
-        <MenuItem icon="eraser" text="Clear chat" onClick={clearChat} />
+        <Menu.Divider title="Tools" />
+        <Menu.Item icon="eraser" text="Clear chat" onClick={clearChat} />
       </Menu>
     )
   }
