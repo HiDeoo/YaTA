@@ -7,8 +7,9 @@
 
 ### 🐛 Bug Fix
 
-- Fix an issue with various commands (`/me`, `/w`, `/r`, _etc._) that could be sent as plain text.
 - Improve selection handling when copying a message using double click.
+- Fix an issue with various commands (`/me`, `/w`, `/r`, _etc._) that could be sent as plain text.
+- Fix various issues with other people mentions (`@notYou`) highlighting.
 
 # 0.3.0
 
