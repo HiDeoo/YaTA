@@ -25,6 +25,9 @@ const light = {
     meta: Colors.GRAY1,
     strong: Colors.DARK_GRAY5,
   },
+  follows: {
+    border: Colors.LIGHT_GRAY1,
+  },
   history: {
     background: Colors.LIGHT_GRAY2,
     border: Colors.GRAY5,

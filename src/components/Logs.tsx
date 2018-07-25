@@ -15,18 +15,21 @@ import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
 import { withSCProps } from 'Utils/react'
-import { ifProp } from 'Utils/styled'
+import { ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled(FlexContent))`
-  border-bottom: 2px solid ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
-  border-top: 3px solid ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
+  border-bottom: ${size('log.border.bottom')} solid ${ifProp(
+  'pauseAutoScroll',
+  'rgba(245, 86, 86, 0.78)',
+  'transparent'
+)};
+  border-top: ${size('log.border.top')} solid ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
   font-size: 0.82rem;
   line-height: 1.4rem;
   overflow: hidden;
-  padding: 8px 0;
 `
 
 /**
@@ -65,6 +68,7 @@ export default class Logs extends React.Component<Props> {
    */
   public render() {
     const { copyMessageOnDoubleClick, logs, showContextMenu } = this.props
+    const { bottom, top } = base.log.border
 
     const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
 
@@ -75,7 +79,7 @@ export default class Logs extends React.Component<Props> {
             <List
               ref={this.list}
               deferredMeasurementCache={this.logMeasureCache}
-              height={height}
+              height={height - bottom - top}
               overscanRowCount={10}
               rowCount={logs.length}
               rowHeight={this.logMeasureCache.rowHeight}

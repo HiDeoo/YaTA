@@ -53,6 +53,10 @@ export default {
     width: 350,
   },
   log: {
+    border: {
+      bottom: 2,
+      top: 3,
+    },
     hPadding: 10,
     highlight: {
       Blue: { color: Colors.WHITE, background: Colors.BLUE3 },

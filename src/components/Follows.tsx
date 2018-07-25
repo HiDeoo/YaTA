@@ -8,12 +8,13 @@ import Follow from 'Components/Follow'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawChannel, RawStream } from 'Libs/Twitch'
-import { size } from 'Utils/styled'
+import { color, size } from 'Utils/styled'
 
 /**
  * Tet component.
  */
 const Wrapper = styled.div`
+  border-top: 1px solid ${color('follows.border')};
   height: calc(100% - 50px);
   overflow-x: hidden;
   overflow-y: auto;
