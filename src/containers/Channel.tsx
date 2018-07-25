@@ -573,7 +573,7 @@ class Channel extends React.Component<Props, State> {
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        const message = this.state.inputValue
+        const message = this.state.inputValue.trim()
         const whisper = Twitch.parseWhisperCommand(message)
 
         if (!_.isNil(whisper)) {

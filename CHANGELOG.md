@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue with various commands (`/me`, `/w`, `/r`, _etc._) that could be sent as plain text.
+
 # 0.3.0
 
 ### 🚀 New Feature
