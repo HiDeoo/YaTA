@@ -3,6 +3,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import LogType from 'Constants/logType'
+import { HighlightColors } from 'Libs/Highlight'
 import { SerializedMessage } from 'Libs/Message'
 import { withSCProps } from 'Utils/react'
 import { color } from 'Utils/styled'
@@ -43,25 +44,22 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
     border-radius: 2px;
     padding: 1px 3px 2px 3px;
 
-    &.Red {
-      background-color: ${color('log.highlight.Red.background')};
-      color: ${color('log.highlight.Red.color')};
-    }
+    ${(props) => {
+      let rules = ''
 
-    &.Yellow {
-      background-color: ${color('log.highlight.Yellow.background')};
-      color: ${color('log.highlight.Yellow.color')};
-    }
+      for (const highlightColor in HighlightColors) {
+        if (HighlightColors.hasOwnProperty(highlightColor)) {
+          rules += `
+            &.${highlightColor} {
+              background-color: ${color(`log.highlight.${highlightColor}.background`)(props)};
+              color: ${color(`log.highlight.${highlightColor}.color`)(props)};
+            }
+          `
+        }
+      }
 
-    &.Green {
-      background-color: ${color('log.highlight.Green.background')};
-      color: ${color('log.highlight.Green.color')};
-    }
-
-    &.Blue {
-      background-color: ${color('log.highlight.Blue.background')};
-      color: ${color('log.highlight.Blue.color')};
-    }
+      return rules
+    }}
   }
 `
 

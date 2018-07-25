@@ -21,7 +21,7 @@ const Wrapper = styled.div`
  * Pattern component.
  */
 const Pattern = styled(EditableText)`
-  width: calc(100% - 135px);
+  width: calc(100% - 154px);
 `
 
 /**

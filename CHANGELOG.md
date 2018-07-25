@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Make the highlight color selection UI more user-friendly.
+
 ### 🐛 Bug Fix
 
 - Fix an issue with various commands (`/me`, `/w`, `/r`, _etc._) that could be sent as plain text.
