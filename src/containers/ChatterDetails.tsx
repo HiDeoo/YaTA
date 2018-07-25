@@ -28,13 +28,12 @@ import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { getDisableDialogAnimations } from 'Store/selectors/settings'
-import { withSCProps } from 'Utils/react'
 import { ifProp, size } from 'Utils/styled'
 
 /**
  * DetailsRow component.
  */
-const DetailsRow = withSCProps<DetailsRowProps, HTMLElement>(styled(FlexLayout))`
+const DetailsRow = styled(FlexLayout)<DetailsRowProps>`
   align-items: center;
   height: ${ifProp('loading', '103px', 'auto')};
   margin-bottom: 15px;

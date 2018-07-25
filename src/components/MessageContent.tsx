@@ -5,13 +5,12 @@ import styled from 'styled-components'
 import LogType from 'Constants/logType'
 import { HighlightColors } from 'Libs/Highlight'
 import { SerializedMessage } from 'Libs/Message'
-import { withSCProps } from 'Utils/react'
 import { color } from 'Utils/styled'
 
 /**
  * Message component.
  */
-const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
+const Message = styled.span<MessageProps>`
   color: ${(props) => props.color};
   word-wrap: break-word;
 
@@ -59,7 +58,7 @@ const Message = withSCProps<MessageProps, HTMLSpanElement>(styled.span)`
       }
 
       return rules
-    }}
+    }};
   }
 `
 

@@ -4,13 +4,12 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Center from 'Components/Center'
-import { withSCProps } from 'Utils/react'
 import { ifProp } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = withSCProps<SizeProps, HTMLDivElement>(styled(Center))`
+const Wrapper = styled(Center)<SizeProps>`
   font-size: ${ifProp('small', 0.8, 1)}rem;
 
   & > h1.${Classes.HEADING} {
@@ -25,7 +24,7 @@ const Wrapper = withSCProps<SizeProps, HTMLDivElement>(styled(Center))`
 /**
  * Shrug component.
  */
-const Shrug = withSCProps<SizeProps, HTMLDivElement>(styled.div)`
+const Shrug = styled.div<SizeProps>`
   font-size: 2em;
   margin-bottom: ${ifProp('small', 0, 10)}px;
   margin-top: ${ifProp('small', -30, 0)}px;

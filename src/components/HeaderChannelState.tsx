@@ -5,13 +5,12 @@ import styled from 'styled-components'
 
 import HeaderTooltip from 'Components/HeaderTooltip'
 import { SerializedRoomState } from 'Libs/RoomState'
-import { withSCProps } from 'Utils/react'
 import { ifProp, size } from 'Utils/styled'
 
 /**
  * TwitchState component.
  */
-const TwitchState = withSCProps<TwitchStateProps, HTMLDivElement>(styled.div)`
+const TwitchState = styled.div<TwitchStateProps>`
   display: inline-grid;
   grid-auto-flow: column;
   grid-gap: ${size('twitchState.gap')} ${size('twitchState.gap')};

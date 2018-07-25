@@ -6,13 +6,12 @@ import styled from 'styled-components'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Twitch, { RawChannel, RawStream } from 'Libs/Twitch'
-import { withSCProps } from 'Utils/react'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = withSCProps<WrapperProps & ICardProps, HTMLDivElement>(styled(Card))`
+const Wrapper = styled(Card)<WrapperProps & ICardProps>`
   background-color: ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.05)', 'inherit')} !important;
   border: 2px solid ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.4)', 'transparent')};
   height: ${size('follows.height')};

@@ -3,13 +3,12 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import { withSCProps } from 'Utils/react'
 import { ifProp } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = withSCProps<WrapperProps, HTMLButtonElement>(styled.button)`
+const Wrapper = styled.button<WrapperProps>`
   appearance: none;
   background: none;
   border: none;

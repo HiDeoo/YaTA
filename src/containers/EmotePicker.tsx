@@ -15,13 +15,12 @@ import Resources from 'Libs/Resources'
 import { ApplicationState } from 'Store/reducers'
 import { getEmotesSets } from 'Store/selectors/app'
 import base from 'Styled/base'
-import { withSCProps } from 'Utils/react'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * EmotePickerButton component.
  */
-const EmotePickerButton = withSCProps<EmotePickerButtonProps, HTMLButtonElement>(styled.button)`
+const EmotePickerButton = styled.button<EmotePickerButtonProps>`
   background-color: initial;
   border: none;
   cursor: pointer;

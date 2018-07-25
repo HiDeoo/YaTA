@@ -14,18 +14,14 @@ import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
-import { withSCProps } from 'Utils/react'
 import { ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled(FlexContent))`
-  border-bottom: ${size('log.border.bottom')} solid ${ifProp(
-  'pauseAutoScroll',
-  'rgba(245, 86, 86, 0.78)',
-  'transparent'
-)};
+const Wrapper = styled(FlexContent)<WrapperProps>`
+  border-bottom: ${size('log.border.bottom')} solid
+    ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
   border-top: ${size('log.border.top')} solid ${ifProp('pauseAutoScroll', 'rgba(245, 86, 86, 0.78)', 'transparent')};
   font-size: 0.82rem;
   line-height: 1.4rem;

@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import MessageContent from 'Components/MessageContent'
 import { SerializedMessage } from 'Libs/Message'
-import { withSCProps } from 'Utils/react'
 import { color, size } from 'Utils/styled'
 
 /**
@@ -29,7 +28,7 @@ const InboxIcon = styled(Icon)`
 /**
  * Username component.
  */
-const Username = withSCProps<UsernameProps, HTMLSpanElement>(styled.span)`
+const Username = styled.span<UsernameProps>`
   color: ${(props) => props.color};
   font-weight: bold;
   padding-right: 6px;

@@ -10,13 +10,12 @@ import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { RawClip } from 'Libs/Twitch'
-import { withSCProps } from 'Utils/react'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = withSCProps<WrapperProps, HTMLDivElement>(styled.div)`
+const Wrapper = styled.div<WrapperProps>`
   background-color: ${ifProp('mentionned', color('log.mention.self.background'), 'inherit')};
   border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
   opacity: ${ifProp('purged', 0.5, 1.0)};
@@ -86,7 +85,7 @@ const Badges = styled.span`
 /**
  * Name component.
  */
-const Name = withSCProps<NameProps, HTMLSpanElement>(styled.span)`
+const Name = styled.span<NameProps>`
   color: ${(props) => props.color};
   cursor: pointer;
   font-weight: bold;

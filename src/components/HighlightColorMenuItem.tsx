@@ -3,13 +3,12 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { HighlightColors } from 'Libs/Highlight'
-import { withSCProps } from 'Utils/react'
 import { color } from 'Utils/styled'
 
 /**
  * ColorPreview component.
  */
-const ColorPreview = withSCProps<ColorPreviewProps, HTMLDivElement>(styled.div)`
+const ColorPreview = styled.div<ColorPreviewProps>`
   background-color: ${(props) => color(`log.highlight.${props.highlightColor}.background`)};
   border-radius: 2px;
   height: 15px;

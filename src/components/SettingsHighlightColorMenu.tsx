@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import HighlightColorMenuItem from 'Components/HighlightColorMenuItem'
 import { HighlightColors } from 'Libs/Highlight'
-import { withSCProps } from 'Utils/react'
 import { color, ifProp } from 'Utils/styled'
 
 /**
@@ -30,7 +29,7 @@ const ColorMenuButton = styled(Button)`
 /**
  * ColorPreview component.
  */
-const ColorPreview = withSCProps<ColorPreviewProps, HTMLDivElement>(styled.div)`
+const ColorPreview = styled.div<ColorPreviewProps>`
   background-color: ${(props) => color(`log.highlight.${props.highlightColor}.background`)};
   border-radius: 2px;
   height: 11px;
