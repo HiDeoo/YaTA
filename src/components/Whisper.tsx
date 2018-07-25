@@ -62,7 +62,10 @@ export default class Whisper extends React.Component<Props> {
 
     return (
       <Wrapper style={style} onDoubleClick={this.onDoubleClick}>
-        <InboxIcon icon={whisper.self ? 'document-share' : 'document-open'} />
+        <InboxIcon
+          icon={whisper.self ? 'document-share' : 'document-open'}
+          title={whisper.self ? 'Whisper sent' : 'Whisper received'}
+        />
         <Username color={whisper.self ? 'inherit' : usernameColor}>{whisper.user.displayName}</Username>
         <MessageContent message={whisper} />
       </Wrapper>
