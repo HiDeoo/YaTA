@@ -8,6 +8,7 @@
 ### 🐛 Bug Fix
 
 - Fix an issue with various commands (`/me`, `/w`, `/r`, _etc._) that could be sent as plain text.
+- Improve selection handling when copying a message using double click.
 
 # 0.3.0
 

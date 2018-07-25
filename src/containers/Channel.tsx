@@ -478,7 +478,10 @@ class Channel extends React.Component<Props, State> {
     this.copyToClipboard(`[${message.time}] ${message.user.displayName}: ${sanitizedMessage}`)
 
     const selection = window.getSelection()
-    selection.empty()
+
+    if (selection.toString().trim().length === 0) {
+      selection.empty()
+    }
   }
 
   /**

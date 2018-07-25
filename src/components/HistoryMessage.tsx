@@ -35,8 +35,7 @@ export default class HistoryMessage extends React.Component<Props> {
 
     return (
       <Wrapper style={style} onDoubleClick={this.onDoubleClick}>
-        <Time>{message.time}</Time>
-        <MessageContent message={message} />
+        <Time>{message.time}</Time> <MessageContent message={message} />
       </Wrapper>
     )
   }
