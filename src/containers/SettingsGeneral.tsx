@@ -12,6 +12,7 @@ import {
   toggleCopyMessageOnDoubleClick,
   toggleDisableDialogAnimations,
   toggleHideWhispers,
+  toggleHighlightAllMentions,
   toggleShowContextMenu,
   toggleShowViewerCount,
   toggleTheme,
@@ -22,6 +23,7 @@ import {
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
   getHideWhispers,
+  getHighlightAllMentions,
   getShowContextMenu,
   getShowViewerCount,
   getTheme,
@@ -65,6 +67,7 @@ class SettingsGeneral extends React.Component<Props> {
       copyMessageOnDoubleClick,
       disableDialogAnimations,
       hideWhispers,
+      highlightAllMentions,
       showContextMenu,
       showViewerCount,
       theme,
@@ -90,6 +93,12 @@ class SettingsGeneral extends React.Component<Props> {
             checked={autoFocusInput}
             label="Automatically focus the input field"
             onChange={this.props.toggleAutoFocusInput}
+          />
+          <Switch
+            description="Other people mentioned are highlighted differently from yourself."
+            checked={highlightAllMentions}
+            label="Highlight all mentions"
+            onChange={this.props.toggleHighlightAllMentions}
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="UI">
@@ -181,6 +190,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     disableDialogAnimations: getDisableDialogAnimations(state),
     hideWhispers: getHideWhispers(state),
+    highlightAllMentions: getHighlightAllMentions(state),
     showContextMenu: getShowContextMenu(state),
     showViewerCount: getShowViewerCount(state),
     theme: getTheme(state),
@@ -190,6 +200,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleCopyMessageOnDoubleClick,
     toggleDisableDialogAnimations,
     toggleHideWhispers,
+    toggleHighlightAllMentions,
     toggleShowContextMenu,
     toggleShowViewerCount,
     toggleTheme,
@@ -204,6 +215,7 @@ type StateProps = {
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   hideWhispers: ReturnType<typeof getHideWhispers>
+  highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   showViewerCount: ReturnType<typeof getShowViewerCount>
   theme: ReturnType<typeof getTheme>
@@ -217,6 +229,7 @@ type DispatchProps = {
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
   toggleHideWhispers: typeof toggleHideWhispers
+  toggleHighlightAllMentions: typeof toggleHighlightAllMentions
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleShowViewerCount: typeof toggleShowViewerCount
   toggleTheme: typeof toggleTheme

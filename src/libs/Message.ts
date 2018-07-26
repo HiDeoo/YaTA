@@ -325,7 +325,7 @@ export default class Message implements Serializable<SerializedMessage> {
         }
 
         parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${word.text}</span>`
-      } else if (word.text === '@') {
+      } else if (Resources.manager().shouldHighlightAllMentions() && word.text === '@') {
         const previousWord = index > 0 ? words[index - 1] : null
 
         if (!_.isNil(previousWord) && previousWord.text.trim().length > 0 && previousWord.text !== '') {

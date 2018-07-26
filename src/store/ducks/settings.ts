@@ -30,6 +30,7 @@ export enum Actions {
   TOGGLE_AUTO_FOCUS_INPUT = 'settings/TOGGLE_AUTO_FOCUS_INPUT',
   TOGGLE_SHOW_VIEWER_COUNT = 'settings/TOGGLE_SHOW_VIEWER_COUNT',
   TOGGLE_DISABLE_DIALOG_ANIMATIONS = 'settings/TOGGLE_DISABLE_DIALOG_ANIMATIONS',
+  TOGGLE_HIGHLIGHT_ALL_MENTIONS = 'settings/TOGGLE_HIGHLIGHT_ALL_MENTIONS',
 }
 
 /**
@@ -42,6 +43,7 @@ export const initialState = {
   copyMessageOnDoubleClick: true,
   disableDialogAnimations: false,
   hideWhispers: false,
+  highlightAllMentions: false,
   highlights: {},
   highlightsIgnoredUsers: [],
   lastKnownVersion: null,
@@ -198,6 +200,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         disableDialogAnimations: !state.disableDialogAnimations,
+      }
+    }
+    case Actions.TOGGLE_HIGHLIGHT_ALL_MENTIONS: {
+      return {
+        ...state,
+        highlightAllMentions: !state.highlightAllMentions,
       }
     }
     default: {
@@ -373,6 +381,12 @@ export const toggleShowViewerCount = () => createAction(Actions.TOGGLE_SHOW_VIEW
 export const toggleDisableDialogAnimations = () => createAction(Actions.TOGGLE_DISABLE_DIALOG_ANIMATIONS)
 
 /**
+ * Toggle the 'Highlight all mentions' setting.
+ * @return The action.
+ */
+export const toggleHighlightAllMentions = () => createAction(Actions.TOGGLE_HIGHLIGHT_ALL_MENTIONS)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -396,6 +410,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleAutoFocusInput>
   | ReturnType<typeof toggleShowViewerCount>
   | ReturnType<typeof toggleDisableDialogAnimations>
+  | ReturnType<typeof toggleHighlightAllMentions>
 
 /**
  * Settings state.
@@ -460,6 +475,11 @@ export type SettingsState = {
    * Disables dialog animations.
    */
   disableDialogAnimations: boolean
+
+  /**
+   * Highlights all mentions (@notYou) instead of only you.
+   */
+  highlightAllMentions: boolean
 }
 
 /**

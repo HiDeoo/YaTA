@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Add a new setting (disabled by default) to highlight all mentions (`@notYou`) vs only highlighting yourself.
+
 ### 🐛 Bug Fix
 
 - Preserve initial casing when rendering a mention.

@@ -38,6 +38,7 @@ import { getChatters, getChattersMap } from 'Store/selectors/chatters'
 import {
   getAutoConnectInDev,
   getHideWhispers,
+  getHighlightAllMentions,
   getHighlights,
   getHighlightsIgnoredUsers,
   getTheme,
@@ -57,7 +58,7 @@ export class ChatClient extends React.Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
-  private didFetchExternalRessources = false
+  private didFetchExternalResources = false
 
   /**
    * Creates a new instance of the component.
@@ -158,7 +159,8 @@ export class ChatClient extends React.Component<Props, State> {
     return (
       this.state.error !== nextState.error ||
       this.props.highlights !== nextProps.highlights ||
-      this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length
+      this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length ||
+      this.props.highlightAllMentions !== nextProps.highlightAllMentions
     )
   }
 
@@ -169,7 +171,8 @@ export class ChatClient extends React.Component<Props, State> {
   public componentDidUpdate(prevProps: Props) {
     if (
       prevProps.highlights !== this.props.highlights ||
-      prevProps.highlightsIgnoredUsers.length !== this.props.highlightsIgnoredUsers.length
+      prevProps.highlightsIgnoredUsers.length !== this.props.highlightsIgnoredUsers.length ||
+      prevProps.highlightAllMentions !== this.props.highlightAllMentions
     ) {
       this.updateHighlights()
     }
@@ -179,7 +182,7 @@ export class ChatClient extends React.Component<Props, State> {
    * Lifecycle: componentWillUnmount.
    */
   public async componentWillUnmount() {
-    this.didFetchExternalRessources = false
+    this.didFetchExternalResources = false
 
     this.props.setModerator(false)
     this.props.resetAppState()
@@ -260,7 +263,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     this.props.updateRoomState(state.serialize())
 
-    this.fetchExternalRessources(state.roomId)
+    this.fetchExternalResources(state.roomId)
   }
 
   /**
@@ -684,11 +687,11 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Fetches external ressources (if not yet fetched) for a specific channel.
+   * Fetches external resources (if not yet fetched) for a specific channel.
    * @param channelId - The channel id.
    */
-  private async fetchExternalRessources(channelId: string) {
-    if (this.didFetchExternalRessources) {
+  private async fetchExternalResources(channelId: string) {
+    if (this.didFetchExternalResources) {
       return
     }
 
@@ -713,7 +716,7 @@ export class ChatClient extends React.Component<Props, State> {
           Resources.manager().addBots(emotesAndBots.bots)
         }
 
-        this.didFetchExternalRessources = true
+        this.didFetchExternalResources = true
       }
     } catch (error) {
       //
@@ -724,9 +727,10 @@ export class ChatClient extends React.Component<Props, State> {
    * Updates highlights and highlights ignored users used when parsing messages.
    */
   private updateHighlights() {
-    const { highlights, highlightsIgnoredUsers } = this.props
+    const { highlightAllMentions, highlights, highlightsIgnoredUsers } = this.props
 
     Resources.manager().setHighlights(highlights, highlightsIgnoredUsers)
+    Resources.manager().setHighlightAllMentions(highlightAllMentions)
   }
 
   /**
@@ -800,6 +804,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
     hideWhispers: getHideWhispers(state),
+    highlightAllMentions: getHighlightAllMentions(state),
     highlights: getHighlights(state),
     highlightsIgnoredUsers: getHighlightsIgnoredUsers(state),
     isMod: getIsMod(state),
@@ -833,6 +838,7 @@ type StateProps = {
   chatters: ReturnType<typeof getChatters>
   chattersMap: ReturnType<typeof getChattersMap>
   hideWhispers: ReturnType<typeof getHideWhispers>
+  highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   highlights: ReturnType<typeof getHighlights>
   highlightsIgnoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
   isMod: ReturnType<typeof getIsMod>

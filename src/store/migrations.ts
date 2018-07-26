@@ -92,4 +92,10 @@ export default {
       settings: { ...state.settings, disableDialogAnimations: initialState.disableDialogAnimations },
     }
   },
+  12: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, highlightAllMentions: initialState.highlightAllMentions },
+    }
+  },
 }

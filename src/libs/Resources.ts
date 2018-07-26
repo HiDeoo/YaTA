@@ -28,6 +28,7 @@ export default class Resources {
   private emotesProviders: Map<EmoteProviderPrefix, EmotesProvider<Emote>> = new Map()
   private highlights: Highlights = {}
   private highlightsIgnoredUsers: string[] = []
+  private highlightAllMentions: boolean = false
 
   /**
    * Creates a new instance of the class.
@@ -75,6 +76,14 @@ export default class Resources {
   public setHighlights(highlights: Highlights, ignoredUsers: string[]) {
     this.highlights = highlights
     this.highlightsIgnoredUsers = ignoredUsers
+  }
+
+  /**
+   * Defines if we should highlight all mentions or not.
+   * @param highlightAllMentions - `true` to highlight all mentions.
+   */
+  public setHighlightAllMentions(highlightAllMentions: boolean) {
+    this.highlightAllMentions = highlightAllMentions
   }
 
   /**
@@ -127,6 +136,14 @@ export default class Resources {
    */
   public shouldIgnoreHighlights(username: string) {
     return _.includes(this.highlightsIgnoredUsers, username)
+  }
+
+  /**
+   * Checks if all mentions should be highlighted or not.
+   * @return `true` when highlighting all mentions.
+   */
+  public shouldHighlightAllMentions() {
+    return this.highlightAllMentions
   }
 
   /**

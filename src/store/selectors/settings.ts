@@ -108,3 +108,10 @@ export const getDisableDialogAnimations = createSelector(
   [getSettingsState],
   (settings) => settings.disableDialogAnimations
 )
+
+/**
+ * Returns the 'Highlight all mentions' setting.
+ * @param  state - The Redux state.
+ * @return The 'Highlight all mentions' setting.
+ */
+export const getHighlightAllMentions = createSelector([getSettingsState], (settings) => settings.highlightAllMentions)
