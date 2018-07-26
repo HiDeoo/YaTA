@@ -4,6 +4,7 @@
 
 - Preserve initial casing when rendering a mention.
 - Fix an issue when unpausing the auto-scroll which could fail in very fast moving chats.
+- Show localized username in context menus when needed.
 
 # 0.4.0
 
