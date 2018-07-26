@@ -6,6 +6,7 @@
 
 ### 🐛 Bug Fix
 
+- Basic emoticons (`:)`, `:/`, etc.) in your own messages are now properly displayed _(this respects your custom emoticons set if you have a Twitch Prime subscription)_.
 - Preserve initial casing when rendering a mention.
 - Fix an issue when unpausing the auto-scroll which could fail in very fast moving chats.
 - Show localized username in context menus when needed.

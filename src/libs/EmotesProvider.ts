@@ -2,6 +2,8 @@ import * as _ from 'lodash'
 import { Emotes } from 'twitch-js'
 import { Word } from 'unistring'
 
+import Resources from 'Libs/Resources'
+
 /**
  * Various emotes providers.
  */
@@ -13,7 +15,7 @@ export enum EmoteProviderPrefix {
 /**
  * Twitch RegExp emotes map.
  */
-const TwitchRegExpEmotesMap = {
+export const TwitchRegExpEmotesMap = {
   'B-?\\)': 'B)',
   'R-?\\)': 'R)',
   '[oO](_|\\.)[oO]': 'O_o',
@@ -29,6 +31,11 @@ const TwitchRegExpEmotesMap = {
   '\\;-?(p|P)': ';P',
   '\\;-?\\)': ';)',
 }
+
+/**
+ * Characters triggering a next word look-up when parsing emotes.
+ */
+const nextWordLookUpTriggers = [';', '<', '>', '(', ':', 'B', 'D', 'R']
 
 /**
  * EmotesProvider class.
@@ -71,16 +78,24 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
   }
 
   /**
+   * Determines if the emote provider is the official Twitch one.
+   * @return `true` if Twitch.
+   */
+  public isTwitch() {
+    return this.prefix === 'twitch'
+  }
+
+  /**
    * Returns the emotes included in a message.
    * @param  words - The message words.
    * @return The emotes.
    */
   public getMessageEmotes(words: Word[]): Emotes {
     return _.reduce(
-      this.emotes,
+      this.isTwitch() ? Resources.manager().getEmoticonsMap() : this.emotes,
       (emotes, emote) => {
         const wordsMatchingEmote = _.filter(words, (word, index) => {
-          if (word.text === '(' || word.text === ':' || word.text === 'D') {
+          if (_.includes(nextWordLookUpTriggers, word.text)) {
             return this.getPotentialNextWord(words, index) === emote.code
           }
 

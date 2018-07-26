@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 
-import EmotesProvider, { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
+import Prime from 'Constants/prime'
+import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'Libs/EmotesProvider'
 import { RawBadges, RawCheermote } from 'Libs/Twitch'
 import { Highlights } from 'Store/ducks/settings'
 
@@ -29,6 +30,8 @@ export default class Resources {
   private highlights: Highlights = {}
   private highlightsIgnoredUsers: string[] = []
   private highlightAllMentions: boolean = false
+  private emoticonsSetId = 0
+  private emoticonsMap: { [key: string]: { code: string; id: string } } = {}
 
   /**
    * Creates a new instance of the class.
@@ -58,6 +61,34 @@ export default class Resources {
    */
   public setCheermotes(cheermotes: RawCheermote[]) {
     this.cheermotes = cheermotes
+  }
+
+  /**
+   * Sets the emoticons set id.
+   * @param id - The emoticons set id.
+   */
+  public setEmoticonsSetId(id: number) {
+    const emoticonsSetId = _.get(Prime.bySetId, id)
+
+    this.emoticonsSetId = !_.isNil(emoticonsSetId) ? id : 0
+
+    this.emoticonsMap = _.reduce(
+      TwitchRegExpEmotesMap,
+      (map, code, regex) => {
+        map[regex] = { code, id: Prime.bySetId[this.emoticonsSetId][regex] }
+
+        return map
+      },
+      {}
+    )
+  }
+
+  /**
+   * Returns the emoticons map.
+   * @return The emoticons map.
+   */
+  public getEmoticonsMap() {
+    return this.emoticonsMap
   }
 
   /**

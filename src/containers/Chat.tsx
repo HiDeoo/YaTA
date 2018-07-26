@@ -16,6 +16,7 @@ import tmi, {
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
 import Page from 'Constants/page'
+import Prime from 'Constants/prime'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
@@ -664,6 +665,16 @@ export class ChatClient extends React.Component<Props, State> {
    * @param sets - The emote sets.
    */
   private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
+    let emoticonsSetId = 0
+
+    _.forEach(Prime.EmoticonsSetsIds, (id) => {
+      if (_.has(sets, id)) {
+        emoticonsSetId = id
+      }
+    })
+
+    Resources.manager().setEmoticonsSetId(emoticonsSetId)
+
     const emotes = EmotesProvider.sanitizeTwitchEmotes(_.flatten(_.map(sets, (set) => set)))
 
     const provider = new EmotesProvider(

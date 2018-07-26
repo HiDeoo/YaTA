@@ -176,7 +176,7 @@ export default class Message implements Serializable<SerializedMessage> {
     Resources.manager()
       .getEmotesProviders()
       .forEach((provider) => {
-        if (provider.prefix === 'twitch') {
+        if (provider.isTwitch() && !this.self) {
           return
         }
 
