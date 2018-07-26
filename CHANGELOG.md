@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Preserve initial casing when rendering a mention.
+
 # 0.4.0
 
 ### 🚀 New Feature

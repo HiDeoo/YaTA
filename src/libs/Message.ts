@@ -324,7 +324,7 @@ export default class Message implements Serializable<SerializedMessage> {
           parsedMessage[i] = ''
         }
 
-        parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${currentUsername}</span>`
+        parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${word.text}</span>`
       } else if (word.text === '@') {
         const previousWord = index > 0 ? words[index - 1] : null
 
