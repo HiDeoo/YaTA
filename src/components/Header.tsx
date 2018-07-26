@@ -1,11 +1,10 @@
 import {
-  Alignment,
   Button,
   Classes,
   Colors,
-  Navbar,
+  Navbar as _Navbar,
   NavbarDivider,
-  NavbarGroup,
+  NavbarGroup as _NavbarGroup,
   NavbarHeading,
   Spinner,
   Switch as _Switch,
@@ -20,6 +19,31 @@ import Page from 'Constants/page'
 import Status from 'Constants/status'
 import { AppState } from 'Store/ducks/app'
 import { enumIncludes } from 'Utils/typescript'
+
+/**
+ * NavBar component.
+ */
+const Navbar = styled(_Navbar)`
+  align-items: center;
+  display: flex;
+`
+
+/**
+ * NavbarGroup component.
+ */
+const NavbarGroup = styled(_NavbarGroup)`
+  &.${Classes.NAVBAR_GROUP}.${Classes.ALIGN_LEFT} {
+    float: unset;
+    flex-shrink: 0;
+  }
+`
+
+/**
+ * NavbarSpacer component.
+ */
+const NavbarSpacer = styled.div`
+  flex-grow: 2;
+`
 
 /**
  * StatusSpinner component.
@@ -49,8 +73,8 @@ const Changelog = styled(Button)`
  * Switch component.
  */
 const Switch = styled(_Switch)`
-  margin-left: 6px;
-  margin-top: 9px;
+  margin-left: 8px;
+  margin-top: 13px;
 `
 
 /**
@@ -116,7 +140,7 @@ export default class Header extends React.Component<Props> {
         <Helmet>
           <title>YaTA</title>
         </Helmet>
-        <NavbarGroup align={Alignment.LEFT}>
+        <NavbarGroup>
           <NavbarHeading>
             <HeaderConsumer>
               {({ titleComponent }) => (!_.isNil(titleComponent) ? <span>{titleComponent} - </span> : null)}
@@ -124,7 +148,8 @@ export default class Header extends React.Component<Props> {
           </NavbarHeading>
           {this.renderStatus()}
         </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
+        <NavbarSpacer />
+        <NavbarGroup>
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
           {this.renderDebugTools()}
           <HeaderTooltip content="Report bug">
