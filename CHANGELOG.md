@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Preserve initial casing when rendering a mention.
+- Fix an issue when unpausing the auto-scroll which could fail in very fast moving chats.
 
 # 0.4.0
 

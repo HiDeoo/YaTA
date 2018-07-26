@@ -394,7 +394,16 @@ class Channel extends React.Component<Props, State> {
    */
   private scrollToNewestLog = () => {
     if (!_.isNil(this.logsComponent.current) && !_.isNil(this.logsComponent.current.list.current)) {
-      this.logsComponent.current.list.current.scrollToRow(this.props.logs.length)
+      const element = document.querySelector('.ReactVirtualized__Grid')
+
+      if (!_.isNil(element)) {
+        const maxScrollTop = element.scrollHeight - element.clientHeight
+
+        if (maxScrollTop > element.scrollTop) {
+          this.logsComponent.current.list.current.scrollToPosition(maxScrollTop)
+          requestAnimationFrame(this.scrollToNewestLog)
+        }
+      }
     }
   }
 
