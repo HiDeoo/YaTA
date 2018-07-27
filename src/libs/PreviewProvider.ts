@@ -22,7 +22,7 @@ export type Previews = {
 export type UnresolvedPreview = {
   id: string
   provider: string
-  resovled: boolean
+  resolved: boolean
 }
 
 /**
@@ -42,5 +42,5 @@ export type Preview = UnresolvedPreview & {
  * @return `true` when the preview is resolved.
  */
 export function isResolved(preview: UnresolvedPreview | Preview): preview is Preview {
-  return preview.resovled === true
+  return preview.resolved === true
 }

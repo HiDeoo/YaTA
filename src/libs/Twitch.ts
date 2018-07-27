@@ -1,5 +1,7 @@
 import * as _ from 'lodash'
 
+import RequestMethod from 'Constants/requestMethod'
+
 /**
  * Twitch various APIs.
  */
@@ -315,7 +317,7 @@ export default class Twitch {
    * Returns the URL for a request.
    * @param  api - The Twitch API to use.
    * @param  endpoint - The endpoint to fetch.
-   * @param  searchParams - Additional search parameters.
+   * @param  [searchParams] - Additional search parameters.
    * @return The URL.
    */
   private static getUrl(api: TwitchApi, endpoint: string, searchParams: { [key: string]: string } = {}) {
@@ -330,9 +332,9 @@ export default class Twitch {
    * Fetches an URL.
    * @param  api - The Twitch API to use.
    * @param  endpoint - The endpoint to fetch.
-   * @param  searchParams - Additional search parameters.
-   * @param  authenticated - Defines if the endpoint requires authentication or not.
-   * @param  options - Additionals request options.
+   * @param  [searchParams] - Additional search parameters.
+   * @param  [authenticated] - Defines if the endpoint requires authentication or not.
+   * @param  [method] - The request method.
    * @return The response.
    */
   private static async fetch(
@@ -696,12 +698,3 @@ export type RawCheermoteImage = { [key in CheermoteImageScales]: string }
 export type CheermoteImageBackground = 'dark' | 'light'
 type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
-
-/**
- * Twitch API allowed method.
- */
-enum RequestMethod {
-  Get = 'GET',
-  Post = 'POST',
-  Put = 'PUT',
-}

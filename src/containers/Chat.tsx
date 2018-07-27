@@ -370,7 +370,7 @@ export class ChatClient extends React.Component<Props, State> {
           if (serializedMessage.previews.hasOwnProperty(previewId)) {
             const preview = serializedMessage.previews[previewId]
 
-            if (!preview.resovled) {
+            if (!preview.resolved) {
               const provider = providers[preview.provider]
 
               try {

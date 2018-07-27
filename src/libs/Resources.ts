@@ -6,6 +6,7 @@ import { PreviewProvider } from 'Libs/PreviewProvider'
 import { RawBadges, RawCheermote } from 'Libs/Twitch'
 import { Highlights } from 'Store/ducks/settings'
 
+import PreviewStrawPoll from 'Libs/PreviewStrawPoll'
 import PreviewTwitch from 'Libs/PreviewTwitch'
 
 /**
@@ -43,6 +44,7 @@ export default class Resources {
    */
   private constructor() {
     this.previewProviders = {
+      [PreviewStrawPoll.getProviderId()]: PreviewStrawPoll,
       [PreviewTwitch.getProviderId()]: PreviewTwitch,
     }
   }
