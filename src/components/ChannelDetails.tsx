@@ -1,5 +1,6 @@
 import { Colors, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
+import * as pluralize from 'pluralize'
 import * as React from 'react'
 import TimeAgo from 'react-timeago'
 import styled from 'styled-components'
@@ -271,7 +272,7 @@ export default class ChannelDetails extends React.Component<Props, State> {
                   </a>
                 </Title>
                 <Meta>
-                  {new Date(video.created_at).toLocaleDateString()} - {video.views} views
+                  {new Date(video.created_at).toLocaleDateString()} - {video.views} {pluralize('views', video.views)}
                 </Meta>
               </VodDetails>
             </Vod>

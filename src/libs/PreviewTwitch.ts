@@ -1,4 +1,5 @@
 import * as _ from 'lodash'
+import * as pluralize from 'pluralize'
 
 import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
 import Twitch from 'Libs/Twitch'
@@ -76,9 +77,9 @@ const PreviewTwitch: PreviewProvider = class {
     if (preview.type === TwitchPreviewType.Clip) {
       const clip = await Twitch.fetchClip(preview.id)
 
-      const meta = `Clipped by ${clip.curator.display_name} on ${clip.broadcaster.display_name} (${this.getViews(
+      const meta = `Clipped by ${clip.curator.display_name} on ${clip.broadcaster.display_name} (${
         clip.views
-      )})`
+      } ${pluralize('view', clip.views)})`
 
       return {
         ...preview,
@@ -91,9 +92,9 @@ const PreviewTwitch: PreviewProvider = class {
     } else if (preview.type === TwitchPreviewType.Video) {
       const video = await Twitch.fetchVideo(preview.id)
 
-      const meta = `Recorded by ${video.channel.display_name} on ${new Date(
-        video.created_at
-      ).toLocaleDateString()} (${this.getViews(video.views)})`
+      const meta = `Recorded by ${video.channel.display_name} on ${new Date(video.created_at).toLocaleDateString()} (${
+        video.views
+      } ${pluralize('view', video.views)})`
 
       return {
         ...preview,
@@ -106,15 +107,6 @@ const PreviewTwitch: PreviewProvider = class {
     }
 
     throw new Error('Invalid preview type.')
-  }
-
-  /**
-   * Returns the pluralized string representation of a number of views.
-   * @param  views - The number of views.
-   * @return The number of views.
-   */
-  private static getViews(views: number) {
-    return `${views} view${views > 1 ? 's' : ''}`
   }
 }
 

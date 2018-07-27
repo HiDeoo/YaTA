@@ -1,4 +1,5 @@
 import * as _ from 'lodash'
+import * as pluralize from 'pluralize'
 
 import RequestMethod from 'Constants/requestMethod'
 import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
@@ -62,7 +63,7 @@ const PreviewYoutube: PreviewProvider = class {
 
     const meta = `Recorded by ${video.snippet.channelTitle} on ${new Date(
       video.snippet.publishedAt
-    ).toLocaleDateString()} (${video.statistics.viewCount} view${video.statistics.viewCount > 1 ? 's' : ''})`
+    ).toLocaleDateString()} (${video.statistics.viewCount} ${pluralize('view', video.statistics.viewCount)})`
 
     return {
       ...preview,
