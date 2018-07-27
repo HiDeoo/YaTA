@@ -23,6 +23,7 @@ export type UnresolvedPreview = {
   id: string
   provider: string
   resolved: boolean
+  type?: string | number
 }
 
 /**

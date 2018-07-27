@@ -8,6 +8,7 @@ import { Highlights } from 'Store/ducks/settings'
 
 import PreviewStrawPoll from 'Libs/PreviewStrawPoll'
 import PreviewTwitch from 'Libs/PreviewTwitch'
+import PreviewYoutube from 'Libs/PreviewYoutube'
 
 /**
  * Manager for various resources used mostly during messages parsing like badges, emotes, cheermotes, etc.
@@ -46,6 +47,7 @@ export default class Resources {
     this.previewProviders = {
       [PreviewStrawPoll.getProviderId()]: PreviewStrawPoll,
       [PreviewTwitch.getProviderId()]: PreviewTwitch,
+      [PreviewYoutube.getProviderId()]: PreviewYoutube,
     }
   }
 

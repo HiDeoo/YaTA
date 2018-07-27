@@ -24,7 +24,10 @@ const Wrapper = styled.div`
  */
 const Thumbnail = styled.img`
   display: inline-block;
+  height: 46px;
   margin-right: 10px;
+  object-fit: cover;
+  width: 80px;
 `
 
 /**

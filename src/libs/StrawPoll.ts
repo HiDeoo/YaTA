@@ -5,7 +5,7 @@ import RequestMethod from 'Constants/requestMethod'
 /**
  * StrawPoll base API URL.
  */
-const baseUrl = 'https://strawpoll.me/api/v2/'
+const BaseUrl = 'https://strawpoll.me/api/v2/'
 
 /**
  * StrawPoll class.
@@ -29,7 +29,7 @@ export default class StrawPoll {
    * @return The URL.
    */
   private static getUrl(endpoint: string, searchParams: { [key: string]: string } = {}) {
-    const url = new URL(`${baseUrl}${endpoint}`)
+    const url = new URL(`${BaseUrl}${endpoint}`)
 
     _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
 

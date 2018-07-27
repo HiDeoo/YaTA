@@ -232,6 +232,17 @@ export default class Twitch {
   }
 
   /**
+   * Fetches details about a video.
+   * @param  id - The video id.
+   * @return The video details.
+   */
+  public static async fetchVideo(id: string): Promise<RawVideo> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/videos/${id}`)
+
+    return response.json()
+  }
+
+  /**
    * Fetches chatters of a specific channel.
    * @param  channel - The channel.
    * @return The chatter.
@@ -639,6 +650,9 @@ export type RawVideos = {
   _total: number
 }
 
+/**
+ * Twitch video.
+ */
 export type RawVideo = {
   animated_preview_url: string
   broadcast_id: number
