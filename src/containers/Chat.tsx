@@ -363,7 +363,7 @@ export class ChatClient extends React.Component<Props, State> {
 
       const serializedMessage = parsedMessage.serialize()
 
-      if (_.size(serializedMessage.previews) > 0) {
+      if (!Resources.manager().isBot(serializedMessage.user.userName) && _.size(serializedMessage.previews) > 0) {
         const providers = Resources.manager().getPreviewProviders()
 
         for (const previewId in serializedMessage.previews) {
