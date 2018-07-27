@@ -7,15 +7,11 @@ import LogType from 'Constants/logType'
 import Theme from 'Constants/theme'
 import Chatter, { SerializedChatter } from 'Libs/Chatter'
 import { EmoteProviderPrefix } from 'Libs/EmotesProvider'
+import { Previews } from 'Libs/PreviewProvider'
 import Resources from 'Libs/Resources'
-import { CheermoteImageBackground, RawCheermoteImage, RawClip } from 'Libs/Twitch'
+import { CheermoteImageBackground, RawCheermoteImage } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { Serializable } from 'Utils/typescript'
-
-/**
- * RegExp used to identify a clip link.
- */
-const ClipRegExp = /https:\/\/clips\.twitch\.tv\/(\w+)/g
 
 /**
  * Message class representing either a chat message, an action (/me) or a whisper.
@@ -31,8 +27,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private time: string
   private purged: boolean = false
   private mentionned: boolean = false
-  private hasClip: boolean = false
-  private clips: Clips = {}
+  private previews: Previews = {}
   private ignoreHighlight: boolean
 
   /**
@@ -82,13 +77,12 @@ export default class Message implements Serializable<SerializedMessage> {
   public serialize() {
     return {
       badges: this.badges,
-      clips: this.clips,
       color: this.color,
       date: this.date,
-      hasClip: this.hasClip,
       id: this.id,
       mentionned: this.mentionned,
       message: this.message,
+      previews: this.previews,
       purged: this.purged,
       self: this.self,
       time: this.time,
@@ -152,7 +146,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.parseEmotes(parsedMessage, emotes)
     this.parseHighlights(words, parsedMessage)
     this.parseMentions(words, parsedMessage, currentUsername)
-    this.parseClips(message)
+    this.parsePreviews(message)
 
     let parsedMessageStr = escape(parsedMessage).join('')
 
@@ -375,17 +369,17 @@ export default class Message implements Serializable<SerializedMessage> {
   }
 
   /**
-   * Checks if the message contains any clip.
+   * Parses the message for potential previews.
    * @param message - The message to parse.
    */
-  private parseClips(message: string) {
-    let match
+  private parsePreviews(message: string) {
+    _.forEach(Resources.manager().getPreviewProviders(), (provider) => {
+      const previews = provider.parse(message)
 
-    // tslint:disable-next-line:no-conditional-assignment
-    while ((match = ClipRegExp.exec(message)) != null) {
-      this.hasClip = true
-      this.clips[match[1]] = null
-    }
+      if (_.size(previews) > 0) {
+        _.merge(this.previews, provider.parse(message))
+      }
+    })
   }
 }
 
@@ -404,15 +398,7 @@ export type SerializedMessage = {
   message: string
   purged: boolean
   time: string
-  hasClip: boolean
-  clips: Clips
-}
-
-/**
- * Clips details.
- */
-type Clips = {
-  [key: string]: RawClip | null
+  previews: Previews
 }
 
 /**

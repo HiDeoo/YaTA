@@ -2,8 +2,11 @@ import * as _ from 'lodash'
 
 import Emoticons from 'Constants/emoticons'
 import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'Libs/EmotesProvider'
+import { PreviewProvider } from 'Libs/PreviewProvider'
 import { RawBadges, RawCheermote } from 'Libs/Twitch'
 import { Highlights } from 'Store/ducks/settings'
+
+import PreviewTwitch from 'Libs/PreviewTwitch'
 
 /**
  * Manager for various resources used mostly during messages parsing like badges, emotes, cheermotes, etc.
@@ -32,12 +35,17 @@ export default class Resources {
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
   private emoticonsMap: { [key: string]: { code: string; id: string } } = {}
+  private previewProviders: { [key: string]: PreviewProvider }
 
   /**
    * Creates a new instance of the class.
    * @class
    */
-  private constructor() {}
+  private constructor() {
+    this.previewProviders = {
+      [PreviewTwitch.getProviderId()]: PreviewTwitch,
+    }
+  }
 
   /**
    * Sets the badges.
@@ -184,5 +192,13 @@ export default class Resources {
    */
   public isBot(username: string) {
     return this.bots.has(username)
+  }
+
+  /**
+   * Returns all the available preview providers.
+   * @return The providers keyed by provider id.
+   */
+  public getPreviewProviders() {
+    return this.previewProviders
   }
 }

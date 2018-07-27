@@ -363,24 +363,23 @@ export class ChatClient extends React.Component<Props, State> {
 
       const serializedMessage = parsedMessage.serialize()
 
-      if (serializedMessage.hasClip) {
-        try {
-          const clipSlugs = _.keys(serializedMessage.clips)
-          const clips = await Twitch.fetchClips(clipSlugs)
+      if (_.size(serializedMessage.previews) > 0) {
+        const providers = Resources.manager().getPreviewProviders()
 
-          const newClips = _.reduce(
-            clips,
-            (clipsById, clip) => {
-              clipsById[clip.slug] = clip
+        for (const previewId in serializedMessage.previews) {
+          if (serializedMessage.previews.hasOwnProperty(previewId)) {
+            const preview = serializedMessage.previews[previewId]
 
-              return clipsById
-            },
-            {}
-          )
+            if (!preview.resovled) {
+              const provider = providers[preview.provider]
 
-          serializedMessage.clips = newClips
-        } catch (error) {
-          //
+              try {
+                serializedMessage.previews[previewId] = await provider.resolve(preview)
+              } catch (error) {
+                //
+              }
+            }
+          }
         }
       }
 

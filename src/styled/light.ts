@@ -14,9 +14,6 @@ const light = {
     background: Colors.LIGHT_GRAY3,
     border: Colors.LIGHT_GRAY2,
   },
-  clips: {
-    meta: Colors.GRAY1,
-  },
   emotePicker: {
     background: Colors.LIGHT_GRAY5,
     border: Colors.LIGHT_GRAY1,
@@ -49,6 +46,9 @@ const light = {
   permissions: {
     color: Colors.GRAY1,
     detail: Colors.GRAY3,
+  },
+  previews: {
+    meta: Colors.GRAY1,
   },
   settings: {
     description: Colors.GRAY1,

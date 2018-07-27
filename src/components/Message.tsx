@@ -3,13 +3,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import Clip from 'Components/Clip'
 import MessageContent from 'Components/MessageContent'
+import Preview from 'Components/Preview'
 import ActionMenuItems from 'Containers/ActionMenuItems'
 import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
-import { RawClip } from 'Libs/Twitch'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
@@ -152,36 +151,24 @@ export default class Message extends React.Component<Props, State> {
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
         <MessageContent message={message} />
-        {this.renderClips()}
+        {this.renderPreviews()}
       </Wrapper>
     )
   }
 
   /**
-   * Renders the clips preview if necessary.
+   * Renders the previews if necessary.
    * @return Element to render.
    */
-  private renderClips() {
+  private renderPreviews() {
     const { message } = this.props
 
-    if (!message.hasClip) {
+    if (_.size(message.previews) <= 0) {
       return null
     }
 
-    const clips = _.reduce(
-      message.clips,
-      (validClips, clip) => {
-        if (!_.isNil(clip)) {
-          validClips[clip.slug] = clip
-        }
-
-        return validClips
-      },
-      {}
-    ) as { [key: string]: RawClip }
-
-    return _.map(clips, (clip) => {
-      return <Clip key={clip.slug} clip={clip} />
+    return _.map(message.previews, (preview) => {
+      return <Preview key={preview.id} preview={preview} />
     })
   }
 

@@ -230,17 +230,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches details about multiple clips.
-   * @param  slug - The clip slugs.
-   * @return The clips details.
-   */
-  public static async fetchClips(slugs: string[]): Promise<RawClip[]> {
-    const requests = _.map(slugs, async (slug) => Twitch.fetchClip(slug))
-
-    return Promise.all(requests)
-  }
-
-  /**
    * Fetches chatters of a specific channel.
    * @param  channel - The channel.
    * @return The chatter.
