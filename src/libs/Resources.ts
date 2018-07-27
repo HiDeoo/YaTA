@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-import Prime from 'Constants/prime'
+import Emoticons from 'Constants/emoticons'
 import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'Libs/EmotesProvider'
 import { RawBadges, RawCheermote } from 'Libs/Twitch'
 import { Highlights } from 'Store/ducks/settings'
@@ -68,14 +68,14 @@ export default class Resources {
    * @param id - The emoticons set id.
    */
   public setEmoticonsSetId(id: number) {
-    const emoticonsSetId = _.get(Prime.bySetId, id)
+    const emoticonsSetId = _.get(Emoticons.setIds, id)
 
     this.emoticonsSetId = !_.isNil(emoticonsSetId) ? id : 0
 
     this.emoticonsMap = _.reduce(
       TwitchRegExpEmotesMap,
       (map, code, regex) => {
-        map[regex] = { code, id: Prime.bySetId[this.emoticonsSetId][regex] }
+        map[regex] = { code, id: Emoticons.bySetId[this.emoticonsSetId][regex] }
 
         return map
       },

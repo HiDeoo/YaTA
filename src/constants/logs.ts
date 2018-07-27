@@ -8,4 +8,9 @@ export default {
    * Threshold for the number of logs to store to avoid too many updates.
    */
   Threshold: 300,
+
+  /**
+   * User color minimum readability contrast.
+   */
+  ReadabilityContrast: 4.5,
 }

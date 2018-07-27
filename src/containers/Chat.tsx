@@ -13,10 +13,10 @@ import tmi, {
   UserState,
 } from 'twitch-js'
 
+import Emoticons from 'Constants/emoticons'
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
 import Page from 'Constants/page'
-import Prime from 'Constants/prime'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
 import Status from 'Constants/status'
@@ -667,7 +667,7 @@ export class ChatClient extends React.Component<Props, State> {
   private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
     let emoticonsSetId = 0
 
-    _.forEach(Prime.EmoticonsSetsIds, (id) => {
+    _.forEach(Emoticons.setIds, (id) => {
       if (_.has(sets, id)) {
         emoticonsSetId = id
       }

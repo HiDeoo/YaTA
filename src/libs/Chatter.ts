@@ -3,6 +3,8 @@ import * as shortid from 'shortid'
 import { UserState } from 'twitch-js'
 
 import LogType from 'Constants/logType'
+import Theme from 'Constants/theme'
+import ChatterColor from 'Libs/ChatterColor'
 import base, { TwitchUserColorMap } from 'Styled/base'
 import { Serializable } from 'Utils/typescript'
 
@@ -16,21 +18,24 @@ export default class Chatter implements Serializable<SerializedChatter> {
    * @return The potential chatter.
    */
   public static createPotentialChatter(username: string) {
-    return new Chatter({
-      badges: null,
-      'badges-raw': '',
-      color: null,
-      'display-name': username,
-      emotes: null,
-      id: shortid.generate(),
-      'message-type': LogType.Chat,
-      mod: false,
-      subscriber: false,
-      'tmi-sent-ts': Date.now().toString(),
-      'user-id': shortid.generate(),
-      'user-type': null,
-      username: username.toLowerCase(),
-    })
+    return new Chatter(
+      {
+        badges: null,
+        'badges-raw': '',
+        color: null,
+        'display-name': username,
+        emotes: null,
+        id: shortid.generate(),
+        'message-type': LogType.Chat,
+        mod: false,
+        subscriber: false,
+        'tmi-sent-ts': Date.now().toString(),
+        'user-id': shortid.generate(),
+        'user-type': null,
+        username: username.toLowerCase(),
+      },
+      Theme.Dark
+    )
   }
 
   public id: string
@@ -47,12 +52,13 @@ export default class Chatter implements Serializable<SerializedChatter> {
    * Creates a new chatter instance.
    * @class
    * @param userstate - The associated user state.
+   * @param theme - The current theme.
    */
-  constructor(userstate: UserState) {
+  constructor(userstate: UserState, theme: Theme) {
     this.displayName = userstate['display-name']
     this.id = userstate['user-id']
     this.userName = userstate.username
-    this.color = this.sanitizeDefaultColor(userstate.color)
+    this.color = this.sanitizeColor(userstate.color, theme)
     this.isBroadcaster = _.has(userstate.badges, 'broadcaster')
     this.isMod = userstate.mod || this.isBroadcaster
     this.showUserName = this.displayName.toLocaleLowerCase() !== this.userName.toLocaleLowerCase()
@@ -90,16 +96,27 @@ export default class Chatter implements Serializable<SerializedChatter> {
   }
 
   /**
-   * Sanitizes Twitch default colors if necessary.
+   * Sanitizes colors if necessary.
    * @param  color - The color to sanitize.
+   * @param theme - The current theme.
    * @return The sanitized color.
    */
-  private sanitizeDefaultColor(color: string | null) {
+  private sanitizeColor(color: string | null, theme: Theme) {
     if (_.isNil(color)) {
       return color
     }
 
-    return _.get(TwitchUserColorMap, color, color)
+    let sanitizedColor = _.get(TwitchUserColorMap, color, color)
+
+    if (sanitizedColor === color) {
+      const chatterColor = new ChatterColor(color, base.background[theme])
+
+      if (!chatterColor.isReadable()) {
+        sanitizedColor = chatterColor.getReadableColor()
+      }
+    }
+
+    return sanitizedColor
   }
 }
 

@@ -51,8 +51,7 @@ import {
   getShowViewerCount,
 } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
-import { replaceImgTagByAlt } from 'Utils/html'
-import { sanitizeUrlForPreview } from 'Utils/preview'
+import { replaceImgTagByAlt, sanitizeUrlForPreview } from 'Utils/html'
 
 /**
  * ChannelLink component.

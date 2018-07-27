@@ -52,6 +52,7 @@
     "semver-compare": "1.0.0",
     "shortid": "2.2.12",
     "styled-components": "3.3.3",
+    "tinycolor2": "1.4.1",
     "twitch-js": "1.2.12",
     "unistring": "https://github.com/akahuku/unistring#master"
   },
@@ -72,6 +73,7 @@
     "@types/react-virtualized": "9.18.5",
     "@types/recompose": "0.26.2",
     "@types/shortid": "0.0.29",
+    "@types/tinycolor2": "1.4.0",
     "@types/webpack-env": "1.13.6",
     "husky": "0.14.3",
     "lint-staged": "7.2.0",

@@ -1,8 +1,8 @@
 export default {
   /**
-   * Prime emoticons sets ids.
+   * Emoticons sets ids (default (0) is always included).
    */
-  EmoticonsSetsIds: [33, 42],
+  setIds: [33, 42],
 
   /**
    * Emoticons mapping by set id.
