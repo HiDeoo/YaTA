@@ -69,7 +69,7 @@ export default {
       Red: { color: Colors.WHITE, background: Colors.RED3 },
       Yellow: { color: Colors.DARK_GRAY1, background: Colors.GOLD5 },
     } as { [key in HighlightColors]: HighlightColor },
-    minHeight: 28,
+    minHeight: 33,
   },
   message: {
     time: {
