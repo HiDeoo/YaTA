@@ -16,6 +16,7 @@ const Message = styled.span<MessageProps>`
 
   .emoteWrapper {
     display: inline-block;
+    min-height: 28px;
     min-width: 28px;
   }
 
