@@ -68,7 +68,7 @@ export default class Resources {
    * @param id - The emoticons set id.
    */
   public setEmoticonsSetId(id: number) {
-    const emoticonsSetId = _.get(Emoticons.setIds, id)
+    const emoticonsSetId = _.get(Emoticons.bySetId, id)
 
     this.emoticonsSetId = !_.isNil(emoticonsSetId) ? id : 0
 
