@@ -115,3 +115,10 @@ export const getDisableDialogAnimations = createSelector(
  * @return The 'Highlight all mentions' setting.
  */
 export const getHighlightAllMentions = createSelector([getSettingsState], (settings) => settings.highlightAllMentions)
+
+/**
+ * Returns the 'Prioritize usernames' setting.
+ * @param  state - The Redux state.
+ * @return The 'Prioritize usernames' setting.
+ */
+export const getPrioritizeUsernames = createSelector([getSettingsState], (settings) => settings.prioritizeUsernames)

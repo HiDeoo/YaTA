@@ -13,6 +13,7 @@ import {
   toggleDisableDialogAnimations,
   toggleHideWhispers,
   toggleHighlightAllMentions,
+  togglePrioritizeUsernames,
   toggleShowContextMenu,
   toggleShowViewerCount,
   toggleTheme,
@@ -24,6 +25,7 @@ import {
   getDisableDialogAnimations,
   getHideWhispers,
   getHighlightAllMentions,
+  getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
   getTheme,
@@ -68,6 +70,7 @@ class SettingsGeneral extends React.Component<Props> {
       disableDialogAnimations,
       hideWhispers,
       highlightAllMentions,
+      prioritizeUsernames,
       showContextMenu,
       showViewerCount,
       theme,
@@ -99,6 +102,12 @@ class SettingsGeneral extends React.Component<Props> {
             checked={highlightAllMentions}
             label="Highlight all mentions"
             onChange={this.props.toggleHighlightAllMentions}
+          />
+          <Switch
+            description="Usernames will be auto-completed before emotes when enabled."
+            checked={prioritizeUsernames}
+            label="Prioritize usernames when auto-completing"
+            onChange={this.props.togglePrioritizeUsernames}
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="UI">
@@ -191,6 +200,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     disableDialogAnimations: getDisableDialogAnimations(state),
     hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
+    prioritizeUsernames: getPrioritizeUsernames(state),
     showContextMenu: getShowContextMenu(state),
     showViewerCount: getShowViewerCount(state),
     theme: getTheme(state),
@@ -201,6 +211,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleDisableDialogAnimations,
     toggleHideWhispers,
     toggleHighlightAllMentions,
+    togglePrioritizeUsernames,
     toggleShowContextMenu,
     toggleShowViewerCount,
     toggleTheme,
@@ -216,6 +227,7 @@ type StateProps = {
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
+  prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   showViewerCount: ReturnType<typeof getShowViewerCount>
   theme: ReturnType<typeof getTheme>
@@ -230,6 +242,7 @@ type DispatchProps = {
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
   toggleHideWhispers: typeof toggleHideWhispers
   toggleHighlightAllMentions: typeof toggleHighlightAllMentions
+  togglePrioritizeUsernames: typeof togglePrioritizeUsernames
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleShowViewerCount: typeof toggleShowViewerCount
   toggleTheme: typeof toggleTheme

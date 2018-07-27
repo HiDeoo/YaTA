@@ -31,6 +31,7 @@ export enum Actions {
   TOGGLE_SHOW_VIEWER_COUNT = 'settings/TOGGLE_SHOW_VIEWER_COUNT',
   TOGGLE_DISABLE_DIALOG_ANIMATIONS = 'settings/TOGGLE_DISABLE_DIALOG_ANIMATIONS',
   TOGGLE_HIGHLIGHT_ALL_MENTIONS = 'settings/TOGGLE_HIGHLIGHT_ALL_MENTIONS',
+  TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
 }
 
 /**
@@ -47,6 +48,7 @@ export const initialState = {
   highlights: {},
   highlightsIgnoredUsers: [],
   lastKnownVersion: null,
+  prioritizeUsernames: false,
   showContextMenu: true,
   showViewerCount: false,
   theme: Theme.Dark as SettingsState['theme'],
@@ -206,6 +208,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         highlightAllMentions: !state.highlightAllMentions,
+      }
+    }
+    case Actions.TOGGLE_PRIORITIZE_USERNAMES: {
+      return {
+        ...state,
+        prioritizeUsernames: !state.prioritizeUsernames,
       }
     }
     default: {
@@ -387,6 +395,12 @@ export const toggleDisableDialogAnimations = () => createAction(Actions.TOGGLE_D
 export const toggleHighlightAllMentions = () => createAction(Actions.TOGGLE_HIGHLIGHT_ALL_MENTIONS)
 
 /**
+ * Toggle the 'Prioritize usernames' setting.
+ * @return The action.
+ */
+export const togglePrioritizeUsernames = () => createAction(Actions.TOGGLE_PRIORITIZE_USERNAMES)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -411,6 +425,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleShowViewerCount>
   | ReturnType<typeof toggleDisableDialogAnimations>
   | ReturnType<typeof toggleHighlightAllMentions>
+  | ReturnType<typeof togglePrioritizeUsernames>
 
 /**
  * Settings state.
@@ -480,6 +495,11 @@ export type SettingsState = {
    * Highlights all mentions (@notYou) instead of only you.
    */
   highlightAllMentions: boolean
+
+  /**
+   * Prioritizes usernames when auto-completing.
+   */
+  prioritizeUsernames: boolean
 }
 
 /**

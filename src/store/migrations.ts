@@ -98,4 +98,10 @@ export default {
       settings: { ...state.settings, highlightAllMentions: initialState.highlightAllMentions },
     }
   },
+  13: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, prioritizeUsernames: initialState.prioritizeUsernames },
+    }
+  },
 }

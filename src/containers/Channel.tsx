@@ -47,6 +47,7 @@ import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
+  getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
 } from 'Store/selectors/settings'
@@ -530,7 +531,7 @@ class Channel extends React.Component<Props, State> {
   private getCompletions = (word: string, excludeEmotes: boolean = false) => {
     const sanitizedWord = word.toLowerCase()
 
-    const { chatters, emotes } = this.props
+    const { chatters, emotes, prioritizeUsernames } = this.props
 
     const usernameCompletions = _.filter(chatters, (chatter) => {
       return chatter.displayName.toLowerCase().startsWith(sanitizedWord)
@@ -542,6 +543,10 @@ class Channel extends React.Component<Props, State> {
       emoteCompletions = _.filter(emotes, (emote) => {
         return emote.code.toLowerCase().startsWith(sanitizedWord)
       }).map((emote) => emote.code)
+    }
+
+    if (prioritizeUsernames) {
+      return [...usernameCompletions, ...emoteCompletions]
     }
 
     return [...emoteCompletions, ...usernameCompletions]
@@ -872,6 +877,7 @@ const enhance = compose<Props, {}>(
       lastWhisperSender: getLastWhisperSender(state),
       loginDetails: getLoginDetails(state),
       logs: getLogs(state),
+      prioritizeUsernames: getPrioritizeUsernames(state),
       roomState: getRoomState(state),
       showContextMenu: getShowContextMenu(state),
       showViewerCount: getShowViewerCount(state),
@@ -901,6 +907,7 @@ type StateProps = {
   lastWhisperSender: ReturnType<typeof getLastWhisperSender>
   loginDetails: ReturnType<typeof getLoginDetails>
   logs: ReturnType<typeof getLogs>
+  prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   roomState: ReturnType<typeof getRoomState>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   showViewerCount: ReturnType<typeof getShowViewerCount>

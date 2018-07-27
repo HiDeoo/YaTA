@@ -2,9 +2,10 @@
 
 ### 🚀 New Feature
 
-- Add message previews for Twitch clips, Twitch vods, Straw Poll, Youtube videos, Github repos.
+- Add message previews for Twitch clips, Twitch vods, Straw Poll, Youtube videos, Github repos (previews are disabled for bots).
 - All user colors should now be readable according to the [WCAG 2.0 guidelines for contrast accessibility](https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html) (this take your theme choice into account).
 - Add a new setting (disabled by default) to highlight all mentions (`@notYou`) vs only highlighting yourself.
+- Add a new setting (disabled by default) to prioritize usernames when auto-completing.
 
 ### 🐛 Bug Fix
 
