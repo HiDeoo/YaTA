@@ -18,6 +18,7 @@ import HeaderModerationTools from 'Components/HeaderModerationTools'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs from 'Components/Logs'
+import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
@@ -47,6 +48,7 @@ import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
+  getEnablePollEditor,
   getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
@@ -80,6 +82,7 @@ const initialState = {
   focusedChatter: null as SerializedChatter | null,
   inputValue: '',
   showChatters: false,
+  showPollEditor: false,
   viewerCount: null as number | null,
 }
 type State = Readonly<typeof initialState>
@@ -117,12 +120,13 @@ class Channel extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props, prevState: State) {
     const {
+      enablePollEditor: prevEnablePollEditor,
       isAutoScrollPaused: prevIsAutoScrollPaused,
       isMod: prevIsMod,
       roomState: prevRoomState,
       showViewerCount: prevShowViewerCount,
     } = prevProps
-    const { isAutoScrollPaused, isMod, roomState, showViewerCount } = this.props
+    const { enablePollEditor, isAutoScrollPaused, isMod, roomState, showViewerCount } = this.props
 
     if (prevShowViewerCount !== showViewerCount || (_.isNil(prevRoomState) && !_.isNil(roomState))) {
       if (showViewerCount) {
@@ -136,6 +140,7 @@ class Channel extends React.Component<Props, State> {
     const { viewerCount } = this.state
 
     if (
+      prevEnablePollEditor !== enablePollEditor ||
       prevIsAutoScrollPaused !== isAutoScrollPaused ||
       prevRoomState !== roomState ||
       prevIsMod !== isMod ||
@@ -164,7 +169,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { focusedChatter, showChatters } = this.state
+    const { focusedChatter, showChatters, showPollEditor } = this.state
     const {
       channel,
       copyMessageOnDoubleClick,
@@ -184,6 +189,11 @@ class Channel extends React.Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
+        <PollEditor
+          visible={showPollEditor}
+          toggle={this.togglePollEditor}
+          disableDialogAnimations={disableDialogAnimations}
+        />
         <Chatters
           visible={showChatters}
           toggle={this.toggleChatters}
@@ -238,7 +248,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   private setHeaderComponents() {
-    const { channel, isAutoScrollPaused, isMod, roomState } = this.props
+    const { channel, enablePollEditor, isAutoScrollPaused, isMod, roomState } = this.props
 
     const channelId = _.get(roomState, 'roomId')
 
@@ -262,6 +272,11 @@ class Channel extends React.Component<Props, State> {
               toggleEmoteOnly={this.toggleEmoteOnly}
             />
           )}
+        {enablePollEditor && (
+          <HeaderTooltip content="Create Straw Poll">
+            <Button onClick={this.togglePollEditor} icon="horizontal-bar-chart" minimal />
+          </HeaderTooltip>
+        )}
         {!_.isNil(roomState) && (
           <HeaderTooltip content="Create Clip">
             <Button onClick={this.clip} icon="film" minimal />
@@ -412,6 +427,13 @@ class Channel extends React.Component<Props, State> {
    */
   private toggleChatters = () => {
     this.setState(({ showChatters }) => ({ showChatters: !showChatters }))
+  }
+
+  /**
+   * Toggles the poll editor.
+   */
+  private togglePollEditor = () => {
+    this.setState(({ showPollEditor }) => ({ showPollEditor: !showPollEditor }))
   }
 
   /**
@@ -870,6 +892,7 @@ const enhance = compose<Props, {}>(
       copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
       disableDialogAnimations: getDisableDialogAnimations(state),
       emotes: getEmotes(state),
+      enablePollEditor: getEnablePollEditor(state),
       history: getHistory(state),
       historyIndex: getHistoryIndex(state),
       isAutoScrollPaused: getIsAutoScrollPaused(state),
@@ -900,6 +923,7 @@ type StateProps = {
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   emotes: ReturnType<typeof getEmotes>
+  enablePollEditor: ReturnType<typeof getEnablePollEditor>
   history: ReturnType<typeof getHistory>
   historyIndex: ReturnType<typeof getHistoryIndex>
   isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>

@@ -5,7 +5,7 @@ import RequestMethod from 'Constants/requestMethod'
 /**
  * StrawPoll base API URL.
  */
-const BaseUrl = 'https://strawpoll.me/api/v2/'
+const BaseUrl = 'https://www.strawpoll.me/api/v2'
 
 /**
  * StrawPoll class.
@@ -13,7 +13,7 @@ const BaseUrl = 'https://strawpoll.me/api/v2/'
 export default class StrawPoll {
   /**
    * Fetches details about a specific poll.
-   * @param id - The poll id.
+   * @param  id - The poll id.
    * @return The poll.
    */
   public static async fetchPoll(id: string): Promise<RawPoll> {
@@ -23,52 +23,70 @@ export default class StrawPoll {
   }
 
   /**
+   * Creates a new poll.
+   * @param  title - The poll title.
+   * @param  options - The poll options.
+   * @param  multi - `true` when multiple answers are allowed.
+   * @param  dupcheck - The duplication check mechanism.
+   * @param  captcha - `true` when a CAPTCHA should be included.
+   * @return The new poll.
+   */
+  public static async createPoll(
+    title: string,
+    options: string[],
+    multi: boolean,
+    dupcheck: StrawPollDuplicationStrategy,
+    captcha: boolean
+  ): Promise<RawPoll> {
+    const response = await StrawPoll.fetch('/polls', RequestMethod.Post, {
+      captcha,
+      dupcheck,
+      multi,
+      options,
+      title,
+    })
+
+    return response.json()
+  }
+
+  /**
    * Returns the URL for a request.
    * @param  endpoint - The endpoint to fetch.
-   * @param  [searchParams] - Additional search parameters.
    * @return The URL.
    */
-  private static getUrl(endpoint: string, searchParams: { [key: string]: string } = {}) {
-    const url = new URL(`${BaseUrl}${endpoint}`)
-
-    _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
-
-    return url.toString()
+  private static getUrl(endpoint: string) {
+    return BaseUrl.concat(endpoint)
   }
 
   /**
    * Fetches an URL.
    * @param  endpoint - The endpoint to fetch.
-   * @param  [searchParams] - Additional search parameters.
    * @param  [method] - The request method.
    * @return The response.
    */
-  private static async fetch(
-    endpoint: string,
-    searchParams: { [key: string]: string } = {},
-    method = RequestMethod.Get
-  ) {
-    const url = StrawPoll.getUrl(endpoint, searchParams)
+  private static async fetch(endpoint: string, method = RequestMethod.Get, body?: object) {
+    const url = StrawPoll.getUrl(endpoint)
 
-    const request = new Request(url, { method })
+    const headers = new Headers()
+    const init: RequestInit = { headers, method }
 
-    const response = await fetch(request)
-
-    if (response.status >= 400) {
-      const json = await response.json()
-
-      const originalMessage = _.get(json, 'message', 'Something went wrong.')
-
-      const message =
-        originalMessage.charAt(0) === '{'
-          ? _.get(JSON.parse(originalMessage), 'message', 'Something went wrong.')
-          : originalMessage
-
-      throw new Error(message)
+    if (!_.isNil(body)) {
+      init.body = JSON.stringify(body)
     }
 
-    return response
+    const request = new Request(url, init)
+
+    return fetch(request)
   }
+}
+
+/**
+ * Straw Poll duplication check strategies.
+ */
+export enum StrawPollDuplicationStrategy {
+  Cookie = 'permissive',
+  Ip = 'normal',
+  None = 'disabled',
 }
 
 /**

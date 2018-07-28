@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Add a tool to quickly create a [Straw Poll](https://www.strawpoll.me/) (can be disabled in the settings).
+
 ### 🐛 Bug Fix
 
 - Fix a line break issue when copying multiple messages.

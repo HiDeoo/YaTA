@@ -2,12 +2,12 @@ import {
   Button,
   Classes,
   Colors,
-  Navbar as _Navbar,
+  Navbar,
   NavbarDivider,
-  NavbarGroup as _NavbarGroup,
+  NavbarGroup,
   NavbarHeading,
   Spinner,
-  Switch as _Switch,
+  Switch,
 } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -23,7 +23,7 @@ import { enumIncludes } from 'Utils/typescript'
 /**
  * NavBar component.
  */
-const Navbar = styled(_Navbar)`
+const HeaderNavbar = styled(Navbar)`
   align-items: center;
   display: flex;
 `
@@ -31,7 +31,7 @@ const Navbar = styled(_Navbar)`
 /**
  * NavbarGroup component.
  */
-const NavbarGroup = styled(_NavbarGroup)`
+const HeaderNavbarGroup = styled(NavbarGroup)`
   &.${Classes.NAVBAR_GROUP}.${Classes.ALIGN_LEFT} {
     float: unset;
     flex-shrink: 0;
@@ -72,7 +72,7 @@ const Changelog = styled(Button)`
 /**
  * Switch component.
  */
-const Switch = styled(_Switch)`
+const HeaderSwitch = styled(Switch)`
   margin-left: 8px;
   margin-top: 13px;
 `
@@ -136,20 +136,20 @@ export default class Header extends React.Component<Props> {
     } = this.props
 
     return (
-      <Navbar>
+      <HeaderNavbar>
         <Helmet>
           <title>YaTA</title>
         </Helmet>
-        <NavbarGroup>
+        <HeaderNavbarGroup>
           <NavbarHeading>
             <HeaderConsumer>
               {({ titleComponent }) => (!_.isNil(titleComponent) ? <span>{titleComponent} - </span> : null)}
             </HeaderConsumer>YaTA
           </NavbarHeading>
           {this.renderStatus()}
-        </NavbarGroup>
+        </HeaderNavbarGroup>
         <NavbarSpacer />
-        <NavbarGroup>
+        <HeaderNavbarGroup>
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
           {this.renderDebugTools()}
           <HeaderTooltip content="Report bug">
@@ -173,8 +173,8 @@ export default class Header extends React.Component<Props> {
               <Button onClick={logout} icon="log-out" minimal />
             </HeaderTooltip>
           )}
-        </NavbarGroup>
-      </Navbar>
+        </HeaderNavbarGroup>
+      </HeaderNavbar>
     )
   }
 
@@ -192,7 +192,7 @@ export default class Header extends React.Component<Props> {
     return (
       <>
         <HeaderTooltip content="Auto-Connect (dev only)">
-          <Switch checked={autoConnectInDev} onChange={toggleAutoConnectInDev} />
+          <HeaderSwitch checked={autoConnectInDev} onChange={toggleAutoConnectInDev} />
         </HeaderTooltip>
         <NavbarDivider />
       </>

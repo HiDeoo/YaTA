@@ -32,6 +32,7 @@ export enum Actions {
   TOGGLE_DISABLE_DIALOG_ANIMATIONS = 'settings/TOGGLE_DISABLE_DIALOG_ANIMATIONS',
   TOGGLE_HIGHLIGHT_ALL_MENTIONS = 'settings/TOGGLE_HIGHLIGHT_ALL_MENTIONS',
   TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
+  TOGGLE_ENABLE_POLL_EDITOR = 'settings/TOGGLE_ENABLE_POLL_EDITOR',
 }
 
 /**
@@ -43,6 +44,7 @@ export const initialState = {
   autoFocusInput: true,
   copyMessageOnDoubleClick: true,
   disableDialogAnimations: false,
+  enablePollEditor: true,
   hideWhispers: false,
   highlightAllMentions: false,
   highlights: {},
@@ -214,6 +216,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         prioritizeUsernames: !state.prioritizeUsernames,
+      }
+    }
+    case Actions.TOGGLE_ENABLE_POLL_EDITOR: {
+      return {
+        ...state,
+        enablePollEditor: !state.enablePollEditor,
       }
     }
     default: {
@@ -401,6 +409,12 @@ export const toggleHighlightAllMentions = () => createAction(Actions.TOGGLE_HIGH
 export const togglePrioritizeUsernames = () => createAction(Actions.TOGGLE_PRIORITIZE_USERNAMES)
 
 /**
+ * Toggle the 'Enable poll editor' setting.
+ * @return The action.
+ */
+export const toggleEnablePollEditor = () => createAction(Actions.TOGGLE_ENABLE_POLL_EDITOR)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -426,6 +440,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleDisableDialogAnimations>
   | ReturnType<typeof toggleHighlightAllMentions>
   | ReturnType<typeof togglePrioritizeUsernames>
+  | ReturnType<typeof toggleEnablePollEditor>
 
 /**
  * Settings state.
@@ -500,6 +515,11 @@ export type SettingsState = {
    * Prioritizes usernames when auto-completing.
    */
   prioritizeUsernames: boolean
+
+  /**
+   * Enables the poll editor.
+   */
+  enablePollEditor: boolean
 }
 
 /**

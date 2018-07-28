@@ -104,4 +104,10 @@ export default {
       settings: { ...state.settings, prioritizeUsernames: initialState.prioritizeUsernames },
     }
   },
+  14: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, enablePollEditor: initialState.enablePollEditor },
+    }
+  },
 }

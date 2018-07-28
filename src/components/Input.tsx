@@ -1,4 +1,4 @@
-import { Classes, Intent, IToastOptions, Position, Toast as _Toast, Toaster } from '@blueprintjs/core'
+import { Classes, Intent, IToastOptions, Position, Toast, Toaster } from '@blueprintjs/core'
 import * as classnames from 'classnames'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
 /**
  * Toast component.
  */
-const Toast = styled(_Toast)`
+const InputToast = styled(Toast)`
   margin-bottom: 60px !important;
 
   .${Classes.BUTTON_GROUP} {
@@ -154,7 +154,7 @@ export default class Input extends React.Component<Props, State> {
     return (
       <Wrapper>
         <Toaster position={Position.BOTTOM}>
-          {_.map(toasts, (toast, index) => <Toast key={index} {...toast} />)}
+          {_.map(toasts, (toast, index) => <InputToast key={index} {...toast} />)}
         </Toaster>
         <TextArea
           dir="auto"
@@ -327,7 +327,7 @@ export default class Input extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onChangeInputValue = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.props.onChange(event.target.value)
+    this.props.onChange(event.currentTarget.value)
   }
 
   /**
