@@ -137,6 +137,7 @@ class EmotePicker extends React.Component<Props, State> {
         content={this.renderPicker()}
         onInteraction={this.toggleVisibility}
         position={Position.LEFT_BOTTOM}
+        popoverClassName="emotePickerPopover"
         minimal
       >
         <EmotePickerButton title="Emote Picker" isOpen={visible}>

@@ -61,6 +61,10 @@ injectGlobal`
       }
     }
   }
+
+  .bp3-popover.bp3-minimal.bp3-popover.emotePickerPopover {
+    transform: scale(1) translateY(-36px) !important;
+  }
 `
 
 /**
