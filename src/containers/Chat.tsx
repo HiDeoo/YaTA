@@ -464,6 +464,12 @@ export class ChatClient extends React.Component<Props, State> {
         this.props.setModerator(true)
       }
     })
+
+    if (mods.length > 0) {
+      const notice = new Notice(`The moderators of this channel are: ${mods.join(', ')}.`, Event.Mods)
+
+      this.props.addLog(notice.serialize())
+    }
   }
 
   /**

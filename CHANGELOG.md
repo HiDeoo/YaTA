@@ -4,6 +4,7 @@
 
 - Fix a line break issue when copying multiple messages.
 - Improve Github previews and add support for issues & pull requests too.
+- Fix an issue with the `/mods` command not displaying its result.
 
 # 0.5.0
 
