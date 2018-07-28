@@ -19,6 +19,7 @@ const Wrapper = styled.div<WrapperProps>`
   border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
   opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')} 1px 7px;
+  white-space: pre-wrap;
 `
 
 /**
@@ -152,6 +153,7 @@ export default class Message extends React.Component<Props, State> {
         </Name>{' '}
         <MessageContent message={message} />
         {this.renderPreviews()}
+        {'\n'}
       </Wrapper>
     )
   }

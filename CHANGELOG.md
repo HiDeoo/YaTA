@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix a line break issue when copying multiple messages.
+
 # 0.5.0
 
 ### 🚀 New Feature
