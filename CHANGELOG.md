@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Fix a line break issue when copying multiple messages.
+- Improve Github previews and add support for issues & pull requests too.
 
 # 0.5.0
 

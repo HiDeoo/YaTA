@@ -68,8 +68,8 @@ const IconWrapper = styled.div`
 
   & > svg {
     color: ${color('previews.meta')};
-    height: 30px;
-    width: 30px;
+    height: 25px;
+    width: 25px;
   }
 `
 

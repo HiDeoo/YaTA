@@ -152,8 +152,8 @@ export default class Message extends React.Component<Props, State> {
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
         <MessageContent message={message} />
-        {this.renderPreviews()}
         {'\n'}
+        {this.renderPreviews()}
       </Wrapper>
     )
   }

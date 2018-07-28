@@ -24,6 +24,7 @@ export type UnresolvedPreview = {
   provider: string
   resolved: boolean
   type?: string | number
+  extra?: { [key: string]: string | number }
 }
 
 /**

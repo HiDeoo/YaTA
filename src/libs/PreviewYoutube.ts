@@ -14,6 +14,9 @@ const BaseUrl = 'https://www.googleapis.com/youtube/v3'
  */
 const VideoRegExp = /https:\/\/(?:www\.)?youtu(?:\.be\/|be\.com\/watch\?v=)(\w+)/g
 
+/**
+ * Youtube preview provider.
+ */
 const PreviewYoutube: PreviewProvider = class {
   /**
    * Returns the preview provider id.

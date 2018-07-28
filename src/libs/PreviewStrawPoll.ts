@@ -8,6 +8,9 @@ import StrawPoll from 'Libs/StrawPoll'
  */
 const PollRegExp = /https:\/\/(?:www\.)?strawpoll\.me\/(\d+)/g
 
+/**
+ * Straw Poll preview provider.
+ */
 const PreviewStrawPoll: PreviewProvider = class {
   /**
    * Returns the preview provider id.

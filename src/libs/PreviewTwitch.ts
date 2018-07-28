@@ -22,6 +22,9 @@ const ClipRegExp = /https:\/\/clips\.twitch\.tv\/(\w+)/g
  */
 const VideoRegExp = /https:\/\/(?:www\.)?twitch\.tv\/videos\/(\d+)/g
 
+/**
+ * Twitch preview provider.
+ */
 const PreviewTwitch: PreviewProvider = class {
   /**
    * Returns the preview provider id.
