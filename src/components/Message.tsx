@@ -55,6 +55,15 @@ const MenuButton = styled(Button)`
 `
 
 /**
+ * ContextMenu component.
+ */
+const ContextMenu = styled(Menu)`
+  & .bp3-menu-item.bp3-disabled {
+    cursor: auto !important;
+  }
+`
+
+/**
  * Time component.
  */
 const Time = styled.span`
@@ -187,10 +196,11 @@ export default class Message extends React.Component<Props, State> {
     }
 
     const menu = (
-      <Menu>
+      <ContextMenu>
         <Menu.Divider
           title={`${message.user.displayName}${message.user.showUserName ? ` (${message.user.userName})` : ''}`}
         />
+        <Menu.Item text="" disabled />
         {!message.user.isSelf && (
           <>
             <Menu.Item icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
@@ -216,11 +226,11 @@ export default class Message extends React.Component<Props, State> {
             )}
           </>
         )}
-      </Menu>
+      </ContextMenu>
     )
 
     return (
-      <Popover content={menu} lazy onInteraction={this.onToggleContextMenu} isOpen={this.state.isContextMenuOpened}>
+      <Popover content={menu} onInteraction={this.onToggleContextMenu} isOpen={this.state.isContextMenuOpened}>
         <MenuButton icon="menu" minimal />
       </Popover>
     )
