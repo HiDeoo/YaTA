@@ -220,27 +220,15 @@ class ChatterDetails extends React.Component<Props, State> {
         <Hr />
         <Tools>
           <div>
-            <Button icon="trash" onClick={this.onClickPurge}>
-              Purge
-            </Button>
-            <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan}>
-              Ban
-            </Button>
+            <Button icon="trash" onClick={this.onClickPurge} text="Purge" />
+            <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan} text="Ban" />
           </div>
           <div>
             <ButtonGroup>
-              <Button icon="time" onClick={this.onClickTimeout10M}>
-                10m
-              </Button>
-              <Button icon="time" onClick={this.onClickTimeout1H}>
-                1h
-              </Button>
-              <Button icon="time" onClick={this.onClickTimeout6H}>
-                6h
-              </Button>
-              <Button icon="time" onClick={this.onClickTimeout24H}>
-                24h
-              </Button>
+              <Button icon="time" onClick={this.onClickTimeout10M} text="10m" />
+              <Button icon="time" onClick={this.onClickTimeout1H} text="1h" />
+              <Button icon="time" onClick={this.onClickTimeout6H} text="6h" />
+              <Button icon="time" onClick={this.onClickTimeout24H} text="24h" />
             </ButtonGroup>
           </div>
         </Tools>
@@ -291,12 +279,13 @@ class ChatterDetails extends React.Component<Props, State> {
         </DetailsRow>
         {!chatter.isSelf && (
           <Tools>
-            <Button icon="envelope" onClick={this.onClickWhisper}>
-              Whisper
-            </Button>
-            <Button disabled={chatter.blocked} icon="blocked-person" intent={Intent.DANGER} onClick={this.onClickBlock}>
-              Block
-            </Button>
+            <Button icon="envelope" onClick={this.onClickWhisper} text="Whisper" />
+            <Button
+              icon="blocked-person"
+              intent={Intent.DANGER}
+              onClick={this.onClickBlockUnblock}
+              text={chatter.blocked ? 'Unblock' : 'Block'}
+            />
           </Tools>
         )}
         <Tools>
@@ -397,13 +386,17 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when the block button is clicked.
+   * Triggered when the block or unblock button is clicked.
    */
-  private onClickBlock = () => {
-    const { block, chatter, unfocus } = this.props
+  private onClickBlockUnblock = () => {
+    const { block, chatter, unblock, unfocus } = this.props
 
     if (!_.isNil(chatter)) {
-      block(chatter.id)
+      if (chatter.blocked) {
+        unblock(chatter.id)
+      } else {
+        block(chatter.id)
+      }
     }
 
     unfocus()
@@ -464,6 +457,7 @@ type OwnProps = {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   timeout: (username: string, duration: number) => void
+  unblock: (targetId: string) => void
   unfocus: () => void
   whisper: (username: string) => void
 }

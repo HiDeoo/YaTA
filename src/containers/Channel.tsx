@@ -30,7 +30,7 @@ import { SerializedMessage } from 'Libs/Message'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
-import { markChatterAsBlocked } from 'Store/ducks/chatters'
+import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
 import { pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
@@ -235,6 +235,7 @@ class Channel extends React.Component<Props, State> {
           unfocus={this.unfocusChatter}
           whisper={this.prepareWhisper}
           chatter={focusedChatter}
+          unblock={this.unblock}
           timeout={this.timeout}
           block={this.block}
           ban={this.ban}
@@ -722,6 +723,20 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Unblocks a user.
+   * @param targetId - The user id of the user to unblock.
+   */
+  private unblock = async (targetId: string) => {
+    try {
+      await Twitch.unblockUser(targetId)
+
+      this.props.markChatterAsUnblocked(targetId)
+    } catch (error) {
+      //
+    }
+  }
+
+  /**
    * Prepare a whisper by setting the input to the whisper command.
    * @param username - The username to whisper.
    */
@@ -906,7 +921,7 @@ const enhance = compose<Props, {}>(
       showViewerCount: getShowViewerCount(state),
       status: getStatus(state),
     }),
-    { addToHistory, markChatterAsBlocked, pauseAutoScroll, setChannel, updateHistoryIndex }
+    { addToHistory, markChatterAsBlocked, markChatterAsUnblocked, pauseAutoScroll, setChannel, updateHistoryIndex }
   ),
   withHeader
 )
@@ -944,6 +959,7 @@ type StateProps = {
 type DispatchProps = {
   addToHistory: typeof addToHistory
   markChatterAsBlocked: typeof markChatterAsBlocked
+  markChatterAsUnblocked: typeof markChatterAsUnblocked
   pauseAutoScroll: typeof pauseAutoScroll
   setChannel: typeof setChannel
   updateHistoryIndex: typeof updateHistoryIndex

@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add a tool to quickly create a [Straw Poll](https://www.strawpoll.me/) (can be disabled in the settings).
+- Add possibility to unblock previously blocked users.
 
 ### 🐛 Bug Fix
 

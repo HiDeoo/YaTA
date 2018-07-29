@@ -297,7 +297,6 @@ export default class Twitch {
 
   /**
    * Blocks a user.
-   * @param  userId - The user id of the current user.
    * @param  targetId - The user id of the user to block.
    */
   public static async blockUser(targetId: string): Promise<RawBlockerUser> {
@@ -310,6 +309,20 @@ export default class Twitch {
     )
 
     return response.json()
+  }
+
+  /**
+   * Unblocks a user.
+   * @param  targetId - The user id of the user to unblock.
+   */
+  public static async unblockUser(targetId: string) {
+    return Twitch.fetch(
+      TwitchApi.Kraken,
+      `/users/${Twitch.userId}/blocks/${targetId}`,
+      undefined,
+      true,
+      RequestMethod.Delete
+    )
   }
 
   /**

@@ -10,6 +10,7 @@ import { createAction } from 'Utils/redux'
 export enum Actions {
   ADD = 'chatters/ADD',
   MARK_AS_BLOCKED = 'chatters/MARK_AS_BLOCKED',
+  MARK_AS_UNBLOCKED = 'chatters/MARK_AS_UNBLOCKED',
   CLEAR = 'chatters/CLEAR',
   ADD_POTENTIAL = 'chatters/ADD_POTENTIAL',
 }
@@ -87,6 +88,21 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
 
       return state
     }
+    case Actions.MARK_AS_UNBLOCKED: {
+      const { id } = action.payload
+
+      if (!_.isNil(_.get(state.byId, id))) {
+        return {
+          ...state,
+          byId: {
+            ...state.byId,
+            [id]: { ...state.byId[id], blocked: false },
+          },
+        }
+      }
+
+      return state
+    }
     case Actions.CLEAR: {
       return initialState
     }
@@ -121,6 +137,16 @@ export const markChatterAsBlocked = (id: string) =>
   })
 
 /**
+ * Marks a chatter as unblocked.
+ * @param  id - The chatter id.
+ * @return The action.
+ */
+export const markChatterAsUnblocked = (id: string) =>
+  createAction(Actions.MARK_AS_UNBLOCKED, {
+    id,
+  })
+
+/**
  * Clears all the chatters.
  * @return The action.
  */
@@ -143,6 +169,7 @@ export const addPotentialChatter = (chatter: SerializedChatter) =>
 export type ChattersActions =
   | ReturnType<typeof addChatterWithMessage>
   | ReturnType<typeof markChatterAsBlocked>
+  | ReturnType<typeof markChatterAsUnblocked>
   | ReturnType<typeof clearChatters>
   | ReturnType<typeof addPotentialChatter>
 
