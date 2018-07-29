@@ -42,6 +42,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
   public color: string | null
   public userName: string
   public isMod: boolean
+  public banned: boolean = false
   private displayName: string
   private showUserName: boolean
   private blocked: boolean = false
@@ -83,6 +84,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
    */
   public serialize() {
     return {
+      banned: this.banned,
       blocked: this.blocked,
       color: this.color,
       displayName: this.displayName,
@@ -124,6 +126,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
  * Serialized chat message.
  */
 export type SerializedChatter = {
+  banned: boolean
   blocked: boolean
   color: string | null
   displayName: string

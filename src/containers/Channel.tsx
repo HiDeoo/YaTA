@@ -172,6 +172,7 @@ class Channel extends React.Component<Props, State> {
     const { focusedChatter, showChatters, showPollEditor } = this.state
     const {
       channel,
+      chatters,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
       loginDetails,
@@ -202,20 +203,22 @@ class Channel extends React.Component<Props, State> {
         />
         <Chat ref={this.chatClient} />
         <Logs
-          logs={logs}
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           pauseAutoScroll={this.props.pauseAutoScroll}
           scrollToNewestLog={this.scrollToNewestLog}
-          showContextMenu={showContextMenu}
-          focusChatter={this.focusChatter}
           copyToClipboard={this.copyToClipboard}
+          showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
+          focusChatter={this.focusChatter}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
-          timeout={this.timeout}
-          ban={this.ban}
           ref={this.logsComponent}
+          timeout={this.timeout}
+          chatters={chatters}
+          unban={this.unban}
+          ban={this.ban}
+          logs={logs}
         />
         <Input
           ref={this.input}
@@ -238,6 +241,7 @@ class Channel extends React.Component<Props, State> {
           unblock={this.unblock}
           timeout={this.timeout}
           block={this.block}
+          unban={this.unban}
           ban={this.ban}
         />
       </FlexLayout>
@@ -693,7 +697,7 @@ class Channel extends React.Component<Props, State> {
 
   /**
    * Bans a user.
-   * @param username - The name of the user to timeout.
+   * @param username - The name of the user to ban.
    */
   private ban = async (username: string) => {
     const { channel } = this.props
@@ -702,6 +706,23 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         await client.ban(channel, username)
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Unbans a user.
+   * @param username - The name of the user to unban.
+   */
+  private unban = async (username: string) => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.unban(channel, username)
       } catch (error) {
         //
       }

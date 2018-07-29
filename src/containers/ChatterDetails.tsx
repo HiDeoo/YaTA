@@ -222,6 +222,7 @@ class ChatterDetails extends React.Component<Props, State> {
           <div>
             <Button icon="trash" onClick={this.onClickPurge} text="Purge" />
             <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan} text="Ban" />
+            {chatter.banned && <Button icon="unlock" intent={Intent.DANGER} onClick={this.onClickUnban} text="Unban" />}
           </div>
           <div>
             <ButtonGroup>
@@ -386,6 +387,19 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the unban button is clicked.
+   */
+  private onClickUnban = () => {
+    const { chatter, unban, unfocus } = this.props
+
+    if (!_.isNil(chatter)) {
+      unban(chatter.userName)
+    }
+
+    unfocus()
+  }
+
+  /**
    * Triggered when the block or unblock button is clicked.
    */
   private onClickBlockUnblock = () => {
@@ -457,6 +471,7 @@ type OwnProps = {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   timeout: (username: string, duration: number) => void
+  unban: (username: string) => void
   unblock: (targetId: string) => void
   unfocus: () => void
   whisper: (username: string) => void

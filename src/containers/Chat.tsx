@@ -16,6 +16,7 @@ import tmi, {
 import Emoticons from 'Constants/emoticons'
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
+import Notices from 'Constants/notices'
 import Page from 'Constants/page'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
@@ -30,7 +31,13 @@ import Resources from 'Libs/Resources'
 import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
-import { addChatterWithMessage, addPotentialChatter, clearChatters } from 'Store/ducks/chatters'
+import {
+  addChatterWithMessage,
+  addPotentialChatter,
+  clearChatters,
+  markChatterAsBanned,
+  markChatterAsUnbanned,
+} from 'Store/ducks/chatters'
 import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -513,6 +520,8 @@ export class ChatClient extends React.Component<Props, State> {
     const userId = _.get(this.props.chattersMap, username)
 
     if (!_.isNil(userId)) {
+      this.props.markChatterAsBanned(userId)
+
       const user = _.get(this.props.chatters, userId)
 
       if (user.messages.length > 0) {
@@ -541,6 +550,10 @@ export class ChatClient extends React.Component<Props, State> {
     const userId = _.get(this.props.chattersMap, username)
 
     if (!_.isNil(userId)) {
+      if (duration > 1) {
+        this.props.markChatterAsBanned(userId)
+      }
+
       const user = _.get(this.props.chatters, userId)
 
       if (user.messages.length > 0) {
@@ -655,13 +668,25 @@ export class ChatClient extends React.Component<Props, State> {
   /**
    * Triggered when a notice is received.
    * @param channel - The channel.
-   * @param msgid - The notice id.
+   * @param id - The notice id.
    * @param message - The notice associated message.
    */
-  private onNotice = (_channel: string, _msgid: string, message: string) => {
+  private onNotice = (_channel: string, id: string, message: string) => {
+    if (_.includes(Notices.IgnoredNotices, id)) {
+      return
+    }
+
     const notice = new Notice(message, Event.Notice)
 
     this.props.addLog(notice.serialize())
+
+    if (_.includes(Notices.UnbanNotices, id)) {
+      const username = _.first(message.split(' '))
+
+      if (!_.isNil(username)) {
+        this.props.markChatterAsUnbanned(username)
+      }
+    }
   }
 
   /**
@@ -833,6 +858,8 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     addPotentialChatter,
     clearChatters,
     clearLogs,
+    markChatterAsBanned,
+    markChatterAsUnbanned,
     purgeLogs,
     resetAppState,
     setLastWhisperSender,
@@ -871,6 +898,8 @@ type DispatchProps = {
   addPotentialChatter: typeof addPotentialChatter
   clearChatters: typeof clearChatters
   clearLogs: typeof clearLogs
+  markChatterAsBanned: typeof markChatterAsBanned
+  markChatterAsUnbanned: typeof markChatterAsUnbanned
   purgeLogs: typeof purgeLogs
   resetAppState: typeof resetAppState
   setLastWhisperSender: typeof setLastWhisperSender

@@ -12,6 +12,7 @@ import Whisper from 'Components/Whisper'
 import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
+import { ChattersState } from 'Store/ducks/chatters'
 import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
 import { ifProp, size } from 'Utils/styled'
@@ -164,16 +165,21 @@ export default class Logs extends React.Component<Props> {
       actionHandler,
       ban,
       canModerate,
+      chatters,
       copyMessageOnDoubleClick,
       copyMessageToClipboard,
       copyToClipboard,
       focusChatter,
       showContextMenu,
       timeout,
+      unban,
       whisper,
     } = this.props
 
     if (isMessage(log)) {
+      const chatter = _.get(chatters, log.user.id)
+      const isBanned = _.isNil(chatter) ? false : chatter.banned
+
       LogComponent = (
         <Message
           style={style}
@@ -181,6 +187,7 @@ export default class Logs extends React.Component<Props> {
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           copyMessageToClipboard={copyMessageToClipboard}
           onToggleContextMenu={this.onToggleContextMenu}
+          showUnbanContextMenuItem={isBanned}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
           actionHandler={actionHandler}
@@ -188,6 +195,7 @@ export default class Logs extends React.Component<Props> {
           canModerate={canModerate}
           timeout={timeout}
           whisper={whisper}
+          unban={unban}
           ban={ban}
         />
       )
@@ -225,6 +233,7 @@ type Props = {
   actionHandler: ActionHandler
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
+  chatters: ChattersState['byId']
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
@@ -234,6 +243,7 @@ type Props = {
   scrollToNewestLog: () => void
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
+  unban: (username: string) => void
   whisper: (username: string) => void
 }
 

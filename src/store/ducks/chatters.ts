@@ -11,6 +11,8 @@ export enum Actions {
   ADD = 'chatters/ADD',
   MARK_AS_BLOCKED = 'chatters/MARK_AS_BLOCKED',
   MARK_AS_UNBLOCKED = 'chatters/MARK_AS_UNBLOCKED',
+  MARK_AS_BANNED = 'chatters/MARK_AS_BANNED',
+  MARK_AS_UNBANNED = 'chatters/MARK_AS_UNBANNED',
   CLEAR = 'chatters/CLEAR',
   ADD_POTENTIAL = 'chatters/ADD_POTENTIAL',
 }
@@ -106,6 +108,38 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
     case Actions.CLEAR: {
       return initialState
     }
+    case Actions.MARK_AS_BANNED: {
+      const { id } = action.payload
+
+      if (!_.isNil(_.get(state.byId, id))) {
+        return {
+          ...state,
+          byId: {
+            ...state.byId,
+            [id]: { ...state.byId[id], banned: true },
+          },
+        }
+      }
+
+      return state
+    }
+    case Actions.MARK_AS_UNBANNED: {
+      const { userName } = action.payload
+
+      const id = _.get(state.byName, userName)
+
+      if (!_.isNil(id)) {
+        return {
+          ...state,
+          byId: {
+            ...state.byId,
+            [id]: { ...state.byId[id], banned: false },
+          },
+        }
+      }
+
+      return state
+    }
     default: {
       return state
     }
@@ -147,6 +181,26 @@ export const markChatterAsUnblocked = (id: string) =>
   })
 
 /**
+ * Marks a chatter as banned.
+ * @param  id - The chatter id.
+ * @return The action.
+ */
+export const markChatterAsBanned = (id: string) =>
+  createAction(Actions.MARK_AS_BANNED, {
+    id,
+  })
+
+/**
+ * Marks a chatter as unblocked.
+ * @param  userName - The chatter userName.
+ * @return The action.
+ */
+export const markChatterAsUnbanned = (userName: string) =>
+  createAction(Actions.MARK_AS_UNBANNED, {
+    userName,
+  })
+
+/**
  * Clears all the chatters.
  * @return The action.
  */
@@ -172,6 +226,8 @@ export type ChattersActions =
   | ReturnType<typeof markChatterAsUnblocked>
   | ReturnType<typeof clearChatters>
   | ReturnType<typeof addPotentialChatter>
+  | ReturnType<typeof markChatterAsBanned>
+  | ReturnType<typeof markChatterAsUnbanned>
 
 /**
  * Chatterss state.

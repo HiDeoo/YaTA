@@ -122,13 +122,14 @@ export default class Message extends React.Component<Props, State> {
     const { isContextMenuOpened } = this.state
     const { isContextMenuOpened: nextIsContextMenuOpened } = nextState
 
-    const { message, style } = this.props
-    const { message: nextMessage, style: nextStyle } = nextProps
+    const { message, showUnbanContextMenuItem, style } = this.props
+    const { message: nextMessage, showUnbanContextMenuItem: prevShowUnbanContextMenuItem, style: nextStyle } = nextProps
 
     return (
       isContextMenuOpened !== nextIsContextMenuOpened ||
       message.id !== nextMessage.id ||
       message.purged !== nextMessage.purged ||
+      showUnbanContextMenuItem !== prevShowUnbanContextMenuItem ||
       !_.isEqual(style, nextStyle)
     )
   }
@@ -179,7 +180,7 @@ export default class Message extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderContextMenu() {
-    const { actionHandler, canModerate, message, showContextMenu } = this.props
+    const { actionHandler, canModerate, message, showContextMenu, showUnbanContextMenuItem } = this.props
 
     if (!showContextMenu) {
       return null
@@ -210,6 +211,9 @@ export default class Message extends React.Component<Props, State> {
               <Menu.Item text="24h" onClick={this.onClickTimeout24H} />
             </Menu.Item>
             <Menu.Item icon="disable" text="Ban" intent={Intent.DANGER} onClick={this.onClickBan} />
+            {showUnbanContextMenuItem && (
+              <Menu.Item icon="unlock" text="Unban" intent={Intent.DANGER} onClick={this.onClickUnban} />
+            )}
           </>
         )}
       </Menu>
@@ -343,6 +347,15 @@ export default class Message extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the unban menu item is clicked.
+   */
+  private onClickUnban = () => {
+    const { message, unban } = this.props
+
+    unban(message.user.userName)
+  }
+
+  /**
    * Triggered when the whisper menu item is clicked.
    */
   private onClickWhisper = () => {
@@ -366,8 +379,10 @@ type Props = {
   message: SerializedMessage
   onToggleContextMenu: (open: boolean) => void
   showContextMenu: boolean
+  showUnbanContextMenuItem: boolean
   style: React.CSSProperties
   timeout: (username: string, duration: number) => void
+  unban: (username: string) => void
   whisper: (username: string) => void
 }
 
