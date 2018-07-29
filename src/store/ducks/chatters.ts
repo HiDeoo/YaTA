@@ -9,7 +9,7 @@ import { createAction } from 'Utils/redux'
  */
 export enum Actions {
   ADD = 'chatters/ADD',
-  IGNORE_USER = 'chatters/IGNORE_USER',
+  MARK_AS_BLOCKED = 'chatters/MARK_AS_BLOCKED',
   CLEAR = 'chatters/CLEAR',
   ADD_POTENTIAL = 'chatters/ADD_POTENTIAL',
 }
@@ -72,7 +72,7 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
         byName: { ...state.byName, [chatter.userName]: chatter.id },
       }
     }
-    case Actions.IGNORE_USER: {
+    case Actions.MARK_AS_BLOCKED: {
       const { id } = action.payload
 
       if (!_.isNil(_.get(state.byId, id))) {
@@ -80,7 +80,7 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
           ...state,
           byId: {
             ...state.byId,
-            [id]: { ...state.byId[id], ignored: true },
+            [id]: { ...state.byId[id], blocked: true },
           },
         }
       }
@@ -111,12 +111,12 @@ export const addChatterWithMessage = (chatter: SerializedChatter, messageId: str
   })
 
 /**
- * Marks a chatter as ignored.
+ * Marks a chatter as blocked.
  * @param  id - The chatter id.
  * @return The action.
  */
-export const ignoreUser = (id: string) =>
-  createAction(Actions.IGNORE_USER, {
+export const markChatterAsBlocked = (id: string) =>
+  createAction(Actions.MARK_AS_BLOCKED, {
     id,
   })
 
@@ -142,7 +142,7 @@ export const addPotentialChatter = (chatter: SerializedChatter) =>
  */
 export type ChattersActions =
   | ReturnType<typeof addChatterWithMessage>
-  | ReturnType<typeof ignoreUser>
+  | ReturnType<typeof markChatterAsBlocked>
   | ReturnType<typeof clearChatters>
   | ReturnType<typeof addPotentialChatter>
 

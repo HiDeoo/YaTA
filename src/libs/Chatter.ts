@@ -44,7 +44,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
   public isMod: boolean
   private displayName: string
   private showUserName: boolean
-  private ignored: boolean = false
+  private blocked: boolean = false
   private isSelf: boolean
   private isBroadcaster: boolean
 
@@ -83,10 +83,10 @@ export default class Chatter implements Serializable<SerializedChatter> {
    */
   public serialize() {
     return {
+      blocked: this.blocked,
       color: this.color,
       displayName: this.displayName,
       id: this.id,
-      ignored: this.ignored,
       isBroadcaster: this.isBroadcaster,
       isMod: this.isMod,
       isSelf: this.isSelf,
@@ -124,10 +124,10 @@ export default class Chatter implements Serializable<SerializedChatter> {
  * Serialized chat message.
  */
 export type SerializedChatter = {
+  blocked: boolean
   color: string | null
   displayName: string
   id: string
-  ignored: boolean
   isBroadcaster: boolean
   isMod: boolean
   isSelf: boolean

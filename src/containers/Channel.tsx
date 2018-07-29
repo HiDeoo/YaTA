@@ -30,7 +30,7 @@ import { SerializedMessage } from 'Libs/Message'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
-import { ignoreUser } from 'Store/ducks/chatters'
+import { markChatterAsBlocked } from 'Store/ducks/chatters'
 import { pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
@@ -713,9 +713,9 @@ class Channel extends React.Component<Props, State> {
    */
   private block = async (targetId: string) => {
     try {
-      const ignoredUser = await Twitch.blockUser(targetId)
+      const blockedUser = await Twitch.blockUser(targetId)
 
-      this.props.ignoreUser(ignoredUser.user._id)
+      this.props.markChatterAsBlocked(blockedUser.user._id)
     } catch (error) {
       //
     }
@@ -906,7 +906,7 @@ const enhance = compose<Props, {}>(
       showViewerCount: getShowViewerCount(state),
       status: getStatus(state),
     }),
-    { addToHistory, ignoreUser, pauseAutoScroll, setChannel, updateHistoryIndex }
+    { addToHistory, markChatterAsBlocked, pauseAutoScroll, setChannel, updateHistoryIndex }
   ),
   withHeader
 )
@@ -943,7 +943,7 @@ type StateProps = {
  */
 type DispatchProps = {
   addToHistory: typeof addToHistory
-  ignoreUser: typeof ignoreUser
+  markChatterAsBlocked: typeof markChatterAsBlocked
   pauseAutoScroll: typeof pauseAutoScroll
   setChannel: typeof setChannel
   updateHistoryIndex: typeof updateHistoryIndex

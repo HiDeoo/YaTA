@@ -294,7 +294,7 @@ class ChatterDetails extends React.Component<Props, State> {
             <Button icon="envelope" onClick={this.onClickWhisper}>
               Whisper
             </Button>
-            <Button disabled={chatter.ignored} icon="blocked-person" intent={Intent.DANGER} onClick={this.onClickBlock}>
+            <Button disabled={chatter.blocked} icon="blocked-person" intent={Intent.DANGER} onClick={this.onClickBlock}>
               Block
             </Button>
           </Tools>
