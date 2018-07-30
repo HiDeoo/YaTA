@@ -600,7 +600,7 @@ class Channel extends React.Component<Props, State> {
     } else if (!previous && index < 0) {
       this.props.updateHistoryIndex(-1)
 
-      return ''
+      return index === -1 ? '' : null
     }
 
     this.props.updateHistoryIndex(index)
