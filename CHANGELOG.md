@@ -15,6 +15,7 @@
 - Fix a line break issue when copying multiple messages.
 - Improve Github previews and add support for issues & pull requests too.
 - The home button can now be middle-clicked or `ctrl` / `cmd` clicked to open the homepage in a new tab / window.
+- Prevent loss of the current partially typed message if any when invoking the history by saving your current text as a draft which will be restored when needed ([#2](https://github.com/HiDeoo/YaTA/issues/2)).
 - Fix an issue with the `/mods` command not displaying its result.
 - Fix a context menu issue for moderators only always opening the timeout submenu by default.
 - Fix an auto-completion related issue that could lead to the first character being at the end ([#1](https://github.com/HiDeoo/YaTA/issues/1)).

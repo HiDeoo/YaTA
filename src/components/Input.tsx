@@ -57,7 +57,11 @@ const TextArea = styled.textarea`
 /**
  * React State.
  */
-const initialState = { toasts: [] as IToastOptions[], intent: '', lastKnownCursor: null as CursorPosition | null }
+const initialState = {
+  intent: '',
+  lastKnownCursor: null as CursorPosition | null,
+  toasts: [] as IToastOptions[],
+}
 type State = Readonly<typeof initialState>
 
 /**
@@ -129,6 +133,7 @@ export default class Input extends React.Component<Props, State> {
   private completionIndex = -1
   private newCursor = null as number | null
   private splittedValueBeforeCompletion: string[] | null = null // [ 'before', 'word being auto-completed', 'after']
+  private draft: string | null = null
 
   /**
    * Lifecycle: componentDidUpdate.
@@ -323,12 +328,24 @@ export default class Input extends React.Component<Props, State> {
 
       this.props.onSubmit()
     } else if (event.key === Key.Up || event.key === Key.Down) {
-      const entry = this.props.getHistory(event.key === Key.Up)
+      const { atStart, entry } = this.props.getHistory(event.key === Key.Up)
 
       if (!_.isNil(entry)) {
+        if (_.isNil(this.draft)) {
+          this.draft = this.props.value
+        }
+
         this.newCursor = entry.length
 
         this.props.onChange(entry)
+      } else {
+        if (atStart && !_.isNil(this.draft)) {
+          this.newCursor = this.draft.length
+
+          this.props.onChange(this.draft)
+
+          this.draft = null
+        }
       }
     }
   }
@@ -357,7 +374,7 @@ export default class Input extends React.Component<Props, State> {
 type Props = {
   disabled: boolean
   getCompletions: (word: string, excludeEmotes: boolean) => string[]
-  getHistory: (previous?: boolean) => string | null
+  getHistory: (previous?: boolean) => { entry: string | null; atStart: boolean }
   onChange: (value: string) => void
   onSubmit: () => void
   username?: string

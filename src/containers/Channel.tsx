@@ -595,17 +595,21 @@ class Channel extends React.Component<Props, State> {
 
     const index = historyIndex + (previous ? 1 : -1)
 
+    let entry: string | null
+
     if (previous && index >= history.length) {
-      return null
+      entry = null
     } else if (!previous && index < 0) {
       this.props.updateHistoryIndex(-1)
 
-      return index === -1 ? '' : null
+      entry = null
+    } else {
+      this.props.updateHistoryIndex(index)
+
+      entry = history[index]
     }
 
-    this.props.updateHistoryIndex(index)
-
-    return history[index]
+    return { entry, atStart: index < 0 }
   }
 
   /**
