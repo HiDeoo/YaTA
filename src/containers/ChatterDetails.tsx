@@ -1,16 +1,4 @@
-import {
-  Button,
-  ButtonGroup,
-  Classes,
-  Colors,
-  Dialog,
-  Icon,
-  Intent,
-  Popover,
-  Position,
-  Spinner,
-  Tooltip,
-} from '@blueprintjs/core'
+import { Button, ButtonGroup, Classes, Colors, Dialog, Icon, Intent, Popover, Spinner } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -28,31 +16,44 @@ import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterMessages } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { getDisableDialogAnimations } from 'Store/selectors/settings'
-import { ifProp, size } from 'Utils/styled'
+import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * DetailsRow component.
  */
 const DetailsRow = styled(FlexLayout)<DetailsRowProps>`
   align-items: center;
-  height: ${ifProp('loading', '103px', 'auto')};
-  margin-bottom: 15px;
+  height: ${ifProp('loading', '127px', 'auto')};
+  margin-bottom: 18px;
 
   .${Classes.SPINNER}.${Classes.SMALL} {
-    margin-right: 10px;
+    margin-right: 15px;
   }
 `
 
 /**
- * DetailTooltip component.
+ * DetailsCell component.
  */
-const DetailTooltip = styled(Tooltip).attrs({
-  position: Position.BOTTOM,
-})`
-  margin-right: 25px;
+const DetailsCell = styled.div`
+  border-right: 1px solid ${color('chatter.details.border')};
+  color: ${color('chatter.details.color')};
+  font-size: 0.82rem;
+  padding: 0 20px 0 12px;
 
-  & svg {
-    margin-right: 6px;
+  &:first-of-type {
+    padding-left: 0;
+  }
+
+  &:last-of-type {
+    border-right: 0;
+  }
+
+  & > strong {
+    color: ${color('chatter.details.strong')};
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding-bottom: 3px;
   }
 `
 
@@ -262,21 +263,15 @@ class ChatterDetails extends React.Component<Props, State> {
     return (
       <>
         <DetailsRow>
-          <DetailTooltip content="Creation date">
-            <>
-              <Icon icon="calendar" /> {new Date(details.created_at).toLocaleDateString()}
-            </>
-          </DetailTooltip>
-          <DetailTooltip content="Views">
-            <>
-              <Icon icon="eye-open" /> {details.views}
-            </>
-          </DetailTooltip>
-          <DetailTooltip content="Followers">
-            <>
-              <Icon icon="follower" /> {details.followers}
-            </>
-          </DetailTooltip>
+          <DetailsCell>
+            <strong>{new Date(details.created_at).toLocaleDateString()}</strong> Creation date
+          </DetailsCell>
+          <DetailsCell>
+            <strong>{details.views}</strong> Views
+          </DetailsCell>
+          <DetailsCell>
+            <strong>{details.followers}</strong> Followers
+          </DetailsCell>
         </DetailsRow>
         {!chatter.isSelf && (
           <Tools>

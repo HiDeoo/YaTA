@@ -14,6 +14,13 @@ const dark = {
     background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY5,
   },
+  chatter: {
+    details: {
+      border: Colors.GRAY1,
+      color: Colors.GRAY3,
+      strong: Colors.WHITE,
+    },
+  },
   emotePicker: {
     background: Colors.DARK_GRAY3,
     border: Colors.DARK_GRAY2,
