@@ -1,4 +1,4 @@
-import { Classes, ISpinnerProps, Spinner as OriginalSpinner } from '@blueprintjs/core'
+import { Classes, Intent, ISpinnerProps, Spinner as OriginalSpinner } from '@blueprintjs/core'
 import * as React from 'react'
 
 import Center from 'Components/Center'
@@ -19,7 +19,7 @@ const Spinner: React.SFC<ISpinnerProps & Props> = ({ size, large, small, ...prop
 
   return (
     <Center>
-      <OriginalSpinner className={className} {...props} />
+      <OriginalSpinner className={className} intent={Intent.PRIMARY} {...props} />
     </Center>
   )
 }

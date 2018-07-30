@@ -2,6 +2,7 @@ import {
   Button,
   Classes,
   Colors,
+  Intent,
   Navbar,
   NavbarDivider,
   NavbarGroup,
@@ -238,7 +239,7 @@ export default class Header extends React.Component<Props> {
     return (
       <>
         <NavbarDivider />
-        <StatusSpinner className={Classes.SMALL} />
+        <StatusSpinner className={Classes.SMALL} intent={Intent.PRIMARY} />
         <StatusMessage>{connectionStr}</StatusMessage>
       </>
     )

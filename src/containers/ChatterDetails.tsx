@@ -254,7 +254,7 @@ class ChatterDetails extends React.Component<Props, State> {
     if (_.isNil(details)) {
       return (
         <DetailsRow loading>
-          <Spinner className={Classes.SMALL} /> Fetching user details…
+          <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} /> Fetching user details…
         </DetailsRow>
       )
     }
