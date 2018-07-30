@@ -705,14 +705,15 @@ class Channel extends React.Component<Props, State> {
   /**
    * Bans a user.
    * @param username - The name of the user to ban.
+   * @param [reason] - The ban reason.
    */
-  private ban = async (username: string) => {
+  private ban = async (username: string, reason?: string) => {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        await client.ban(channel, username)
+        await client.ban(channel, username, reason)
       } catch (error) {
         //
       }

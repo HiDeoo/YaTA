@@ -242,6 +242,7 @@ export default class Input extends React.Component<Props, State> {
 
   /**
    * Triggered when a key is pressed down in the input.
+   * @param event - The associated event.
    */
   private onKeyDownInputValue = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === Key.Tab) {

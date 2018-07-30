@@ -66,6 +66,10 @@ injectGlobal`
   .${Classes.DARK} .${Classes.POPOVER}.${Classes.MINIMAL}.${Classes.POPOVER}.emotePickerPopover {
     transform: scale(1) translateY(-36px);
   }
+
+  .${Classes.ALERT_CONTENTS} {
+    flex: 1;
+  }
 `
 
 /**

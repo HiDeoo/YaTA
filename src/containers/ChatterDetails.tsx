@@ -1,9 +1,10 @@
-import { Button, ButtonGroup, Classes, Colors, Dialog, Icon, Intent, Popover, Spinner } from '@blueprintjs/core'
+import { Button, ButtonGroup, Classes, Colors, Dialog, Icon, Intent, Menu, Popover, Spinner } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import BanReason from 'Components/BanReason'
 import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
 import History from 'Components/History'
@@ -127,10 +128,18 @@ const Tools = styled.div`
   & > div {
     margin-bottom: 10px;
 
-    & > button {
+    & > button,
+    & > div.${Classes.BUTTON_GROUP} {
       margin-right: 10px;
     }
   }
+`
+
+/**
+ * ButtonRow component.
+ */
+const ButtonRow = styled.div`
+  display: flex;
 `
 
 /**
@@ -147,7 +156,11 @@ const Hr = styled.div`
 /**
  * React State.
  */
-const initialState = { details: null as RawChannel | null, error: undefined as Error | undefined }
+const initialState = {
+  details: null as RawChannel | null,
+  error: undefined as Error | undefined,
+  showBanReasonAlert: false,
+}
 type State = Readonly<typeof initialState>
 
 /**
@@ -187,7 +200,7 @@ class ChatterDetails extends React.Component<Props, State> {
    */
   public render() {
     const { chatter, disableDialogAnimations, messages } = this.props
-    const { details } = this.state
+    const { details, showBanReasonAlert } = this.state
 
     if (_.isNil(chatter)) {
       return null
@@ -211,6 +224,11 @@ class ChatterDetails extends React.Component<Props, State> {
         title={header}
         transitionName={disableDialogAnimations ? '' : undefined}
       >
+        <BanReason
+          onConfirmBanReason={this.onConfirmBanReason}
+          toggle={this.toggleBanReasonAlert}
+          visible={showBanReasonAlert}
+        />
         <div className={Classes.DIALOG_BODY}>
           {this.renderDetails()}
           {this.renderModerationTools()}
@@ -230,6 +248,13 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
+   * Toggles the ban reason alert.
+   */
+  private toggleBanReasonAlert = () => {
+    this.setState(({ showBanReasonAlert }) => ({ showBanReasonAlert: !showBanReasonAlert }))
+  }
+
+  /**
    * Renders the moderation tools.
    * @return Element to render.
    */
@@ -240,23 +265,34 @@ class ChatterDetails extends React.Component<Props, State> {
       return null
     }
 
+    const banMenu = (
+      <Menu>
+        <Menu.Item text="Ban with reason" icon="disable" onClick={this.toggleBanReasonAlert} />
+      </Menu>
+    )
+
     return (
       <>
         <Hr />
         <Tools>
-          <div>
+          <ButtonRow>
             <Button icon="trash" onClick={this.onClickPurge} text="Purge" />
-            <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan} text="Ban" />
+            <ButtonGroup>
+              <Button icon="disable" intent={Intent.DANGER} onClick={this.onClickBan} text="Ban" />
+              <Popover content={banMenu} usePortal={false}>
+                <Button icon="caret-down" intent={Intent.DANGER} />
+              </Popover>
+            </ButtonGroup>
             {chatter.banned && <Button icon="unlock" intent={Intent.DANGER} onClick={this.onClickUnban} text="Unban" />}
-          </div>
-          <div>
+          </ButtonRow>
+          <ButtonRow>
             <ButtonGroup>
               <Button icon="time" onClick={this.onClickTimeout10M} text="10m" />
               <Button icon="time" onClick={this.onClickTimeout1H} text="1h" />
               <Button icon="time" onClick={this.onClickTimeout6H} text="6h" />
               <Button icon="time" onClick={this.onClickTimeout24H} text="24h" />
             </ButtonGroup>
-          </div>
+          </ButtonRow>
         </Tools>
       </>
     )
@@ -341,6 +377,22 @@ class ChatterDetails extends React.Component<Props, State> {
         copyMessageToClipboard={copyMessageToClipboard}
       />
     )
+  }
+
+  /**
+   * Triggered when the ban with reason is clicked.
+   * @param reason - The ban reason.
+   */
+  private onConfirmBanReason = (reason: string) => {
+    this.toggleBanReasonAlert()
+
+    const { ban, chatter, unfocus } = this.props
+
+    if (!_.isNil(chatter)) {
+      ban(chatter.userName, reason)
+    }
+
+    unfocus()
   }
 
   /**
@@ -483,7 +535,7 @@ type StateProps = {
  */
 type OwnProps = {
   actionHandler: ActionHandler
-  ban: (username: string) => void
+  ban: (username: string, reason?: string) => void
   block: (targetId: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   chatter: SerializedChatter | null
