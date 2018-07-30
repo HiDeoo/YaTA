@@ -291,6 +291,8 @@ export default class PollEditor extends React.Component<Props, State> {
   private toggle = () => {
     if (this.state.formState === FormState.Done) {
       this.setState(initialState)
+
+      Toaster.clear()
     }
 
     this.props.toggle()
