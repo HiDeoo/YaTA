@@ -44,8 +44,7 @@ const dark = {
     message: Colors.GRAY4,
   },
   permissions: {
-    color: Colors.GRAY5,
-    detail: Colors.GRAY3,
+    detail: Colors.GRAY5,
   },
   previews: {
     meta: Colors.GRAY3,

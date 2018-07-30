@@ -1,4 +1,4 @@
-import { AnchorButton, Card, Intent } from '@blueprintjs/core'
+import { AnchorButton, Callout, Classes, Intent } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -9,20 +9,34 @@ import { color } from 'Utils/styled'
 /**
  * Details component.
  */
-const Details = styled(Card)`
-  color: ${color('permissions.color')};
-  font-size: 0.82rem;
-  margin-top: 40px;
-  width: 360px;
+const Details = styled(Callout)`
+  &.${Classes.CALLOUT} {
+    margin-top: 40px;
+    width: 360px;
+
+    & h4.${Classes.HEADING} {
+      font-size: 1rem;
+    }
+
+    & > svg {
+      height: 18px;
+      width: 18px;
+
+      &.${Classes.ICON}:first-child {
+        left: 13px;
+        top: 11px;
+      }
+    }
+  }
 `
 
 /**
  * Permissions component.
  */
 const Permissions = styled.ul`
-  font-size: 0.78rem;
-  margin: 20px 0 0 0;
-  padding-left: 30px;
+  font-size: 0.8rem;
+  margin: 12px 0 0 0;
+  padding-left: 2px;
 
   & > li {
     margin: 4px 0;
@@ -51,8 +65,7 @@ const Login: React.SFC = () => (
       rightIcon="document-open"
       href={Twitch.getAuthURL().toString()}
     />
-    <Details>
-      The following permissions are required:
+    <Details title="Required permissions" intent={Intent.WARNING} icon="key">
       <Permissions>
         <li>
           View your email address.
