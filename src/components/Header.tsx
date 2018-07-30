@@ -125,16 +125,7 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const {
-      goHome,
-      highlightChangelog,
-      isLoggedIn,
-      logout,
-      page,
-      reportBug,
-      toggleChangelog,
-      toggleSettings,
-    } = this.props
+    const { highlightChangelog, isLoggedIn, logout, page, reportBug, toggleChangelog, toggleSettings } = this.props
 
     return (
       <HeaderNavbar>
@@ -158,7 +149,7 @@ export default class Header extends React.Component<Props> {
           </HeaderTooltip>
           {page !== Page.Home && (
             <HeaderTooltip content="Home">
-              <Button onClick={goHome} icon="home" minimal />
+              <Button onMouseUp={this.onMouseUpHome} icon="home" minimal />
             </HeaderTooltip>
           )}
           {highlightChangelog && (
@@ -177,6 +168,14 @@ export default class Header extends React.Component<Props> {
         </HeaderNavbarGroup>
       </HeaderNavbar>
     )
+  }
+
+  /**
+   * Triggered on the mouse up event on the home button.
+   * @param event - The associated event.
+   */
+  private onMouseUpHome = (event: React.MouseEvent<HTMLElement>) => {
+    this.props.goHome(event)
   }
 
   /**
@@ -251,7 +250,7 @@ export default class Header extends React.Component<Props> {
  */
 type Props = {
   autoConnectInDev: boolean
-  goHome: () => void
+  goHome: (event: React.MouseEvent<HTMLElement>) => void
   highlightChangelog: boolean
   isLoggedIn: boolean
   logout: () => void

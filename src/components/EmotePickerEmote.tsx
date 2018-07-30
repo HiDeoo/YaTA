@@ -46,6 +46,7 @@ export default class EmotePickerEmote extends React.Component<Props> {
 
   /**
    * Triggered when the emote is clicked.
+   * @param event - The associated event.
    */
   private onClick = (event: React.MouseEvent<HTMLElement>) => {
     const { emote, onClick } = this.props

@@ -197,9 +197,14 @@ class App extends React.Component<Props, State> {
 
   /**
    * Navigates to the homepage.
+   * @param event - The associated event.
    */
-  private goHome = () => {
-    this.props.history.push(Page.Home)
+  private goHome = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.ctrlKey || event.metaKey || event.button === 1) {
+      window.open('/')
+    } else {
+      this.props.history.push(Page.Home)
+    }
   }
 
   /**
