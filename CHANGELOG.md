@@ -21,6 +21,10 @@
 - Fix an auto-completion related issue that could lead to the first character being at the end ([#1](https://github.com/HiDeoo/YaTA/issues/1)).
 - Add proper error when trying to use `/marker`.
 
+### ⚙️ Internal
+
+- Upgrade to TypeScript 3.0.
+
 # 0.5.0
 
 ### 🚀 New Feature

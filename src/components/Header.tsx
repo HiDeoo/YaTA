@@ -136,7 +136,8 @@ export default class Header extends React.Component<Props> {
           <NavbarHeading>
             <HeaderConsumer>
               {({ titleComponent }) => (!_.isNil(titleComponent) ? <span>{titleComponent} - </span> : null)}
-            </HeaderConsumer>YaTA
+            </HeaderConsumer>
+            YaTA
           </NavbarHeading>
           {this.renderStatus()}
         </HeaderNavbarGroup>

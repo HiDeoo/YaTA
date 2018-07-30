@@ -161,7 +161,8 @@ export default class PollEditor extends React.Component<Props, State> {
 
     const questionLabelInfo = (
       <>
-        (required){!_.isNil(optionsError) && (
+        (required)
+        {!_.isNil(optionsError) && (
           <>
             {' '}
             - <Error>{optionsError}</Error>

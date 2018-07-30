@@ -169,7 +169,9 @@ export default class Input extends React.Component<Props, State> {
     return (
       <Wrapper>
         <Toaster position={Position.BOTTOM}>
-          {_.map(toasts, (toast, index) => <InputToast key={index} {...toast} />)}
+          {_.map(toasts, (toast, index) => (
+            <InputToast key={index} {...toast} />
+          ))}
         </Toaster>
         <TextArea
           dir="auto"

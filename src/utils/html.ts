@@ -53,9 +53,9 @@ export function readTextFile(file: File): Promise<string> {
     fileReader.onabort = reject
     fileReader.onerror = reject
     fileReader.onload = (event) => {
-      const target = event.target
+      const target = event.target as FileReader
 
-      if (!_.isNil(target)) {
+      if (!_.isNil(target) && _.isString(target.result)) {
         resolve(target.result)
       } else {
         reject()

@@ -180,7 +180,9 @@ class SettingsActions extends React.Component<Props, State> {
       <Popover
         content={
           <Menu>
-            {_.map(ActionType, (type) => <ActionTypeMenuItem key={type} type={type} onClick={this.onChangeType} />)}
+            {_.map(ActionType, (type) => (
+              <ActionTypeMenuItem key={type} type={type} onClick={this.onChangeType} />
+            ))}
           </Menu>
         }
         position={Position.BOTTOM_RIGHT}

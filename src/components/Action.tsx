@@ -63,7 +63,14 @@ export default class Action extends React.Component<Props> {
   public render() {
     const { action, editing } = this.props
 
-    const recipient = action.type === ActionType.Whisper ? <em> (@{action.recipient})</em> : null
+    const recipient =
+      action.type === ActionType.Whisper ? (
+        <em>
+          {' '}
+          (@
+          {action.recipient})
+        </em>
+      ) : null
 
     return (
       <Wrapper>
