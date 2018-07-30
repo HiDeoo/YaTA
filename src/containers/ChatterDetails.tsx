@@ -94,6 +94,26 @@ const Avatar = styled.div`
 `
 
 /**
+ * Badges component.
+ */
+const Badges = styled.span`
+  margin-left: 9px;
+
+  .badge {
+    border-radius: 50%;
+    display: inline-block;
+    margin-top: -1px;
+    min-width: 18px;
+    margin-right: 6px;
+    vertical-align: middle;
+
+    &:last-of-type {
+      margin-right: 6px;
+    }
+  }
+`
+
+/**
  * Tools component.
  */
 const Tools = styled.div`
@@ -166,17 +186,21 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { chatter, disableDialogAnimations } = this.props
+    const { chatter, disableDialogAnimations, messages } = this.props
     const { details } = this.state
 
     if (_.isNil(chatter)) {
       return null
     }
 
+    const lastMessage = _.last(messages)
+    const badges = !_.isNil(lastMessage) ? lastMessage.badges : null
+
     const header = (
       <Header>
         <Avatar>{_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} />}</Avatar>
         {`${chatter.displayName}${chatter.showUserName ? ` (${chatter.userName})` : ''}`}
+        {!_.isNil(badges) && <Badges dangerouslySetInnerHTML={{ __html: badges }} />}
       </Header>
     )
 

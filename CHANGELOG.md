@@ -5,6 +5,7 @@
 - Add a tool to quickly create a [Straw Poll](https://www.strawpoll.me/) (can be disabled in the settings).
 - Improve chatter details dialog UI:
   - Rework details to be readable without the need to hover them or their associated icons.
+  - Add badges.
 - Add a button & context menu item to unban previously banned users.
 - Add a button to unblock previously blocked users.
 
