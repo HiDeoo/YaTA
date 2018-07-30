@@ -28,6 +28,11 @@ export enum BroadcastType {
 const WhisperRegExp = /^\/w (\S+) (.+)/
 
 /**
+ * RegExp used to identify marker command (/marker [message]).
+ */
+const MarkerRegExp = /^\/marker(?:$|\s)/
+
+/**
  * Twitch class.
  */
 export default class Twitch {
@@ -127,6 +132,15 @@ export default class Twitch {
     }
 
     return null
+  }
+
+  /**
+   * Checks if a message is a marker command.
+   * @param  message - The message.
+   * @return `true` if the message is a marker command.
+   */
+  public static isMarkerCommand(message: string) {
+    return MarkerRegExp.test(message)
   }
 
   /**

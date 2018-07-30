@@ -18,6 +18,7 @@
 - Fix an issue with the `/mods` command not displaying its result.
 - Fix a context menu issue for moderators only always opening the timeout submenu by default.
 - Fix an auto-completion related issue that could lead to the first character being at the end ([#1](https://github.com/HiDeoo/YaTA/issues/1)).
+- Add proper error when trying to use `/marker`.
 
 # 0.5.0
 
