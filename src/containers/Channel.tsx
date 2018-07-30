@@ -1,4 +1,4 @@
-import { Button, Intent, NavbarDivider, Popover } from '@blueprintjs/core'
+import { Button, Classes, Intent, NavbarDivider, Popover } from '@blueprintjs/core'
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -62,7 +62,14 @@ import { replaceImgTagByAlt, sanitizeUrlForPreview } from 'Utils/html'
 const ChannelLink = styled.a.attrs({
   target: '_blank',
 })`
-  color: inherit !important;
+  &,
+  .${Classes.DARK} & {
+    color: inherit;
+
+    &:hover {
+      color: inherit;
+    }
+  }
 `
 
 /**

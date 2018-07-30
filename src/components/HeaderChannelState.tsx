@@ -45,8 +45,8 @@ const Tooltip = styled(HeaderTooltip)`
  * PauseButton component.
  */
 const PauseButton = styled(Button)`
-  & > svg.${Classes.ICON} {
-    color: ${Colors.RED4} !important;
+  &.${Classes.BUTTON} svg.${Classes.ICON}, .${Classes.DARK} &.${Classes.BUTTON} svg.${Classes.ICON} {
+    color: ${Colors.RED4};
   }
 `
 

@@ -65,8 +65,8 @@ const StatusMessage = styled(NavbarHeading)`
  * Changelog component.
  */
 const Changelog = styled(Button)`
-  svg {
-    color: ${Colors.GOLD5} !important;
+  &.${Classes.BUTTON} svg.${Classes.ICON}, .${Classes.DARK} &.${Classes.BUTTON} svg.${Classes.ICON} {
+    color: ${Colors.GOLD5};
   }
 `
 

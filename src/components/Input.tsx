@@ -26,7 +26,9 @@ const Wrapper = styled.div`
  * Toast component.
  */
 const InputToast = styled(Toast)`
-  margin-bottom: 60px !important;
+  &.${Classes.TOAST} {
+    margin-bottom: 60px;
+  }
 
   .${Classes.BUTTON_GROUP} {
     display: none;

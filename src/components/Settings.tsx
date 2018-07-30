@@ -1,4 +1,4 @@
-import { Dialog, Navbar, Tab, Tabs } from '@blueprintjs/core'
+import { Classes, Dialog, Navbar, Tab, Tabs } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -22,7 +22,9 @@ const SettingsDialog = styled(Dialog)`
  * SettingsNavbar component.
  */
 const SettingsNavbar = styled(Navbar)`
-  height: 40px !important;
+  &.${Classes.NAVBAR} {
+    height: 40px;
+  }
 `
 
 /**

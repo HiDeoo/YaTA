@@ -1,4 +1,4 @@
-import { FocusStyleManager } from '@blueprintjs/core'
+import { Classes, FocusStyleManager } from '@blueprintjs/core'
 import * as React from 'react'
 import { render } from 'react-dom'
 import { injectGlobal } from 'styled-components'
@@ -62,8 +62,9 @@ injectGlobal`
     }
   }
 
-  .bp3-popover.bp3-minimal.bp3-popover.emotePickerPopover {
-    transform: scale(1) translateY(-36px) !important;
+  .${Classes.POPOVER}.${Classes.MINIMAL}.${Classes.POPOVER}.emotePickerPopover,
+  .${Classes.DARK} .${Classes.POPOVER}.${Classes.MINIMAL}.${Classes.POPOVER}.emotePickerPopover {
+    transform: scale(1) translateY(-36px);
   }
 `
 

@@ -58,7 +58,7 @@ const MenuButton = styled(Button)`
  * ContextMenu component.
  */
 const ContextMenu = styled(Menu)`
-  & .bp3-menu-item.bp3-disabled {
+  & .${Classes.MENU_ITEM}.${Classes.DISABLED} {
     cursor: auto !important;
   }
 `
