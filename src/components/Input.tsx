@@ -110,7 +110,7 @@ export default class Input extends React.Component<Props, State> {
       toasts.push({
         icon: 'warning-sign',
         intent: Intent.DANGER,
-        message: 'Your message exceed the 500 characters limit.',
+        message: 'Your message exceeds the 500 characters limit.',
       })
 
       intent = Classes.INTENT_DANGER
@@ -118,7 +118,7 @@ export default class Input extends React.Component<Props, State> {
       toasts.push({
         icon: 'hand',
         intent: Intent.WARNING,
-        message: 'Your message exceed 400 characters. Try to avoid long messages.',
+        message: 'Your message exceeds 400 characters. Try to avoid long messages.',
       })
 
       intent = Classes.INTENT_WARNING
