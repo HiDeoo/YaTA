@@ -82,7 +82,7 @@ export default class SettingsHighlight extends React.Component<Props, State> {
           />
         </span>
         <SettingsHighlightColorMenu small color={this.props.highlight.color} onSelect={this.onSelectColor} />
-        <DeleteButton minimal icon="trash" intent={Intent.DANGER} onClick={this.onClickRemove} />
+        <DeleteButton minimal icon="trash" intent={Intent.DANGER} onClick={this.onClickRemove} title="Remove" />
       </Wrapper>
     )
   }

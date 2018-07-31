@@ -10,7 +10,7 @@ import NonIdealState from 'Components/NonIdealState'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
 import Action, { ActionPlaceholder, ActionType } from 'Libs/Action'
-import { addAction, removeAction, updateAction } from 'Store/ducks/settings'
+import { addAction, moveAction, removeAction, updateAction } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getActions } from 'Store/selectors/settings'
 import { color } from 'Utils/styled'
@@ -121,13 +121,16 @@ class SettingsActions extends React.Component<Props, State> {
         </Inline>
         <Actions>
           {actions.length > 0 ? (
-            _.map(actions, (action) => (
+            _.map(actions, (action, index) => (
               <ActionRow
-                key={action.id}
-                editing={editing}
-                action={action}
                 remove={this.props.removeAction}
+                move={this.props.moveAction}
+                count={actions.length}
+                editing={editing}
                 edit={this.edit}
+                action={action}
+                key={action.id}
+                index={index}
               />
             ))
           ) : (
@@ -312,7 +315,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     actions: getActions(state),
   }),
-  { addAction, removeAction, updateAction }
+  { addAction, moveAction, removeAction, updateAction }
 )(SettingsActions)
 
 /**
@@ -327,6 +330,7 @@ type StateProps = {
  */
 type DispatchProps = {
   addAction: typeof addAction
+  moveAction: typeof moveAction
   removeAction: typeof removeAction
   updateAction: typeof updateAction
 }

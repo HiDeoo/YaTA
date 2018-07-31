@@ -25,6 +25,7 @@ export enum Actions {
   ADD_ACTION = 'settings/ADD_ACTION',
   REMOVE_ACTION = 'settings/REMOVE_ACTION',
   UPDATE_ACTION = 'settings/UPDATE_ACTION',
+  MOVE_ACTION = 'settings/MOVE_ACTION',
   TOGGLE_HIDE_WHISPERS = 'settings/TOGGLE_HIDE_WHISPERS',
   RESTORE = 'settings/RESTORE',
   TOGGLE_AUTO_FOCUS_INPUT = 'settings/TOGGLE_AUTO_FOCUS_INPUT',
@@ -175,6 +176,25 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         actions: {
           allIds: [...state.actions.allIds.slice(0, index), ...state.actions.allIds.slice(index + 1)],
           byId: otherActions,
+        },
+      }
+    }
+    case Actions.MOVE_ACTION: {
+      const { down, id } = action.payload
+
+      const index = _.indexOf(state.actions.allIds, id)
+      const otherIndex = index + (down ? 1 : -1)
+
+      const newAllIds = [...state.actions.allIds]
+      const actionToSwap = newAllIds[index]
+      newAllIds[index] = newAllIds[otherIndex]
+      newAllIds[otherIndex] = actionToSwap
+
+      return {
+        ...state,
+        actions: {
+          allIds: newAllIds,
+          byId: state.actions.byId,
         },
       }
     }
@@ -376,6 +396,18 @@ export const updateAction = (id: string, action: SerializedAction) =>
   })
 
 /**
+ * Moves an action up or down.
+ * @param  id - The action id.
+ * @param  down - `true` when moving down.
+ * @return The action.
+ */
+export const moveAction = (id: string, down: boolean) =>
+  createAction(Actions.MOVE_ACTION, {
+    down,
+    id,
+  })
+
+/**
  * Toggle the 'Hide whispers' setting.
  * @return The action.
  */
@@ -454,6 +486,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleHighlightAllMentions>
   | ReturnType<typeof togglePrioritizeUsernames>
   | ReturnType<typeof toggleEnablePollEditor>
+  | ReturnType<typeof moveAction>
 
 /**
  * Settings state.

@@ -7,6 +7,7 @@
   - Rework details to be readable without the need to hover them or their associated icons.
   - A ban reason can now be provided when banning a user from this screen.
   - Badges are now displayed in this dialog.
+- Actions can now be reordered.
 - Add a button & context menu item to unban previously banned users.
 - Add a button to unblock previously blocked users.
 

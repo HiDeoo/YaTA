@@ -1,4 +1,4 @@
-import { Button, Colors, Icon, Intent, Text } from '@blueprintjs/core'
+import { Button, ButtonGroup, Classes, Colors, Icon, Intent, Text } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -43,6 +43,21 @@ const ActionName = styled(Text).attrs({
 `
 
 /**
+ * OrderButtonGroup component.
+ */
+const OrderButtonGroup = styled(ButtonGroup)`
+  & > .${Classes.BUTTON} {
+    min-height: 18px;
+    min-width: 30px;
+    padding: 0 10px;
+
+    &:only-child {
+      min-height: 36px;
+    }
+  }
+`
+
+/**
  * ActionText component.
  */
 const ActionText = styled(Text).attrs({
@@ -74,7 +89,7 @@ export default class Action extends React.Component<Props> {
 
     return (
       <Wrapper>
-        {this.renderIcon()}
+        <ActionIcon icon={ActionIconMap[action.type]} />
         <FlexContent>
           <ActionName>
             {action.name}
@@ -82,27 +97,47 @@ export default class Action extends React.Component<Props> {
           </ActionName>
           <ActionText>{action.text}</ActionText>
         </FlexContent>
-        <Button disabled={editing} minimal icon="edit" onClick={this.onClickEdit} />
-        <Button disabled={editing} minimal icon="trash" intent={Intent.DANGER} onClick={this.onClickRemove} />
+        {this.renderOrderButtons()}
+        <Button disabled={editing} minimal icon="edit" onClick={this.onClickEdit} title="Edit" />
+        <Button
+          onClick={this.onClickRemove}
+          intent={Intent.DANGER}
+          disabled={editing}
+          title="Remove"
+          icon="trash"
+          minimal
+        />
       </Wrapper>
     )
   }
 
   /**
-   * Renders the action icon.
+   * Renders the order buttons if needed.
    * @return Element to render.
    */
-  private renderIcon() {
-    const { action } = this.props
+  private renderOrderButtons() {
+    const { count, index } = this.props
 
-    return <ActionIcon icon={ActionIconMap[action.type]} />
+    const showUpButton = count > 1 && index > 0
+    const showDownButton = count > 1 && index < count - 1
+
+    if (!showUpButton && !showDownButton) {
+      return null
+    }
+
+    return (
+      <OrderButtonGroup minimal vertical>
+        {showUpButton && <Button icon="caret-up" title="Move up" onClick={this.onClickMoveUp} />}
+        {showDownButton && <Button icon="caret-down" title="Move down" onClick={this.onClickMoveDown} />}
+      </OrderButtonGroup>
+    )
   }
 
   /**
    * Triggered when the remove button is clicked.
    */
   private onClickRemove = () => {
-    const { remove, action } = this.props
+    const { action, remove } = this.props
 
     remove(action.id)
   }
@@ -111,9 +146,27 @@ export default class Action extends React.Component<Props> {
    * Triggered when the edit button is clicked.
    */
   private onClickEdit = () => {
-    const { edit, action } = this.props
+    const { action, edit } = this.props
 
     edit(action.id)
+  }
+
+  /**
+   * Triggered when the move up button is clicked.
+   */
+  private onClickMoveUp = () => {
+    const { action, move } = this.props
+
+    move(action.id, false)
+  }
+
+  /**
+   * Triggered when the move down button is clicked.
+   */
+  private onClickMoveDown = () => {
+    const { action, move } = this.props
+
+    move(action.id, true)
   }
 }
 
@@ -122,7 +175,10 @@ export default class Action extends React.Component<Props> {
  */
 type Props = {
   action: SerializedAction
+  count: number
   edit: (id: string) => void
   editing: boolean
+  index: number
+  move: (id: string, down: boolean) => void
   remove: (id: string) => void
 }
