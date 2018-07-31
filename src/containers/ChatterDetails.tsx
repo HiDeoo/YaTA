@@ -1,4 +1,16 @@
-import { Button, ButtonGroup, Classes, Colors, Dialog, Icon, Intent, Menu, Popover, Spinner } from '@blueprintjs/core'
+import {
+  Button,
+  ButtonGroup,
+  Classes,
+  Colors,
+  Dialog,
+  EditableText,
+  Icon,
+  Intent,
+  Menu,
+  Popover,
+  Spinner,
+} from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -14,9 +26,11 @@ import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import Twitch, { RawChannel } from 'Libs/Twitch'
 import { isMessage } from 'Store/ducks/logs'
+import { updateNote } from 'Store/ducks/notes'
 import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterLogs } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
+import { makeGetChatterNote } from 'Store/selectors/notes'
 import { getDisableDialogAnimations } from 'Store/selectors/settings'
 import { color, ifProp, size } from 'Utils/styled'
 
@@ -155,6 +169,13 @@ const Hr = styled.div`
 `
 
 /**
+ * Note component.
+ */
+const Note = styled(EditableText)`
+  margin-top: 20px;
+`
+
+/**
  * React State.
  */
 const initialState = {
@@ -234,6 +255,7 @@ class ChatterDetails extends React.Component<Props, State> {
           {this.renderDetails()}
           {this.renderModerationTools()}
           {this.renderHistory()}
+          {this.renderNote()}
         </div>
       </Dialog>
     )
@@ -253,6 +275,29 @@ class ChatterDetails extends React.Component<Props, State> {
    */
   private toggleBanReasonAlert = () => {
     this.setState(({ showBanReasonAlert }) => ({ showBanReasonAlert: !showBanReasonAlert }))
+  }
+
+  /**
+   * Renders the note.
+   * @return Element to render.
+   */
+  private renderNote() {
+    const { chatter, note } = this.props
+
+    if (_.isNil(chatter) || chatter.isSelf) {
+      return null
+    }
+
+    return (
+      <Note
+        placeholder="Click to add a note…"
+        onChange={this.onChangeNote}
+        minLines={1}
+        maxLines={5}
+        value={note}
+        multiline
+      />
+    )
   }
 
   /**
@@ -378,6 +423,18 @@ class ChatterDetails extends React.Component<Props, State> {
         logs={logs}
       />
     )
+  }
+
+  /**
+   * Triggered when the note for the current chatter is edited.
+   * @param event - The associated event.
+   */
+  private onChangeNote = (note: string) => {
+    const { chatter } = this.props
+
+    if (!_.isNil(chatter)) {
+      this.props.updateNote(chatter.id, note)
+    }
   }
 
   /**
@@ -514,14 +571,19 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 }
 
-export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownProps: OwnProps) => {
-  const getChatterLogs = makeGetChatterLogs()
+export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+  (state, ownProps: OwnProps) => {
+    const getChatterLogs = makeGetChatterLogs()
+    const getChatterNote = makeGetChatterNote()
 
-  return {
-    disableDialogAnimations: getDisableDialogAnimations(state),
-    logs: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterLogs(state, ownProps.chatter.id)) : null,
-  }
-})(ChatterDetails)
+    return {
+      disableDialogAnimations: getDisableDialogAnimations(state),
+      logs: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterLogs(state, ownProps.chatter.id)) : null,
+      note: !_.isNil(ownProps.chatter) ? getChatterNote(state, ownProps.chatter.id) : '',
+    }
+  },
+  { updateNote }
+)(ChatterDetails)
 
 /**
  * React Props.
@@ -529,6 +591,14 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
 type StateProps = {
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   logs: ReturnType<typeof getLogsByIds> | null
+  note: string
+}
+
+/**
+ * React Props.
+ */
+type DispatchProps = {
+  updateNote: typeof updateNote
 }
 
 /**
@@ -552,7 +622,7 @@ type OwnProps = {
 /**
  * React Props.
  */
-type Props = OwnProps & StateProps
+type Props = OwnProps & DispatchProps & StateProps
 
 /**
  * React Props.

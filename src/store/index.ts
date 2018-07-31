@@ -14,7 +14,7 @@ const persistedReducers = persistCombineReducers<ApplicationState>(
     migrate: createMigrate(migrations as any, { debug: false }),
     storage,
     version: 15,
-    whitelist: ['settings', 'user'],
+    whitelist: ['settings', 'user', 'notes'],
   },
   reducers
 )

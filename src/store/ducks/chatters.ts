@@ -241,7 +241,7 @@ export type ChattersActions =
   | ReturnType<typeof markChatterAsUnbanned>
 
 /**
- * Chatterss state.
+ * Chatters state.
  */
 export type ChattersState = {
   /**

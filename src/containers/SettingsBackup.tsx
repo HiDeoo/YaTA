@@ -7,8 +7,10 @@ import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
 import Toaster from 'Libs/Toaster'
+import { restoreNotes } from 'Store/ducks/notes'
 import { restoreSettings } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
+import { getNotesBackup } from 'Store/selectors/notes'
 import { getSettingsBackup } from 'Store/selectors/settings'
 import { readTextFile } from 'Utils/html'
 
@@ -59,7 +61,7 @@ class SettingsBackup extends React.Component<Props, State> {
             disabled={importing}
             icon="download"
             intent={Intent.SUCCESS}
-            text="Export settings…"
+            text="Export settings & notes…"
             onClick={this.onClickExport}
           />
         </div>
@@ -82,7 +84,9 @@ class SettingsBackup extends React.Component<Props, State> {
    * Triggered when the export button is clicked.
    */
   private onClickExport = () => {
-    const blob = new Blob([JSON.stringify(this.props.settings)], {
+    const { notes, settings } = this.props
+
+    const blob = new Blob([JSON.stringify({ notes, settings })], {
       type: 'text/plain;charset=utf-8;',
     })
 
@@ -107,9 +111,10 @@ class SettingsBackup extends React.Component<Props, State> {
 
     try {
       const content = await readTextFile(file)
-      const json = JSON.parse(content)
+      const { notes, settings } = JSON.parse(content)
 
-      this.props.restoreSettings(json)
+      this.props.restoreSettings(settings)
+      this.props.restoreNotes(notes)
 
       location.reload()
     } catch (error) {
@@ -126,15 +131,17 @@ class SettingsBackup extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
+    notes: getNotesBackup(state),
     settings: getSettingsBackup(state),
   }),
-  { restoreSettings }
+  { restoreNotes, restoreSettings }
 )(SettingsBackup)
 
 /**
  * React Props.
  */
 type StateProps = {
+  notes: ReturnType<typeof getNotesBackup>
   settings: ReturnType<typeof getSettingsBackup>
 }
 
@@ -142,6 +149,7 @@ type StateProps = {
  * React Props.
  */
 type DispatchProps = {
+  restoreNotes: typeof restoreNotes
   restoreSettings: typeof restoreSettings
 }
 

@@ -11,7 +11,7 @@ import { ApplicationState } from 'Store/reducers'
 const getChattersState = (state: ApplicationState) => state.chatters
 
 /**
- * Returns the state of a specific chatter based in its id.
+ * Returns the state of a specific chatter based on its id.
  * @param  state - The Redux state.
  * @param  id - The chatter id.
  * @return The chatter state.
