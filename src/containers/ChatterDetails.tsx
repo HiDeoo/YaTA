@@ -13,8 +13,9 @@ import { ActionHandler, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import Twitch, { RawChannel } from 'Libs/Twitch'
+import { isMessage } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
-import { makeGetChatterMessages } from 'Store/selectors/chatters'
+import { makeGetChatterLogs } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { getDisableDialogAnimations } from 'Store/selectors/settings'
 import { color, ifProp, size } from 'Utils/styled'
@@ -199,15 +200,15 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { chatter, disableDialogAnimations, messages } = this.props
+    const { chatter, disableDialogAnimations, logs } = this.props
     const { details, showBanReasonAlert } = this.state
 
     if (_.isNil(chatter)) {
       return null
     }
 
-    const lastMessage = _.last(messages)
-    const badges = !_.isNil(lastMessage) ? lastMessage.badges : null
+    const lastMessage = _.last(logs)
+    const badges = !_.isNil(lastMessage) && isMessage(lastMessage) ? lastMessage.badges : null
 
     const header = (
       <Header>
@@ -364,17 +365,17 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderHistory() {
-    const { copyMessageOnDoubleClick, copyMessageToClipboard, messages } = this.props
+    const { copyMessageOnDoubleClick, copyMessageToClipboard, logs } = this.props
 
-    if (_.isNil(messages) || messages.length === 0) {
+    if (_.isNil(logs) || logs.length === 0) {
       return null
     }
 
     return (
       <History
-        messages={messages}
         copyMessageOnDoubleClick={copyMessageOnDoubleClick}
         copyMessageToClipboard={copyMessageToClipboard}
+        logs={logs}
       />
     )
   }
@@ -514,11 +515,11 @@ class ChatterDetails extends React.Component<Props, State> {
 }
 
 export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownProps: OwnProps) => {
-  const getChatterMessages = makeGetChatterMessages()
+  const getChatterLogs = makeGetChatterLogs()
 
   return {
     disableDialogAnimations: getDisableDialogAnimations(state),
-    messages: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterMessages(state, ownProps.chatter.id)) : null,
+    logs: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterLogs(state, ownProps.chatter.id)) : null,
   }
 })(ChatterDetails)
 
@@ -527,7 +528,7 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state, ownPr
  */
 type StateProps = {
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
-  messages: ReturnType<typeof getLogsByIds> | null
+  logs: ReturnType<typeof getLogsByIds> | null
 }
 
 /**

@@ -2,7 +2,8 @@ import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
 import { SerializedMessage } from 'Libs/Message'
-import { isMessage } from 'Store/ducks/logs'
+import { SerializedNotification } from 'Libs/Notification'
+import { isMessage, isNotification } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 
 /**
@@ -41,12 +42,12 @@ export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byI
  * @return The logs.
  */
 export const getLogsByIds = (state: ApplicationState, ids: string[]) => {
-  const logs: SerializedMessage[] = []
+  const logs: Array<SerializedMessage | SerializedNotification> = []
 
   _.forEach(ids, (id) => {
     const log = _.get(state.logs.byId, id)
 
-    if (!_.isNil(log) && isMessage(log)) {
+    if (!_.isNil(log) && (isMessage(log) || isNotification(log))) {
       logs.push(log)
     }
   })

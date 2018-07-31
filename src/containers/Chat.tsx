@@ -32,7 +32,7 @@ import RoomState from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
 import {
-  addChatterWithMessage,
+  addChatter,
   addPotentialChatter,
   clearChatters,
   markChatterAsBanned,
@@ -319,17 +319,19 @@ export class ChatClient extends React.Component<Props, State> {
    * @param autohost - `true` if the host is an auto host.
    */
   private onHosted = (channel: string, username: string, viewers: number, autohost: boolean) => {
-    if (Twitch.sanitizeChannel(channel) === this.props.channel) {
+    if (Twitch.sanitizeChannel(channel) !== this.props.channel) {
       return
     }
 
-    const notice = new Notice(
+    const notification = new Notification(
       `${username} is now ${autohost ? 'auto' : ''} hosting you for up to ${viewers} viewers.`,
-      Event.Hosted
+      NotificationEvent.Host
     )
 
-    this.props.addLog(notice.serialize())
-    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
+    const serializedNotification = notification.serialize()
+
+    this.props.addLog(serializedNotification)
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize(), serializedNotification.id)
   }
 
   /**
@@ -397,7 +399,7 @@ export class ChatClient extends React.Component<Props, State> {
       this.props.addLog(serializedMessage)
 
       if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
-        this.props.addChatterWithMessage(serializedMessage.user, serializedMessage.id)
+        this.props.addChatter(serializedMessage.user, serializedMessage.id)
       }
 
       if (serializedMessage.type === LogType.Whisper && !self) {
@@ -524,8 +526,8 @@ export class ChatClient extends React.Component<Props, State> {
 
       const user = _.get(this.props.chatters, userId)
 
-      if (user.messages.length > 0) {
-        this.props.purgeLogs(user.messages)
+      if (user.logs.length > 0) {
+        this.props.purgeLogs(user.logs)
       }
     }
   }
@@ -556,8 +558,8 @@ export class ChatClient extends React.Component<Props, State> {
 
       const user = _.get(this.props.chatters, userId)
 
-      if (user.messages.length > 0) {
-        this.props.purgeLogs(user.messages)
+      if (user.logs.length > 0) {
+        this.props.purgeLogs(user.logs)
       }
     }
   }
@@ -576,8 +578,10 @@ export class ChatClient extends React.Component<Props, State> {
       !_.isNil(message) ? message : undefined
     )
 
-    this.props.addLog(notification.serialize())
-    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
+    const serializedNotification = notification.serialize()
+
+    this.props.addLog(serializedNotification)
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize(), serializedNotification.id)
   }
 
   /**
@@ -603,8 +607,10 @@ export class ChatClient extends React.Component<Props, State> {
       !_.isNil(message) ? message : undefined
     )
 
-    this.props.addLog(notification.serialize())
-    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
+    const serializedNotification = notification.serialize()
+
+    this.props.addLog(serializedNotification)
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize(), serializedNotification.id)
   }
 
   /**
@@ -616,9 +622,11 @@ export class ChatClient extends React.Component<Props, State> {
   private onSubGift = (_channel: string, username: string, recipient: string) => {
     const notification = new Notification(`${username} just gifted a sub to ${recipient}!`, NotificationEvent.SubGift)
 
-    this.props.addLog(notification.serialize())
-    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
-    this.props.addPotentialChatter(Chatter.createPotentialChatter(recipient).serialize())
+    const serializedNotification = notification.serialize()
+
+    this.props.addLog(serializedNotification)
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize(), serializedNotification.id)
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(recipient).serialize(), serializedNotification.id)
   }
 
   /**
@@ -632,8 +640,10 @@ export class ChatClient extends React.Component<Props, State> {
         NotificationEvent.RitualNewChatter
       )
 
-      this.props.addLog(notification.serialize())
-      this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize())
+      const serializedNotification = notification.serialize()
+
+      this.props.addLog(serializedNotification)
+      this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize(), serializedNotification.id)
     }
   }
 
@@ -644,8 +654,10 @@ export class ChatClient extends React.Component<Props, State> {
   private onRaid = ({ raider, viewers }: Raid) => {
     const notification = new Notification(`${raider} is raiding with a party of ${viewers}!`, NotificationEvent.Raid)
 
-    this.props.addLog(notification.serialize())
-    this.props.addPotentialChatter(Chatter.createPotentialChatter(raider).serialize())
+    const serializedNotification = notification.serialize()
+
+    this.props.addLog(serializedNotification)
+    this.props.addPotentialChatter(Chatter.createPotentialChatter(raider).serialize(), serializedNotification.id)
   }
 
   /**
@@ -661,7 +673,7 @@ export class ChatClient extends React.Component<Props, State> {
       const serializedMessage = parsedMessage.serialize()
 
       this.props.addLog(serializedMessage)
-      this.props.addChatterWithMessage(serializedMessage.user, serializedMessage.id)
+      this.props.addChatter(serializedMessage.user, serializedMessage.id)
     }
   }
 
@@ -853,7 +865,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     theme: getTheme(state),
   }),
   {
-    addChatterWithMessage,
+    addChatter,
     addLog,
     addPotentialChatter,
     clearChatters,
@@ -894,7 +906,7 @@ type StateProps = {
  */
 type DispatchProps = {
   addLog: typeof addLog
-  addChatterWithMessage: typeof addChatterWithMessage
+  addChatter: typeof addChatter
   addPotentialChatter: typeof addPotentialChatter
   clearChatters: typeof clearChatters
   clearLogs: typeof clearLogs

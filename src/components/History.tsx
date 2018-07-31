@@ -1,16 +1,20 @@
+import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
 import HistoryMessage from 'Components/HistoryMessage'
+import Notification from 'Components/Notification'
 import { SerializedMessage } from 'Libs/Message'
+import { SerializedNotification } from 'Libs/Notification'
+import { isMessage, isNotification } from 'Store/ducks/logs'
 import base from 'Styled/base'
-import { color } from 'Utils/styled'
+import { color, size } from 'Utils/styled'
 
 /**
- * Message measures cache.
+ * Log measures cache.
  */
-const messageMeasureCache = new CellMeasurerCache({
+const logMeasureCache = new CellMeasurerCache({
   defaultHeight: base.log.minHeight,
   fixedWidth: true,
   minHeight: base.log.minHeight,
@@ -23,7 +27,7 @@ const Wrapper = styled.div`
   background-color: ${color('history.background')};
   border: 1px solid ${color('history.border')};
   font-size: 0.82rem;
-  height: 200px;
+  height: ${size('history.height')};
   line-height: 1.4rem;
   margin-top: 20px;
   padding: 0;
@@ -39,20 +43,20 @@ export default class History extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { messages } = this.props
+    const { logs } = this.props
 
     return (
       <Wrapper>
-        <AutoSizer onResize={this.onResize}>
-          {({ height, width }) => (
+        <AutoSizer onResize={this.onResize} disableHeight>
+          {({ width }) => (
             <List
-              deferredMeasurementCache={messageMeasureCache}
-              height={height}
+              deferredMeasurementCache={logMeasureCache}
+              height={base.history.height - 2}
               overscanRowCount={10}
-              rowCount={messages.length}
-              rowHeight={messageMeasureCache.rowHeight}
-              rowRenderer={this.messageRenderer}
-              scrollToIndex={messages.length - 1}
+              rowCount={logs.length}
+              rowHeight={logMeasureCache.rowHeight}
+              rowRenderer={this.logRenderer}
+              scrollToIndex={logs.length - 1}
               width={width}
             />
           )}
@@ -65,21 +69,33 @@ export default class History extends React.Component<Props> {
    * Clears the measures cache when resize the window.
    */
   private onResize = () => {
-    messageMeasureCache.clearAll()
+    logMeasureCache.clearAll()
   }
 
   /**
-   * Render a message.
+   * Render a log.
    * @param  listRowProps - The props to add to the row being rendered.
    * @return Element to render.
    */
-  private messageRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
-    const { messages } = this.props
-    const message = messages[index]
+  private logRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
+    const { logs } = this.props
+    const log = logs[index]
+
+    let LogComponent: JSX.Element | null = null
+
+    if (isMessage(log)) {
+      LogComponent = <HistoryMessage style={style} onDoubleClick={this.onDoubleClick} message={log} />
+    } else if (isNotification(log)) {
+      LogComponent = <Notification style={style} notification={log} />
+    }
+
+    if (_.isNil(LogComponent)) {
+      return null
+    }
 
     return (
-      <CellMeasurer cache={messageMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-        <HistoryMessage style={style} onDoubleClick={this.onDoubleClick} message={message} />
+      <CellMeasurer cache={logMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
+        {LogComponent}
       </CellMeasurer>
     )
   }
@@ -103,5 +119,5 @@ export default class History extends React.Component<Props> {
 type Props = {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
-  messages: SerializedMessage[]
+  logs: Array<SerializedMessage | SerializedNotification>
 }

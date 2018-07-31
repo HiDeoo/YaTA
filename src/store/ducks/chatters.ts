@@ -34,22 +34,24 @@ export const initialState = {
 const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initialState, action) => {
   switch (action.type) {
     case Actions.ADD: {
-      const { messageId, chatter } = action.payload
+      const { chatter, logId } = action.payload
 
       if (_.isNil(_.get(state.byId, chatter.id))) {
         let { byId } = state
 
         const potentialUserId = _.get(state.byName, chatter.userName)
+        let potentialLogs: string[] = []
 
         // If the user is known as a potential chatter, remove the old entry.
         if (!_.isNil(potentialUserId)) {
           const { [potentialUserId]: potentialUser, ...byIdWithoutPotentialChatter } = byId
           byId = byIdWithoutPotentialChatter
+          potentialLogs = potentialUser.logs
         }
 
         return {
           ...state,
-          byId: { ...byId, [chatter.id]: { ...chatter, messages: [messageId] } },
+          byId: { ...byId, [chatter.id]: { ...chatter, logs: [...potentialLogs, logId] } },
           byName: { ...state.byName, [chatter.userName]: chatter.id },
         }
       }
@@ -58,20 +60,28 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
         ...state,
         byId: {
           ...state.byId,
-          [chatter.id]: { ...state.byId[chatter.id], messages: [...state.byId[chatter.id].messages, messageId] },
+          [chatter.id]: { ...state.byId[chatter.id], logs: [...state.byId[chatter.id].logs, logId] },
         },
       }
     }
     case Actions.ADD_POTENTIAL: {
-      const { chatter } = action.payload
+      const { chatter, logId } = action.payload
 
-      if (!_.isNil(_.get(state.byName, chatter.userName))) {
-        return state
+      const potentialUserId = _.get(state.byName, chatter.userName)
+
+      if (!_.isNil(potentialUserId)) {
+        return {
+          ...state,
+          byId: {
+            ...state.byId,
+            [potentialUserId]: { ...state.byId[potentialUserId], logs: [...state.byId[potentialUserId].logs, logId] },
+          },
+        }
       }
 
       return {
         ...state,
-        byId: { ...state.byId, [chatter.id]: { ...chatter, messages: [] } },
+        byId: { ...state.byId, [chatter.id]: { ...chatter, logs: [logId] } },
         byName: { ...state.byName, [chatter.userName]: chatter.id },
       }
     }
@@ -149,15 +159,15 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
 export default chattersReducer
 
 /**
- * Adds a chatter with a sent message id.
+ * Adds a chatter with a sent log id.
  * @param  chatter - The chatter to add.
- * @param  messageId - The id of the message which triggered the chatter to be added.
+ * @param  logId - The id of the log which triggered the chatter to be added.
  * @return The action.
  */
-export const addChatterWithMessage = (chatter: SerializedChatter, messageId: string) =>
+export const addChatter = (chatter: SerializedChatter, logId: string) =>
   createAction(Actions.ADD, {
     chatter,
-    messageId,
+    logId,
   })
 
 /**
@@ -207,21 +217,22 @@ export const markChatterAsUnbanned = (userName: string) =>
 export const clearChatters = () => createAction(Actions.CLEAR)
 
 /**
- * Adds a potential chatter.
+ * Adds a potential chatter with a sent log id.
  * @param  user - The potential chatter to add.
- * @param  messageId - The id of the message which triggered the chatter to be added.
+ * @param  logId - The id of the log which triggered the chatter to be added.
  * @return The action.
  */
-export const addPotentialChatter = (chatter: SerializedChatter) =>
+export const addPotentialChatter = (chatter: SerializedChatter, logId: string) =>
   createAction(Actions.ADD_POTENTIAL, {
     chatter,
+    logId,
   })
 
 /**
  * Chatters actions.
  */
 export type ChattersActions =
-  | ReturnType<typeof addChatterWithMessage>
+  | ReturnType<typeof addChatter>
   | ReturnType<typeof markChatterAsBlocked>
   | ReturnType<typeof markChatterAsUnblocked>
   | ReturnType<typeof clearChatters>
@@ -236,7 +247,7 @@ export type ChattersState = {
   /**
    * All chatters keyed by ids.
    */
-  byId: { [key: string]: SerializedChatter & { messages: string[] } }
+  byId: { [key: string]: SerializedChatter & { logs: string[] } }
 
   /**
    * All chatters keyed by names.

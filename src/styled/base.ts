@@ -57,6 +57,9 @@ export default {
     margin: 10,
     width: 350,
   },
+  history: {
+    height: 200,
+  },
   log: {
     border: {
       bottom: 2,

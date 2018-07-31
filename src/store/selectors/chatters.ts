@@ -33,7 +33,7 @@ export const getChatters = createSelector([getChattersState], (chatters) => _.ge
 export const getChattersMap = createSelector([getChattersState], (chatters) => _.get(chatters, 'byName'))
 
 /**
- * Creates the selector retuning a chatter messages ids.
+ * Creates the selector retuning a chatter logs ids.
  * @return The selector.
  */
-export const makeGetChatterMessages = () => createSelector([getChatterState], (chatter) => _.get(chatter, 'messages'))
+export const makeGetChatterLogs = () => createSelector([getChatterState], (chatter) => _.get(chatter, 'logs'))

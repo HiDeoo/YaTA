@@ -5,6 +5,7 @@
 - Add a tool to quickly create a [Straw Poll](https://www.strawpoll.me/) (can be disabled in the settings).
 - Improve chatter details dialog UI:
   - Rework details to be readable without the need to hover them or their associated icons.
+  - Notifications (sub, resub, subgift, host, raid, ritual) are now visible in a the history.
   - A ban reason can now be provided when banning a user from this screen.
   - Badges are now displayed in this dialog.
 - Actions can now be reordered.
@@ -16,6 +17,7 @@
 
 - Fix an issue with display names containing a space displayed as `\s` (turns out spaces are [allowed](https://discuss.dev.twitch.tv/t/irc-s-letter-in-the-end-of-display-name/2208/4) in display names when manually entered by a Twitch staff or for some users who used a Twitch bug).
 - Fix a line break issue when copying multiple messages.
+- To be more visible, when hosted, a notification is triggered instead of a notice.
 - Improve Github previews and add support for issues & pull requests too.
 - The home button can now be middle-clicked or `ctrl` / `cmd` clicked to open the homepage in a new tab / window.
 - Prevent loss of the current partially typed message if any when invoking the history by saving your current text as a draft which will be restored when needed ([#2](https://github.com/HiDeoo/YaTA/issues/2)).
