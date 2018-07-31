@@ -3,7 +3,7 @@ import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
-import HistoryMessage from 'Components/HistoryMessage'
+import HeadlessMessage from 'Components/HeadlessMessage'
 import Notification from 'Components/Notification'
 import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotification } from 'Libs/Notification'
@@ -84,7 +84,7 @@ export default class History extends React.Component<Props> {
     let LogComponent: JSX.Element | null = null
 
     if (isMessage(log)) {
-      LogComponent = <HistoryMessage style={style} onDoubleClick={this.onDoubleClick} message={log} />
+      LogComponent = <HeadlessMessage style={style} onDoubleClick={this.onDoubleClick} message={log} />
     } else if (isNotification(log)) {
       LogComponent = <Notification style={style} notification={log} />
     }

@@ -11,7 +11,7 @@ import Twitch, { RawChannel, RawStream } from 'Libs/Twitch'
 import { color, size } from 'Utils/styled'
 
 /**
- * Tet component.
+ * Wrapper component.
  */
 const Wrapper = styled.div`
   border-top: 1px solid ${color('follows.border')};

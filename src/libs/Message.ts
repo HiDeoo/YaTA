@@ -30,6 +30,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private mentionned: boolean = false
   private previews: Previews = {}
   private ignoreHighlight: boolean
+  private text: string
 
   /**
    * Creates and parses a new chat message instance.
@@ -52,6 +53,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate, this.parseOptions.theme)
     this.type = userstate['message-type']
+    this.text = message.toLowerCase()
 
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
 
@@ -86,6 +88,7 @@ export default class Message implements Serializable<SerializedMessage> {
       previews: this.previews,
       purged: this.purged,
       self: this.self,
+      text: this.text,
       time: this.time,
       type: this.type,
       user: this.user.serialize(),
@@ -398,6 +401,7 @@ export type SerializedMessage = {
   mentionned: boolean
   message: string
   purged: boolean
+  text: string
   time: string
   previews: Previews
 }

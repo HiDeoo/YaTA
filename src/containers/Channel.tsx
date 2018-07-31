@@ -24,6 +24,7 @@ import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
 import Chat, { ChatClient } from 'Containers/Chat'
 import ChatterDetails from 'Containers/ChatterDetails'
+import Search from 'Containers/Search'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
@@ -90,6 +91,7 @@ const initialState = {
   inputValue: '',
   showChatters: false,
   showPollEditor: false,
+  showSearch: false,
   viewerCount: null as number | null,
 }
 type State = Readonly<typeof initialState>
@@ -118,6 +120,7 @@ class Channel extends React.Component<Props, State> {
     this.setHeaderComponents()
 
     window.addEventListener('focus', this.onFocusWindow)
+    window.addEventListener('keydown', this.onKeyDown)
   }
 
   /**
@@ -165,6 +168,7 @@ class Channel extends React.Component<Props, State> {
     this.props.setHeaderRightComponent(null)
 
     window.removeEventListener('focus', this.onFocusWindow)
+    window.removeEventListener('keydown', this.onKeyDown)
 
     if (this.props.showViewerCount) {
       this.stopMonitoringViewerCount()
@@ -176,7 +180,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { focusedChatter, showChatters, showPollEditor } = this.state
+    const { focusedChatter, showChatters, showPollEditor, showSearch } = this.state
     const {
       channel,
       chatters,
@@ -197,6 +201,13 @@ class Channel extends React.Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
+        <Search
+          copyMessageToClipboard={this.copyMessageToClipboard}
+          copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          disableDialogAnimations={disableDialogAnimations}
+          toggle={this.toggleSearch}
+          visible={showSearch}
+        />
         <PollEditor
           visible={showPollEditor}
           toggle={this.togglePollEditor}
@@ -291,6 +302,9 @@ class Channel extends React.Component<Props, State> {
         )}
         {!_.isNil(roomState) && (
           <>
+            <HeaderTooltip content="Search">
+              <Button onClick={this.toggleSearch} icon="search" minimal />
+            </HeaderTooltip>
             <HeaderTooltip content="Add Marker">
               <Button onClick={this.props.addMarker} icon="bookmark" minimal />
             </HeaderTooltip>
@@ -358,6 +372,18 @@ class Channel extends React.Component<Props, State> {
   private onFocusWindow = () => {
     if (this.props.autoFocusInput && !_.isNil(this.input.current)) {
       this.input.current.focus()
+    }
+  }
+
+  /**
+   * Triggered when a key is pressed down.
+   * @param event - The associated event.
+   */
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (event.code === 'KeyF' && event.altKey) {
+      event.preventDefault()
+
+      this.toggleSearch()
     }
   }
 
@@ -451,6 +477,13 @@ class Channel extends React.Component<Props, State> {
    */
   private togglePollEditor = () => {
     this.setState(({ showPollEditor }) => ({ showPollEditor: !showPollEditor }))
+  }
+
+  /**
+   * Toggles the search.
+   */
+  private toggleSearch = () => {
+    this.setState(({ showSearch }) => ({ showSearch: !showSearch }))
   }
 
   /**
