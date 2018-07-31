@@ -39,7 +39,10 @@ export enum Actions {
  * Initial state.
  */
 export const initialState = {
-  actions: {},
+  actions: {
+    allIds: [],
+    byId: {},
+  },
   autoConnectInDev: true,
   autoFocusInput: true,
   copyMessageOnDoubleClick: true,
@@ -155,17 +158,24 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
 
       return {
         ...state,
-        actions: { ...state.actions, [newAction.id]: newAction },
+        actions: {
+          allIds: [...state.actions.allIds, newAction.id],
+          byId: { ...state.actions.byId, [newAction.id]: newAction },
+        },
       }
     }
     case Actions.REMOVE_ACTION: {
       const { id } = action.payload
 
-      const { [id]: actionToRemove, ...otherActions } = state.actions
+      const { [id]: actionToRemove, ...otherActions } = state.actions.byId
+      const index = _.indexOf(state.actions.allIds, id)
 
       return {
         ...state,
-        actions: otherActions,
+        actions: {
+          allIds: [...state.actions.allIds.slice(0, index), ...state.actions.allIds.slice(index + 1)],
+          byId: otherActions,
+        },
       }
     }
     case Actions.UPDATE_ACTION: {
@@ -173,7 +183,10 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
 
       return {
         ...state,
-        actions: { ...state.actions, [id]: { ...state.actions[id], ...updatedAction } },
+        actions: {
+          ...state.actions,
+          byId: { ...state.actions.byId, [id]: { ...state.actions.byId[id], ...updatedAction } },
+        },
       }
     }
     case Actions.TOGGLE_HIDE_WHISPERS: {
@@ -474,7 +487,7 @@ export type SettingsState = {
   /**
    * Highlights.
    */
-  highlights: Highlights
+  highlights: SerializedHighlights
 
   /**
    * Users ignored for highlights & mentions.
@@ -484,7 +497,17 @@ export type SettingsState = {
   /**
    * Actions.
    */
-  actions: SerializedActions
+  actions: {
+    /**
+     * All actions keyed by ids.
+     */
+    byId: SerializedActions
+
+    /**
+     * All actions ordered by ids.
+     */
+    allIds: string[]
+  }
 
   /**
    * Hides whispers (received & sent).
@@ -525,7 +548,7 @@ export type SettingsState = {
 /**
  * Highlights.
  */
-export type Highlights = { [key in SerializedHighlight['id']]: SerializedHighlight }
+export type SerializedHighlights = { [key in SerializedHighlight['id']]: SerializedHighlight }
 
 /**
  * Actions.

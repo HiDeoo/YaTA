@@ -4,7 +4,7 @@ import Emoticons from 'Constants/emoticons'
 import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'Libs/EmotesProvider'
 import { PreviewProvider } from 'Libs/PreviewProvider'
 import { RawBadges, RawCheermote } from 'Libs/Twitch'
-import { Highlights } from 'Store/ducks/settings'
+import { SerializedHighlights } from 'Store/ducks/settings'
 
 import PreviewGithub from 'Libs/PreviewGithub'
 import PreviewStrawPoll from 'Libs/PreviewStrawPoll'
@@ -33,7 +33,7 @@ export default class Resources {
   private bots: Set<string> = new Set(['moobot'])
   private cheermotes: RawCheermote[] = []
   private emotesProviders: Map<EmoteProviderPrefix, EmotesProvider<Emote>> = new Map()
-  private highlights: Highlights = {}
+  private highlights: SerializedHighlights = {}
   private highlightsIgnoredUsers: string[] = []
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
@@ -118,7 +118,7 @@ export default class Resources {
    * @param highlights - The highlights.
    * @param ignoredUsers - The highlights ignored users.
    */
-  public setHighlights(highlights: Highlights, ignoredUsers: string[]) {
+  public setHighlights(highlights: SerializedHighlights, ignoredUsers: string[]) {
     this.highlights = highlights
     this.highlightsIgnoredUsers = ignoredUsers
   }

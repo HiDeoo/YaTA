@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as shortid from 'shortid'
 
-import { Highlights } from 'Store/ducks/settings'
+import { SerializedHighlights } from 'Store/ducks/settings'
 import { Serializable } from 'Utils/typescript'
 
 /**
@@ -19,7 +19,7 @@ export default class Highlight implements Serializable<SerializedHighlight> {
    * @param  highlights - The existing highlights.
    * @return `true` if the highlight is valid.
    */
-  public static validate(pattern: string, highlights: Highlights) {
+  public static validate(pattern: string, highlights: SerializedHighlights) {
     return PatternRegExp.test(pattern) && !_.includes(_.map(highlights, 'pattern'), pattern.toLowerCase())
   }
 

@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
 import { ApplicationState } from 'Store/reducers'
@@ -8,6 +9,20 @@ import { ApplicationState } from 'Store/reducers'
  * @return The settings state.
  */
 const getSettingsState = (state: ApplicationState) => state.settings
+
+/**
+ * Returns all the actions organized by ids.
+ * @param  state - The Redux state.
+ * @return The logs.
+ */
+const getActionsById = (state: ApplicationState) => state.settings.actions.byId
+
+/**
+ * Returns all actions ids sorted by order.
+ * @param  state - The Redux state.
+ * @return The logs ids.
+ */
+const getActionsAllIds = (state: ApplicationState) => state.settings.actions.allIds
 
 /**
  * Returns the theme.
@@ -65,11 +80,13 @@ export const getHighlightsIgnoredUsers = createSelector(
 )
 
 /**
- * Returns the actions.
+ * Returns the actions in order.
  * @param  state - The Redux state.
- * @return The actions.
+ * @return The actions in order.
  */
-export const getActions = createSelector([getSettingsState], (settings) => settings.actions)
+export const getActions = createSelector([getActionsAllIds, getActionsById], (allIds, byId) => {
+  return _.map(allIds, (id) => byId[id])
+})
 
 /**
  * Returns the 'Hide whispers' setting.

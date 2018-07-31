@@ -20,7 +20,7 @@ class ActionMenuItems extends React.Component<Props> {
   public render() {
     const { actionHandler, actions, chatter, endDivider, startDivider, wrap } = this.props
 
-    if (_.size(actions) === 0) {
+    if (actions.length === 0) {
       if (wrap) {
         return (
           <Menu>

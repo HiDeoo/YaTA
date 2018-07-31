@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 
 import { HighlightColors } from 'Libs/Highlight'
-import { initialState } from 'Store/ducks/settings'
+import { initialState, SerializedActions } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 
 /**
@@ -108,6 +108,19 @@ export default {
     return {
       ...state,
       settings: { ...state.settings, enablePollEditor: initialState.enablePollEditor },
+    }
+  },
+  15: (state: ApplicationState): ApplicationState => {
+    if (!_.isNil(state.settings.actions.allIds) && !_.isNil(state.settings.actions.byId)) {
+      return state
+    }
+
+    const oldActions = (_.get(state.settings, 'actions') as any) as SerializedActions
+    const allIds = _.map(oldActions, (action) => action.id)
+
+    return {
+      ...state,
+      settings: { ...state.settings, actions: { byId: oldActions, allIds } },
     }
   },
 }

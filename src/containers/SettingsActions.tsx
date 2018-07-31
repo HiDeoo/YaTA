@@ -120,7 +120,7 @@ class SettingsActions extends React.Component<Props, State> {
           {this.renderButtons()}
         </Inline>
         <Actions>
-          {_.size(actions) > 0 ? (
+          {actions.length > 0 ? (
             _.map(actions, (action) => (
               <ActionRow
                 key={action.id}
@@ -217,7 +217,7 @@ class SettingsActions extends React.Component<Props, State> {
    * @param id - The id of the action to edit.
    */
   private edit = (id: string) => {
-    const action = this.props.actions[id]
+    const action = _.find(this.props.actions, ['id', id])
 
     if (!_.isNil(action)) {
       const recipient = _.get(action, 'recipient', '') as string
