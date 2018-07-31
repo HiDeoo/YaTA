@@ -8,6 +8,7 @@
   - Notifications (sub, resub, subgift, host, raid, ritual) are now visible in a the history.
   - A ban reason can now be provided when banning a user from this screen.
   - Badges are now displayed in this dialog.
+- Add chat markers which can be useful to mark a point in time in chat before going away temporarily, to spot an important discussion, etc.
 - Actions can now be reordered.
 - Youtube video previews now indicate the video duration.
 - Add a button & context menu item to unban previously banned users.

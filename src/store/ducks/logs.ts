@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 import { Reducer } from 'redux'
+import * as shortid from 'shortid'
 
 import Logs from 'Constants/logs'
 import LogType from 'Constants/logType'
@@ -7,6 +8,7 @@ import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotice } from 'Libs/Notice'
 import { SerializedNotification } from 'Libs/Notification'
 import { createAction } from 'Utils/redux'
+import { padTimeUnit } from 'Utils/time'
 
 /**
  * Determines if logs should be rotated.
@@ -52,6 +54,7 @@ export enum Actions {
   PURGE = 'logs/PURGE',
   CLEAR = 'logs/CLEAR',
   PAUSE_AUTO_SCROLL = 'logs/PAUSE_AUTO_SCROLL',
+  ADD_MARKER = 'logs/ADD_MARKER',
 }
 
 /**
@@ -98,6 +101,17 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
       )
 
       return { ...state, byId: { ...state.byId, ...updatedMessages } }
+    }
+    case Actions.ADD_MARKER: {
+      const id = shortid.generate()
+      const date = new Date()
+      const time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`
+
+      return {
+        ...state,
+        allIds: [...state.allIds, id],
+        byId: { ...state.byId, [id]: { id, time, type: LogType.Marker } },
+      }
     }
     case Actions.CLEAR: {
       return initialState
@@ -153,6 +167,12 @@ export const pauseAutoScroll = (pause: boolean) =>
   })
 
 /**
+ * Add a marker.
+ * @return The action.
+ */
+export const addMarker = () => createAction(Actions.ADD_MARKER)
+
+/**
  * Logs actions.
  */
 export type LogsActions =
@@ -160,6 +180,7 @@ export type LogsActions =
   | ReturnType<typeof purgeLogs>
   | ReturnType<typeof clearLogs>
   | ReturnType<typeof pauseAutoScroll>
+  | ReturnType<typeof addMarker>
 
 /**
  * Logs state.
@@ -184,7 +205,16 @@ export type LogsState = {
 /**
  * Log possible types.
  */
-export type Log = SerializedMessage | SerializedNotice | SerializedNotification
+export type Log = SerializedMessage | SerializedNotice | SerializedNotification | SerializedMarker
+
+/**
+ * Marker.
+ */
+export type SerializedMarker = {
+  time: string
+  id: string
+  type: LogType.Marker
+}
 
 /**
  * Determines if a log entry is a message.
@@ -220,4 +250,13 @@ export function isNotification(log: Log): log is SerializedNotification {
  */
 export function isWhisper(log: Log): log is SerializedMessage {
   return log.type === LogType.Whisper
+}
+
+/**
+ * Determines if a log entry is a marker.
+ * @param  log - The log entry to validate.
+ * @return `true` if the log is a marker.
+ */
+export function isMarker(log: Log): log is SerializedMarker {
+  return log.type === LogType.Marker
 }

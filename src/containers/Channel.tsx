@@ -31,7 +31,7 @@ import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
-import { pauseAutoScroll } from 'Store/ducks/logs'
+import { addMarker, pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
   getChannel,
@@ -290,9 +290,14 @@ class Channel extends React.Component<Props, State> {
           </HeaderTooltip>
         )}
         {!_.isNil(roomState) && (
-          <HeaderTooltip content="Create Clip">
-            <Button onClick={this.clip} icon="film" minimal />
-          </HeaderTooltip>
+          <>
+            <HeaderTooltip content="Add Marker">
+              <Button onClick={this.props.addMarker} icon="bookmark" minimal />
+            </HeaderTooltip>
+            <HeaderTooltip content="Create Clip">
+              <Button onClick={this.clip} icon="film" minimal />
+            </HeaderTooltip>
+          </>
         )}
         <Popover>
           <HeaderTooltip content="Channel Details">
@@ -954,7 +959,15 @@ const enhance = compose<Props, {}>(
       showViewerCount: getShowViewerCount(state),
       status: getStatus(state),
     }),
-    { addToHistory, markChatterAsBlocked, markChatterAsUnblocked, pauseAutoScroll, setChannel, updateHistoryIndex }
+    {
+      addMarker,
+      addToHistory,
+      markChatterAsBlocked,
+      markChatterAsUnblocked,
+      pauseAutoScroll,
+      setChannel,
+      updateHistoryIndex,
+    }
   ),
   withHeader
 )
@@ -990,6 +1003,7 @@ type StateProps = {
  * React Props.
  */
 type DispatchProps = {
+  addMarker: typeof addMarker
   addToHistory: typeof addToHistory
   markChatterAsBlocked: typeof markChatterAsBlocked
   markChatterAsUnblocked: typeof markChatterAsUnblocked

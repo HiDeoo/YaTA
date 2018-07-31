@@ -5,6 +5,7 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } fro
 import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
+import Marker from 'Components/Marker'
 import Message from 'Components/Message'
 import Notice from 'Components/Notice'
 import Notification from 'Components/Notification'
@@ -13,7 +14,7 @@ import { ActionHandler } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { ChattersState } from 'Store/ducks/chatters'
-import { isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
+import { isMarker, isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
 import base from 'Styled/base'
 import { ifProp, size } from 'Utils/styled'
 
@@ -212,6 +213,8 @@ export default class Logs extends React.Component<Props> {
           copyMessageToClipboard={copyMessageToClipboard}
         />
       )
+    } else if (isMarker(log)) {
+      LogComponent = <Marker style={style} marker={log} />
     }
 
     if (_.isNil(LogComponent)) {
