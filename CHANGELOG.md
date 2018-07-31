@@ -1,9 +1,9 @@
-# Unreleased
+# 0.6.0
 
 ### 🚀 New Feature
 
 - Add a tool to quickly create a [Straw Poll](https://www.strawpoll.me/) (can be disabled in the settings).
-- Search has landed! 🛬 Anything except whispers can be searched from message content or notifications to usernames.
+- Search has landed! 🛬 Anything except whispers can be searched from message content or notifications to usernames. The search panel can also be invoked using the `Alt` + `f` shortcut.
 - Improve chatter details dialog UI:
   - Rework details to be readable without the need to hover them or their associated icons.
   - Notifications (sub, resub, subgift, host, raid, ritual) are now visible in a the history.
