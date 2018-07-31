@@ -11,6 +11,7 @@ import { Previews } from 'Libs/PreviewProvider'
 import Resources from 'Libs/Resources'
 import { CheermoteImageBackground, RawCheermoteImage } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
+import { padTimeUnit } from 'Utils/time'
 import { Serializable } from 'Utils/typescript'
 
 /**
@@ -55,7 +56,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
 
     const date = new Date(parseInt(this.date, 10))
-    this.time = `${_.padStart(date.getHours().toString(), 2, '0')}:${_.padStart(date.getMinutes().toString(), 2, '0')}`
+    this.time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`
 
     this.badges = this.parseBadges(userstate)
     this.message = this.parseMessage(message, userstate, currentUsername)

@@ -3,6 +3,7 @@ import * as pluralize from 'pluralize'
 
 import RequestMethod from 'Constants/requestMethod'
 import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
+import { durationToString } from 'Utils/time'
 
 /**
  * Youtube base API URL.
@@ -12,7 +13,7 @@ const BaseUrl = 'https://www.googleapis.com/youtube/v3'
 /**
  * RegExp used to identify a video link.
  */
-const VideoRegExp = /https:\/\/(?:www\.)?youtu(?:\.be\/|be\.com\/watch\?v=)(\w+)/g
+const VideoRegExp = /https:\/\/(?:www\.)?youtu(?:\.be\/|be\.com\/watch\?v=)([\w-]+)/g
 
 /**
  * Youtube preview provider.
@@ -53,7 +54,7 @@ const PreviewYoutube: PreviewProvider = class {
     const url = new URL(`${BaseUrl}/videos`)
     url.searchParams.set('key', process.env.REACT_APP_YOUTUBE_API_KEY)
     url.searchParams.set('id', preview.id)
-    url.searchParams.set('part', 'snippet,statistics')
+    url.searchParams.set('part', 'snippet,statistics,contentDetails')
 
     const request = new Request(url.toString(), { method: RequestMethod.Get })
     const response = await fetch(request)
@@ -64,9 +65,15 @@ const PreviewYoutube: PreviewProvider = class {
       throw new Error('No Youtube video found.')
     }
 
+    const duration = durationToString(video.contentDetails.duration)
+    const durationStr = !_.isNil(duration) ? ` - ${duration}` : ''
+
     const meta = `Recorded by ${video.snippet.channelTitle} on ${new Date(
       video.snippet.publishedAt
-    ).toLocaleDateString()} (${video.statistics.viewCount} ${pluralize('view', video.statistics.viewCount)})`
+    ).toLocaleDateString()}${durationStr} (${video.statistics.viewCount} ${pluralize(
+      'view',
+      video.statistics.viewCount
+    )})`
 
     return {
       ...preview,
@@ -94,6 +101,14 @@ type Video = {
  * Youtube video details.
  */
 type VideoDetails = {
+  contentDetails: {
+    caption: boolean
+    definition: string
+    dimensions: string
+    duration: string
+    licensedContent: boolean
+    projection: string
+  }
   etag: string
   id: string
   kind: string
