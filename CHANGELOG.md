@@ -13,6 +13,7 @@
 
 ### 🐛 Bug Fix
 
+- Fix an issue with display names containing a space displayed as `\s` (turns out spaces are [allowed](https://discuss.dev.twitch.tv/t/irc-s-letter-in-the-end-of-display-name/2208/4) in display names when manually entered by a Twitch staff or for some users who used a Twitch bug).
 - Fix a line break issue when copying multiple messages.
 - Improve Github previews and add support for issues & pull requests too.
 - The home button can now be middle-clicked or `ctrl` / `cmd` clicked to open the homepage in a new tab / window.

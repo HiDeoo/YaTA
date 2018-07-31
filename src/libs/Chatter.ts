@@ -56,7 +56,7 @@ export default class Chatter implements Serializable<SerializedChatter> {
    * @param theme - The current theme.
    */
   constructor(userstate: UserState, theme: Theme) {
-    this.displayName = userstate['display-name']
+    this.displayName = userstate['display-name'].replace(/\\s/g, ' ').trim()
     this.id = userstate['user-id']
     this.userName = userstate.username
     this.color = this.sanitizeColor(userstate.color, theme)
