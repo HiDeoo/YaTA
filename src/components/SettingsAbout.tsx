@@ -87,6 +87,12 @@ const SettingsAbout: React.SFC = () => (
           △ZEIT
         </a>
       </p>
+      <p>
+        Notification sound by{' '}
+        <a target="_blank" href="https://freesound.org/people/rhodesmas/sounds/342759/">
+          rhodesmas
+        </a>
+      </p>
     </Content>
   </SettingsPanel>
 )
