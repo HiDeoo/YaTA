@@ -2,6 +2,10 @@
 
 ### 🚀 New Feature
 
+- Upload images directly from the chat! 📸 Just drag & drop an image in the chat window.
+  - Images are uploaded to Imgur.
+  - Uploads are anonymous even if connected to Imgur in the same browser.
+  - When done, the url is pasted in the chat input ready to be shared.
 - Rework header UI to be less of a dumping ground for new features.
 - Search now happens as you type instead of requiring to press `Enter`.
 - Add support for Youtube channels preview.

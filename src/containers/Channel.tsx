@@ -11,6 +11,7 @@ import styled from 'styled-components'
 
 import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
+import DropOverlay from 'Components/DropOverlay'
 import FlexLayout from 'Components/FlexLayout'
 import { withHeader, WithHeaderProps } from 'Components/Header'
 import HeaderChannelState from 'Components/HeaderChannelState'
@@ -88,6 +89,7 @@ const WhisperReplyRegExp = /^\/r /
 const initialState = {
   focusedChatter: null as SerializedChatter | null,
   inputValue: '',
+  isUploadingFile: false,
   showChatters: false,
   showPollEditor: false,
   showSearch: false,
@@ -177,7 +179,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { focusedChatter, showChatters, showPollEditor, showSearch } = this.state
+    const { focusedChatter, isUploadingFile, showChatters, showPollEditor, showSearch } = this.state
     const {
       channel,
       chatters,
@@ -198,6 +200,12 @@ class Channel extends React.Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
+        <DropOverlay
+          onSuccess={this.onUploadSuccess}
+          onInvalid={this.onUploadInvalid}
+          onError={this.onUploadError}
+          onStart={this.onUploadStart}
+        />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -236,14 +244,15 @@ class Channel extends React.Component<Props, State> {
           logs={logs}
         />
         <Input
-          ref={this.input}
           disabled={this.props.status !== Status.Connected}
-          value={this.state.inputValue}
-          onChange={this.onChangeInputValue}
-          onSubmit={this.sendMessage}
-          getCompletions={this.getCompletions}
-          getHistory={this.getHistory}
           username={_.get(loginDetails, 'username')}
+          getCompletions={this.getCompletions}
+          onChange={this.onChangeInputValue}
+          isUploadingFile={isUploadingFile}
+          value={this.state.inputValue}
+          getHistory={this.getHistory}
+          onSubmit={this.sendMessage}
+          ref={this.input}
         />
         <ChatterDetails
           copyMessageToClipboard={this.copyMessageToClipboard}
@@ -359,6 +368,60 @@ class Channel extends React.Component<Props, State> {
     }
 
     return ' '
+  }
+
+  /**
+   * Triggered when uploading a file fails.
+   * @param error - The error.
+   */
+  private onUploadError = (_error: Error) => {
+    Toaster.show({
+      icon: 'error',
+      intent: Intent.DANGER,
+      message: 'Something went wrong! Please try again.',
+    })
+
+    this.setState(() => ({ isUploadingFile: false }))
+  }
+
+  /**
+   * Triggered when trying to upload an invalid fails.
+   */
+  private onUploadInvalid = () => {
+    Toaster.show({
+      icon: 'error',
+      intent: Intent.DANGER,
+      message: 'Only images can be uploaded!',
+    })
+
+    this.setState(() => ({ isUploadingFile: false }))
+  }
+
+  /**
+   * Triggered when starting to upload a file.
+   */
+  private onUploadStart = () => {
+    this.setState(() => ({ isUploadingFile: true }))
+  }
+
+  /**
+   * Triggered after a successful upload.
+   * @param url - The URL of the uploaded file.
+   */
+  private onUploadSuccess = (url: string) => {
+    this.setState(
+      ({ inputValue }) => {
+        const lastCharacter = inputValue.slice(-1)
+        const newInputValue = `${inputValue}${lastCharacter === ' ' || inputValue.length === 0 ? '' : ' '}${url} `
+
+        return { inputValue: newInputValue, isUploadingFile: false }
+      },
+      () => {
+        if (!_.isNil(this.input.current)) {
+          this.input.current.focus()
+        }
+      }
+    )
   }
 
   /**

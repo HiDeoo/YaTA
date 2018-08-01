@@ -62,13 +62,13 @@ export default class StrawPoll {
    * Fetches an URL.
    * @param  endpoint - The endpoint to fetch.
    * @param  [method] - The request method.
+   * @param  [body] - The request body.
    * @return The response.
    */
   private static async fetch(endpoint: string, method = RequestMethod.Get, body?: object) {
     const url = StrawPoll.getUrl(endpoint)
 
-    const headers = new Headers()
-    const init: RequestInit = { headers, method }
+    const init: RequestInit = { method }
 
     if (!_.isNil(body)) {
       init.body = JSON.stringify(body)

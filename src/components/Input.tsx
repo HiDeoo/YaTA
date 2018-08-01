@@ -1,4 +1,4 @@
-import { Classes, Intent, IToastOptions, Position, Toast, Toaster } from '@blueprintjs/core'
+import { Classes, Intent, IToastOptions, Position, ProgressBar, Toast, Toaster } from '@blueprintjs/core'
 import * as classnames from 'classnames'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -51,6 +51,18 @@ const TextArea = styled.textarea`
 
   &::-webkit-scrollbar {
     display: none;
+  }
+`
+
+/**
+ * UploadProgressBar component.
+ */
+const UploadProgressBar = styled(ProgressBar)`
+  &.${Classes.PROGRESS_BAR} {
+    bottom: 70px;
+    left: -4px;
+    position: fixed;
+    width: 200vw;
   }
 `
 
@@ -161,7 +173,7 @@ export default class Input extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { disabled, value } = this.props
+    const { disabled, isUploadingFile, value } = this.props
     const { intent, toasts } = this.state
 
     const classes = classnames(Classes.INPUT, Classes.FILL, Classes.LARGE, intent)
@@ -173,10 +185,11 @@ export default class Input extends React.Component<Props, State> {
             <InputToast key={index} {...toast} />
           ))}
         </Toaster>
+        {isUploadingFile && <UploadProgressBar intent={Intent.PRIMARY} />}
         <TextArea
           dir="auto"
           value={value}
-          disabled={disabled}
+          disabled={disabled || isUploadingFile}
           className={classes}
           innerRef={this.input}
           onBlur={this.onBlurInput}
@@ -377,6 +390,7 @@ type Props = {
   disabled: boolean
   getCompletions: (word: string, excludeEmotes: boolean) => string[]
   getHistory: (previous?: boolean) => { entry: string | null; atStart: boolean }
+  isUploadingFile: boolean
   onChange: (value: string) => void
   onSubmit: () => void
   username?: string
