@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Rework header UI to be less of a dumping ground for new features.
+- Search now happens as you type instead of requiring to press `Enter`.
 - Add support for Youtube channels preview.
 
 # 0.6.0

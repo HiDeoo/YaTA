@@ -12,7 +12,6 @@ import HeadlessMessage from 'Components/HeadlessMessage'
 import NonIdealState from 'Components/NonIdealState'
 import Notification from 'Components/Notification'
 import Spinner from 'Components/Spinner'
-import Key from 'Constants/key'
 import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotification } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
@@ -55,14 +54,14 @@ const Refresh = styled(Button)`
 
   &.${Classes.BUTTON}.${Classes.MINIMAL}, .${Classes.DARK} &.${Classes.BUTTON}.${Classes.MINIMAL} {
     & > svg {
-      color: ${Colors.GRAY2};
+      color: ${Colors.LIGHT_GRAY1};
     }
 
     &:hover {
       background: inherit;
 
       & > svg {
-        color: ${Colors.LIGHT_GRAY1};
+        color: ${Colors.GRAY4};
       }
     }
   }
@@ -73,7 +72,7 @@ const Refresh = styled(Button)`
  */
 const initialState = {
   filter: '',
-  results: null as ReturnType<typeof getLogs> | null,
+  results: [] as ReturnType<typeof getLogs>,
   searching: false,
 }
 type State = Readonly<typeof initialState>
@@ -142,13 +141,18 @@ class Search extends React.Component<Props, State> {
               <SearchInput
                 placeholder="Type your query & press Enter to search…"
                 inputRef={this.setSearchElementRef}
-                onKeyDown={this.onKeyDownSearch}
                 onChange={this.onChangeFilter}
                 value={filter}
                 type="search"
               />
             </FlexContent>
-            <Refresh icon="refresh" minimal title="Search again…" onClick={this.startSearch} />
+            <Refresh
+              disabled={filter.length === 0}
+              onClick={this.computeResults}
+              title="Search again…"
+              icon="refresh"
+              minimal
+            />
           </FlexLayout>
           <Wrapper>{this.renderResults()}</Wrapper>
         </Content>
@@ -167,12 +171,8 @@ class Search extends React.Component<Props, State> {
       return <Spinner large />
     }
 
-    if (filter.length === 0 && _.isNil(results)) {
+    if (filter.length === 0) {
       return <NonIdealState details="Start typing your query in the field above." title="Nothing yet!" />
-    }
-
-    if (_.isNil(results)) {
-      return <NonIdealState details="Press Enter to start your search." title="Nothing yet!" />
     }
 
     if (results.length === 0) {
@@ -204,7 +204,7 @@ class Search extends React.Component<Props, State> {
   private resultRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
     const { results } = this.state
 
-    if (_.isNil(results)) {
+    if (results.length === 0) {
       return null
     }
 
@@ -239,39 +239,16 @@ class Search extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a key is pressed in the filter input.
-   * @param event - The associated event.
-   */
-  private onKeyDownSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === Key.Enter) {
-      event.preventDefault()
-
-      this.startSearch()
-    }
-  }
-
-  /**
    * Triggered when the filter input is modified.
    * @param event - The associated event.
    */
   private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const filter = event.currentTarget.value
 
-    this.setState(() => ({ filter }))
-  }
-
-  /**
-   * Starts the search.
-   */
-  private startSearch = () => {
     this.setState(
-      () => ({ results: null, searching: true }),
+      () => ({ filter, results: [], searching: true }),
       () => {
-        if (this.state.filter.length > 0) {
-          this.computeResults()
-        } else {
-          this.setState(() => ({ searching: false }))
-        }
+        this.computeResults()
       }
     )
   }
@@ -279,7 +256,13 @@ class Search extends React.Component<Props, State> {
   /**
    * Computes search results.
    */
-  private computeResults() {
+  private computeResults = () => {
+    if (this.state.filter.length === 0) {
+      this.setState(() => ({ searching: false }))
+
+      return
+    }
+
     const { logs } = this.props
 
     const filters = _.map(this.state.filter.split(' '), (filter) => filter.toLowerCase().trim())
