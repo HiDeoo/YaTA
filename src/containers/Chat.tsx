@@ -48,6 +48,7 @@ import {
   getHighlightAllMentions,
   getHighlights,
   getHighlightsIgnoredUsers,
+  getHostThreshold,
   getTheme,
 } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
@@ -316,7 +317,7 @@ export class ChatClient extends React.Component<Props, State> {
    * @param autohost - `true` if the host is an auto host.
    */
   private onHosted = (channel: string, username: string, viewers: number, autohost: boolean) => {
-    if (Twitch.sanitizeChannel(channel) !== this.props.channel) {
+    if (Twitch.sanitizeChannel(channel) !== this.props.channel || viewers < this.props.hostThreshold) {
       return
     }
 
@@ -856,6 +857,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     highlightAllMentions: getHighlightAllMentions(state),
     highlights: getHighlights(state),
     highlightsIgnoredUsers: getHighlightsIgnoredUsers(state),
+    hostThreshold: getHostThreshold(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
     theme: getTheme(state),
@@ -891,6 +893,7 @@ type StateProps = {
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   highlights: ReturnType<typeof getHighlights>
   highlightsIgnoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
+  hostThreshold: ReturnType<typeof getHostThreshold>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
   theme: ReturnType<typeof getTheme>

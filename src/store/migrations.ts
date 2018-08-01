@@ -143,4 +143,10 @@ export default {
       },
     }
   },
+  18: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, hostThreshold: initialState.hostThreshold },
+    }
+  },
 }

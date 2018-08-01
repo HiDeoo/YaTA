@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
 import SettingsPanelSection from 'Components/SettingsPanelSection'
+import Slider from 'Components/Slider'
 import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
 import {
@@ -17,6 +18,7 @@ import {
   toggleShowContextMenu,
   toggleShowViewerCount,
   toggleTheme,
+  updateHostThreshold,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import {
@@ -25,6 +27,7 @@ import {
   getDisableDialogAnimations,
   getHideWhispers,
   getHighlightAllMentions,
+  getHostThreshold,
   getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
@@ -70,6 +73,7 @@ class SettingsGeneral extends React.Component<Props> {
       disableDialogAnimations,
       hideWhispers,
       highlightAllMentions,
+      hostThreshold,
       prioritizeUsernames,
       showContextMenu,
       showViewerCount,
@@ -124,6 +128,17 @@ class SettingsGeneral extends React.Component<Props> {
             checked={disableDialogAnimations}
             label="Disable dialog animations"
             onChange={this.props.toggleDisableDialogAnimations}
+          />
+        </SettingsPanelSection>
+        <SettingsPanelSection title="Notifications">
+          <Slider
+            onChange={this.props.updateHostThreshold}
+            description="Hosts & auto-hosts with less viewers than the threshold will be ignored."
+            label="Host threshold"
+            value={hostThreshold}
+            labelStepSize={10}
+            max={50}
+            min={0}
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="Streamer mode">
@@ -200,6 +215,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     disableDialogAnimations: getDisableDialogAnimations(state),
     hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
+    hostThreshold: getHostThreshold(state),
     prioritizeUsernames: getPrioritizeUsernames(state),
     showContextMenu: getShowContextMenu(state),
     showViewerCount: getShowViewerCount(state),
@@ -215,6 +231,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleShowContextMenu,
     toggleShowViewerCount,
     toggleTheme,
+    updateHostThreshold,
   }
 )(SettingsGeneral)
 
@@ -227,6 +244,7 @@ type StateProps = {
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
+  hostThreshold: ReturnType<typeof getHostThreshold>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   showViewerCount: ReturnType<typeof getShowViewerCount>
@@ -246,6 +264,7 @@ type DispatchProps = {
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleShowViewerCount: typeof toggleShowViewerCount
   toggleTheme: typeof toggleTheme
+  updateHostThreshold: typeof updateHostThreshold
 }
 
 /**

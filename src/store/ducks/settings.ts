@@ -32,6 +32,7 @@ export enum Actions {
   TOGGLE_DISABLE_DIALOG_ANIMATIONS = 'settings/TOGGLE_DISABLE_DIALOG_ANIMATIONS',
   TOGGLE_HIGHLIGHT_ALL_MENTIONS = 'settings/TOGGLE_HIGHLIGHT_ALL_MENTIONS',
   TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
+  UPDATE_HOST_THRESHOLD = 'settings/UPDATE_HOST_THRESHOLD',
 }
 
 /**
@@ -49,6 +50,7 @@ export const initialState = {
   highlightAllMentions: false,
   highlights: {},
   highlightsIgnoredUsers: [],
+  hostThreshold: 1,
   lastKnownVersion: null,
   prioritizeUsernames: false,
   showContextMenu: true,
@@ -239,6 +241,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         prioritizeUsernames: !state.prioritizeUsernames,
+      }
+    }
+    case Actions.UPDATE_HOST_THRESHOLD: {
+      return {
+        ...state,
+        hostThreshold: action.payload.threshold,
       }
     }
     default: {
@@ -432,6 +440,16 @@ export const toggleHighlightAllMentions = () => createAction(Actions.TOGGLE_HIGH
 export const togglePrioritizeUsernames = () => createAction(Actions.TOGGLE_PRIORITIZE_USERNAMES)
 
 /**
+ * Updates the host threshold.
+ * @param  threshold - The new threshold.
+ * @return The action.
+ */
+export const updateHostThreshold = (threshold: number) =>
+  createAction(Actions.UPDATE_HOST_THRESHOLD, {
+    threshold,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -457,6 +475,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleHighlightAllMentions>
   | ReturnType<typeof togglePrioritizeUsernames>
   | ReturnType<typeof moveAction>
+  | ReturnType<typeof updateHostThreshold>
 
 /**
  * Settings state.
@@ -536,6 +555,11 @@ export type SettingsState = {
    * Prioritizes usernames when auto-completing.
    */
   prioritizeUsernames: boolean
+
+  /**
+   * Host below this threshold will be ignored.
+   */
+  hostThreshold: number
 }
 
 /**

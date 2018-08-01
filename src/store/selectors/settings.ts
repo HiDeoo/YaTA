@@ -132,3 +132,10 @@ export const getHighlightAllMentions = createSelector([getSettingsState], (setti
  * @return The 'Prioritize usernames' setting.
  */
 export const getPrioritizeUsernames = createSelector([getSettingsState], (settings) => settings.prioritizeUsernames)
+
+/**
+ * Returns the 'Host threshold' setting.
+ * @param  state - The Redux state.
+ * @return The 'Host threshold' setting.
+ */
+export const getHostThreshold = createSelector([getSettingsState], (settings) => settings.hostThreshold)
