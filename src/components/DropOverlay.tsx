@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Imgur from 'Libs/Imgur'
+import { color } from 'Utils/styled'
 
 /**
  * Wrapper component.
@@ -19,13 +20,22 @@ const Wrapper = styled.div`
  * Tooltip component.
  */
 const Tooltip = styled(Callout)`
-  &.${Classes.CALLOUT} {
+  &.${Classes.CALLOUT}, .${Classes.DARK} &.${Classes.CALLOUT} {
+    background-color: red;
     padding: 20px;
     width: 360px;
+
+    &.${Classes.INTENT_PRIMARY} {
+      background-color: ${color('dropOverlay.background')};
+    }
 
     & h4.${Classes.HEADING} {
       font-size: 1.5rem;
       margin-left: 24px;
+    }
+
+    .${Classes.DARK} & h4.${Classes.HEADING} {
+      margin-left: 44px;
     }
 
     & > svg {
@@ -48,7 +58,12 @@ const Details = styled.ul`
   margin-top: 24px;
   padding-left: 7px;
 
-  & > li {
+  .${Classes.DARK} & {
+    padding-left: 27px;
+  }
+
+  & > li,
+  .${Classes.DARK} & > li {
     margin: 4px 0;
   }
 `
@@ -151,7 +166,7 @@ export default class DropOverlay extends React.Component<Props, State> {
       <Overlay isOpen>
         <Wrapper>
           <Center>
-            <Tooltip title="Upload an image" intent={Intent.PRIMARY} icon="cloud-upload">
+            <Tooltip title="Upload an image…" intent={Intent.PRIMARY} icon="cloud-upload">
               <Details>
                 <li>Images are uploaded to Imgur.</li>
                 <li>Uploads are anonymous.</li>

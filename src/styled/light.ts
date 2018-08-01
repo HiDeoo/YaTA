@@ -21,6 +21,9 @@ const light = {
       strong: Colors.DARK_GRAY1,
     },
   },
+  dropOverlay: {
+    background: '#e2ebf4',
+  },
   emotePicker: {
     background: Colors.LIGHT_GRAY5,
     border: Colors.LIGHT_GRAY1,
