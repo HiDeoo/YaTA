@@ -20,11 +20,11 @@ import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Twitch from 'Libs/Twitch'
 import { setShouldReadChangelog } from 'Store/ducks/app'
-import { setVersion, toggleAutoConnectInDev } from 'Store/ducks/settings'
+import { setVersion } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getShouldReadChangelog, getStatus } from 'Store/selectors/app'
-import { getAutoConnectInDev, getLastKnownVersion, getTheme } from 'Store/selectors/settings'
+import { getLastKnownVersion, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import dark from 'Styled/dark'
 import light from 'Styled/light'
@@ -106,7 +106,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { showSettings, settingSelectedTab } = this.state
-    const { isLoggedIn, location, autoConnectInDev, shouldReadChangelog, status, theme } = this.props
+    const { isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
     const { pathname } = location
 
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
@@ -122,7 +122,6 @@ class App extends React.Component<Props, State> {
         <HeaderProvider value={this.state.headerConfiguration}>
           <FlexLayout vertical>
             <Header
-              autoConnectInDev={autoConnectInDev}
               goHome={this.goHome}
               highlightChangelog={shouldReadChangelog}
               isLoggedIn={isLoggedIn}
@@ -130,7 +129,6 @@ class App extends React.Component<Props, State> {
               page={pathname}
               reportBug={this.reportBug}
               status={status}
-              toggleAutoConnectInDev={this.props.toggleAutoConnectInDev}
               toggleChangelog={this.toggleChangelog}
               toggleSettings={this.toggleSettings}
             />
@@ -256,7 +254,6 @@ If applicable, add screenshots to help explain your problem.
 
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
-    autoConnectInDev: getAutoConnectInDev(state),
     isLoggedIn: getIsLoggedIn(state),
     lastKnownVersion: getLastKnownVersion(state),
     loginDetails: getLoginDetails(state),
@@ -264,14 +261,13 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     status: getStatus(state),
     theme: getTheme(state),
   }),
-  { resetUser, setVersion, setShouldReadChangelog, toggleAutoConnectInDev }
+  { resetUser, setVersion, setShouldReadChangelog }
 )(App)
 
 /**
  * React Props.
  */
 type StateProps = {
-  autoConnectInDev: ReturnType<typeof getAutoConnectInDev>
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: ReturnType<typeof getLastKnownVersion>
   loginDetails: ReturnType<typeof getLoginDetails>
@@ -287,7 +283,6 @@ type DispatchProps = {
   resetUser: typeof resetUser
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
-  toggleAutoConnectInDev: typeof toggleAutoConnectInDev
 }
 
 /**

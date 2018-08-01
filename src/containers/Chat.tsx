@@ -44,7 +44,6 @@ import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
 import {
-  getAutoConnectInDev,
   getHideWhispers,
   getHighlightAllMentions,
   getHighlights,
@@ -97,7 +96,7 @@ export class ChatClient extends React.Component<Props, State> {
       return
     }
 
-    const { autoConnectInDev, channel } = this.props
+    const { channel } = this.props
 
     if (_.isNil(channel)) {
       this.setState(() => ({ error: new Error('No channel provided.') }))
@@ -137,23 +136,21 @@ export class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.Cheer, this.onCheer)
     this.client.on(Event.EmoteSets, this.onEmoteSets)
 
-    if (process.env.NODE_ENV !== 'development' || autoConnectInDev) {
-      try {
-        await this.client.connect()
-        await this.client.join(channel)
-      } catch (error) {
-        let theError: Error
+    try {
+      await this.client.connect()
+      await this.client.join(channel)
+    } catch (error) {
+      let theError: Error
 
-        if (_.isString(error)) {
-          theError = new Error(error)
-        } else if (_.isError(error)) {
-          theError = error
-        } else {
-          theError = new Error('Something went wrong.')
-        }
-
-        this.setState(() => ({ error: theError }))
+      if (_.isString(error)) {
+        theError = new Error(error)
+      } else if (_.isError(error)) {
+        theError = error
+      } else {
+        theError = new Error('Something went wrong.')
       }
+
+      this.setState(() => ({ error: theError }))
     }
   }
 
@@ -852,7 +849,6 @@ export class ChatClient extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
-    autoConnectInDev: getAutoConnectInDev(state),
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
@@ -888,7 +884,6 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  * React Props.
  */
 type StateProps = {
-  autoConnectInDev: ReturnType<typeof getAutoConnectInDev>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   chattersMap: ReturnType<typeof getChattersMap>

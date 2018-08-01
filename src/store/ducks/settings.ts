@@ -15,7 +15,6 @@ export enum Actions {
   SET_VERSION = 'settings/SET_VERSION',
   TOGGLE_COPY_MESSAGE_DOUBLE_CLICK = 'settings/TOGGLE_COPY_MESSAGE_DOUBLE_CLICK',
   TOGGLE_SHOW_CONTEXT_MENU = 'settings/TOGGLE_SHOW_CONTEXT_MENU',
-  TOGGLE_AUTO_CONNECT_IN_DEV = 'settings/TOGGLE_AUTO_CONNECT_IN_DEV',
   ADD_HIGHLIGHT = 'settings/ADD_HIGHLIGHT',
   UPDATE_HIGHLIGHT_PATTERN = 'settings/UPDATE_HIGHLIGHT_PATTERN',
   UPDATE_HIGHLIGHT_COLOR = 'settings/UPDATE_HIGHLIGHT_COLOR',
@@ -44,7 +43,6 @@ export const initialState = {
     allIds: [],
     byId: {},
   },
-  autoConnectInDev: true,
   autoFocusInput: true,
   copyMessageOnDoubleClick: true,
   disableDialogAnimations: false,
@@ -97,12 +95,6 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         showContextMenu: !state.showContextMenu,
-      }
-    }
-    case Actions.TOGGLE_AUTO_CONNECT_IN_DEV: {
-      return {
-        ...state,
-        autoConnectInDev: !state.autoConnectInDev,
       }
     }
     case Actions.ADD_HIGHLIGHT: {
@@ -294,12 +286,6 @@ export const toggleCopyMessageOnDoubleClick = () => createAction(Actions.TOGGLE_
 export const toggleShowContextMenu = () => createAction(Actions.TOGGLE_SHOW_CONTEXT_MENU)
 
 /**
- * Toggle the 'Auto connect in dev' setting.
- * @return The action.
- */
-export const toggleAutoConnectInDev = () => createAction(Actions.TOGGLE_AUTO_CONNECT_IN_DEV)
-
-/**
  * Add an highlight.
  * @param  highlight - The new highlight.
  * @return The action.
@@ -468,7 +454,6 @@ export type SettingsActions =
   | ReturnType<typeof setVersion>
   | ReturnType<typeof toggleCopyMessageOnDoubleClick>
   | ReturnType<typeof toggleShowContextMenu>
-  | ReturnType<typeof toggleAutoConnectInDev>
   | ReturnType<typeof addHighlight>
   | ReturnType<typeof updateHighlightPattern>
   | ReturnType<typeof updateHighlightColor>
@@ -511,11 +496,6 @@ export type SettingsState = {
    * Defines if a context menu should be added to each message.
    */
   showContextMenu: boolean
-
-  /**
-   * When in dev mode, auto-connect to the chat servers.
-   */
-  autoConnectInDev: boolean
 
   /**
    * Highlights.

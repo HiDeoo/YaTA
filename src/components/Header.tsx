@@ -8,7 +8,6 @@ import {
   NavbarGroup,
   NavbarHeading,
   Spinner,
-  Switch,
 } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -68,14 +67,6 @@ const Changelog = styled(Button)`
   &.${Classes.BUTTON} svg.${Classes.ICON}, .${Classes.DARK} &.${Classes.BUTTON} svg.${Classes.ICON} {
     color: ${Colors.GOLD5};
   }
-`
-
-/**
- * Switch component.
- */
-const HeaderSwitch = styled(Switch)`
-  margin-left: 8px;
-  margin-top: 13px;
 `
 
 /**
@@ -144,7 +135,6 @@ export default class Header extends React.Component<Props> {
         <NavbarSpacer />
         <HeaderNavbarGroup>
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
-          {this.renderDebugTools()}
           <HeaderTooltip content="Report bug">
             <Button onClick={reportBug} icon="issue" minimal />
           </HeaderTooltip>
@@ -177,27 +167,6 @@ export default class Header extends React.Component<Props> {
    */
   private onMouseUpHome = (event: React.MouseEvent<HTMLElement>) => {
     this.props.goHome(event)
-  }
-
-  /**
-   * Render the debug tools if necessary.
-   * @return Element to render.
-   */
-  private renderDebugTools() {
-    if (process.env.NODE_ENV !== 'development') {
-      return null
-    }
-
-    const { autoConnectInDev, toggleAutoConnectInDev } = this.props
-
-    return (
-      <>
-        <HeaderTooltip content="Auto-Connect (dev only)">
-          <HeaderSwitch checked={autoConnectInDev} onChange={toggleAutoConnectInDev} />
-        </HeaderTooltip>
-        <NavbarDivider />
-      </>
-    )
   }
 
   /**
@@ -250,7 +219,6 @@ export default class Header extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  autoConnectInDev: boolean
   goHome: (event: React.MouseEvent<HTMLElement>) => void
   highlightChangelog: boolean
   isLoggedIn: boolean
@@ -258,7 +226,6 @@ type Props = {
   page: string
   reportBug: () => void
   status: AppState['status']
-  toggleAutoConnectInDev: () => void
   toggleChangelog: () => void
   toggleSettings: () => void
 }

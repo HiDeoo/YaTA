@@ -29,7 +29,9 @@ export default {
   3: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, autoConnectInDev: initialState.autoConnectInDev },
+      settings: { ...state.settings, autoConnectInDev: undefined } as ApplicationState['settings'] & {
+        autoConnectInDev: undefined
+      },
     }
   },
   4: (state: ApplicationState): ApplicationState => {
@@ -121,6 +123,14 @@ export default {
     return {
       ...state,
       settings: { ...state.settings, actions: { byId: oldActions, allIds } },
+    }
+  },
+  16: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, autoConnectInDev: undefined } as ApplicationState['settings'] & {
+        autoConnectInDev: undefined
+      },
     }
   },
 }

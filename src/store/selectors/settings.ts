@@ -56,13 +56,6 @@ export const getCopyMessageOnDoubleClick = createSelector(
 export const getShowContextMenu = createSelector([getSettingsState], (settings) => settings.showContextMenu)
 
 /**
- * Returns the 'Auto connect in dev' setting.
- * @param  state - The Redux state.
- * @return The 'Auto connect in dev' setting.
- */
-export const getAutoConnectInDev = createSelector([getSettingsState], (settings) => settings.autoConnectInDev)
-
-/**
  * Returns the highlights.
  * @param  state - The Redux state.
  * @return The highlights.
