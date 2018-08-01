@@ -6,6 +6,10 @@
 - Search now happens as you type instead of requiring to press `Enter`.
 - Add support for Youtube channels preview.
 
+### 🐛 Bug Fix
+
+- Focus the chat input when closing the search panel.
+
 # 0.6.0
 
 ### 🚀 New Feature

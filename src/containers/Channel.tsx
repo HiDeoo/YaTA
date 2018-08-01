@@ -478,7 +478,13 @@ class Channel extends React.Component<Props, State> {
    * Toggles the search.
    */
   private toggleSearch = () => {
+    const closing = this.state.showSearch
+
     this.setState(({ showSearch }) => ({ showSearch: !showSearch }))
+
+    if (closing && !_.isNil(this.input.current)) {
+      this.input.current.focus()
+    }
   }
 
   /**
