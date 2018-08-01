@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Rework header UI to be less of a dumping ground for new features.
+
 # 0.6.0
 
 ### 🚀 New Feature

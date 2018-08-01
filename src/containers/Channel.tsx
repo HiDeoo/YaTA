@@ -1,4 +1,4 @@
-import { Button, Classes, Intent, NavbarDivider, Popover } from '@blueprintjs/core'
+import { Button, Classes, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -14,7 +14,7 @@ import Chatters from 'Components/Chatters'
 import FlexLayout from 'Components/FlexLayout'
 import { withHeader, WithHeaderProps } from 'Components/Header'
 import HeaderChannelState from 'Components/HeaderChannelState'
-import HeaderModerationTools from 'Components/HeaderModerationTools'
+import HeaderModerationMenuItems from 'Components/HeaderModerationMenuItems'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs from 'Components/Logs'
@@ -49,7 +49,6 @@ import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
-  getEnablePollEditor,
   getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
@@ -130,13 +129,12 @@ class Channel extends React.Component<Props, State> {
    */
   public componentDidUpdate(prevProps: Props, prevState: State) {
     const {
-      enablePollEditor: prevEnablePollEditor,
       isAutoScrollPaused: prevIsAutoScrollPaused,
       isMod: prevIsMod,
       roomState: prevRoomState,
       showViewerCount: prevShowViewerCount,
     } = prevProps
-    const { enablePollEditor, isAutoScrollPaused, isMod, roomState, showViewerCount } = this.props
+    const { isAutoScrollPaused, isMod, roomState, showViewerCount } = this.props
 
     if (prevShowViewerCount !== showViewerCount || (_.isNil(prevRoomState) && !_.isNil(roomState))) {
       if (showViewerCount) {
@@ -150,7 +148,6 @@ class Channel extends React.Component<Props, State> {
     const { viewerCount } = this.state
 
     if (
-      prevEnablePollEditor !== enablePollEditor ||
       prevIsAutoScrollPaused !== isAutoScrollPaused ||
       prevRoomState !== roomState ||
       prevIsMod !== isMod ||
@@ -271,47 +268,45 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   private setHeaderComponents() {
-    const { channel, enablePollEditor, isAutoScrollPaused, isMod, roomState } = this.props
+    const { channel, isAutoScrollPaused, isMod, roomState } = this.props
 
     const channelId = _.get(roomState, 'roomId')
+
+    const connected = !_.isNil(roomState)
 
     const headerRightComponent = (
       <>
         <HeaderChannelState
-          isAutoScrollPaused={isAutoScrollPaused}
-          roomState={roomState}
           scrollToNewestLog={this.scrollToNewestLog}
+          isAutoScrollPaused={isAutoScrollPaused}
           viewerCount={this.state.viewerCount}
+          roomState={roomState}
         />
-        {isMod &&
-          !_.isNil(roomState) && (
-            <HeaderModerationTools
-              clearChat={this.clearChat}
-              roomState={roomState}
-              toggleR9k={this.toggleR9k}
-              toggleSlowMode={this.toggleSlowMode}
-              toggleFollowersOnly={this.toggleFollowersOnly}
-              toggleSubsOnly={this.toggleSubsOnly}
-              toggleEmoteOnly={this.toggleEmoteOnly}
-            />
-          )}
-        {enablePollEditor && (
-          <HeaderTooltip content="Create Straw Poll">
-            <Button onClick={this.togglePollEditor} icon="horizontal-bar-chart" minimal />
+        <Popover position={Position.BOTTOM}>
+          <HeaderTooltip content="Tools">
+            <Button icon="wrench" minimal />
           </HeaderTooltip>
-        )}
-        {!_.isNil(roomState) && (
-          <>
-            <HeaderTooltip content="Search">
-              <Button onClick={this.toggleSearch} icon="search" minimal />
-            </HeaderTooltip>
-            <HeaderTooltip content="Add Marker">
-              <Button onClick={this.props.addMarker} icon="bookmark" minimal />
-            </HeaderTooltip>
-            <HeaderTooltip content="Create Clip">
-              <Button onClick={this.clip} icon="film" minimal />
-            </HeaderTooltip>
-          </>
+          <Menu>
+            <Menu.Divider title="Tools" />
+            {connected && <Menu.Item onClick={this.clip} icon="film" text="Create clip" />}
+            <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
+            {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
+            <HeaderModerationMenuItems
+              toggleFollowersOnly={this.toggleFollowersOnly}
+              toggleEmoteOnly={this.toggleEmoteOnly}
+              toggleSlowMode={this.toggleSlowMode}
+              toggleSubsOnly={this.toggleSubsOnly}
+              clearChat={this.clearChat}
+              toggleR9k={this.toggleR9k}
+              roomState={roomState}
+              isMod={isMod}
+            />
+          </Menu>
+        </Popover>
+        {connected && (
+          <HeaderTooltip content="Search">
+            <Button onClick={this.toggleSearch} icon="search" minimal />
+          </HeaderTooltip>
         )}
         <Popover>
           <HeaderTooltip content="Channel Details">
@@ -978,7 +973,6 @@ const enhance = compose<Props, {}>(
       copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
       disableDialogAnimations: getDisableDialogAnimations(state),
       emotes: getEmotes(state),
-      enablePollEditor: getEnablePollEditor(state),
       history: getHistory(state),
       historyIndex: getHistoryIndex(state),
       isAutoScrollPaused: getIsAutoScrollPaused(state),
@@ -1017,7 +1011,6 @@ type StateProps = {
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   emotes: ReturnType<typeof getEmotes>
-  enablePollEditor: ReturnType<typeof getEnablePollEditor>
   history: ReturnType<typeof getHistory>
   historyIndex: ReturnType<typeof getHistoryIndex>
   isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>

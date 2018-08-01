@@ -132,10 +132,3 @@ export const getHighlightAllMentions = createSelector([getSettingsState], (setti
  * @return The 'Prioritize usernames' setting.
  */
 export const getPrioritizeUsernames = createSelector([getSettingsState], (settings) => settings.prioritizeUsernames)
-
-/**
- * Returns the 'Enable poll editor' setting.
- * @param  state - The Redux state.
- * @return The 'Enable poll editor' setting.
- */
-export const getEnablePollEditor = createSelector([getSettingsState], (settings) => settings.enablePollEditor)

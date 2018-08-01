@@ -11,7 +11,6 @@ import {
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
   toggleDisableDialogAnimations,
-  toggleEnablePollEditor,
   toggleHideWhispers,
   toggleHighlightAllMentions,
   togglePrioritizeUsernames,
@@ -24,7 +23,6 @@ import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
-  getEnablePollEditor,
   getHideWhispers,
   getHighlightAllMentions,
   getPrioritizeUsernames,
@@ -70,7 +68,6 @@ class SettingsGeneral extends React.Component<Props> {
       autoFocusInput,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
-      enablePollEditor,
       hideWhispers,
       highlightAllMentions,
       prioritizeUsernames,
@@ -130,12 +127,6 @@ class SettingsGeneral extends React.Component<Props> {
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="Streamer mode">
-          <Switch
-            description="This feature uses Straw Poll."
-            checked={enablePollEditor}
-            label="Enable poll editor"
-            onChange={this.props.toggleEnablePollEditor}
-          />
           <Switch
             description="You will still be able to send whispers."
             checked={hideWhispers}
@@ -207,7 +198,6 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     autoFocusInput: getAutoFocusInput(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     disableDialogAnimations: getDisableDialogAnimations(state),
-    enablePollEditor: getEnablePollEditor(state),
     hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
     prioritizeUsernames: getPrioritizeUsernames(state),
@@ -219,7 +209,6 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleAutoFocusInput,
     toggleCopyMessageOnDoubleClick,
     toggleDisableDialogAnimations,
-    toggleEnablePollEditor,
     toggleHideWhispers,
     toggleHighlightAllMentions,
     togglePrioritizeUsernames,
@@ -236,7 +225,6 @@ type StateProps = {
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
-  enablePollEditor: ReturnType<typeof getEnablePollEditor>
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
@@ -252,7 +240,6 @@ type DispatchProps = {
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
-  toggleEnablePollEditor: typeof toggleEnablePollEditor
   toggleHideWhispers: typeof toggleHideWhispers
   toggleHighlightAllMentions: typeof toggleHighlightAllMentions
   togglePrioritizeUsernames: typeof togglePrioritizeUsernames

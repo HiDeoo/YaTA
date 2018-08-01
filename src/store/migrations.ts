@@ -109,7 +109,9 @@ export default {
   14: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, enablePollEditor: initialState.enablePollEditor },
+      settings: { ...state.settings, enablePollEditor: undefined } as ApplicationState['settings'] & {
+        enablePollEditor: undefined
+      },
     }
   },
   15: (state: ApplicationState): ApplicationState => {
@@ -130,6 +132,14 @@ export default {
       ...state,
       settings: { ...state.settings, autoConnectInDev: undefined } as ApplicationState['settings'] & {
         autoConnectInDev: undefined
+      },
+    }
+  },
+  17: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, enablePollEditor: undefined } as ApplicationState['settings'] & {
+        enablePollEditor: undefined
       },
     }
   },

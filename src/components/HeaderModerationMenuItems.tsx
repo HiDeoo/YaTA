@@ -1,37 +1,35 @@
-import { Button, Icon, Menu, Popover, Position } from '@blueprintjs/core'
+import { Icon, Menu } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import HeaderTooltip from 'Components/HeaderTooltip'
 import { SerializedRoomState } from 'Libs/RoomState'
 
 /**
- * HeaderModerationTools Component.
+ * HeaderModerationMenuItems Component.
  */
-export default class HeaderModerationTools extends React.Component<Props> {
+export default class HeaderModerationMenuItems extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    return (
-      <Popover content={this.renderMenu()} position={Position.BOTTOM}>
-        <HeaderTooltip content="Moderation Tools">
-          <Button icon="wrench" minimal />
-        </HeaderTooltip>
-      </Popover>
-    )
-  }
+    const {
+      clearChat,
+      isMod,
+      roomState,
+      toggleR9k,
+      toggleSlowMode,
+      toggleFollowersOnly,
+      toggleSubsOnly,
+      toggleEmoteOnly,
+    } = this.props
 
-  /**
-   * Renders the menu.
-   * @return Element to render.
-   */
-  private renderMenu() {
-    const { clearChat, toggleR9k, toggleSlowMode, toggleFollowersOnly, toggleSubsOnly, toggleEmoteOnly } = this.props
+    if (_.isNil(roomState) || !isMod) {
+      return null
+    }
 
     return (
-      <Menu>
+      <>
         <Menu.Divider title="Mode" />
         <Menu.Item
           icon={this.getStateMenuIcon('r9k')}
@@ -63,9 +61,9 @@ export default class HeaderModerationTools extends React.Component<Props> {
           labelElement={<Icon icon="media" />}
           onClick={toggleEmoteOnly}
         />
-        <Menu.Divider title="Tools" />
+        <Menu.Divider title="Moderation" />
         <Menu.Item icon="eraser" text="Clear chat" onClick={clearChat} />
-      </Menu>
+      </>
     )
   }
 
@@ -84,7 +82,8 @@ export default class HeaderModerationTools extends React.Component<Props> {
  */
 type Props = {
   clearChat: () => void
-  roomState: SerializedRoomState
+  isMod: boolean
+  roomState: SerializedRoomState | null
   toggleR9k: () => void
   toggleSlowMode: () => void
   toggleFollowersOnly: () => void
