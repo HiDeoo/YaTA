@@ -3,6 +3,8 @@
 ### 🚀 New Feature
 
 - Rework header UI to be less of a dumping ground for new features.
+- Improve previews:
+  - Add support for Youtube channels.
 
 # 0.6.0
 
