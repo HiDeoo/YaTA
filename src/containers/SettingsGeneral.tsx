@@ -7,6 +7,7 @@ import SettingsPanel from 'Components/SettingsPanel'
 import SettingsPanelSection from 'Components/SettingsPanelSection'
 import Slider from 'Components/Slider'
 import Switch from 'Components/Switch'
+import Sound from 'Constants/sound'
 import Theme from 'Constants/theme'
 import {
   toggleAutoFocusInput,
@@ -14,6 +15,8 @@ import {
   toggleDisableDialogAnimations,
   toggleHideWhispers,
   toggleHighlightAllMentions,
+  togglePlaySoundOnMentions,
+  togglePlaySoundOnWhispers,
   togglePrioritizeUsernames,
   toggleShowContextMenu,
   toggleShowViewerCount,
@@ -28,6 +31,8 @@ import {
   getHideWhispers,
   getHighlightAllMentions,
   getHostThreshold,
+  getPlaySoundOnMentions,
+  getPlaySoundOnWhispers,
   getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
@@ -61,6 +66,7 @@ type State = Readonly<typeof initialState>
  */
 class SettingsGeneral extends React.Component<Props> {
   public state: State = initialState
+  private notificationSound = new Audio(Sound.Notification)
 
   /**
    * Renders the component.
@@ -74,6 +80,8 @@ class SettingsGeneral extends React.Component<Props> {
       hideWhispers,
       highlightAllMentions,
       hostThreshold,
+      playSoundOnMentions,
+      playSoundOnWhispers,
       prioritizeUsernames,
       showContextMenu,
       showViewerCount,
@@ -131,6 +139,16 @@ class SettingsGeneral extends React.Component<Props> {
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="Notifications">
+          <Switch
+            checked={playSoundOnMentions}
+            label="Play sound on mentions"
+            onChange={this.togglePlaySoundOnMentions}
+          />
+          <Switch
+            checked={playSoundOnWhispers}
+            label="Play sound on whispers"
+            onChange={this.togglePlaySoundOnWhispers}
+          />
           <Slider
             onChange={this.props.updateHostThreshold}
             description="Hosts & auto-hosts with less viewers than the threshold will be ignored."
@@ -206,6 +224,28 @@ class SettingsGeneral extends React.Component<Props> {
 
     this.props.toggleTheme()
   }
+
+  /**
+   * Triggered when the sound on mentions is toggled.
+   */
+  private togglePlaySoundOnMentions = () => {
+    if (!this.props.playSoundOnMentions) {
+      this.notificationSound.play()
+    }
+
+    this.props.togglePlaySoundOnMentions()
+  }
+
+  /**
+   * Triggered when the sound on whispers is toggled.
+   */
+  private togglePlaySoundOnWhispers = () => {
+    if (!this.props.playSoundOnWhispers) {
+      this.notificationSound.play()
+    }
+
+    this.props.togglePlaySoundOnWhispers()
+  }
 }
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
@@ -216,6 +256,8 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
     hostThreshold: getHostThreshold(state),
+    playSoundOnMentions: getPlaySoundOnMentions(state),
+    playSoundOnWhispers: getPlaySoundOnWhispers(state),
     prioritizeUsernames: getPrioritizeUsernames(state),
     showContextMenu: getShowContextMenu(state),
     showViewerCount: getShowViewerCount(state),
@@ -227,6 +269,8 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleDisableDialogAnimations,
     toggleHideWhispers,
     toggleHighlightAllMentions,
+    togglePlaySoundOnMentions,
+    togglePlaySoundOnWhispers,
     togglePrioritizeUsernames,
     toggleShowContextMenu,
     toggleShowViewerCount,
@@ -245,6 +289,8 @@ type StateProps = {
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   hostThreshold: ReturnType<typeof getHostThreshold>
+  playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
+  playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   showViewerCount: ReturnType<typeof getShowViewerCount>
@@ -260,6 +306,8 @@ type DispatchProps = {
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
   toggleHideWhispers: typeof toggleHideWhispers
   toggleHighlightAllMentions: typeof toggleHighlightAllMentions
+  togglePlaySoundOnMentions: typeof togglePlaySoundOnMentions
+  togglePlaySoundOnWhispers: typeof togglePlaySoundOnWhispers
   togglePrioritizeUsernames: typeof togglePrioritizeUsernames
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleShowViewerCount: typeof toggleShowViewerCount

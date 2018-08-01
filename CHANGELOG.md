@@ -6,6 +6,10 @@
   - Images are uploaded to Imgur.
   - Uploads are anonymous even if connected to Imgur in the same browser.
   - When done, the url is pasted in the chat input ready to be shared.
+- Add new notifications settings section:
+  - Host threshold to hide hosts & auto-hosts below a specific amount of viewers.
+  - Sound on mentions (disabled by default).
+  - Sound on whispers (disabled by default).
 - Rework header UI to be less of a dumping ground for new features.
 - Search now happens as you type instead of requiring to press `Enter`.
 - Add support for Youtube channels preview.

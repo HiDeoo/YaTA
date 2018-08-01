@@ -33,6 +33,8 @@ export enum Actions {
   TOGGLE_HIGHLIGHT_ALL_MENTIONS = 'settings/TOGGLE_HIGHLIGHT_ALL_MENTIONS',
   TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
   UPDATE_HOST_THRESHOLD = 'settings/UPDATE_HOST_THRESHOLD',
+  TOGGLE_PLAY_SOUND_ON_MENTIONS = 'settings/TOGGLE_PLAY_SOUND_ON_MENTIONS',
+  TOGGLE_PLAY_SOUND_ON_WHISPERS = 'settings/TOGGLE_PLAY_SOUND_ON_WHISPERS',
 }
 
 /**
@@ -52,6 +54,8 @@ export const initialState = {
   highlightsIgnoredUsers: [],
   hostThreshold: 1,
   lastKnownVersion: null,
+  playSoundOnMentions: false,
+  playSoundOnWhispers: false,
   prioritizeUsernames: false,
   showContextMenu: true,
   showViewerCount: false,
@@ -247,6 +251,18 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         hostThreshold: action.payload.threshold,
+      }
+    }
+    case Actions.TOGGLE_PLAY_SOUND_ON_MENTIONS: {
+      return {
+        ...state,
+        playSoundOnMentions: !state.playSoundOnMentions,
+      }
+    }
+    case Actions.TOGGLE_PLAY_SOUND_ON_WHISPERS: {
+      return {
+        ...state,
+        playSoundOnWhispers: !state.playSoundOnWhispers,
       }
     }
     default: {
@@ -450,6 +466,18 @@ export const updateHostThreshold = (threshold: number) =>
   })
 
 /**
+ * Toggle the 'Play sound on mentions' setting.
+ * @return The action.
+ */
+export const togglePlaySoundOnMentions = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_MENTIONS)
+
+/**
+ * Toggle the 'Play sound on whispers' setting.
+ * @return The action.
+ */
+export const togglePlaySoundOnWhispers = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_WHISPERS)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -476,6 +504,8 @@ export type SettingsActions =
   | ReturnType<typeof togglePrioritizeUsernames>
   | ReturnType<typeof moveAction>
   | ReturnType<typeof updateHostThreshold>
+  | ReturnType<typeof togglePlaySoundOnMentions>
+  | ReturnType<typeof togglePlaySoundOnWhispers>
 
 /**
  * Settings state.
@@ -560,6 +590,16 @@ export type SettingsState = {
    * Host below this threshold will be ignored.
    */
   hostThreshold: number
+
+  /**
+   * Plays a sound on mentions.
+   */
+  playSoundOnMentions: boolean
+
+  /**
+   * Plays a sound on whispers.
+   */
+  playSoundOnWhispers: boolean
 }
 
 /**

@@ -20,6 +20,7 @@ import Notices from 'Constants/notices'
 import Page from 'Constants/page'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
+import Sound from 'Constants/sound'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
 import Chatter from 'Libs/Chatter'
@@ -49,6 +50,8 @@ import {
   getHighlights,
   getHighlightsIgnoredUsers,
   getHostThreshold,
+  getPlaySoundOnMentions,
+  getPlaySoundOnWhispers,
   getTheme,
 } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
@@ -67,6 +70,7 @@ export class ChatClient extends React.Component<Props, State> {
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
   private didFetchExternalResources = false
+  private notificationSound = new Audio(Sound.Notification)
 
   /**
    * Creates a new instance of the component.
@@ -398,10 +402,18 @@ export class ChatClient extends React.Component<Props, State> {
 
       if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
         this.props.addChatter(serializedMessage.user, serializedMessage.id)
+
+        if (this.props.playSoundOnMentions && serializedMessage.mentionned) {
+          this.notificationSound.play()
+        }
       }
 
       if (serializedMessage.type === LogType.Whisper && !self) {
         this.props.setLastWhisperSender(serializedMessage.user.userName)
+
+        if (this.props.playSoundOnWhispers) {
+          this.notificationSound.play()
+        }
       }
     }
   }
@@ -860,6 +872,8 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     hostThreshold: getHostThreshold(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
+    playSoundOnMentions: getPlaySoundOnMentions(state),
+    playSoundOnWhispers: getPlaySoundOnWhispers(state),
     theme: getTheme(state),
   }),
   {
@@ -896,6 +910,8 @@ type StateProps = {
   hostThreshold: ReturnType<typeof getHostThreshold>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
+  playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
+  playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
   theme: ReturnType<typeof getTheme>
 }
 

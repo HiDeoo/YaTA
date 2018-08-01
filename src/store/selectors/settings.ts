@@ -139,3 +139,17 @@ export const getPrioritizeUsernames = createSelector([getSettingsState], (settin
  * @return The 'Host threshold' setting.
  */
 export const getHostThreshold = createSelector([getSettingsState], (settings) => settings.hostThreshold)
+
+/**
+ * Returns the 'Play sound on mentions' setting.
+ * @param  state - The Redux state.
+ * @return The 'Play sound on mentions' setting.
+ */
+export const getPlaySoundOnMentions = createSelector([getSettingsState], (settings) => settings.playSoundOnMentions)
+
+/**
+ * Returns the 'Play sound on whispers' setting.
+ * @param  state - The Redux state.
+ * @return The 'Play sound on whispers' setting.
+ */
+export const getPlaySoundOnWhispers = createSelector([getSettingsState], (settings) => settings.playSoundOnWhispers)

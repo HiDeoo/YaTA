@@ -149,4 +149,16 @@ export default {
       settings: { ...state.settings, hostThreshold: initialState.hostThreshold },
     }
   },
+  19: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, playSoundOnMentions: initialState.playSoundOnMentions },
+    }
+  },
+  20: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, playSoundOnWhispers: initialState.playSoundOnWhispers },
+    }
+  },
 }
