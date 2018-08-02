@@ -137,7 +137,7 @@ class SettingsHighlights extends React.Component<Props, State> {
           fill
         />
         <UsersInput
-          placeholder="Always highlight messages from users… (space-separated list)"
+          placeholder="Highlight all messages from users… (space-separated list)"
           onRemove={this.onRemovePermanentUser}
           onAdd={this.onAddPermanentUsers}
           values={permanentUsers}

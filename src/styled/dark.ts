@@ -48,7 +48,7 @@ const dark = {
       },
     },
     permanent: {
-      background: '#1e622f',
+      background: '#244f3b',
       border: Colors.GREEN3,
     },
   },

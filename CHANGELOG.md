@@ -4,7 +4,7 @@
 
 - Hosts & auto-hosts thresholds can now be configured independently.
 - Improve UI when dropping an image to upload with shiny new animations.
-- Add a new highlights setting to always highlight messages from specific users.
+- Add a new highlights setting to highlight all messages from specific users.
 - Add an help section for actions.
 
 ### 🐛 Bug Fix

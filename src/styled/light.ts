@@ -48,7 +48,7 @@ const light = {
       },
     },
     permanent: {
-      background: 'rgba(99, 241, 100, 0.3)',
+      background: 'rgba(60, 241, 73, 0.3)',
       border: Colors.GREEN3,
     },
   },
