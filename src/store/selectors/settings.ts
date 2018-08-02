@@ -141,6 +141,13 @@ export const getPrioritizeUsernames = createSelector([getSettingsState], (settin
 export const getHostThreshold = createSelector([getSettingsState], (settings) => settings.hostThreshold)
 
 /**
+ * Returns the 'Auto-host threshold' setting.
+ * @param  state - The Redux state.
+ * @return The 'Auto-host threshold' setting.
+ */
+export const getAutoHostThreshold = createSelector([getSettingsState], (settings) => settings.autoHostThreshold)
+
+/**
  * Returns the 'Play sound on mentions' setting.
  * @param  state - The Redux state.
  * @return The 'Play sound on mentions' setting.

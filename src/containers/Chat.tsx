@@ -45,6 +45,7 @@ import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
 import {
+  getAutoHostThreshold,
   getHideWhispers,
   getHighlightAllMentions,
   getHighlights,
@@ -321,12 +322,16 @@ export class ChatClient extends React.Component<Props, State> {
    * @param autohost - `true` if the host is an auto host.
    */
   private onHosted = (channel: string, username: string, viewers: number, autohost: boolean) => {
-    if (Twitch.sanitizeChannel(channel) !== this.props.channel || viewers < this.props.hostThreshold) {
+    if (
+      Twitch.sanitizeChannel(channel) !== this.props.channel ||
+      (!autohost && viewers < this.props.hostThreshold) ||
+      (autohost && viewers < this.props.autoHostThreshold)
+    ) {
       return
     }
 
     const notification = new Notification(
-      `${username} is now ${autohost ? 'auto' : ''} hosting you for up to ${viewers} viewers.`,
+      `${username} is now ${autohost ? 'auto-' : ''}hosting you for up to ${viewers} viewers.`,
       NotificationEvent.Host
     )
 
@@ -862,6 +867,7 @@ export class ChatClient extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
+    autoHostThreshold: getAutoHostThreshold(state),
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
@@ -900,6 +906,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  * React Props.
  */
 type StateProps = {
+  autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   chattersMap: ReturnType<typeof getChattersMap>

@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Hosts & auto-hosts thresholds can now be configured independently.
+
 # 0.7.0
 
 ### 🚀 New Feature

@@ -33,6 +33,7 @@ export enum Actions {
   TOGGLE_HIGHLIGHT_ALL_MENTIONS = 'settings/TOGGLE_HIGHLIGHT_ALL_MENTIONS',
   TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
   UPDATE_HOST_THRESHOLD = 'settings/UPDATE_HOST_THRESHOLD',
+  UPDATE_AUTO_HOST_THRESHOLD = 'settings/UPDATE_AUTO_HOST_THRESHOLD',
   TOGGLE_PLAY_SOUND_ON_MENTIONS = 'settings/TOGGLE_PLAY_SOUND_ON_MENTIONS',
   TOGGLE_PLAY_SOUND_ON_WHISPERS = 'settings/TOGGLE_PLAY_SOUND_ON_WHISPERS',
 }
@@ -46,6 +47,7 @@ export const initialState = {
     byId: {},
   },
   autoFocusInput: true,
+  autoHostThreshold: 1,
   copyMessageOnDoubleClick: true,
   disableDialogAnimations: false,
   hideWhispers: false,
@@ -251,6 +253,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         hostThreshold: action.payload.threshold,
+      }
+    }
+    case Actions.UPDATE_AUTO_HOST_THRESHOLD: {
+      return {
+        ...state,
+        autoHostThreshold: action.payload.threshold,
       }
     }
     case Actions.TOGGLE_PLAY_SOUND_ON_MENTIONS: {
@@ -466,6 +474,16 @@ export const updateHostThreshold = (threshold: number) =>
   })
 
 /**
+ * Updates the auto-host threshold.
+ * @param  threshold - The new threshold.
+ * @return The action.
+ */
+export const updateAutoHostThreshold = (threshold: number) =>
+  createAction(Actions.UPDATE_AUTO_HOST_THRESHOLD, {
+    threshold,
+  })
+
+/**
  * Toggle the 'Play sound on mentions' setting.
  * @return The action.
  */
@@ -504,6 +522,7 @@ export type SettingsActions =
   | ReturnType<typeof togglePrioritizeUsernames>
   | ReturnType<typeof moveAction>
   | ReturnType<typeof updateHostThreshold>
+  | ReturnType<typeof updateAutoHostThreshold>
   | ReturnType<typeof togglePlaySoundOnMentions>
   | ReturnType<typeof togglePlaySoundOnWhispers>
 
@@ -587,9 +606,14 @@ export type SettingsState = {
   prioritizeUsernames: boolean
 
   /**
-   * Host below this threshold will be ignored.
+   * Hosts below this threshold will be ignored.
    */
   hostThreshold: number
+
+  /**
+   * Auto-hosts below this threshold will be ignored.
+   */
+  autoHostThreshold: number
 
   /**
    * Plays a sound on mentions.

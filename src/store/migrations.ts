@@ -161,4 +161,10 @@ export default {
       settings: { ...state.settings, playSoundOnWhispers: initialState.playSoundOnWhispers },
     }
   },
+  21: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, autoHostThreshold: initialState.autoHostThreshold },
+    }
+  },
 }
