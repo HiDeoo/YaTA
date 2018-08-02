@@ -158,7 +158,7 @@ export default class DropOverlay extends React.Component<Props, State> {
   public render() {
     const { isDragging, isDraggingOver } = this.state
 
-    if (!isDragging && !isDraggingOver) {
+    if (!isDragging || !isDraggingOver) {
       return null
     }
 
@@ -203,19 +203,29 @@ export default class DropOverlay extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onDragOver = (event: DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
+    if (this.state.isDragging) {
+      event.preventDefault()
+      event.stopPropagation()
 
-    if (!this.state.isDraggingOver) {
-      this.setState(() => ({ isDraggingOver: true }))
+      if (!this.state.isDraggingOver) {
+        this.setState(() => ({ isDraggingOver: true }))
+      }
     }
   }
 
   /**
    * Triggered when a dragged element leaves the document.
+   * @param event - The associated event.
    */
-  private onDragLeave = () => {
-    if (this.state.isDraggingOver) {
+  private onDragLeave = (event: DragEvent) => {
+    const target = event.target as HTMLElement | null
+
+    if (
+      this.state.isDragging &&
+      this.state.isDraggingOver &&
+      !_.isNil(target) &&
+      target.classList.contains(Classes.OVERLAY_BACKDROP)
+    ) {
       this.setState(() => ({ isDragging: false, isDraggingOver: false }))
     }
   }
@@ -226,14 +236,14 @@ export default class DropOverlay extends React.Component<Props, State> {
    * @return Always `false`.
    */
   private onDrop = (event: DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-
     const { isDraggingOver, isDragging } = this.state
 
     if (!isDragging && !isDraggingOver) {
       return false
     }
+
+    event.preventDefault()
+    event.stopPropagation()
 
     this.setState(() => ({ isDragging: false, isDraggingOver: false }))
 

@@ -7,6 +7,7 @@
 ### 🐛 Bug Fix
 
 - Improve behavior when editing a user note and pressing the escape key.
+- Fix an issue prevent to drag & drop text from the chat to the input bar.
 
 # 0.7.0
 
