@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Hosts & auto-hosts thresholds can now be configured independently.
+- Improve UI when dropping an image to upload with shiny new animations.
 
 ### 🐛 Bug Fix
 

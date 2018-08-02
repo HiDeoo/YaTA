@@ -8,12 +8,21 @@ import Imgur from 'Libs/Imgur'
 import { color } from 'Utils/styled'
 
 /**
+ * Overlay transition name.
+ */
+const DropOverlayTransitionName = 'bp3-overlay'
+
+/**
  * Wrapper component.
  */
 const Wrapper = styled.div`
   height: 100vh;
   pointer-events: none;
   width: 100vw;
+
+  &.bp3-overlay-transition-enter {
+    background-color: red !important;
+  }
 `
 
 /**
@@ -47,6 +56,32 @@ const Tooltip = styled(Callout)`
         top: 16px;
       }
     }
+  }
+
+  .${DropOverlayTransitionName}-appear &,
+  .${DropOverlayTransitionName}-enter & {
+    transform: translateY(-50vh) rotate(-10deg);
+  }
+
+  .${DropOverlayTransitionName}-appear-active &,
+  .${DropOverlayTransitionName}-enter-active & {
+    transform: translateY(0) rotate(0deg);
+    transition-property: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(0.54, 1.12, 0.38, 1.11);
+    transition-delay: 0;
+  }
+
+  .${DropOverlayTransitionName}-exit & {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  .${DropOverlayTransitionName}-exit-active & {
+    transform: translateY(150vh) rotate(-20deg);
+    transition-property: transform;
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
+    transition-delay: 0;
   }
 `
 
@@ -158,12 +193,8 @@ export default class DropOverlay extends React.Component<Props, State> {
   public render() {
     const { isDragging, isDraggingOver } = this.state
 
-    if (!isDragging || !isDraggingOver) {
-      return null
-    }
-
     return (
-      <Overlay isOpen>
+      <Overlay isOpen={isDragging && isDraggingOver} lazy={false}>
         <Wrapper>
           <Center>
             <Tooltip title="Upload an image…" intent={Intent.PRIMARY} icon="cloud-upload">
