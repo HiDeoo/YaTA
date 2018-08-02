@@ -244,7 +244,7 @@ export default class Message implements Serializable<SerializedMessage> {
             const url = images['1']
             const srcset = `${images['1']} 1x,${images['2']} 2x,${images['4']} 4x`
 
-            const str = `<img class="emote cheer" src="${url}" srcset="${srcset}" alt="${cheerName}" /><span class="cheer" style="color: ${color}">${bits}</span>`
+            const str = `<span class="emoteWrapper"><img class="emote cheer" src="${url}" srcset="${srcset}" alt="${cheerName}" /></span><span class="cheer" style="color: ${color}">${bits}</span>`
 
             replacements.push({ str, start, end })
 

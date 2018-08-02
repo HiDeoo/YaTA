@@ -11,6 +11,7 @@
 
 - Improve behavior when editing a user note and pressing the escape key.
 - Fix an issue prevent to drag & drop text from the chat to the input bar.
+- Fix various issues with cheers rendering.
 
 # 0.7.0
 
