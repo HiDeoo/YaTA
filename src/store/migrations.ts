@@ -167,4 +167,10 @@ export default {
       settings: { ...state.settings, autoHostThreshold: initialState.autoHostThreshold },
     }
   },
+  22: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, highlightsPermanentUsers: initialState.highlightsPermanentUsers },
+    }
+  },
 }

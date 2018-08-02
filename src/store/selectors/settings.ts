@@ -73,6 +73,16 @@ export const getHighlightsIgnoredUsers = createSelector(
 )
 
 /**
+ * Returns the permanently highlighted users.
+ * @param  state - The Redux state.
+ * @return The users.
+ */
+export const getHighlightsPermanentUsers = createSelector(
+  [getSettingsState],
+  (settings) => settings.highlightsPermanentUsers
+)
+
+/**
  * Returns the actions in order.
  * @param  state - The Redux state.
  * @return The actions in order.

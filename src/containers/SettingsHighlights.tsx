@@ -16,13 +16,15 @@ import Highlight, { HighlightColors } from 'Libs/Highlight'
 import {
   addHighlight,
   addHighlightsIgnoredUsers,
+  addHighlightsPermanentUsers,
   removeHighlight,
   removeHighlightsIgnoredUser,
+  removeHighlightsPermanentUser,
   updateHighlightColor,
   updateHighlightPattern,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getHighlights, getHighlightsIgnoredUsers } from 'Store/selectors/settings'
+import { getHighlights, getHighlightsIgnoredUsers, getHighlightsPermanentUsers } from 'Store/selectors/settings'
 import { color } from 'Utils/styled'
 
 /**
@@ -46,20 +48,24 @@ const Form = styled(FlexContent)`
 const Highlights = styled.div`
   background-color: ${color('settings.table.background')};
   border: 1px solid ${color('settings.table.border')};
-  height: calc(100% - 160px);
+  height: calc(100% - 218px);
   overflow-y: auto;
   margin: 20px 0;
 `
 
 /**
- * IgnoredUsers component.
+ * UsersInput component.
  */
-const IgnoredUsers = styled(TagInput)`
-  max-height: 50px;
+const UsersInput = styled(TagInput)`
+  margin-bottom: 10px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 
   &.${Classes.INPUT}, &.${Classes.TAG_INPUT}, & > .${Classes.TAG_INPUT_VALUES} {
     max-height: 50px;
-    overflow-y: hidden;
+    overflow-y: auto;
   }
 
   & > .${Classes.TAG_INPUT_VALUES} {
@@ -86,7 +92,7 @@ class SettingsHighlights extends React.Component<Props, State> {
    */
   public render() {
     const { newColor, newHighlight, newHighlightIntent } = this.state
-    const { highlights, ignoredUsers } = this.props
+    const { highlights, ignoredUsers, permanentUsers } = this.props
 
     return (
       <SettingsPanel>
@@ -120,15 +126,25 @@ class SettingsHighlights extends React.Component<Props, State> {
             <NonIdealState small title="No highlight yet!" details="Try adding some above." />
           )}
         </Highlights>
-        <IgnoredUsers
-          fill
-          leftIcon="user"
-          onAdd={this.onAddIgnoredUser}
-          onRemove={this.onRemoveIgnoredUser}
+        <UsersInput
           placeholder="Ignore highlights from users… (space-separated list)"
-          separator=" "
-          inputValue=""
+          onRemove={this.onRemoveIgnoredUser}
+          onAdd={this.onAddIgnoredUsers}
           values={ignoredUsers}
+          leftIcon="blocked-person"
+          inputValue=""
+          separator=" "
+          fill
+        />
+        <UsersInput
+          placeholder="Always highlight messages from users… (space-separated list)"
+          onRemove={this.onRemovePermanentUser}
+          onAdd={this.onAddPermanentUsers}
+          values={permanentUsers}
+          leftIcon="new-person"
+          inputValue=""
+          separator=" "
+          fill
         />
       </SettingsPanel>
     )
@@ -158,7 +174,7 @@ class SettingsHighlights extends React.Component<Props, State> {
    * Triggered when one or more ignored user(s) are added.
    * @param usernames - The ignored usernames.
    */
-  private onAddIgnoredUser = (usernames: string[]) => {
+  private onAddIgnoredUsers = (usernames: string[]) => {
     this.props.addHighlightsIgnoredUsers(_.map(usernames, _.toLower))
   }
 
@@ -168,6 +184,22 @@ class SettingsHighlights extends React.Component<Props, State> {
    */
   private onRemoveIgnoredUser = (username: string) => {
     this.props.removeHighlightsIgnoredUser(username)
+  }
+
+  /**
+   * Triggered when one or more permanent user(s) are added.
+   * @param usernames - The permanent usernames.
+   */
+  private onAddPermanentUsers = (usernames: string[]) => {
+    this.props.addHighlightsPermanentUsers(_.map(usernames, _.toLower))
+  }
+
+  /**
+   * Triggered when a permanent user is removed.
+   * @param username - The permanent username.
+   */
+  private onRemovePermanentUser = (username: string) => {
+    this.props.removeHighlightsPermanentUser(username)
   }
 
   /**
@@ -222,12 +254,15 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     highlights: getHighlights(state),
     ignoredUsers: getHighlightsIgnoredUsers(state),
+    permanentUsers: getHighlightsPermanentUsers(state),
   }),
   {
     addHighlight,
     addHighlightsIgnoredUsers,
+    addHighlightsPermanentUsers,
     removeHighlight,
     removeHighlightsIgnoredUser,
+    removeHighlightsPermanentUser,
     updateHighlightColor,
     updateHighlightPattern,
   }
@@ -239,6 +274,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 type StateProps = {
   highlights: ReturnType<typeof getHighlights>
   ignoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
+  permanentUsers: ReturnType<typeof getHighlightsPermanentUsers>
 }
 
 /**
@@ -247,8 +283,10 @@ type StateProps = {
 type DispatchProps = {
   addHighlight: typeof addHighlight
   addHighlightsIgnoredUsers: typeof addHighlightsIgnoredUsers
+  addHighlightsPermanentUsers: typeof addHighlightsPermanentUsers
   removeHighlight: typeof removeHighlight
   removeHighlightsIgnoredUser: typeof removeHighlightsIgnoredUser
+  removeHighlightsPermanentUser: typeof removeHighlightsPermanentUser
   updateHighlightColor: typeof updateHighlightColor
   updateHighlightPattern: typeof updateHighlightPattern
 }

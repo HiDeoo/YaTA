@@ -21,6 +21,8 @@ export enum Actions {
   REMOVE_HIGHLIGHT = 'settings/REMOVE_HIGHLIGHT',
   ADD_HIGHLIGHTS_IGNORED_USERS = 'settings/ADD_HIGHLIGHTS_IGNORED_USERS',
   REMOVE_HIGHLIGHTS_IGNORED_USER = 'settings/REMOVE_HIGHLIGHTS_IGNORED_USER',
+  ADD_HIGHLIGHTS_PERMANENT_USERS = 'settings/ADD_HIGHLIGHTS_PERMANENT_USERS',
+  REMOVE_HIGHLIGHTS_PERMANENT_USER = 'settings/REMOVE_HIGHLIGHTS_PERMANENT_USER',
   ADD_ACTION = 'settings/ADD_ACTION',
   REMOVE_ACTION = 'settings/REMOVE_ACTION',
   UPDATE_ACTION = 'settings/UPDATE_ACTION',
@@ -54,6 +56,7 @@ export const initialState = {
   highlightAllMentions: false,
   highlights: {},
   highlightsIgnoredUsers: [],
+  highlightsPermanentUsers: [],
   hostThreshold: 1,
   lastKnownVersion: null,
   playSoundOnMentions: false,
@@ -148,6 +151,21 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         ...state,
         highlightsIgnoredUsers: _.filter(
           state.highlightsIgnoredUsers,
+          (username) => username !== action.payload.username
+        ),
+      }
+    }
+    case Actions.ADD_HIGHLIGHTS_PERMANENT_USERS: {
+      return {
+        ...state,
+        highlightsPermanentUsers: [...state.highlightsPermanentUsers, ...action.payload.usernames],
+      }
+    }
+    case Actions.REMOVE_HIGHLIGHTS_PERMANENT_USER: {
+      return {
+        ...state,
+        highlightsPermanentUsers: _.filter(
+          state.highlightsPermanentUsers,
           (username) => username !== action.payload.username
         ),
       }
@@ -374,6 +392,26 @@ export const removeHighlightsIgnoredUser = (username: string) =>
   })
 
 /**
+ * Adds one or multiple users to always be highlighted.
+ * @param  usernames - The usernames to always highlight.
+ * @return The action.
+ */
+export const addHighlightsPermanentUsers = (usernames: string[]) =>
+  createAction(Actions.ADD_HIGHLIGHTS_PERMANENT_USERS, {
+    usernames,
+  })
+
+/**
+ * Removes an always highlighted user.
+ * @param  username - The username to remove.
+ * @return The action.
+ */
+export const removeHighlightsPermanentUser = (username: string) =>
+  createAction(Actions.REMOVE_HIGHLIGHTS_PERMANENT_USER, {
+    username,
+  })
+
+/**
  * Add an Action.
  * @param  action - The new action.
  * @return The action.
@@ -510,6 +548,8 @@ export type SettingsActions =
   | ReturnType<typeof removeHighlight>
   | ReturnType<typeof addHighlightsIgnoredUsers>
   | ReturnType<typeof removeHighlightsIgnoredUser>
+  | ReturnType<typeof addHighlightsPermanentUsers>
+  | ReturnType<typeof removeHighlightsPermanentUser>
   | ReturnType<typeof addAction>
   | ReturnType<typeof removeAction>
   | ReturnType<typeof updateAction>
@@ -559,6 +599,11 @@ export type SettingsState = {
    * Users ignored for highlights & mentions.
    */
   highlightsIgnoredUsers: string[]
+
+  /**
+   * Users with messages always highlighted.
+   */
+  highlightsPermanentUsers: string[]
 
   /**
    * Actions.

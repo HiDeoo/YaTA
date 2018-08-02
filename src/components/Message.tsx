@@ -15,8 +15,17 @@ import { color, ifProp, size } from 'Utils/styled'
  * Wrapper component.
  */
 const Wrapper = styled.div<WrapperProps>`
-  background-color: ${ifProp('mentionned', color('log.mention.self.background'), 'inherit')};
-  border-left: 3px solid ${ifProp('mentionned', color('log.mention.self.color'), 'transparent')};
+  background-color: ${ifProp(
+    'highlighted',
+    color('log.permanent.background'),
+    ifProp('mentionned', color('log.mention.self.background'), 'inherit')
+  )};
+  border-left: 3px solid
+    ${ifProp(
+      'highlighted',
+      color('log.permanent.border'),
+      ifProp('mentionned', color('log.mention.self.color'), 'transparent')
+    )};
   opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')} 1px 7px;
   white-space: pre-wrap;
@@ -153,7 +162,13 @@ export default class Message extends React.Component<Props, State> {
     const usernameColor = message.user.color as string
 
     return (
-      <Wrapper style={style} onDoubleClick={this.onDoubleClick} mentionned={message.mentionned} purged={message.purged}>
+      <Wrapper
+        onDoubleClick={this.onDoubleClick}
+        highlighted={message.highlighted}
+        mentionned={message.mentionned}
+        purged={message.purged}
+        style={style}
+      >
         {this.renderContextMenu()}
         <Time>{message.time} </Time>
         {this.renderBadges()}
@@ -400,6 +415,7 @@ type Props = {
  * React Props.
  */
 type WrapperProps = {
+  highlighted: boolean
   mentionned: boolean
   purged: boolean
 }

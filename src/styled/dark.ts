@@ -47,6 +47,10 @@ const dark = {
         color: Colors.RED3,
       },
     },
+    permanent: {
+      background: '#1e622f',
+      border: Colors.GREEN3,
+    },
   },
   notification: {
     background: Colors.DARK_GRAY2,

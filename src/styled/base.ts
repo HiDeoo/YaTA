@@ -83,7 +83,7 @@ export default {
     color: Colors.GRAY2,
   },
   settings: {
-    height: 500,
+    height: 550,
   },
   tooltip: {
     background: Colors.DARK_GRAY1,

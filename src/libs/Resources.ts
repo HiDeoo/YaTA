@@ -35,6 +35,7 @@ export default class Resources {
   private emotesProviders: Map<EmoteProviderPrefix, EmotesProvider<Emote>> = new Map()
   private highlights: SerializedHighlights = {}
   private highlightsIgnoredUsers: string[] = []
+  private highlightsPermanentUsers: string[] = []
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
   private emoticonsMap: { [key: string]: { code: string; id: string } } = {}
@@ -114,13 +115,15 @@ export default class Resources {
   }
 
   /**
-   * Sets the highlights and highlights ignored users.
+   * Sets the highlights, highlights ignored users and highlights permanent users.
    * @param highlights - The highlights.
    * @param ignoredUsers - The highlights ignored users.
+   * @param permanentUsers - The highlights permanent users.
    */
-  public setHighlights(highlights: SerializedHighlights, ignoredUsers: string[]) {
+  public setHighlights(highlights: SerializedHighlights, ignoredUsers: string[], permanentUsers: string[]) {
     this.highlights = highlights
     this.highlightsIgnoredUsers = ignoredUsers
+    this.highlightsPermanentUsers = permanentUsers
   }
 
   /**
@@ -181,6 +184,15 @@ export default class Resources {
    */
   public shouldIgnoreHighlights(username: string) {
     return _.includes(this.highlightsIgnoredUsers, username)
+  }
+
+  /**
+   * Check if a message should always be highlighted.
+   * @param  username - The username.
+   * @return `true` when highlighted.
+   */
+  public shouldAlwaysHighlight(username: string) {
+    return _.includes(this.highlightsPermanentUsers, username)
   }
 
   /**

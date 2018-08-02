@@ -47,6 +47,10 @@ const light = {
         color: Colors.RED3,
       },
     },
+    permanent: {
+      background: 'rgba(99, 241, 100, 0.3)',
+      border: Colors.GREEN3,
+    },
   },
   notification: {
     background: Colors.LIGHT_GRAY3,

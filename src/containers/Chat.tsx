@@ -50,6 +50,7 @@ import {
   getHighlightAllMentions,
   getHighlights,
   getHighlightsIgnoredUsers,
+  getHighlightsPermanentUsers,
   getHostThreshold,
   getPlaySoundOnMentions,
   getPlaySoundOnWhispers,
@@ -171,6 +172,7 @@ export class ChatClient extends React.Component<Props, State> {
       this.state.error !== nextState.error ||
       this.props.highlights !== nextProps.highlights ||
       this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length ||
+      this.props.highlightsPermanentUsers.length !== nextProps.highlightsPermanentUsers.length ||
       this.props.highlightAllMentions !== nextProps.highlightAllMentions
     )
   }
@@ -183,6 +185,7 @@ export class ChatClient extends React.Component<Props, State> {
     if (
       prevProps.highlights !== this.props.highlights ||
       prevProps.highlightsIgnoredUsers.length !== this.props.highlightsIgnoredUsers.length ||
+      prevProps.highlightsPermanentUsers.length !== this.props.highlightsPermanentUsers.length ||
       prevProps.highlightAllMentions !== this.props.highlightAllMentions
     ) {
       this.updateHighlights()
@@ -792,12 +795,12 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Updates highlights and highlights ignored users used when parsing messages.
+   * Updates highlights, highlights ignored users and highlights permanent users used when parsing messages.
    */
   private updateHighlights() {
-    const { highlightAllMentions, highlights, highlightsIgnoredUsers } = this.props
+    const { highlightAllMentions, highlights, highlightsIgnoredUsers, highlightsPermanentUsers } = this.props
 
-    Resources.manager().setHighlights(highlights, highlightsIgnoredUsers)
+    Resources.manager().setHighlights(highlights, highlightsIgnoredUsers, highlightsPermanentUsers)
     Resources.manager().setHighlightAllMentions(highlightAllMentions)
   }
 
@@ -875,6 +878,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     highlightAllMentions: getHighlightAllMentions(state),
     highlights: getHighlights(state),
     highlightsIgnoredUsers: getHighlightsIgnoredUsers(state),
+    highlightsPermanentUsers: getHighlightsPermanentUsers(state),
     hostThreshold: getHostThreshold(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
@@ -914,6 +918,7 @@ type StateProps = {
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   highlights: ReturnType<typeof getHighlights>
   highlightsIgnoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
+  highlightsPermanentUsers: ReturnType<typeof getHighlightsPermanentUsers>
   hostThreshold: ReturnType<typeof getHostThreshold>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>

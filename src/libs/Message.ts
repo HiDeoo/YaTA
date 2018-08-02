@@ -30,6 +30,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private mentionned: boolean = false
   private previews: Previews = {}
   private ignoreHighlight: boolean
+  private highlighted: boolean
   private text: string
 
   /**
@@ -54,6 +55,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.user = new Chatter(userstate, this.parseOptions.theme)
     this.type = userstate['message-type']
     this.text = message.toLowerCase()
+    this.highlighted = !self && Resources.manager().shouldAlwaysHighlight(this.user.userName)
 
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
 
@@ -82,6 +84,7 @@ export default class Message implements Serializable<SerializedMessage> {
       badges: this.badges,
       color: this.color,
       date: this.date,
+      highlighted: this.highlighted,
       id: this.id,
       mentionned: this.mentionned,
       message: this.message,
@@ -394,6 +397,7 @@ export type SerializedMessage = {
   badges: string | null
   color: string | null
   user: SerializedChatter
+  highlighted: boolean
   id: string
   date: string
   self: boolean

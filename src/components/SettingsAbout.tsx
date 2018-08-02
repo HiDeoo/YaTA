@@ -28,7 +28,7 @@ const Logo = styled.div`
   display: flex;
   height: 128px;
   justify-content: center;
-  margin: 0 auto 30px auto;
+  margin: 20px auto 40px auto;
   width: 128px;
 `
 
