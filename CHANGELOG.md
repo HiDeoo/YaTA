@@ -4,6 +4,10 @@
 
 - Hosts & auto-hosts thresholds can now be configured independently.
 
+### 🐛 Bug Fix
+
+- Improve behavior when editing a user note and pressing the escape key.
+
 # 0.7.0
 
 ### 🚀 New Feature

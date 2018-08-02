@@ -181,6 +181,7 @@ const Note = styled(EditableText)`
 const initialState = {
   details: null as RawChannel | null,
   error: undefined as Error | undefined,
+  isEditingNote: false,
   showBanReasonAlert: false,
 }
 type State = Readonly<typeof initialState>
@@ -222,7 +223,7 @@ class ChatterDetails extends React.Component<Props, State> {
    */
   public render() {
     const { chatter, disableDialogAnimations, logs } = this.props
-    const { details, showBanReasonAlert } = this.state
+    const { details, isEditingNote, showBanReasonAlert } = this.state
 
     if (_.isNil(chatter)) {
       return null
@@ -241,10 +242,12 @@ class ChatterDetails extends React.Component<Props, State> {
 
     return (
       <Dialog
+        transitionName={disableDialogAnimations ? '' : undefined}
+        canOutsideClickClose={!isEditingNote}
+        canEscapeKeyClose={!isEditingNote}
         isOpen={!_.isNil(chatter)}
         onClose={this.onClose}
         title={header}
-        transitionName={disableDialogAnimations ? '' : undefined}
       >
         <BanReason
           onConfirmBanReason={this.onConfirmBanReason}
@@ -291,7 +294,10 @@ class ChatterDetails extends React.Component<Props, State> {
     return (
       <Note
         placeholder="Click to add a note…"
+        onConfirm={this.onConfirmNote}
         onChange={this.onChangeNote}
+        onCancel={this.onCancelNote}
+        onEdit={this.onEditNote}
         minLines={1}
         maxLines={5}
         value={note}
@@ -423,6 +429,27 @@ class ChatterDetails extends React.Component<Props, State> {
         logs={logs}
       />
     )
+  }
+
+  /**
+   * Triggered when the user cancels of editing the note.
+   */
+  private onCancelNote = () => {
+    this.setState(() => ({ isEditingNote: false }))
+  }
+
+  /**
+   * Triggered when the user starts editing the note.
+   */
+  private onEditNote = () => {
+    this.setState(() => ({ isEditingNote: true }))
+  }
+
+  /**
+   * Triggered when the user confirms the edition of the note.
+   */
+  private onConfirmNote = () => {
+    this.setState(() => ({ isEditingNote: false }))
   }
 
   /**
