@@ -6,6 +6,9 @@ import styled from 'styled-components'
 
 import ActionRow from 'Components/Action'
 import ActionTypeMenuItem from 'Components/ActionTypeMenuItem'
+import FlexContent from 'Components/FlexContent'
+import FlexLayout from 'Components/FlexLayout'
+import Help from 'Components/Help'
 import NonIdealState from 'Components/NonIdealState'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
@@ -18,7 +21,8 @@ import { color } from 'Utils/styled'
 /**
  * Notice component.
  */
-const Notice = styled.div`
+const Notice = styled(FlexLayout)`
+  display: flex;
   font-style: italic;
   margin-bottom: 20px;
 
@@ -92,8 +96,32 @@ class SettingsActions extends React.Component<Props, State> {
     return (
       <SettingsPanel>
         <Notice>
-          Available text placeholders:
-          {_.map(ActionPlaceholder, (placeholder) => this.renderPlaceholder(placeholder))}
+          <FlexContent>
+            Available text placeholders:
+            {_.map(ActionPlaceholder, (placeholder) => this.renderPlaceholder(placeholder))}
+          </FlexContent>
+          <Help>
+            <p>Actions provide a mechanism to trigger various behaviors on users / mesages.</p>
+            <p>
+              Actions are triggered either by using the context menu on the left of each messages or in the dialog
+              appearing when clicking a username.
+            </p>
+            <p>There are multiple action types:</p>
+            <ul>
+              <li>
+                <u>Say</u>: Send the action text as a chat message.
+              </li>
+              <li>
+                <u>Whisper</u>: Whisper the action text to a user.
+              </li>
+              <li>
+                <u>Prepare</u>: Paste the action text in the chat input, ready to be shared.
+              </li>
+              <li>
+                <u>Open URL</u>: Open the action text as an URL.
+              </li>
+            </ul>
+          </Help>
         </Notice>
         <SettingsInput
           intent={this.getIntent('text')}
