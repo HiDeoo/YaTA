@@ -72,7 +72,7 @@ const Refresh = styled(Button)`
  */
 const initialState = {
   filter: '',
-  results: [] as ReturnType<typeof getLogs>,
+  results: [] as ReturnType<typeof getLogs>['logs'],
   searching: false,
 }
 type State = Readonly<typeof initialState>
@@ -95,7 +95,7 @@ class Search extends React.Component<Props, State> {
     this.logMeasureCache = new CellMeasurerCache({
       defaultHeight: base.log.minHeight,
       fixedWidth: true,
-      keyMapper: (index) => _.get(this.props.logs[index], 'id'),
+      keyMapper: (index) => _.get(this.props.allLogs.logs[index], 'id'),
       minHeight: base.log.minHeight,
     })
   }
@@ -263,11 +263,11 @@ class Search extends React.Component<Props, State> {
       return
     }
 
-    const { logs } = this.props
+    const { allLogs } = this.props
 
     const filters = _.map(this.state.filter.split(' '), (filter) => filter.toLowerCase().trim())
 
-    const results = _.filter(logs, (log) => {
+    const results = _.filter(allLogs.logs, (log) => {
       if (isMessage(log)) {
         return _.every(
           filters,
@@ -322,14 +322,14 @@ class Search extends React.Component<Props, State> {
 }
 
 export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
-  logs: getLogs(state),
+  allLogs: getLogs(state),
 }))(Search)
 
 /**
  * React Props.
  */
 type StateProps = {
-  logs: ReturnType<typeof getLogs>
+  allLogs: ReturnType<typeof getLogs>
 }
 
 /**

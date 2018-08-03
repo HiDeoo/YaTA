@@ -181,12 +181,12 @@ class Channel extends React.Component<Props, State> {
   public render() {
     const { focusedChatter, isUploadingFile, showChatters, showPollEditor, showSearch } = this.state
     const {
+      allLogs,
       channel,
       chatters,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
       loginDetails,
-      logs,
       showContextMenu,
     } = this.props
 
@@ -233,15 +233,16 @@ class Channel extends React.Component<Props, State> {
           copyToClipboard={this.copyToClipboard}
           showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
+          purgedCount={allLogs.purgedCount}
           focusChatter={this.focusChatter}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
           ref={this.logsComponent}
           timeout={this.timeout}
+          logs={allLogs.logs}
           chatters={chatters}
           unban={this.unban}
           ban={this.ban}
-          logs={logs}
         />
         <Input
           disabled={this.props.status !== Status.Connected}
@@ -1036,6 +1037,7 @@ class Channel extends React.Component<Props, State> {
 const enhance = compose<Props, {}>(
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     (state) => ({
+      allLogs: getLogs(state),
       autoFocusInput: getAutoFocusInput(state),
       channel: getChannel(state),
       chatters: getChatters(state),
@@ -1048,7 +1050,6 @@ const enhance = compose<Props, {}>(
       isMod: getIsMod(state),
       lastWhisperSender: getLastWhisperSender(state),
       loginDetails: getLoginDetails(state),
-      logs: getLogs(state),
       prioritizeUsernames: getPrioritizeUsernames(state),
       roomState: getRoomState(state),
       showContextMenu: getShowContextMenu(state),
@@ -1074,6 +1075,7 @@ export default enhance(Channel)
  * React Props.
  */
 type StateProps = {
+  allLogs: ReturnType<typeof getLogs>
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
@@ -1086,7 +1088,6 @@ type StateProps = {
   isMod: ReturnType<typeof getIsMod>
   lastWhisperSender: ReturnType<typeof getLastWhisperSender>
   loginDetails: ReturnType<typeof getLoginDetails>
-  logs: ReturnType<typeof getLogs>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   roomState: ReturnType<typeof getRoomState>
   showContextMenu: ReturnType<typeof getShowContextMenu>

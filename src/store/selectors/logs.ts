@@ -28,12 +28,24 @@ const getLogsById = (state: ApplicationState) => state.logs.byId
 const getLogsAllIds = (state: ApplicationState) => state.logs.allIds
 
 /**
- * Returns all the logs in a chronological order.
+ * Returns all the logs in a chronological order and the number of purged logs.
  * @param  state - The Redux state.
- * @return The logs in chronological order.
+ * @return The logs in chronological order and the number of purged logs.
  */
 export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byId) => {
-  return _.map(allIds, (id) => byId[id])
+  let purgedCount = 0
+
+  const logs = _.map(allIds, (id) => {
+    const log = byId[id]
+
+    if (isMessage(log) && log.purged) {
+      purgedCount += 1
+    }
+
+    return log
+  })
+
+  return { logs, purgedCount }
 })
 
 /**

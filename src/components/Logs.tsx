@@ -66,7 +66,7 @@ export default class Logs extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { copyMessageOnDoubleClick, logs, showContextMenu } = this.props
+    const { copyMessageOnDoubleClick, logs, purgedCount, showContextMenu } = this.props
     const { bottom, top } = base.log.border
 
     const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
@@ -76,19 +76,19 @@ export default class Logs extends React.Component<Props> {
         <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
-              ref={this.list}
-              deferredMeasurementCache={this.logMeasureCache}
-              height={height - bottom - top}
-              overscanRowCount={10}
-              rowCount={logs.length}
-              rowHeight={this.logMeasureCache.rowHeight}
-              rowRenderer={this.logRenderer}
-              onScroll={this.onScroll}
-              scrollToIndex={scrollToIndex}
-              width={width}
-              showContextMenu={showContextMenu}
               copyMessageOnDoubleClick={copyMessageOnDoubleClick}
-              purgedCount={_.sumBy(logs, 'purged')}
+              deferredMeasurementCache={this.logMeasureCache}
+              rowHeight={this.logMeasureCache.rowHeight}
+              showContextMenu={showContextMenu}
+              height={height - bottom - top}
+              rowRenderer={this.logRenderer}
+              scrollToIndex={scrollToIndex}
+              purgedCount={purgedCount}
+              onScroll={this.onScroll}
+              rowCount={logs.length}
+              overscanRowCount={10}
+              ref={this.list}
+              width={width}
             />
           )}
         </AutoSizer>
@@ -243,6 +243,7 @@ type Props = {
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
   pauseAutoScroll: (pause: boolean) => void
+  purgedCount: number
   scrollToNewestLog: () => void
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
