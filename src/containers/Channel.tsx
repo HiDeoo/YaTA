@@ -29,11 +29,12 @@ import Search from 'Containers/Search'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
+import Notice from 'Libs/Notice'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
-import { addMarker, pauseAutoScroll } from 'Store/ducks/logs'
+import { addLog, addMarker, pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
   getChannel,
@@ -408,8 +409,9 @@ class Channel extends React.Component<Props, State> {
   /**
    * Triggered after a successful upload.
    * @param url - The URL of the uploaded file.
+   * @param deletionUrl -  The URL to delete the uploaded file.
    */
-  private onUploadSuccess = (url: string) => {
+  private onUploadSuccess = (url: string, deletionUrl: string) => {
     this.setState(
       ({ inputValue }) => {
         const lastCharacter = inputValue.slice(-1)
@@ -418,6 +420,14 @@ class Channel extends React.Component<Props, State> {
         return { inputValue: newInputValue, isUploadingFile: false }
       },
       () => {
+        const notice = new Notice(
+          `Image uploaded successfully. To delete it, use <a href="${deletionUrl}" target="_blank">this link</a>.`,
+          null,
+          true
+        )
+
+        this.props.addLog(notice.serialize())
+
         if (!_.isNil(this.input.current)) {
           this.input.current.focus()
         }
@@ -1057,6 +1067,7 @@ const enhance = compose<Props, {}>(
       status: getStatus(state),
     }),
     {
+      addLog,
       addMarker,
       addToHistory,
       markChatterAsBlocked,
@@ -1099,6 +1110,7 @@ type StateProps = {
  * React Props.
  */
 type DispatchProps = {
+  addLog: typeof addLog
   addMarker: typeof addMarker
   addToHistory: typeof addToHistory
   markChatterAsBlocked: typeof markChatterAsBlocked

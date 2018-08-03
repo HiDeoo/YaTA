@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Hosts & auto-hosts thresholds can now be configured independently.
+- Uploaded images can now be deleted easily.
 - Improve UI when dropping an image to upload with new _blazing-fast_ animations.
 - Add a new highlights setting to highlight all messages from specific users.
 - Add an help section for actions.

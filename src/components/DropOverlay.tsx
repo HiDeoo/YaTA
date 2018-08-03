@@ -309,7 +309,7 @@ export default class DropOverlay extends React.Component<Props, State> {
 
       const response = await Imgur.uploadAnonymousFile(file)
 
-      onSuccess(response.data.link)
+      onSuccess(response.data.link, `https://imgur.com/delete/${response.data.deletehash}`)
     } catch (error) {
       onError(error)
     }
@@ -323,5 +323,5 @@ type Props = {
   onInvalid: () => void
   onError: (error: Error) => void
   onStart: () => void
-  onSuccess: (url: string) => void
+  onSuccess: (url: string, deletionUrl: string) => void
 }
