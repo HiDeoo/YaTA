@@ -20,7 +20,9 @@
 - 🔨 Moderation tools.
 - 🔍 Custom highlights.
 - 🔫 Custom actions.
-- 🎬 Clips.
+- 🎬 Clips, Youtube, Straw Poll, Github previews.
+- 🗳️ Straw Poll creator.
+- 🔍 Search.
 - 🚀 And a lot more…
 
 ## Usage
