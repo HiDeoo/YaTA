@@ -1,4 +1,4 @@
-# Unreleased
+# 0.8.0
 
 ### 🚀 New Feature
 
@@ -12,8 +12,8 @@
 
 - Fix an issue that could lead to have some multiple lines messages overlapping.
 - Improve overall chat performance by caching more computation results.
+- Fix an issue preventing to drag & drop text from the chat to the input bar.
 - Improve behavior when editing a user note and pressing the escape key.
-- Fix an issue prevent to drag & drop text from the chat to the input bar.
 - Fix various issues with cheers rendering.
 
 # 0.7.0
