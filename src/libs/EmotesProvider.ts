@@ -33,6 +33,35 @@ export const TwitchRegExpEmotesMap = {
 }
 
 /**
+ * Specific widths map for emotes known to be larger than the default width (28px).
+ */
+const EmotesWidthsMap = {
+  '54fab45f633595ca4c713abc': 36,
+  '54fab7d2633595ca4c713abf': 42,
+  '54fbefeb01abde735115de5b': 87,
+  '54fbf00a01abde735115de5c': 46,
+  '5502874d135896936880fdd2': 36,
+  '55189a5062e6bd0027aee082': 60,
+  '5622aaef3286c42e57d8e4ab': 32,
+  '566c9fc265dbbdab32ec053b': 30,
+  '566c9fde65dbbdab32ec053e': 30,
+  '566c9ff365dbbdab32ec0541': 53,
+  '566ca00f65dbbdab32ec0544': 56,
+  '566ca06065dbbdab32ec054e': 38,
+  '566ca1a365dbbdab32ec055b': 84,
+  '566ca38765dbbdab32ec0560': 35,
+  '573d38b50ffbf6cc5cc38dc9': 37,
+  1900: 33,
+  28: 39,
+  30: 29,
+  36: 36,
+  52: 32,
+  65: 40,
+  69: 41,
+  86: 36,
+}
+
+/**
  * Characters triggering a next word look-up when parsing emotes.
  */
 const nextWordLookUpTriggers = [';', '<', '>', '(', ':', 'B', 'D', 'R']
@@ -124,8 +153,9 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    */
   public getEmoteTag(id: string, name: string) {
     const { src, srcset } = this.getEmoteTagUrls(id)
+    const minWidth = this.getSpecificWidth(id)
 
-    return `<span class="emoteWrapper"><img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" /></span>`
+    return `<span class="emoteWrapper"${minWidth}><img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" /></span>`
   }
 
   /**
@@ -167,6 +197,15 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
       .concat(_.get(words[index + 1], 'text', ''))
       .concat(_.get(words[index + 2], 'text', ''))
       .trim()
+  }
+
+  /**
+   * Returns the specific min-width of an emote if necessary.
+   * @param  id - The emote id.
+   * @return The minimum width or an empty string.
+   */
+  private getSpecificWidth(id: string) {
+    return _.has(EmotesWidthsMap, id) ? `  style="min-width: ${EmotesWidthsMap[id]}px;"` : ''
   }
 }
 
