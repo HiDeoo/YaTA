@@ -9,7 +9,7 @@ import SettingsPanel from 'Components/SettingsPanel'
 import SettingsPanelSection from 'Components/SettingsPanelSection'
 import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
-import Sound, { Sounds } from 'Libs/Sound'
+import { Sounds } from 'Libs/Sound'
 import {
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
@@ -98,39 +98,39 @@ class SettingsGeneral extends React.Component<Props> {
       <SettingsPanel>
         <SettingsPanelSection title="Features">
           <Switch
-            checked={copyMessageOnDoubleClick}
-            label="Copy message on double click"
             onChange={this.props.toggleCopyMessageOnDoubleClick}
+            label="Copy message on double click"
+            checked={copyMessageOnDoubleClick}
           />
           <Switch
             description="Menu next to each message to quickly access various actions."
+            onChange={this.props.toggleShowContextMenu}
             checked={showContextMenu}
             label="Show context menu"
-            onChange={this.props.toggleShowContextMenu}
           />
           <Switch
             description="This only happens when focusing the application."
-            checked={autoFocusInput}
             label="Automatically focus the input field"
             onChange={this.props.toggleAutoFocusInput}
+            checked={autoFocusInput}
           />
           <Switch
             description="Other people mentioned are highlighted differently from yourself."
             checked={highlightAllMentions}
-            label="Highlight all mentions"
             onChange={this.props.toggleHighlightAllMentions}
+            label="Highlight all mentions"
           />
           <Switch
             description="Usernames will be auto-completed before emotes when enabled."
-            checked={prioritizeUsernames}
             label="Prioritize usernames when auto-completing"
             onChange={this.props.togglePrioritizeUsernames}
+            checked={prioritizeUsernames}
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="UI">
           <Popover
-            isOpen={isThemeConfirmationOpened}
             popoverClassName={Classes.POPOVER_CONTENT_SIZING}
+            isOpen={isThemeConfirmationOpened}
             usePortal={false}
           >
             <Switch checked={theme === Theme.Dark} label="Dark theme" onChange={this.onToggleTheme} />
@@ -138,21 +138,23 @@ class SettingsGeneral extends React.Component<Props> {
           </Popover>
           <Switch
             description="Dialogs include the chatter details & chatters list."
+            onChange={this.props.toggleDisableDialogAnimations}
             checked={disableDialogAnimations}
             label="Disable dialog animations"
-            onChange={this.props.toggleDisableDialogAnimations}
           />
         </SettingsPanelSection>
         <SettingsPanelSection title="Notifications">
           <Switch
-            checked={playSoundOnMentions}
+            onChange={this.props.togglePlaySoundOnMentions}
+            checkSound={Sounds.Notification}
             label="Play sound on mentions"
-            onChange={this.togglePlaySoundOnMentions}
+            checked={playSoundOnMentions}
           />
           <Switch
-            checked={playSoundOnWhispers}
+            onChange={this.props.togglePlaySoundOnWhispers}
+            checkSound={Sounds.Notification}
             label="Play sound on whispers"
-            onChange={this.togglePlaySoundOnWhispers}
+            checked={playSoundOnWhispers}
           />
           <NumericInput
             description="Hosts with less viewers will be ignored."
@@ -178,15 +180,15 @@ class SettingsGeneral extends React.Component<Props> {
         <SettingsPanelSection title="Streamer mode">
           <Switch
             description="You will still be able to send whispers."
+            onChange={this.props.toggleHideWhispers}
             checked={hideWhispers}
             label="Hide whispers"
-            onChange={this.props.toggleHideWhispers}
           />
           <Switch
+            onChange={this.props.toggleShowViewerCount}
             description="Updated every 2mins."
             checked={showViewerCount}
             label="Show viewer count"
-            onChange={this.props.toggleShowViewerCount}
           />
         </SettingsPanelSection>
       </SettingsPanel>
@@ -239,28 +241,6 @@ class SettingsGeneral extends React.Component<Props> {
     this.setState(() => ({ isThemeConfirmationOpened: false }))
 
     this.props.toggleTheme()
-  }
-
-  /**
-   * Triggered when the sound on mentions is toggled.
-   */
-  private togglePlaySoundOnMentions = () => {
-    if (!this.props.playSoundOnMentions) {
-      Sound.manager().playSound(Sounds.Notification)
-    }
-
-    this.props.togglePlaySoundOnMentions()
-  }
-
-  /**
-   * Triggered when the sound on whispers is toggled.
-   */
-  private togglePlaySoundOnWhispers = () => {
-    if (!this.props.playSoundOnWhispers) {
-      Sound.manager().playSound(Sounds.Notification)
-    }
-
-    this.props.togglePlaySoundOnWhispers()
   }
 
   /**

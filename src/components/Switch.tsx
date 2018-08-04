@@ -3,6 +3,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import Sound, { Sounds } from 'Libs/Sound'
 import { color } from 'Utils/styled'
 
 /**
@@ -26,22 +27,43 @@ const Description = styled.div`
 /**
  * Switch Component.
  */
-const Switch: React.SFC<Props> = (props) => {
-  const { description, ...restProps } = props
+export default class Switch extends React.Component<Props> {
+  /**
+   * Renders the component.
+   * @return Element to render.
+   */
+  public render() {
+    const { checkSound, description, onChange, ...restProps } = this.props
 
-  return (
-    <Wrapper>
-      <OriginalSwitch {...restProps} />
-      {!_.isNil(description) && <Description>{description}</Description>}
-    </Wrapper>
-  )
+    return (
+      <Wrapper>
+        <OriginalSwitch {...restProps} onChange={this.onChange} />
+        {!_.isNil(description) && <Description>{description}</Description>}
+      </Wrapper>
+    )
+  }
+
+  /**
+   * Triggered when the switch is checked or unchecked.
+   * @param event - The associated event.
+   */
+  private onChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const { checked, checkSound, onChange } = this.props
+
+    if (!_.isNil(checkSound) && !checked) {
+      Sound.manager().playSound(checkSound)
+    }
+
+    if (!_.isNil(onChange)) {
+      onChange(event)
+    }
+  }
 }
-
-export default Switch
 
 /**
  * React Props.
  */
 interface Props extends ISwitchProps {
   description?: string
+  checkSound?: Sounds
 }
