@@ -270,6 +270,22 @@ export default class Twitch {
   }
 
   /**
+   * Fetches follows for the current user which consist of online streams and offline channels.
+   * @return The streams and follows.
+   */
+  public static async fetchFollows(): Promise<RawFollow[]> {
+    const allFollow = await Twitch.fetchAuthenticatedUserFollows()
+    const { streams } = await Twitch.fetchAuthenticatedUserStreams()
+
+    const follows = _.map(allFollow.follows, 'channel')
+
+    const onlineStreams = _.map(streams, 'channel.name')
+    const offlineFollows = _.filter(follows, (follow) => !_.includes(onlineStreams, follow.name))
+
+    return [...streams, ...offlineFollows]
+  }
+
+  /**
    * Fetches all followed streams for the current authenticated user.
    * @return The follows.
    */
@@ -739,3 +755,8 @@ export type RawCheermoteImage = { [key in CheermoteImageScales]: string }
 export type CheermoteImageBackground = 'dark' | 'light'
 type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
+
+/**
+ * Online stream or offline channel.
+ */
+export type RawFollow = RawStream | RawChannel

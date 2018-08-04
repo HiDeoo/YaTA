@@ -13,6 +13,7 @@ import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
 import DropOverlay from 'Components/DropOverlay'
 import FlexLayout from 'Components/FlexLayout'
+import FollowOmnibar from 'Components/FollowOmnibar'
 import { withHeader, WithHeaderProps } from 'Components/Header'
 import HeaderChannelState from 'Components/HeaderChannelState'
 import HeaderModerationMenuItems from 'Components/HeaderModerationMenuItems'
@@ -92,6 +93,7 @@ const initialState = {
   inputValue: '',
   isUploadingFile: false,
   showChatters: false,
+  showFollowOmnibar: false,
   showPollEditor: false,
   showSearch: false,
   viewerCount: null as number | null,
@@ -180,7 +182,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { focusedChatter, isUploadingFile, showChatters, showPollEditor, showSearch } = this.state
+    const { focusedChatter, isUploadingFile, showFollowOmnibar, showChatters, showPollEditor, showSearch } = this.state
     const {
       allLogs,
       channel,
@@ -207,6 +209,7 @@ class Channel extends React.Component<Props, State> {
           onError={this.onUploadError}
           onStart={this.onUploadStart}
         />
+        <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -428,9 +431,7 @@ class Channel extends React.Component<Props, State> {
 
         this.props.addLog(notice.serialize())
 
-        if (!_.isNil(this.input.current)) {
-          this.input.current.focus()
-        }
+        this.focusChatInput()
       }
     )
   }
@@ -439,8 +440,8 @@ class Channel extends React.Component<Props, State> {
    * Triggered when the application is focused.
    */
   private onFocusWindow = () => {
-    if (this.props.autoFocusInput && !_.isNil(this.input.current)) {
-      this.input.current.focus()
+    if (this.props.autoFocusInput) {
+      this.focusChatInput()
     }
   }
 
@@ -453,6 +454,10 @@ class Channel extends React.Component<Props, State> {
       event.preventDefault()
 
       this.toggleSearch()
+    } else if (event.code === 'KeyP' && event.altKey) {
+      event.preventDefault()
+
+      this.toggleFollowOmnibar()
     }
   }
 
@@ -538,14 +543,39 @@ class Channel extends React.Component<Props, State> {
    * Toggles the chatters list.
    */
   private toggleChatters = () => {
+    const closing = this.state.showChatters
+
     this.setState(({ showChatters }) => ({ showChatters: !showChatters }))
+
+    if (closing) {
+      this.focusChatInput()
+    }
   }
 
   /**
    * Toggles the poll editor.
    */
   private togglePollEditor = () => {
+    const closing = this.state.showPollEditor
+
     this.setState(({ showPollEditor }) => ({ showPollEditor: !showPollEditor }))
+
+    if (closing) {
+      this.focusChatInput()
+    }
+  }
+
+  /**
+   * Toggles the channel omnibar.
+   */
+  private toggleFollowOmnibar = () => {
+    const closing = this.state.showFollowOmnibar
+
+    this.setState(({ showFollowOmnibar }) => ({ showFollowOmnibar: !showFollowOmnibar }))
+
+    if (closing) {
+      this.focusChatInput()
+    }
   }
 
   /**
@@ -556,8 +586,8 @@ class Channel extends React.Component<Props, State> {
 
     this.setState(({ showSearch }) => ({ showSearch: !showSearch }))
 
-    if (closing && !_.isNil(this.input.current)) {
-      this.input.current.focus()
+    if (closing) {
+      this.focusChatInput()
     }
   }
 
@@ -591,9 +621,7 @@ class Channel extends React.Component<Props, State> {
       } else if (action.type === ActionType.Prepare) {
         this.setState(() => ({ inputValue: text }))
 
-        if (!_.isNil(this.input.current)) {
-          this.input.current.focus()
-        }
+        this.focusChatInput()
       } else if (action.type === ActionType.Open) {
         window.open(text)
       }
@@ -603,6 +631,15 @@ class Channel extends React.Component<Props, State> {
         intent: Intent.DANGER,
         message: 'Something went wrong! Check your action configuration.',
       })
+    }
+  }
+
+  /**
+   * Focus the chat input.
+   */
+  private focusChatInput() {
+    if (!_.isNil(this.input.current)) {
+      this.input.current.focus()
     }
   }
 
@@ -899,9 +936,7 @@ class Channel extends React.Component<Props, State> {
   private prepareWhisper = (username: string) => {
     this.setState(() => ({ inputValue: `/w ${username} ` }))
 
-    if (!_.isNil(this.input.current)) {
-      this.input.current.focus()
-    }
+    this.focusChatInput()
   }
 
   /**

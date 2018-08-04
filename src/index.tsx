@@ -8,6 +8,7 @@ import configureStore, { StoreConfiguration } from 'Store'
 import base from 'Styled/base'
 
 import 'node_modules/@blueprintjs/core/lib/css/blueprint.css'
+import 'node_modules/@blueprintjs/select/lib/css/blueprint-select.css'
 import 'node_modules/normalize.css/normalize.css'
 
 /**

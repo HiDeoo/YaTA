@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import Follow from 'Components/Follow'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
-import Twitch, { RawChannel, RawStream } from 'Libs/Twitch'
+import Twitch, { RawFollow } from 'Libs/Twitch'
 import { color, size } from 'Utils/styled'
 
 /**
@@ -45,8 +45,8 @@ const Search = styled(InputGroup)`
 const initialState = {
   error: undefined as Error | undefined,
   filter: '',
-  filteredFollows: null as Array<RawChannel | RawStream> | null,
-  follows: null as Array<RawChannel | RawStream> | null,
+  filteredFollows: null as RawFollow[] | null,
+  follows: null as RawFollow[] | null,
 }
 type State = Readonly<typeof initialState>
 
@@ -62,16 +62,10 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
    */
   public async componentDidMount() {
     try {
-      const allFollow = await Twitch.fetchAuthenticatedUserFollows()
-      const { streams } = await Twitch.fetchAuthenticatedUserStreams()
-
-      const follows = _.map(allFollow.follows, 'channel')
-
-      const onlineStreams = _.map(streams, 'channel.name')
-      const offlineFollows = _.filter(follows, (follow) => !_.includes(onlineStreams, follow.name))
+      const follows = await Twitch.fetchFollows()
 
       this.setState(
-        () => ({ follows: [...streams, ...offlineFollows] }),
+        () => ({ follows }),
         () => {
           if (!_.isNil(this.search)) {
             this.search.focus()
@@ -143,7 +137,7 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
   private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const filter = event.currentTarget.value
 
-    let filteredFollows: Array<RawChannel | RawStream> | null = null
+    let filteredFollows: RawFollow[] | null = null
 
     const { follows } = this.state
 

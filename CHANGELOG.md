@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Add a quick way to switch from a channel to another with the `Alt` + `p` shortcut.
+
 ### 🐛 Bug Fix
 
 - Fix auto-completion of users having a localized display name.
