@@ -8,8 +8,8 @@ import NumericInput from 'Components/NumericInput'
 import SettingsPanel from 'Components/SettingsPanel'
 import SettingsPanelSection from 'Components/SettingsPanelSection'
 import Switch from 'Components/Switch'
-import Sound from 'Constants/sound'
 import Theme from 'Constants/theme'
+import Sound, { Sounds } from 'Libs/Sound'
 import {
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
@@ -69,7 +69,6 @@ type State = Readonly<typeof initialState>
  */
 class SettingsGeneral extends React.Component<Props> {
   public state: State = initialState
-  private notificationSound = new Audio(Sound.Notification)
   private hostThresholdInput = React.createRef<NumericInput>()
   private autoHostThresholdInput = React.createRef<NumericInput>()
 
@@ -247,7 +246,7 @@ class SettingsGeneral extends React.Component<Props> {
    */
   private togglePlaySoundOnMentions = () => {
     if (!this.props.playSoundOnMentions) {
-      this.notificationSound.play()
+      Sound.manager().playSound(Sounds.Notification)
     }
 
     this.props.togglePlaySoundOnMentions()
@@ -258,7 +257,7 @@ class SettingsGeneral extends React.Component<Props> {
    */
   private togglePlaySoundOnWhispers = () => {
     if (!this.props.playSoundOnWhispers) {
-      this.notificationSound.play()
+      Sound.manager().playSound(Sounds.Notification)
     }
 
     this.props.togglePlaySoundOnWhispers()

@@ -20,7 +20,6 @@ import Notices from 'Constants/notices'
 import Page from 'Constants/page'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
-import Sound from 'Constants/sound'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
 import Chatter from 'Libs/Chatter'
@@ -30,6 +29,7 @@ import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import Resources from 'Libs/Resources'
 import RoomState from 'Libs/RoomState'
+import Sound, { Sounds } from 'Libs/Sound'
 import Twitch from 'Libs/Twitch'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
 import {
@@ -72,7 +72,6 @@ export class ChatClient extends React.Component<Props, State> {
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
   private didFetchExternalResources = false
-  private notificationSound = new Audio(Sound.Notification)
 
   /**
    * Creates a new instance of the component.
@@ -412,7 +411,7 @@ export class ChatClient extends React.Component<Props, State> {
         this.props.addChatter(serializedMessage.user, serializedMessage.id)
 
         if (this.props.playSoundOnMentions && serializedMessage.mentionned) {
-          this.notificationSound.play()
+          Sound.manager().playSound(Sounds.Notification)
         }
       }
 
@@ -420,7 +419,7 @@ export class ChatClient extends React.Component<Props, State> {
         this.props.setLastWhisperSender(serializedMessage.user.userName)
 
         if (this.props.playSoundOnWhispers) {
-          this.notificationSound.play()
+          Sound.manager().playSound(Sounds.Notification)
         }
       }
     }
