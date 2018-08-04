@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🐛 Bug Fix
+
+- Fix auto-completion of users having a localized display name.
+
 # 0.8.0
 
 ### 🚀 New Feature

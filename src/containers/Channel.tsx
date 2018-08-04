@@ -680,9 +680,19 @@ class Channel extends React.Component<Props, State> {
 
     const { chatters, emotes, prioritizeUsernames } = this.props
 
-    const usernameCompletions = _.filter(chatters, (chatter) => {
-      return chatter.displayName.toLowerCase().startsWith(sanitizedWord)
-    }).map((chatter) => chatter.displayName)
+    const usernameCompletions = _.reduce(
+      chatters,
+      (usernames, chatter) => {
+        if (chatter.displayName.toLowerCase().startsWith(sanitizedWord)) {
+          usernames.push(chatter.displayName)
+        } else if (chatter.showUserName && chatter.userName.toLowerCase().startsWith(sanitizedWord)) {
+          usernames.push(chatter.userName)
+        }
+
+        return usernames
+      },
+      [] as string[]
+    )
 
     let emoteCompletions: string[] = []
 
