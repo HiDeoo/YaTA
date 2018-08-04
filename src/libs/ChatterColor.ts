@@ -158,7 +158,7 @@ export default class ChatterColor {
 /**
  * Color alias.
  */
-type Color = tinycolorInstance
+type Color = tinycolor.Instance
 
 /**
  * A color, null or undefined.
