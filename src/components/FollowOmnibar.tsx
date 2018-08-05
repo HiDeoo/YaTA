@@ -2,6 +2,7 @@ import { Colors, Icon, Menu } from '@blueprintjs/core'
 import { ItemPredicate, ItemRenderer, Omnibar } from '@blueprintjs/select'
 import * as _ from 'lodash'
 import * as React from 'react'
+import { RouteComponentProps, withRouter } from 'react-router'
 
 import Twitch, { RawFollow } from 'Libs/Twitch'
 
@@ -19,7 +20,7 @@ type State = Readonly<typeof initialState>
 /**
  * FollowOmnibar Component.
  */
-export default class FollowOmnibar extends React.Component<Props, State> {
+class FollowOmnibar extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -55,6 +56,7 @@ export default class FollowOmnibar extends React.Component<Props, State> {
         onClose={this.props.toggle}
         items={this.state.follows}
         isOpen={visible}
+        resetOnSelect
       />
     )
   }
@@ -116,7 +118,7 @@ export default class FollowOmnibar extends React.Component<Props, State> {
   private onSelectFollow = (follow: RawFollow) => {
     this.props.toggle()
 
-    document.location.href = `/${Twitch.isStream(follow) ? follow.channel.name : follow.name}`
+    this.props.history.push(`/${Twitch.isStream(follow) ? follow.channel.name : follow.name}`)
   }
 
   /**
@@ -132,7 +134,9 @@ export default class FollowOmnibar extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props extends RouteComponentProps<{}> {
   toggle: () => void
   visible: boolean
 }
+
+export default withRouter(FollowOmnibar)

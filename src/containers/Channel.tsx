@@ -115,12 +115,7 @@ class Channel extends React.Component<Props, State> {
    * Lifecycle: componentDidMount.
    */
   public componentDidMount() {
-    const channel = this.props.match.params.channel.toLowerCase()
-
-    if (this.props.match.params.channel !== this.props.channel) {
-      this.props.setChannel(channel)
-    }
-
+    this.setChannel()
     this.setHeaderComponents()
 
     window.addEventListener('focus', this.onFocusWindow)
@@ -136,10 +131,15 @@ class Channel extends React.Component<Props, State> {
     const {
       isAutoScrollPaused: prevIsAutoScrollPaused,
       isMod: prevIsMod,
+      match: prevMatch,
       roomState: prevRoomState,
       showViewerCount: prevShowViewerCount,
     } = prevProps
     const { isAutoScrollPaused, isMod, roomState, showViewerCount } = this.props
+
+    if (prevMatch.params.channel !== this.props.match.params.channel) {
+      this.setChannel()
+    }
 
     if (prevShowViewerCount !== showViewerCount || (_.isNil(prevRoomState) && !_.isNil(roomState))) {
       if (showViewerCount) {
@@ -228,7 +228,7 @@ class Channel extends React.Component<Props, State> {
           channel={channel}
           disableDialogAnimations={disableDialogAnimations}
         />
-        <Chat ref={this.chatClient} />
+        <Chat ref={this.chatClient} key={channel} />
         <Logs
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -275,6 +275,17 @@ class Channel extends React.Component<Props, State> {
         />
       </FlexLayout>
     )
+  }
+
+  /**
+   * Sets the current channel if necessary.
+   */
+  private setChannel() {
+    const channel = this.props.match.params.channel.toLowerCase()
+
+    if (this.props.match.params.channel !== this.props.channel) {
+      this.props.setChannel(channel)
+    }
   }
 
   /**

@@ -93,6 +93,7 @@ const appReducer: Reducer<AppState, AppActions> = (state = initialState, action)
     case Actions.RESET_APP_STATE: {
       return {
         ...initialState,
+        channel: state.channel,
         shouldReadChangelog: state.shouldReadChangelog,
       }
     }
