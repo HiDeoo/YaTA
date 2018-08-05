@@ -33,6 +33,11 @@ const WhisperRegExp = /^\/w (\S+) (.+)/
 const MarkerRegExp = /^\/marker(?:$|\s)/
 
 /**
+ * CORS proxy URL.
+ */
+const ProxyURL = 'https://cors-anywhere.herokuapp.com/'
+
+/**
  * Twitch class.
  */
 export default class Twitch {
@@ -262,9 +267,7 @@ export default class Twitch {
    * @return The chatter.
    */
   public static async fetchChatters(channel: string): Promise<RawChattersDetails> {
-    const response = await fetch(
-      `https://cors-anywhere.herokuapp.com/${Twitch.getUrl(TwitchApi.Tmi, `/group/user/${channel}/chatters`)}`
-    )
+    const response = await fetch(Twitch.getUrl(TwitchApi.Tmi, `/group/user/${channel}/chatters`, undefined, true))
 
     return response.json()
   }
@@ -372,10 +375,11 @@ export default class Twitch {
    * @param  api - The Twitch API to use.
    * @param  endpoint - The endpoint to fetch.
    * @param  [searchParams] - Additional search parameters.
+   * @param  [proxy=false] - `true` to use a CORS proxy.
    * @return The URL.
    */
-  private static getUrl(api: TwitchApi, endpoint: string, searchParams: { [key: string]: string } = {}) {
-    const url = new URL(`${api}${endpoint}`)
+  private static getUrl(api: TwitchApi, endpoint: string, searchParams: { [key: string]: string } = {}, proxy = false) {
+    const url = new URL(`${proxy ? ProxyURL : ''}${api}${endpoint}`)
 
     _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
 
