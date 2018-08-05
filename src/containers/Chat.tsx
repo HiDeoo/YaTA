@@ -734,7 +734,9 @@ export class ChatClient extends React.Component<Props, State> {
 
     Resources.manager().setEmoticonsSetId(emoticonsSetId)
 
-    const emotes = EmotesProvider.sanitizeTwitchEmotes(_.flatten(_.map(sets, (set) => set)))
+    const emotes = EmotesProvider.sanitizeTwitchEmotes(
+      _.flatten(_.map(sets, (set) => _.filter(set, (emote) => !Resources.manager().isEmoticon(emote.id))))
+    )
 
     const provider = new EmotesProvider(
       EmoteProviderPrefix.Twitch,

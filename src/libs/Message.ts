@@ -144,12 +144,11 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param currentUsername - The name of the current user.
    */
   private parseMessage(message: string, userstate: UserState, currentUsername: string) {
-    const emotes = userstate.emotes || {}
     const words = Unistring.getWords(message)
 
     const parsedMessage = Array.from(message)
 
-    this.parseAdditionalEmotes(words, emotes)
+    const emotes = this.parseAdditionalEmotes(words, userstate.emotes || {})
     this.parseEmotes(parsedMessage, emotes)
     this.parseHighlights(words, parsedMessage)
     this.parseMentions(words, parsedMessage, currentUsername)
@@ -174,19 +173,25 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param emotes - The message emotes.
    */
   private parseAdditionalEmotes(words: Word[], emotes: Emotes) {
+    const parsedEmotes = {}
+
     Resources.manager()
       .getEmotesProviders()
       .forEach((provider) => {
         if (provider.isTwitch() && !this.self) {
+          _.merge(parsedEmotes, emotes)
+
           return
         }
 
         const providerEmotes = provider.getMessageEmotes(words)
 
         if (_.size(providerEmotes) > 0) {
-          _.merge(emotes, providerEmotes)
+          _.merge(parsedEmotes, providerEmotes)
         }
       })
+
+    return parsedEmotes
   }
 
   /**

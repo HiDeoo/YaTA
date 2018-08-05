@@ -39,6 +39,7 @@ export default class Resources {
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
   private emoticonsMap: { [key: string]: { code: string; id: string } } = {}
+  private emoticonsList = _.flatten(_.map(Emoticons.bySetId, (set) => _.map(set, (id) => id)))
   private previewProviders: { [key: string]: PreviewProvider }
 
   /**
@@ -104,6 +105,15 @@ export default class Resources {
    */
   public getEmoticonsMap() {
     return this.emoticonsMap
+  }
+
+  /**
+   * Checks if an emote id corresponds to an emoticon.
+   * @param  id - The emote id.
+   * @return `true` if the emote is an emoticon.
+   */
+  public isEmoticon(id: string | number) {
+    return _.includes(this.emoticonsList, id)
   }
 
   /**

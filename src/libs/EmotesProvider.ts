@@ -121,7 +121,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    */
   public getMessageEmotes(words: Word[]): Emotes {
     return _.reduce(
-      this.isTwitch() ? Resources.manager().getEmoticonsMap() : this.emotes,
+      this.isTwitch() ? [...this.emotes, ..._.values(Resources.manager().getEmoticonsMap())] : this.emotes,
       (emotes, emote) => {
         const wordsMatchingEmote = _.filter(words, (word, index) => {
           if (_.includes(nextWordLookUpTriggers, word.text)) {
