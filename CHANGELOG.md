@@ -8,6 +8,7 @@
 
 - Fix auto-completion of users having a localized display name.
 - Fix an issue with Twitch emotes & emojis in sent messages ([#3](https://github.com/HiDeoo/YaTA/issues/3)).
+- Fix a Firefox issue with emotes rendering that could lead to empty lines.
 
 # 0.8.0
 
