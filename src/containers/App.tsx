@@ -246,7 +246,7 @@ If applicable, add screenshots to help explain your problem.
 | ---------------- | -------
 | YaTA             | ${REACT_APP_VERSION}
 | Browser          | ${browser.name} ${browser.version}
-| Operating System | ${os.name} ${os.version}`
+| Operating System | ${os.name} ${os.version || ''}`
 
     window.open(`${REACT_APP_BUGS_URL}/new?body=${encodeURIComponent(body)}`)
   }
