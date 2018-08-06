@@ -337,7 +337,7 @@ class Channel extends React.Component<Props, State> {
           <HeaderTooltip content="Channel Details">
             <Button icon="eye-open" minimal />
           </HeaderTooltip>
-          <ChannelDetails channelId={channelId} />
+          <ChannelDetails channel={channel} id={channelId} />
         </Popover>
         <HeaderTooltip content="Chatters List">
           <Button onClick={this.toggleChatters} icon="people" minimal />

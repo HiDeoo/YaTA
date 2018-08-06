@@ -8,6 +8,7 @@ import RequestMethod from 'Constants/requestMethod'
 enum TwitchApi {
   Auth = 'https://id.twitch.tv/oauth2',
   Badges = 'https://badges.twitch.tv/v1/badges',
+  Base = 'https://api.twitch.tv',
   Helix = 'https://api.twitch.tv/helix',
   Kraken = 'https://api.twitch.tv/kraken',
   Tmi = 'https://tmi.twitch.tv',
@@ -20,6 +21,16 @@ export enum BroadcastType {
   Archive = 'archive',
   Highlight = 'highlight',
   Upload = 'upload',
+}
+
+/**
+ * Twitch clip discovery period.
+ */
+export enum ClipPeriod {
+  All = 'all',
+  Day = 'day',
+  Month = 'month',
+  Week = 'week',
 }
 
 /**
@@ -179,6 +190,29 @@ export default class Twitch {
    */
   public static async fetchChannel(id: string): Promise<RawChannel> {
     const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`)
+
+    return response.json()
+  }
+
+  /**
+   * Fetches description panels of a channel.
+   * @param  channel - The channel.
+   * @return The panels.
+   */
+  public static async fetchPanels(channel: string): Promise<RawPanels> {
+    const response = await Twitch.fetch(TwitchApi.Base, `/channels/${channel}/panels`)
+
+    return response.json()
+  }
+
+  /**
+   * Returns the top clips for a specific channel.
+   * @param  channel - The channel.
+   * @param  period - The period to include.
+   * @return The top clips.
+   */
+  public static async fetchTopClips(channel: string, period: ClipPeriod): Promise<RawClips> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/clips/top`, { channel, period })
 
     return response.json()
   }
@@ -741,6 +775,37 @@ type RawPreview = {
  */
 type RawNewClips = {
   data: Array<{ edit_url: string; id: string }>
+}
+
+/**
+ * Twitch channel panels.
+ */
+export type RawPanels = RawPanel[]
+
+/**
+ * Twitch channel panel.
+ */
+type RawPanel = {
+  channel: string
+  data: {
+    description?: string
+    image?: string
+    link?: string
+    title?: string
+  }
+  display_order: number
+  html_description: string
+  kind: 'default' | string
+  user_id: number
+  _id: number
+}
+
+/**
+ * Twitch clips.
+ */
+export type RawClips = {
+  clips: RawClip[]
+  _cursor: string
 }
 
 /**

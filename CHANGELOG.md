@@ -3,6 +3,11 @@
 ### 🚀 New Feature
 
 - Add a quick way to switch from a channel to another with the `Alt` + `p` shortcut.
+- Revamp channel details panel to reduce even more the need of the Twitch website:
+  - Basic infos are more visible.
+  - Include channel description (text below the video player) which is very useful to look at chat rules, streamer infos, social links, schedule, etc.
+  - Show last 10 vods instead of only 3.
+  - Include top clips & recent clips.
 
 ### 🐛 Bug Fix
 
