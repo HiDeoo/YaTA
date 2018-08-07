@@ -1,6 +1,6 @@
 {
   "name": "yata",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Twitch chat client",
   "author": "HiDeoo",
   "license": "MIT",
@@ -38,6 +38,7 @@
     "node-jose": "1.0.0",
     "pluralize": "7.0.0",
     "react": "16.4.2",
+    "react-confetti": "2.3.0",
     "react-dom": "16.4.2",
     "react-helmet": "5.2.0",
     "react-redux": "5.0.7",

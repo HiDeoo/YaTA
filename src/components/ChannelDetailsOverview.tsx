@@ -194,9 +194,10 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * @return Element to render.
    */
   private renderStream() {
+    const { channel } = this.props
     const { showPlayer, stream } = this.state
 
-    if (_.isNil(stream)) {
+    if (_.isNil(stream) || _.isNil(channel)) {
       return <NonIdealState small title="Currently offline!" />
     }
 
@@ -214,7 +215,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
         </Meta>
         <PreviewWrapper>
           {showPlayer ? (
-            <Player src="http://player.twitch.tv/?channel=nybblesio&muted=true" scrolling="no" />
+            <Player src={`http://player.twitch.tv/?channel=${channel}&muted=true`} scrolling="no" />
           ) : (
             <>
               <Preview src={stream.preview.medium} onClick={this.onClickPreview} />

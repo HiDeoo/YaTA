@@ -8,6 +8,7 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import * as semCompare from 'semver-compare'
 import { ThemeProvider } from 'styled-components'
 
+import Beta from 'Components/Beta'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Follows from 'Components/Follows'
@@ -35,6 +36,7 @@ import light from 'Styled/light'
 const initialState = {
   headerConfiguration: defaultHeaderConfiguration,
   settingSelectedTab: SettingsTab.General,
+  showBetaDialog: false,
   showSettings: false,
 }
 type State = Readonly<typeof initialState>
@@ -52,6 +54,11 @@ class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
+    const showBetaDialog =
+      !_.isNil(props.lastKnownVersion) &&
+      semCompare(process.env.REACT_APP_VERSION, props.lastKnownVersion) === 1 &&
+      process.env.REACT_APP_VERSION === '1.0.0'
+
     this.state = {
       ...initialState,
       headerConfiguration: {
@@ -67,6 +74,7 @@ class App extends React.Component<Props, State> {
           }))
         },
       },
+      showBetaDialog,
     }
 
     this.installTheme()
@@ -105,7 +113,7 @@ class App extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { showSettings, settingSelectedTab } = this.state
+    const { showBetaDialog, showSettings, settingSelectedTab } = this.state
     const { isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
     const { pathname } = location
 
@@ -133,6 +141,7 @@ class App extends React.Component<Props, State> {
               toggleSettings={this.toggleSettings}
             />
             <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
+            <Beta visible={showBetaDialog} toggle={this.toggleBetaDialog} />
             <FlexContent>
               <Switch>
                 <Route exact path={Page.Home} component={Follows} />
@@ -180,6 +189,15 @@ class App extends React.Component<Props, State> {
     this.setState(({ showSettings }) => ({
       settingSelectedTab: SettingsTab.General,
       showSettings: !showSettings,
+    }))
+  }
+
+  /**
+   * Toggles the beta dialog.
+   */
+  private toggleBetaDialog = () => {
+    this.setState(({ showBetaDialog }) => ({
+      showBetaDialog: !showBetaDialog,
     }))
   }
 

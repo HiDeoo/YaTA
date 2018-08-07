@@ -11,6 +11,10 @@ export default {
     [Theme.Dark]: '#293741',
     [Theme.Light]: Colors.LIGHT_GRAY5,
   },
+  beta: {
+    height: 200,
+    width: 500,
+  },
   chatter: {
     avatar: {
       margin: '7px 10px 7px 0',
