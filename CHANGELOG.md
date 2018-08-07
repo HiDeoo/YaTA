@@ -7,6 +7,7 @@
   - Improve channel description readability.
   - Links in channel description now opens in a new tab / window.
   - Vods & clips can be clicked more easily.
+  - The stream thumbnail can be clicked to get a Twitch player to quickly check status, sound & quality (muted by default & closing this view will stop the player).
 
 # 0.9.0
 

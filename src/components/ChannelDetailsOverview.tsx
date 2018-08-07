@@ -1,4 +1,4 @@
-import { ButtonGroup, Classes, Colors, IconName, IPanel, IPanelProps, Text } from '@blueprintjs/core'
+import { ButtonGroup, Classes, Colors, Icon, IconName, IPanel, IPanelProps, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import TimeAgo from 'react-timeago'
@@ -52,12 +52,43 @@ const Meta = styled(Detail)`
 `
 
 /**
+ * PreviewWrapper component.
+ */
+const PreviewWrapper = styled.div`
+  cursor: pointer;
+  margin-top: 10px;
+  position: relative;
+`
+
+/**
+ * PlayIcon component.
+ */
+const PlayIcon = styled(Icon)`
+  height: 100px;
+  left: calc(50% - 50px);
+  pointer-events: none;
+  position: absolute;
+  top: calc(50% - 50px);
+  width: 100px;
+`
+
+/**
  * Preview component.
  */
 const Preview = styled.img`
   border: 1px solid ${Colors.DARK_GRAY3};
   display: block;
-  margin-top: 10px;
+  max-width: 100%;
+`
+
+/**
+ * Player component.
+ */
+const Player = styled.iframe.attrs({
+  // @ts-ignore
+  allowfullscreen: 'true',
+})`
+  border: 0;
   max-width: 100%;
 `
 
@@ -96,7 +127,7 @@ const ChannelDetailsPanels = {
 /**
  * React State.
  */
-const initialState = { didFail: false, stream: undefined as RawStream | null | undefined }
+const initialState = { didFail: false, showPlayer: false, stream: undefined as RawStream | null | undefined }
 type State = Readonly<typeof initialState>
 
 /**
@@ -163,7 +194,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * @return Element to render.
    */
   private renderStream() {
-    const { stream } = this.state
+    const { showPlayer, stream } = this.state
 
     if (_.isNil(stream)) {
       return <NonIdealState small title="Currently offline!" />
@@ -181,7 +212,16 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
         <Meta>
           Started <TimeAgo date={new Date(stream.created_at)} />
         </Meta>
-        <Preview src={stream.preview.medium} />
+        <PreviewWrapper>
+          {showPlayer ? (
+            <Player src="http://player.twitch.tv/?channel=nybblesio&muted=true" scrolling="no" />
+          ) : (
+            <>
+              <Preview src={stream.preview.medium} onClick={this.onClickPreview} />
+              <PlayIcon icon="play" />
+            </>
+          )}
+        </PreviewWrapper>
       </>
     )
   }
@@ -200,6 +240,13 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
     }
 
     this.props.openPanel(panel)
+  }
+
+  /**
+   * Triggered when a preview is clicked.
+   */
+  private onClickPreview = () => {
+    this.setState(() => ({ showPlayer: true }))
   }
 }
 
