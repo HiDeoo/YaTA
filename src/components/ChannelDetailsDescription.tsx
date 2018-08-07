@@ -1,4 +1,4 @@
-import { IPanelProps } from '@blueprintjs/core'
+import { Colors, IPanelProps } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -13,26 +13,48 @@ import Twitch, { RawPanels } from 'Libs/Twitch'
  * Wrapper component.
  */
 const Wrapper = styled.div`
+  border-bottom: 1px solid ${Colors.GRAY3};
   font-size: 0.8rem;
   margin-bottom: 10px;
+
+  &:last-child {
+    border-bottom: 0;
+  }
 
   &:last-of-type {
     margin-bottom: 0;
   }
 
   img {
+    margin: 5px 0;
     max-width: 100%;
   }
 
   h1 {
-    font-size: 1.2rem;
-    line-height: 30px;
-    margin: 5px 0;
+    font-size: 1.1rem;
+    margin: 0 0 10px 0;
+  }
+
+  h2 {
+    font-size: 1rem;
+    margin: 0 0 10px 0;
+  }
+
+  h3 {
+    font-size: 0.9rem;
+    margin: 0 0 10px 0;
   }
 
   ul {
     padding-left: 25px;
   }
+`
+
+/**
+ * Content component.
+ */
+const Content = styled.div`
+  margin-top: 10px;
 `
 
 /**
@@ -91,7 +113,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
           const hasTitle = !_.isNil(panel.data.title)
           const hasImage = !_.isNil(panel.data.image)
           const hasLink = !_.isNil(panel.data.link)
-          const hasDescription = !_.isNil(panel.html_description)
+          const hasDescription = !_.isNil(panel.html_description) && panel.html_description.length > 0
 
           let image = hasImage ? <img src={panel.data.image} /> : null
 
@@ -104,14 +126,29 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
           }
 
           return (
-            <Wrapper key={panel._id}>
+            <Wrapper key={panel._id} onClick={this.onClick}>
               {hasTitle && <div>{panel.data.title}</div>}
               {image}
-              {hasDescription && <div dangerouslySetInnerHTML={{ __html: panel.html_description }} />}
+              {hasDescription && <Content dangerouslySetInnerHTML={{ __html: panel.html_description }} />}
             </Wrapper>
           )
         })}
       </ChannelDetailsPanel>
     )
+  }
+
+  /**
+   * Triggered when anything in a panel is clicked.
+   */
+  private onClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target instanceof HTMLAnchorElement) {
+      const link = event.target.href
+
+      if (link.length > 0) {
+        event.preventDefault()
+
+        window.open(link)
+      }
+    }
   }
 }

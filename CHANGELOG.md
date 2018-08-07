@@ -4,6 +4,8 @@
 
 - Improve revamped channel details panel introduced in `0.9.0`:
   - Improve navigation UI.
+  - Improve channel description readability.
+  - Links in channel description now opens in a new tab / window.
 
 # 0.9.0
 
