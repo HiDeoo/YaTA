@@ -10,6 +10,11 @@ const light = {
   about: {
     description: Colors.GRAY1,
   },
+  channel: {
+    background: Colors.LIGHT_GRAY5,
+    border: Colors.GRAY5,
+    lightBorder: Colors.LIGHT_GRAY1,
+  },
   chatInput: {
     background: Colors.LIGHT_GRAY3,
     border: Colors.LIGHT_GRAY2,

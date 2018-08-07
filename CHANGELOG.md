@@ -1,3 +1,10 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Improve revamped channel details panel introduced in `0.9.0`:
+  - Improve navigation UI.
+
 # 0.9.0
 
 ### 🚀 New Feature

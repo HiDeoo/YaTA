@@ -1,4 +1,4 @@
-import { Button, Classes, Colors, Intent, IPanel, IPanelProps, Text } from '@blueprintjs/core'
+import { ButtonGroup, Classes, Colors, IconName, IPanel, IPanelProps, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import TimeAgo from 'react-timeago'
@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import ChannelDetailsDescription from 'Components/ChannelDetailsDescription'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
+import ChannelDetailsPanelButton from 'Components/ChannelDetailsPanelButton'
 import ChannelDetailsVideos from 'Components/ChannelDetailsVideos'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
@@ -64,20 +65,11 @@ const Preview = styled.img`
  * PanelButtons component.
  */
 const PanelButtons = styled.div`
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: 1fr 1fr;
-  padding: 0 10px 10px 10px;
-`
+  border-top: 1px solid ${color('channel.border')};
+  padding: 0;
 
-/**
- * PanelButton component.
- */
-const PanelButton = styled(Button).attrs({
-  intent: Intent.PRIMARY,
-})`
-  &.${Classes.BUTTON} {
-    justify-content: left;
+  & .${Classes.BUTTON_GROUP}.${Classes.MINIMAL}.${Classes.FILL} {
+    background-color: ${color('channel.background')};
   }
 `
 
@@ -95,11 +87,11 @@ export enum ChannelDetailsType {
  * A map between panel types & their associated components.
  */
 const ChannelDetailsPanels = {
-  [ChannelDetailsType.Description]: ChannelDetailsDescription,
-  [ChannelDetailsType.LastVods]: ChannelDetailsVideos,
-  [ChannelDetailsType.RecentClips]: ChannelDetailsVideos,
-  [ChannelDetailsType.TopClips]: ChannelDetailsVideos,
-}
+  [ChannelDetailsType.Description]: { component: ChannelDetailsDescription, icon: 'info-sign' },
+  [ChannelDetailsType.LastVods]: { component: ChannelDetailsVideos, icon: 'video' },
+  [ChannelDetailsType.RecentClips]: { component: ChannelDetailsVideos, icon: 'film' },
+  [ChannelDetailsType.TopClips]: { component: ChannelDetailsVideos, icon: 'crown' },
+} as { [key in ChannelDetailsType]: ChannelDetailsPanel }
 
 /**
  * React State.
@@ -151,10 +143,16 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
       <>
         <ChannelDetailsPanel>{this.renderStream()}</ChannelDetailsPanel>
         <PanelButtons>
-          <PanelButton icon="align-left" onClick={this.onClickDescription} text={ChannelDetailsType.Description} />
-          <PanelButton icon="video" onClick={this.onClickLastVods} text={ChannelDetailsType.LastVods} />
-          <PanelButton icon="film" onClick={this.onClickTopClips} text={ChannelDetailsType.TopClips} />
-          <PanelButton icon="film" onClick={this.onClickRecentTopClips} text={ChannelDetailsType.RecentClips} />
+          <ButtonGroup fill minimal large>
+            {_.map(ChannelDetailsType, (type) => (
+              <ChannelDetailsPanelButton
+                panel={ChannelDetailsPanels[type]}
+                onClick={this.showPanel}
+                type={type}
+                key={type}
+              />
+            ))}
+          </ButtonGroup>
         </PanelButtons>
       </>
     )
@@ -192,43 +190,20 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * Shows a specific panel.
    * @param type - The panel type.
    */
-  private showPanel(type: ChannelDetailsType) {
+  private showPanel = (type: ChannelDetailsType) => {
     const { channel, id } = this.props
 
     const panel: IPanel<any> = {
-      component: ChannelDetailsPanels[type],
+      component: ChannelDetailsPanels[type].component,
       props: { channel, id, type },
       title: type,
     }
 
     this.props.openPanel(panel)
   }
-
-  /**
-   * Triggered when the last vods button is clicked.
-   */
-  private onClickLastVods = () => {
-    this.showPanel(ChannelDetailsType.LastVods)
-  }
-
-  /**
-   * Triggered when the top clips button is clicked.
-   */
-  private onClickTopClips = () => {
-    this.showPanel(ChannelDetailsType.TopClips)
-  }
-
-  /**
-   * Triggered when the recent top clips button is clicked.
-   */
-  private onClickRecentTopClips = () => {
-    this.showPanel(ChannelDetailsType.RecentClips)
-  }
-
-  /**
-   * Triggered when the description button is clicked.
-   */
-  private onClickDescription = () => {
-    this.showPanel(ChannelDetailsType.Description)
-  }
 }
+
+/**
+ * Channel details panel.
+ */
+export type ChannelDetailsPanel = { component: React.ComponentType<any>; icon: IconName }

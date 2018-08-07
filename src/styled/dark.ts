@@ -10,6 +10,11 @@ const dark = {
   about: {
     description: Colors.GRAY4,
   },
+  channel: {
+    background: Colors.DARK_GRAY3,
+    border: Colors.DARK_GRAY1,
+    lightBorder: Colors.DARK_GRAY2,
+  },
   chatInput: {
     background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY5,
