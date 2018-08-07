@@ -89,7 +89,7 @@ export default class Follow extends React.Component<Props> {
       title = follow.channel.status || ''
       meta = (
         <Text ellipsize>
-          <strong>{follow.channel.display_name}</strong> - {follow.game} - {follow.viewers} viewers
+          <strong>{follow.channel.display_name}</strong> - {follow.game} - {follow.viewers.toLocaleString()} viewers
         </Text>
       )
     } else {

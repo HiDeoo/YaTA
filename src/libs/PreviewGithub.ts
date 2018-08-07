@@ -98,12 +98,15 @@ const PreviewGithub: PreviewProvider = class {
         title = title.concat(` - ${repo.description}`)
       }
 
-      const meta = `${pluralize('Issue', repo.open_issues_count)}: ${repo.open_issues_count} - ${pluralize(
+      const meta = `${pluralize(
+        'Issue',
+        repo.open_issues_count
+      )}: ${repo.open_issues_count.toLocaleString()} - ${pluralize(
         'Star',
         repo.stargazers_count
-      )}: ${repo.stargazers_count} - Last update: ${new Date(repo.updated_at).toLocaleDateString()} - Owner: ${
-        repo.owner.login
-      }`
+      )}: ${repo.stargazers_count.toLocaleString()} - Last update: ${new Date(
+        repo.updated_at
+      ).toLocaleDateString()} - Owner: ${repo.owner.login}`
 
       return {
         ...preview,
@@ -129,9 +132,10 @@ const PreviewGithub: PreviewProvider = class {
 
       const meta = `${isIssue ? 'Issue' : 'Pull request'} created on ${new Date(
         issueOrPR.created_at
-      ).toLocaleDateString()} - Status: ${issueOrPR.state} - ${pluralize('Comment', issueOrPR.comments)}: ${
+      ).toLocaleDateString()} - Status: ${issueOrPR.state} - ${pluralize(
+        'Comment',
         issueOrPR.comments
-      }`
+      )}: ${issueOrPR.comments.toLocaleString()}`
 
       return {
         ...preview,

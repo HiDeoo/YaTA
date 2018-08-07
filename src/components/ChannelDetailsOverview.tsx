@@ -208,7 +208,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
           </a>
         </Title>
         <Game>{stream.channel.game}</Game>
-        <Meta>{stream.viewers} viewers</Meta>
+        <Meta>{stream.viewers.toLocaleString()} viewers</Meta>
         <Meta>
           Started <TimeAgo date={new Date(stream.created_at)} />
         </Meta>

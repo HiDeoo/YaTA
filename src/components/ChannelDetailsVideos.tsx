@@ -36,7 +36,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
 
           const parsedVideos = _.map(videos, (video) => ({
             id: video._id,
-            meta: `${new Date(video.created_at).toLocaleDateString()} - ${video.views} ${pluralize(
+            meta: `${new Date(video.created_at).toLocaleDateString()} - ${video.views.toLocaleString()} ${pluralize(
               'views',
               video.views
             )}`,
@@ -53,7 +53,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
 
           const parsedVideos = _.map(clips, (clip) => ({
             id: clip.slug,
-            meta: `${new Date(clip.created_at).toLocaleDateString()} - ${clip.views} ${pluralize(
+            meta: `${new Date(clip.created_at).toLocaleDateString()} - ${clip.views.toLocaleString()} ${pluralize(
               'views',
               clip.views
             )} - ${clip.curator.display_name}`,

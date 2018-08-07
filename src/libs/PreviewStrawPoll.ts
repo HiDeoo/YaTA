@@ -49,7 +49,9 @@ const PreviewStrawPoll: PreviewProvider = class {
     return {
       ...preview,
       icon: 'horizontal-bar-chart',
-      meta: `Total votes: ${_.sum(poll.votes)} - Total options: ${poll.options.length}`,
+      meta: `Total votes: ${_.sum(
+        poll.votes
+      ).toLocaleString()} - Total options: ${poll.options.length.toLocaleString()}`,
       resolved: true,
       title: poll.title,
       url: `https://www.strawpoll.me/${preview.id}`,

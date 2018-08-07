@@ -2,6 +2,7 @@
 
 ### 🚀 New Feature
 
+- Numbers are now properly formatted according to your locale across the application.
 - Improve revamped channel details panel introduced in `0.9.0`:
   - Improve navigation UI.
   - Improve channel description readability.

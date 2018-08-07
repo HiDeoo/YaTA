@@ -117,7 +117,7 @@ export default class Chatters extends React.Component<Props, State> {
       content = <Spinner />
     }
 
-    const title = `Chatters List${!_.isNil(count) ? ` - ${count}` : ''}`
+    const title = `Chatters List${!_.isNil(count) ? ` - ${count.toLocaleString()}` : ''}`
 
     return (
       <Dialog

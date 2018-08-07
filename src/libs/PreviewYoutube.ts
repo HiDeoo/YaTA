@@ -100,11 +100,11 @@ const PreviewYoutube: PreviewProvider = class {
 
       const duration = durationToString(video.contentDetails.duration)
       const durationStr = !_.isNil(duration) ? ` - ${duration}` : ''
-      const { viewCount } = video.statistics
+      const viewCount = parseInt(video.statistics.viewCount, 10)
 
       const meta = `Recorded by ${video.snippet.channelTitle} on ${new Date(
         video.snippet.publishedAt
-      ).toLocaleDateString()}${durationStr} (${viewCount} ${pluralize('view', viewCount)})`
+      ).toLocaleDateString()}${durationStr} (${viewCount.toLocaleString()} ${pluralize('view', viewCount)})`
 
       return {
         ...preview,
@@ -129,12 +129,17 @@ const PreviewYoutube: PreviewProvider = class {
         throw new Error('No Youtube channel found.')
       }
 
-      const { subscriberCount, videoCount, viewCount } = channel.statistics
+      const subscriberCount = parseInt(channel.statistics.subscriberCount, 10)
+      const videoCount = parseInt(channel.statistics.videoCount, 10)
+      const viewCount = parseInt(channel.statistics.viewCount, 10)
 
-      const meta = `${viewCount} ${pluralize('view', viewCount)} - ${subscriberCount} ${pluralize(
+      const meta = `${viewCount.toLocaleString()} ${pluralize(
+        'view',
+        viewCount
+      )} - ${subscriberCount.toLocaleString()} ${pluralize(
         'subscriber',
         subscriberCount
-      )} - ${videoCount} ${pluralize('video', videoCount)}`
+      )} - ${videoCount.toLocaleString()} ${pluralize('video', videoCount)}`
 
       return {
         ...preview,
@@ -196,11 +201,11 @@ type VideoDetails = {
     title: string
   }
   statistics: {
-    commentCount: number
-    disklikeCount: number
-    favoriteCount: number
-    likeCount: number
-    viewCount: number
+    commentCount: string
+    disklikeCount: string
+    favoriteCount: string
+    likeCount: string
+    viewCount: string
   }
 }
 
@@ -218,10 +223,10 @@ type ChannelDetails = {
     title: string
   }
   statistics: {
-    commentCount: number
-    subscriberCount: number
-    videoCount: number
-    viewCount: number
+    commentCount: string
+    subscriberCount: string
+    videoCount: string
+    viewCount: string
   }
 }
 

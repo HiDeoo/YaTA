@@ -379,10 +379,10 @@ class ChatterDetails extends React.Component<Props, State> {
             <strong>{new Date(details.created_at).toLocaleDateString()}</strong> Creation date
           </DetailsCell>
           <DetailsCell>
-            <strong>{details.views}</strong> Views
+            <strong>{details.views.toLocaleString()}</strong> Views
           </DetailsCell>
           <DetailsCell>
-            <strong>{details.followers}</strong> Followers
+            <strong>{details.followers.toLocaleString()}</strong> Followers
           </DetailsCell>
         </DetailsRow>
         {!chatter.isSelf && (

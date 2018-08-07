@@ -124,7 +124,7 @@ class Search extends React.Component<Props, State> {
     let title = 'Search'
 
     if (!_.isNil(results) && results.length > 0) {
-      title = title.concat(` - ${results.length} ${pluralize('results', results.length)}`)
+      title = title.concat(` - ${results.length.toLocaleString()} ${pluralize('results', results.length)}`)
     }
 
     return (

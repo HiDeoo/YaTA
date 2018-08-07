@@ -80,9 +80,9 @@ const PreviewTwitch: PreviewProvider = class {
     if (preview.type === TwitchPreviewType.Clip) {
       const clip = await Twitch.fetchClip(preview.id)
 
-      const meta = `Clipped by ${clip.curator.display_name} on ${clip.broadcaster.display_name} (${
-        clip.views
-      } ${pluralize('view', clip.views)})`
+      const meta = `Clipped by ${clip.curator.display_name} on ${
+        clip.broadcaster.display_name
+      } (${clip.views.toLocaleString()} ${pluralize('view', clip.views)})`
 
       return {
         ...preview,
@@ -95,9 +95,9 @@ const PreviewTwitch: PreviewProvider = class {
     } else if (preview.type === TwitchPreviewType.Video) {
       const video = await Twitch.fetchVideo(preview.id)
 
-      const meta = `Recorded by ${video.channel.display_name} on ${new Date(video.created_at).toLocaleDateString()} (${
-        video.views
-      } ${pluralize('view', video.views)})`
+      const meta = `Recorded by ${video.channel.display_name} on ${new Date(
+        video.created_at
+      ).toLocaleDateString()} (${video.views.toLocaleString()} ${pluralize('view', video.views)})`
 
       return {
         ...preview,
