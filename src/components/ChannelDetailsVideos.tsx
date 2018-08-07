@@ -1,65 +1,15 @@
-import { Colors, IPanelProps, Text } from '@blueprintjs/core'
+import { IPanelProps } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import { ChannelDetailsType } from 'Components/ChannelDetailsOverview'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
+import ChannelDetailsVideo from 'Components/ChannelDetailsVideo'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
-import { color } from 'Utils/styled'
-
-/**
- * Vod component.
- */
-const Vod = styled(FlexLayout)`
-  margin-bottom: 10px;
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-`
-
-/**
- * Thumbnail component.
- */
-const Thumbnail = styled.img`
-  display: inline-block;
-  height: 45px;
-  margin-right: 10px;
-  width: 80px;
-`
-
-/**
- * Detail component.
- */
-const Detail = styled(Text).attrs({
-  ellipsize: true,
-})`
-  margin: 3px 0 5px 0;
-`
-
-/**
- * Title component.
- */
-const Title = styled(Detail)`
-  color: ${Colors.BLUE5};
-  font-size: 13px;
-  font-weight: bold;
-`
-
-/**
- * Meta component.
- */
-const Meta = styled(Detail)`
-  color: ${color('follow.meta')};
-  font-size: 11px;
-`
 
 /**
  * React State.
@@ -144,19 +94,9 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     }
 
     return (
-      <ChannelDetailsPanel>
+      <ChannelDetailsPanel minimal>
         {_.map(videos, (video) => (
-          <Vod key={video.id}>
-            <Thumbnail src={video.thumbnail} />
-            <FlexContent>
-              <Title>
-                <a href={video.url} target="_blank">
-                  {video.title}
-                </a>
-              </Title>
-              <Meta>{video.meta}</Meta>
-            </FlexContent>
-          </Vod>
+          <ChannelDetailsVideo key={video.id} video={video} />
         ))}
       </ChannelDetailsPanel>
     )
@@ -173,7 +113,7 @@ type Props = {
 /**
  * Channel details video.
  */
-type Video = {
+export type Video = {
   id: string
   meta: string
   thumbnail: string

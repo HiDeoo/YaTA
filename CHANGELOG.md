@@ -6,6 +6,7 @@
   - Improve navigation UI.
   - Improve channel description readability.
   - Links in channel description now opens in a new tab / window.
+  - Vods & clips can be clicked more easily.
 
 # 0.9.0
 
