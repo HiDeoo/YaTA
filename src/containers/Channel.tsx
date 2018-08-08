@@ -208,13 +208,14 @@ class Channel extends React.Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
+        <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
+        <Chat ref={this.chatClient} key={channel} />
         <DropOverlay
           onSuccess={this.onUploadSuccess}
           onInvalid={this.onUploadInvalid}
           onError={this.onUploadError}
           onStart={this.onUploadStart}
         />
-        <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -223,17 +224,16 @@ class Channel extends React.Component<Props, State> {
           visible={showSearch}
         />
         <PollEditor
-          visible={showPollEditor}
-          toggle={this.togglePollEditor}
           disableDialogAnimations={disableDialogAnimations}
+          toggle={this.togglePollEditor}
+          visible={showPollEditor}
         />
         <Chatters
-          visible={showChatters}
-          toggle={this.toggleChatters}
-          channel={channel}
           disableDialogAnimations={disableDialogAnimations}
+          toggle={this.toggleChatters}
+          visible={showChatters}
+          channel={channel}
         />
-        <Chat ref={this.chatClient} key={channel} />
         <Logs
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
