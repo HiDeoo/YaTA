@@ -167,6 +167,7 @@ export default class Message extends React.Component<Props, State> {
         highlighted={message.highlighted}
         mentionned={message.mentionned}
         purged={message.purged}
+        onClick={this.onClick}
         style={style}
       >
         {this.renderContextMenu()}
@@ -276,6 +277,18 @@ export default class Message extends React.Component<Props, State> {
 
     if (isContextMenuOpened !== nextOpenState) {
       this.props.onToggleContextMenu(nextOpenState)
+    }
+  }
+
+  /**
+   * Triggered when a message is clicked.
+   * @param event - The associated event.
+   */
+  private onClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.altKey) {
+      const { message, quoteMessage } = this.props
+
+      quoteMessage(message)
     }
   }
 
@@ -403,6 +416,7 @@ type Props = {
   focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage
   onToggleContextMenu: (open: boolean) => void
+  quoteMessage: (message: SerializedMessage) => void
   showContextMenu: boolean
   showUnbanContextMenuItem: boolean
   style: React.CSSProperties

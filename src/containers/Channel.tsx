@@ -225,6 +225,7 @@ class Channel extends React.Component<Props, State> {
           actionHandler={this.handleAction}
           purgedCount={allLogs.purgedCount}
           focusChatter={this.focusChatter}
+          quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
           ref={this.logsComponent}
@@ -373,6 +374,29 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Appends text to the input value.
+   * @param text - The text to append.
+   * @param [focus=true] - `true` to focus the input when done.
+   */
+  private appendToInputValue(text: string, focus = true) {
+    this.setState(
+      ({ inputValue }) => {
+        const lastCharacter = inputValue.slice(-1)
+        const newInputValue = `${inputValue}${lastCharacter === ' ' || inputValue.length === 0 ? '' : ' '}${text} `
+
+        return { inputValue: newInputValue }
+      },
+      () => {
+        requestAnimationFrame(() => {
+          if (focus) {
+            this.focusChatInput()
+          }
+        })
+      }
+    )
+  }
+
+  /**
    * Triggered when uploading a file fails.
    * @param error - The error.
    */
@@ -412,25 +436,17 @@ class Channel extends React.Component<Props, State> {
    * @param deletionUrl -  The URL to delete the uploaded file.
    */
   private onUploadSuccess = (url: string, deletionUrl: string) => {
-    this.setState(
-      ({ inputValue }) => {
-        const lastCharacter = inputValue.slice(-1)
-        const newInputValue = `${inputValue}${lastCharacter === ' ' || inputValue.length === 0 ? '' : ' '}${url} `
+    this.appendToInputValue(url)
 
-        return { inputValue: newInputValue, isUploadingFile: false }
-      },
-      () => {
-        const notice = new Notice(
-          `Image uploaded successfully. To delete it, use <a href="${deletionUrl}" target="_blank">this link</a>.`,
-          null,
-          true
-        )
+    this.setState(() => ({ isUploadingFile: false }))
 
-        this.props.addLog(notice.serialize())
-
-        this.focusChatInput()
-      }
+    const notice = new Notice(
+      `Image uploaded successfully. To delete it, use <a href="${deletionUrl}" target="_blank">this link</a>.`,
+      null,
+      true
     )
+
+    this.props.addLog(notice.serialize())
   }
 
   /**
@@ -653,6 +669,13 @@ class Channel extends React.Component<Props, State> {
    */
   private unfocusChatter = () => {
     this.setState(() => ({ focusedChatter: null }))
+  }
+
+  /**
+   * Quotes a message.
+   */
+  private quoteMessage = (message: SerializedMessage) => {
+    this.appendToInputValue(`“${message.text}”`)
   }
 
   /**

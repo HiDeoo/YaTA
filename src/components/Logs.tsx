@@ -171,6 +171,7 @@ export default class Logs extends React.Component<Props> {
       copyMessageToClipboard,
       copyToClipboard,
       focusChatter,
+      quoteMessage,
       showContextMenu,
       timeout,
       unban,
@@ -183,8 +184,6 @@ export default class Logs extends React.Component<Props> {
 
       LogComponent = (
         <Message
-          style={style}
-          message={log}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           copyMessageToClipboard={copyMessageToClipboard}
           onToggleContextMenu={this.onToggleContextMenu}
@@ -193,10 +192,13 @@ export default class Logs extends React.Component<Props> {
           showContextMenu={showContextMenu}
           actionHandler={actionHandler}
           focusChatter={focusChatter}
+          quoteMessage={quoteMessage}
           canModerate={canModerate}
           timeout={timeout}
           whisper={whisper}
           unban={unban}
+          style={style}
+          message={log}
           ban={ban}
         />
       )
@@ -244,6 +246,7 @@ type Props = {
   logs: Log[]
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number
+  quoteMessage: (message: SerializedMessage) => void
   scrollToNewestLog: () => void
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void

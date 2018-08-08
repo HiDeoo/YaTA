@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add a button to copy all messages from a user history.
+- Quote messages by `Alt` clicking them.
 - Add follow status (and follow age if following) in the channel details view.
 - Add the `/followed` command.
 
