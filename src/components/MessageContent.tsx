@@ -18,6 +18,7 @@ const Message = styled.span<MessageProps>`
     display: inline-block;
     min-height: 28px;
     min-width: 28px;
+    text-align: center;
   }
 
   .emote {

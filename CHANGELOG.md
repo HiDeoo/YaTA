@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+### 🐛 Bug Fix
+
 # 1.0.0
 
 ### 🚀 New Feature
