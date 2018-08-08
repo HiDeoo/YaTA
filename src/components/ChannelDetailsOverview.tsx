@@ -11,7 +11,7 @@ import ChannelDetailsPanelButton from 'Components/ChannelDetailsPanelButton'
 import ChannelDetailsVideos from 'Components/ChannelDetailsVideos'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
-import Twitch, { RawStream } from 'Libs/Twitch'
+import Twitch, { RawRelationship, RawStream } from 'Libs/Twitch'
 import { color } from 'Utils/styled'
 
 /**
@@ -127,7 +127,12 @@ const ChannelDetailsPanels = {
 /**
  * React State.
  */
-const initialState = { didFail: false, showPlayer: false, stream: undefined as RawStream | null | undefined }
+const initialState = {
+  didFail: false,
+  relationship: undefined as RawRelationship | null | undefined,
+  showPlayer: false,
+  stream: undefined as RawStream | null | undefined,
+}
 type State = Readonly<typeof initialState>
 
 /**
@@ -144,9 +149,9 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
 
     if (!_.isNil(id)) {
       try {
-        const { stream } = await Twitch.fetchStream(id)
+        const response = await Promise.all([Twitch.fetchStream(id), Twitch.fetchRelationship(id)])
 
-        this.setState(() => ({ didFail: false, stream }))
+        this.setState(() => ({ didFail: false, stream: response[0].stream, relationship: response[1] }))
       } catch (error) {
         this.setState(() => ({ didFail: true }))
       }
@@ -195,7 +200,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    */
   private renderStream() {
     const { channel } = this.props
-    const { showPlayer, stream } = this.state
+    const { relationship, showPlayer, stream } = this.state
 
     if (_.isNil(stream) || _.isNil(channel)) {
       return <NonIdealState small title="Currently offline!" />
@@ -211,7 +216,12 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
         <Game>{stream.channel.game}</Game>
         <Meta>{stream.viewers.toLocaleString()} viewers</Meta>
         <Meta>
-          Started <TimeAgo date={new Date(stream.created_at)} />
+          Started <TimeAgo date={new Date(stream.created_at)} />.
+        </Meta>
+        <Meta>
+          {_.isNil(relationship)
+            ? 'Channel not followed.'
+            : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`}
         </Meta>
         <PreviewWrapper>
           {showPlayer ? (

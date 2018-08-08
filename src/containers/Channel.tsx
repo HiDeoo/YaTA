@@ -86,6 +86,11 @@ const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
 const WhisperReplyRegExp = /^\/r /
 
 /**
+ * RegExp used to identify the followed command (/followed).
+ */
+const FollowedRegExp = /^\/followed(?:$| .*)/
+
+/**
  * React State.
  */
 const initialState = {
@@ -825,13 +830,28 @@ class Channel extends React.Component<Props, State> {
         const message = this.state.inputValue.trim()
         const whisper = Twitch.parseWhisperCommand(message)
 
+        this.setState(() => ({ inputValue: '' }))
+
         if (!_.isNil(whisper)) {
           await this.whisper(whisper.username, whisper.message)
+        } else if (FollowedRegExp.test(message)) {
+          const channelId = _.get(this.props.roomState, 'roomId')
+
+          if (!_.isNil(channelId)) {
+            const relationship = await Twitch.fetchRelationship(channelId)
+
+            const notice = new Notice(
+              _.isNil(relationship)
+                ? 'Channel not followed.'
+                : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`,
+              null
+            )
+
+            this.props.addLog(notice.serialize())
+          }
         } else {
           await this.say(message)
         }
-
-        this.setState(() => ({ inputValue: '' }))
       } catch (error) {
         //
       }

@@ -323,6 +323,35 @@ export default class Twitch {
   }
 
   /**
+   * Fetches the follow relationship between the current user and another user.
+   * @param  id - The target user id.
+   * @return The follow relationship if any.
+   */
+  public static async fetchRelationship(id: string) {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing source user id for relationship fetching.')
+    }
+
+    const params = {
+      from_id: Twitch.userId,
+      to_id: id,
+    }
+
+    const response = await Twitch.fetch(TwitchApi.Helix, '/users/follows', params)
+    const relationships = (await response.json()) as RawRelationships
+
+    if (relationships.total === 1) {
+      const relationship = _.head(relationships.data)
+
+      if (!_.isNil(relationship)) {
+        return relationship
+      }
+    }
+
+    return null
+  }
+
+  /**
    * Fetches all followed streams for the current authenticated user.
    * @return The follows.
    */
@@ -806,6 +835,26 @@ type RawPanel = {
 export type RawClips = {
   clips: RawClip[]
   _cursor: string
+}
+
+/**
+ * Twitch follow relationships.
+ */
+type RawRelationships = {
+  data: RawRelationship[]
+  total: number
+  pagination: {
+    cursor: string
+  }
+}
+
+/**
+ * Twitch follow relationship.
+ */
+export type RawRelationship = {
+  from_id: string
+  to_id: string
+  followed_at: string
 }
 
 /**

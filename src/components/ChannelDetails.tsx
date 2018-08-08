@@ -9,7 +9,7 @@ import ChannelDetailsOverview from 'Components/ChannelDetailsOverview'
  */
 const ChannelDetailsPanels = styled(PanelStack)`
   width: 300px;
-  height: 340px;
+  height: 360px;
 `
 
 /**

@@ -8,4 +8,16 @@ export default {
    * Notices indicating that a user can be marked as unbanned.
    */
   UnbanNotices: ['bad_unban_no_ban', 'unban_success', 'untimeout_success'],
+
+  Help: {
+    /**
+     * Id of the help notice (/help).
+     */
+    Id: 'cmds_available',
+
+    /**
+     * Additions to the help notice to concatenate at the end.
+     */
+    Additions: ' /followed',
+  },
 }

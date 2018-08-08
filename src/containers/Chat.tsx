@@ -705,7 +705,7 @@ export class ChatClient extends React.Component<Props, State> {
       return
     }
 
-    const notice = new Notice(message, Event.Notice)
+    const notice = new Notice(id === Notices.Help.Id ? message.concat(Notices.Help.Additions) : message, Event.Notice)
 
     this.props.addLog(notice.serialize())
 
