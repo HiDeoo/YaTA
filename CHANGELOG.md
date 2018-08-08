@@ -4,6 +4,8 @@
 
 ### 🐛 Bug Fix
 
+- Fix a line break issue when copying multiple messages from the chatter details view or the search panel.
+
 # 1.0.0
 
 ### 🚀 New Feature

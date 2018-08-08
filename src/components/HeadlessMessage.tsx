@@ -12,6 +12,7 @@ import { color, size } from 'Utils/styled'
 const Wrapper = styled.div`
   min-height: ${size('log.minHeight')};
   padding: 4px 8px;
+  white-space: pre-wrap;
 `
 
 /**
@@ -59,6 +60,7 @@ export default class HeadlessMessage extends React.Component<Props> {
         <Time>{message.time}</Time>
         {showUsername && (
           <>
+            {' '}
             <Name color={usernameColor}>
               {message.user.displayName}
               {message.user.showUserName && <Username> ({message.user.userName})</Username>}
@@ -66,6 +68,7 @@ export default class HeadlessMessage extends React.Component<Props> {
           </>
         )}{' '}
         <MessageContent message={message} />
+        {'\n'}
       </Wrapper>
     )
   }
