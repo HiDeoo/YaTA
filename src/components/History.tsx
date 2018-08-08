@@ -1,3 +1,4 @@
+import { Button, Classes, Tooltip } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
@@ -31,7 +32,28 @@ const Wrapper = styled.div`
   line-height: 1.4rem;
   margin-top: 20px;
   padding: 0;
+  position: relative;
   width: 100%;
+`
+
+/**
+ * ButtonWrapper component.
+ */
+const ButtonWrapper = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`
+
+/**
+ * CopyButton component.
+ */
+const CopyButton = styled(Button)`
+  &.${Classes.BUTTON} {
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
 `
 
 /**
@@ -61,6 +83,11 @@ export default class History extends React.Component<Props> {
             />
           )}
         </AutoSizer>
+        <ButtonWrapper>
+          <Tooltip content="Copy all messages">
+            <CopyButton icon="clipboard" onClick={this.onClickCopyAllMessages} />
+          </Tooltip>
+        </ButtonWrapper>
       </Wrapper>
     )
   }
@@ -111,6 +138,17 @@ export default class History extends React.Component<Props> {
       copyMessageToClipboard(message)
     }
   }
+
+  /**
+   * Triggered when the copy all messages button is clicked.
+   */
+  private onClickCopyAllMessages = () => {
+    const { copyMessageToClipboard, logs } = this.props
+
+    const messages = _.filter(logs, isMessage)
+
+    copyMessageToClipboard(messages)
+  }
 }
 
 /**
@@ -118,6 +156,6 @@ export default class History extends React.Component<Props> {
  */
 type Props = {
   copyMessageOnDoubleClick: boolean
-  copyMessageToClipboard: (message: SerializedMessage) => void
+  copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
   logs: Array<SerializedMessage | SerializedNotification>
 }

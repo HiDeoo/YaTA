@@ -2,9 +2,12 @@
 
 ### 🚀 New Feature
 
+- Add a button to copy all messages from a user history.
+
 ### 🐛 Bug Fix
 
 - Fix a line break issue when copying multiple messages from the chatter details view or the search panel.
+- Fix an issue when copying messages with emotes.
 
 # 1.0.0
 

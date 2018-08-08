@@ -670,16 +670,27 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Copy a message to the clipboard.
-   * @param message - The message to copy.
+   * Copy message(s) to the clipboard.
+   * @param messages - The message(s) to copy.
    */
-  private copyMessageToClipboard = (message: SerializedMessage) => {
-    const tmpDiv = document.createElement('div')
-    tmpDiv.innerHTML = replaceImgTagByAlt(message.message)
+  private copyMessageToClipboard = (messages: SerializedMessage | SerializedMessage[]) => {
+    const messagesToCopy = _.isArray(messages) ? messages : [messages]
 
-    const sanitizedMessage = tmpDiv.textContent || tmpDiv.innerText || ''
+    let sanitizedMessages = ''
 
-    this.copyToClipboard(`[${message.time}] ${message.user.displayName}: ${sanitizedMessage}`)
+    _.forEach(messagesToCopy, (message, index) => {
+      const tmpDiv = document.createElement('div')
+      tmpDiv.innerHTML = replaceImgTagByAlt(message.message)
+
+      const sanitizedMessage = tmpDiv.textContent || tmpDiv.innerText || ''
+      const messageToCopy = `[${message.time}] ${message.user.displayName}: ${sanitizedMessage}${
+        index < messagesToCopy.length - 1 ? '\n' : ''
+      }`
+
+      sanitizedMessages = sanitizedMessages.concat(messageToCopy)
+    })
+
+    this.copyToClipboard(sanitizedMessages)
 
     const selection = window.getSelection()
 

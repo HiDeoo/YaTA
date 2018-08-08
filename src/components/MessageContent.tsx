@@ -27,6 +27,13 @@ const Message = styled.span<MessageProps>`
     vertical-align: middle;
   }
 
+  img:-moz-loading,
+  img:-moz-broken {
+    height: 28px;
+    width: 28px;
+    overflow-x: hidden;
+  }
+
   .mention {
     background-color: ${color('log.mention.color')};
     border-radius: 2px;

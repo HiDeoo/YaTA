@@ -638,7 +638,7 @@ type OwnProps = {
   canModerate: (chatter: SerializedChatter) => boolean
   chatter: SerializedChatter | null
   copyMessageOnDoubleClick: boolean
-  copyMessageToClipboard: (message: SerializedMessage) => void
+  copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
   unblock: (targetId: string) => void

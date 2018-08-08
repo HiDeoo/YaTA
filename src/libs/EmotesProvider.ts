@@ -155,7 +155,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     const { src, srcset } = this.getEmoteTagUrls(id)
     const minWidth = this.getSpecificWidth(id)
 
-    return `<span class="emoteWrapper"${minWidth}><img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" /></span>`
+    return `<span class="emoteWrapper"${minWidth}><img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" /></span>`
   }
 
   /**
