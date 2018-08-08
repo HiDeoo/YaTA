@@ -10,6 +10,7 @@
 
 - Fix a line break issue when copying multiple messages from the chatter details view or the search panel.
 - Fix an issue when copying messages with emotes.
+- Remove a slight delay when closing some dialogs with animations turned off.
 
 # 1.0.0
 

@@ -3,7 +3,6 @@ import {
   Checkbox,
   Classes,
   Colors,
-  Dialog,
   FormGroup,
   HTMLSelect,
   InputGroup,
@@ -17,6 +16,7 @@ import styled from 'styled-components'
 
 import FlexLayout from 'Components/FlexLayout'
 import Key from 'Constants/key'
+import Dialog from 'Containers/Dialog'
 import StrawPoll, { StrawPollDuplicationStrategy } from 'Libs/StrawPoll'
 import Toaster from 'Libs/Toaster'
 
@@ -146,7 +146,7 @@ export default class PollEditor extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { disableDialogAnimations, visible } = this.props
+    const { visible } = this.props
     const {
       captcha,
       duplication,
@@ -176,13 +176,7 @@ export default class PollEditor extends React.Component<Props, State> {
     const inputDisabled = isProcessing || isDone
 
     return (
-      <Dialog
-        isOpen={visible}
-        onClose={this.toggle}
-        icon="horizontal-bar-chart"
-        title="New Straw Poll"
-        transitionName={disableDialogAnimations ? '' : undefined}
-      >
+      <Dialog isOpen={visible} onClose={this.toggle} icon="horizontal-bar-chart" title="New Straw Poll">
         <div className={Classes.DIALOG_BODY}>
           <FormGroup label="Question" labelFor="question-input" labelInfo="(required)" disabled={inputDisabled}>
             <InputGroup
@@ -424,7 +418,6 @@ export default class PollEditor extends React.Component<Props, State> {
  * React Props.
  */
 type Props = {
-  disableDialogAnimations: boolean
   toggle: () => void
   visible: boolean
 }

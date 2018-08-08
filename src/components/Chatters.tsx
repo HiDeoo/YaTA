@@ -1,4 +1,4 @@
-import { Dialog, InputGroup } from '@blueprintjs/core'
+import { InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, List, ListRowRenderer } from 'react-virtualized'
@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
+import Dialog from 'Containers/Dialog'
 import Twitch, { RawChatters } from 'Libs/Twitch'
 import base from 'Styled/base'
 import { color } from 'Utils/styled'
@@ -102,7 +103,7 @@ export default class Chatters extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { disableDialogAnimations, toggle, visible } = this.props
+    const { toggle, visible } = this.props
     const { count, didFail } = this.state
 
     let content: JSX.Element
@@ -120,13 +121,7 @@ export default class Chatters extends React.Component<Props, State> {
     const title = `Chatters List${!_.isNil(count) ? ` - ${count.toLocaleString()}` : ''}`
 
     return (
-      <Dialog
-        isOpen={visible}
-        onClose={toggle}
-        icon="people"
-        title={title}
-        transitionName={disableDialogAnimations ? '' : undefined}
-      >
+      <Dialog isOpen={visible} onClose={toggle} icon="people" title={title}>
         <Content>{content}</Content>
       </Dialog>
     )
@@ -283,7 +278,6 @@ export default class Chatters extends React.Component<Props, State> {
  */
 type Props = {
   channel: string
-  disableDialogAnimations: boolean
   toggle: () => void
   visible: boolean
 }

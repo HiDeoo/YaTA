@@ -1,8 +1,9 @@
-import { Classes, Dialog, H3 } from '@blueprintjs/core'
+import { Classes, H3 } from '@blueprintjs/core'
 import * as React from 'react'
 import Confetti from 'react-confetti'
 import styled from 'styled-components'
 
+import Dialog from 'Containers/Dialog'
 import base from 'Styled/base'
 import { size } from 'Utils/styled'
 

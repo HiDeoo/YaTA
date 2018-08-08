@@ -3,7 +3,6 @@ import {
   ButtonGroup,
   Classes,
   Colors,
-  Dialog,
   EditableText,
   Icon,
   Intent,
@@ -21,6 +20,7 @@ import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
 import History from 'Components/History'
 import ActionMenuItems from 'Containers/ActionMenuItems'
+import Dialog from 'Containers/Dialog'
 import { ActionHandler, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
@@ -31,7 +31,6 @@ import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterLogs } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { makeGetChatterNote } from 'Store/selectors/notes'
-import { getDisableDialogAnimations } from 'Store/selectors/settings'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
@@ -222,7 +221,7 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { chatter, disableDialogAnimations, logs } = this.props
+    const { chatter, logs } = this.props
     const { details, isEditingNote, showBanReasonAlert } = this.state
 
     if (_.isNil(chatter)) {
@@ -242,7 +241,6 @@ class ChatterDetails extends React.Component<Props, State> {
 
     return (
       <Dialog
-        transitionName={disableDialogAnimations ? '' : undefined}
         canOutsideClickClose={!isEditingNote}
         canEscapeKeyClose={!isEditingNote}
         isOpen={!_.isNil(chatter)}
@@ -604,7 +602,6 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     const getChatterNote = makeGetChatterNote()
 
     return {
-      disableDialogAnimations: getDisableDialogAnimations(state),
       logs: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterLogs(state, ownProps.chatter.id)) : null,
       note: !_.isNil(ownProps.chatter) ? getChatterNote(state, ownProps.chatter.id) : '',
     }
@@ -616,7 +613,6 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  * React Props.
  */
 type StateProps = {
-  disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   logs: ReturnType<typeof getLogsByIds> | null
   note: string
 }

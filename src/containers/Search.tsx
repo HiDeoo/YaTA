@@ -1,4 +1,4 @@
-import { Button, Classes, Colors, Dialog, InputGroup } from '@blueprintjs/core'
+import { Button, Classes, Colors, InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
@@ -12,6 +12,7 @@ import HeadlessMessage from 'Components/HeadlessMessage'
 import NonIdealState from 'Components/NonIdealState'
 import Notification from 'Components/Notification'
 import Spinner from 'Components/Spinner'
+import Dialog from 'Containers/Dialog'
 import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotification } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
@@ -118,7 +119,7 @@ class Search extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { disableDialogAnimations, visible } = this.props
+    const { visible } = this.props
     const { filter, results } = this.state
 
     let title = 'Search'
@@ -128,13 +129,7 @@ class Search extends React.Component<Props, State> {
     }
 
     return (
-      <Dialog
-        isOpen={visible}
-        onClose={this.toggle}
-        icon="search"
-        title={title}
-        transitionName={disableDialogAnimations ? '' : undefined}
-      >
+      <Dialog isOpen={visible} onClose={this.toggle} icon="search" title={title}>
         <Content>
           <FlexLayout>
             <FlexContent>
@@ -338,7 +333,6 @@ type StateProps = {
 type OwnProps = {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
-  disableDialogAnimations: boolean
   toggle: () => void
   visible: boolean
 }

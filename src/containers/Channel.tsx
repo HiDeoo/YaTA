@@ -51,7 +51,6 @@ import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
 import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
-  getDisableDialogAnimations,
   getPrioritizeUsernames,
   getShowContextMenu,
   getShowViewerCount,
@@ -188,15 +187,7 @@ class Channel extends React.Component<Props, State> {
    */
   public render() {
     const { focusedChatter, isUploadingFile, showFollowOmnibar, showChatters, showPollEditor, showSearch } = this.state
-    const {
-      allLogs,
-      channel,
-      chatters,
-      copyMessageOnDoubleClick,
-      disableDialogAnimations,
-      loginDetails,
-      showContextMenu,
-    } = this.props
+    const { allLogs, channel, chatters, copyMessageOnDoubleClick, loginDetails, showContextMenu } = this.props
 
     if (_.isNil(channel)) {
       return <Spinner large />
@@ -216,23 +207,13 @@ class Channel extends React.Component<Props, State> {
           onError={this.onUploadError}
           onStart={this.onUploadStart}
         />
+        <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
+        <Chatters toggle={this.toggleChatters} visible={showChatters} channel={channel} />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
-          disableDialogAnimations={disableDialogAnimations}
           toggle={this.toggleSearch}
           visible={showSearch}
-        />
-        <PollEditor
-          disableDialogAnimations={disableDialogAnimations}
-          toggle={this.togglePollEditor}
-          visible={showPollEditor}
-        />
-        <Chatters
-          disableDialogAnimations={disableDialogAnimations}
-          toggle={this.toggleChatters}
-          visible={showChatters}
-          channel={channel}
         />
         <Logs
           copyMessageToClipboard={this.copyMessageToClipboard}
@@ -1139,7 +1120,6 @@ const enhance = compose<Props, {}>(
       channel: getChannel(state),
       chatters: getChatters(state),
       copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
-      disableDialogAnimations: getDisableDialogAnimations(state),
       emotes: getEmotes(state),
       history: getHistory(state),
       historyIndex: getHistoryIndex(state),
@@ -1178,7 +1158,6 @@ type StateProps = {
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
-  disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   emotes: ReturnType<typeof getEmotes>
   history: ReturnType<typeof getHistory>
   historyIndex: ReturnType<typeof getHistoryIndex>
