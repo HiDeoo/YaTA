@@ -12,7 +12,7 @@ const Dialog: React.SFC<Props> = ({ disableDialogAnimations, ...restProps }) => 
   <OriginalDialog
     {...restProps}
     transitionName={disableDialogAnimations ? '' : undefined}
-    transitionDuration={disableDialogAnimations ? 0 : 100}
+    transitionDuration={disableDialogAnimations ? 0 : 300}
   />
 )
 
