@@ -75,7 +75,6 @@ const Login: React.SFC = () => (
         <li>Create clips from a broadcast or video.</li>
         <li>Follow users on your behalf.</li>
         <li>Block users on your behalf.</li>
-        <li>Read your list of ignored users.</li>
       </Permissions>
     </Details>
   </Center>

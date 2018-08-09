@@ -73,7 +73,7 @@ export default class Twitch {
       client_id: REACT_APP_TWITCH_CLIENT_ID,
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
-      scope: 'openid chat_login user_read user_blocks_read user_blocks_edit clips:edit user_follows_edit',
+      scope: 'openid chat_login user_read user_blocks_edit clips:edit user_follows_edit',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
