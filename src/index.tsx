@@ -1,4 +1,4 @@
-import { Classes, FocusStyleManager } from '@blueprintjs/core'
+import { Classes, Colors, FocusStyleManager } from '@blueprintjs/core'
 import * as React from 'react'
 import { render } from 'react-dom'
 import { injectGlobal } from 'styled-components'
@@ -70,6 +70,40 @@ injectGlobal`
 
   .${Classes.ALERT_CONTENTS} {
     flex: 1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border-radius: 8px;
+    border: 3px solid transparent;
+    border-right-width: 4px;
+  }
+
+  ::-webkit-scrollbar-track-piece,
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: ${Colors.LIGHT_GRAY2};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${Colors.GRAY3};
+  }
+
+  body.${Classes.DARK} ::-webkit-scrollbar-track {
+    background-color: ${Colors.DARK_GRAY2};
+  }
+
+  body.${Classes.DARK} ::-webkit-scrollbar-thumb {
+    background-color: ${Colors.DARK_GRAY1};
   }
 `
 
