@@ -254,8 +254,10 @@ class Channel extends React.Component<Props, State> {
           unfocus={this.unfocusChatter}
           whisper={this.prepareWhisper}
           chatter={focusedChatter}
+          unfollow={this.unfollow}
           unblock={this.unblock}
           timeout={this.timeout}
+          follow={this.follow}
           block={this.block}
           unban={this.unban}
           ban={this.ban}
@@ -949,7 +951,7 @@ class Channel extends React.Component<Props, State> {
 
   /**
    * Blocks a user.
-   * @param targetId - The user id of the user to block.
+   * @param targetId - The id of the user to block.
    */
   private block = async (targetId: string) => {
     try {
@@ -963,13 +965,37 @@ class Channel extends React.Component<Props, State> {
 
   /**
    * Unblocks a user.
-   * @param targetId - The user id of the user to unblock.
+   * @param targetId - The id of the user to unblock.
    */
   private unblock = async (targetId: string) => {
     try {
       await Twitch.unblockUser(targetId)
 
       this.props.markChatterAsUnblocked(targetId)
+    } catch (error) {
+      //
+    }
+  }
+
+  /**
+   * Follows a channel.
+   * @param targetId - The id of the channel to follow.
+   */
+  private follow = (targetId: string) => {
+    try {
+      Twitch.followChannel(targetId)
+    } catch (error) {
+      //
+    }
+  }
+
+  /**
+   * Unfollows a channel.
+   * @param targetId - The id of the channel to unfollow.
+   */
+  private unfollow = (targetId: string) => {
+    try {
+      Twitch.unfollowChannel(targetId)
     } catch (error) {
       //
     }

@@ -24,7 +24,7 @@ import Dialog from 'Containers/Dialog'
 import { ActionHandler, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
-import Twitch, { RawChannel } from 'Libs/Twitch'
+import Twitch, { RawChannel, RawRelationship } from 'Libs/Twitch'
 import TwitchTools, { UsernameHistory } from 'Libs/TwitchTools'
 import { isMessage } from 'Store/ducks/logs'
 import { updateNote } from 'Store/ducks/notes'
@@ -211,6 +211,7 @@ const initialState = {
   details: null as RawChannel | null,
   error: undefined as Error | undefined,
   isEditingNote: false,
+  relationship: undefined as RawRelationship | null | undefined,
   showBanReasonAlert: false,
   usernameHistory: [] as UsernameHistory,
 }
@@ -240,12 +241,23 @@ class ChatterDetails extends React.Component<Props, State> {
           id = chatter.id
         }
 
-        const response = await Promise.all([Twitch.fetchChannel(id), TwitchTools.fetchUsernameHistory(id)])
+        const response = await Promise.all([
+          Twitch.fetchChannel(id),
+          Twitch.fetchRelationship(id),
+          TwitchTools.fetchUsernameHistory(id),
+        ])
 
-        this.setState(() => ({ details: response[0], error: undefined, usernameHistory: response[1] }))
+        this.setState(() => ({
+          details: response[0],
+          error: undefined,
+          relationship: response[1],
+          usernameHistory: response[2],
+        }))
       } catch (error) {
         this.setState(() => ({ error }))
       }
+    } else if (_.isNil(chatter) && prevProps.chatter !== chatter) {
+      this.setState(initialState)
     }
   }
 
@@ -386,7 +398,7 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderDetails() {
-    const { details, error, usernameHistory } = this.state
+    const { details, error, relationship, usernameHistory } = this.state
     const { chatter } = this.props
 
     if (_.isNil(chatter)) {
@@ -395,7 +407,7 @@ class ChatterDetails extends React.Component<Props, State> {
       throw error
     }
 
-    if (_.isNil(details)) {
+    if (_.isNil(details) || _.isUndefined(relationship)) {
       return (
         <DetailsRow loading>
           <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} /> Fetching user details…
@@ -404,6 +416,7 @@ class ChatterDetails extends React.Component<Props, State> {
     }
 
     const hasUsernameHistory = _.isArray(usernameHistory) && usernameHistory.length > 0
+    const followed = !_.isNil(relationship)
 
     return (
       <>
@@ -421,6 +434,12 @@ class ChatterDetails extends React.Component<Props, State> {
         {!chatter.isSelf && (
           <Tools>
             <Button icon="envelope" onClick={this.onClickWhisper} text="Whisper" />
+            <Button
+              icon={followed ? 'following' : 'follower'}
+              intent={Intent.PRIMARY}
+              onClick={this.onClickFollowUnfollow}
+              text={followed ? 'Unfollow' : 'Follow'}
+            />
             <Button
               icon="blocked-person"
               intent={Intent.DANGER}
@@ -610,6 +629,24 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the follow or unfollow button is clicked.
+   */
+  private onClickFollowUnfollow = () => {
+    const { chatter, follow, unfocus, unfollow } = this.props
+    const { relationship } = this.state
+
+    if (!_.isNil(chatter)) {
+      if (!_.isNil(relationship)) {
+        unfollow(chatter.id)
+      } else {
+        follow(chatter.id)
+      }
+    }
+
+    unfocus()
+  }
+
+  /**
    * Triggered when the block or unblock button is clicked.
    */
   private onClickBlockUnblock = () => {
@@ -691,10 +728,12 @@ type OwnProps = {
   chatter: SerializedChatter | null
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
+  follow: (targetId: string) => void
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
   unblock: (targetId: string) => void
   unfocus: () => void
+  unfollow: (targetId: string) => void
   whisper: (username: string) => void
 }
 

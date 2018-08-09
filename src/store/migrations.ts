@@ -1,7 +1,8 @@
 import * as _ from 'lodash'
 
 import { HighlightColors } from 'Libs/Highlight'
-import { initialState, SerializedActions } from 'Store/ducks/settings'
+import { initialState as SettingsInitialState, SerializedActions } from 'Store/ducks/settings'
+import { initialState as UserInitialState } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 
 /**
@@ -11,19 +12,19 @@ export default {
   0: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, lastKnownVersion: initialState.lastKnownVersion },
+      settings: { ...state.settings, lastKnownVersion: SettingsInitialState.lastKnownVersion },
     }
   },
   1: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, copyMessageOnDoubleClick: initialState.copyMessageOnDoubleClick },
+      settings: { ...state.settings, copyMessageOnDoubleClick: SettingsInitialState.copyMessageOnDoubleClick },
     }
   },
   2: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, showContextMenu: initialState.showContextMenu },
+      settings: { ...state.settings, showContextMenu: SettingsInitialState.showContextMenu },
     }
   },
   3: (state: ApplicationState): ApplicationState => {
@@ -37,37 +38,37 @@ export default {
   4: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, highlights: initialState.highlights },
+      settings: { ...state.settings, highlights: SettingsInitialState.highlights },
     }
   },
   5: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, highlightsIgnoredUsers: initialState.highlightsIgnoredUsers },
+      settings: { ...state.settings, highlightsIgnoredUsers: SettingsInitialState.highlightsIgnoredUsers },
     }
   },
   6: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, actions: initialState.actions },
+      settings: { ...state.settings, actions: SettingsInitialState.actions },
     }
   },
   7: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, hideWhispers: initialState.hideWhispers },
+      settings: { ...state.settings, hideWhispers: SettingsInitialState.hideWhispers },
     }
   },
   8: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, autoFocusInput: initialState.autoFocusInput },
+      settings: { ...state.settings, autoFocusInput: SettingsInitialState.autoFocusInput },
     }
   },
   9: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, showViewerCount: initialState.showViewerCount },
+      settings: { ...state.settings, showViewerCount: SettingsInitialState.showViewerCount },
     }
   },
   10: (state: ApplicationState): ApplicationState => {
@@ -91,19 +92,19 @@ export default {
   11: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, disableDialogAnimations: initialState.disableDialogAnimations },
+      settings: { ...state.settings, disableDialogAnimations: SettingsInitialState.disableDialogAnimations },
     }
   },
   12: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, highlightAllMentions: initialState.highlightAllMentions },
+      settings: { ...state.settings, highlightAllMentions: SettingsInitialState.highlightAllMentions },
     }
   },
   13: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, prioritizeUsernames: initialState.prioritizeUsernames },
+      settings: { ...state.settings, prioritizeUsernames: SettingsInitialState.prioritizeUsernames },
     }
   },
   14: (state: ApplicationState): ApplicationState => {
@@ -146,31 +147,37 @@ export default {
   18: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, hostThreshold: initialState.hostThreshold },
+      settings: { ...state.settings, hostThreshold: SettingsInitialState.hostThreshold },
     }
   },
   19: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, playSoundOnMentions: initialState.playSoundOnMentions },
+      settings: { ...state.settings, playSoundOnMentions: SettingsInitialState.playSoundOnMentions },
     }
   },
   20: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, playSoundOnWhispers: initialState.playSoundOnWhispers },
+      settings: { ...state.settings, playSoundOnWhispers: SettingsInitialState.playSoundOnWhispers },
     }
   },
   21: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, autoHostThreshold: initialState.autoHostThreshold },
+      settings: { ...state.settings, autoHostThreshold: SettingsInitialState.autoHostThreshold },
     }
   },
   22: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, highlightsPermanentUsers: initialState.highlightsPermanentUsers },
+      settings: { ...state.settings, highlightsPermanentUsers: SettingsInitialState.highlightsPermanentUsers },
+    }
+  },
+  23: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      user: UserInitialState,
     }
   },
 }

@@ -73,7 +73,7 @@ export default class Twitch {
       client_id: REACT_APP_TWITCH_CLIENT_ID,
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
-      scope: 'openid chat_login user_read user_blocks_edit clips:edit',
+      scope: 'openid chat_login user_read user_blocks_read user_blocks_edit clips:edit user_follows_edit',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -393,9 +393,10 @@ export default class Twitch {
 
   /**
    * Blocks a user.
-   * @param  targetId - The user id of the user to block.
+   * @param  targetId - The id of the user to block.
+   * @return The blocked user.
    */
-  public static async blockUser(targetId: string): Promise<RawBlockerUser> {
+  public static async blockUser(targetId: string): Promise<RawBlockedUser> {
     const response = await Twitch.fetch(
       TwitchApi.Kraken,
       `/users/${Twitch.userId}/blocks/${targetId}`,
@@ -409,12 +410,44 @@ export default class Twitch {
 
   /**
    * Unblocks a user.
-   * @param  targetId - The user id of the user to unblock.
+   * @param  targetId - The id of the user to unblock.
    */
   public static async unblockUser(targetId: string) {
     return Twitch.fetch(
       TwitchApi.Kraken,
       `/users/${Twitch.userId}/blocks/${targetId}`,
+      undefined,
+      true,
+      RequestMethod.Delete
+    )
+  }
+
+  /**
+   * Follows a channel.
+   * @param  targetId - The id of the channel to follow.
+   * @param  withNotifications - `true` to get notifications when the channel goes live.
+   * @return The follow action.
+   */
+  public static async followChannel(targetId: string, withNotifications = true): Promise<RawFollowing> {
+    const response = await Twitch.fetch(
+      TwitchApi.Kraken,
+      `/users/${Twitch.userId}/follows/channels/${targetId}`,
+      { notifications: withNotifications ? 'true' : 'false' },
+      true,
+      RequestMethod.Put
+    )
+
+    return response.json()
+  }
+
+  /**
+   * Unfollows a channel.
+   * @param  targetId - The id of the channel to unfollow.
+   */
+  public static async unfollowChannel(targetId: string) {
+    return Twitch.fetch(
+      TwitchApi.Kraken,
+      `/users/${Twitch.userId}/follows/channels/${targetId}`,
       undefined,
       true,
       RequestMethod.Delete
@@ -606,6 +639,15 @@ export type RawChannel = {
 }
 
 /**
+ * Twitch follow response.
+ */
+type RawFollowing = {
+  channel: RawChannel
+  created_at: string
+  notifications: boolean
+}
+
+/**
  * Twitch authenticated user details.
  */
 export interface AuthenticatedUserDetails extends RawUser {
@@ -679,7 +721,7 @@ type RawClipUser = {
 /**
  * Blocked user.
  */
-type RawBlockerUser = {
+type RawBlockedUser = {
   user: {
     _id: string
     bio: string | null
