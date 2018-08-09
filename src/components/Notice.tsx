@@ -11,6 +11,7 @@ import { color, size } from 'Utils/styled'
 const Wrapper = styled.div`
   color: ${color('notice.color')};
   padding: 5px ${size('log.hPadding')} 0 ${size('log.hPadding')};
+  white-space: pre-wrap;
 `
 
 /**
@@ -36,7 +37,11 @@ export default class Notice extends React.Component<Props> {
   public render() {
     const { notice, style } = this.props
 
-    return <Wrapper style={style} dangerouslySetInnerHTML={{ __html: notice.message }} />
+    return (
+      <Wrapper style={style}>
+        <div dangerouslySetInnerHTML={{ __html: notice.message }} />
+      </Wrapper>
+    )
   }
 }
 

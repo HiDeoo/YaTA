@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   background-color: ${color('whisper.background')};
   border-left: 3px solid ${color('whisper.border')};
   padding: 4px ${size('log.hPadding')} 4px calc(${size('log.hPadding')} - 1px);
+  white-space: pre-wrap;
 `
 
 /**
@@ -67,6 +68,7 @@ export default class Whisper extends React.Component<Props> {
         />
         <Username color={whisper.self ? 'inherit' : usernameColor}>{whisper.user.displayName}</Username>
         <MessageContent message={whisper} />
+        {'\n'}
       </Wrapper>
     )
   }

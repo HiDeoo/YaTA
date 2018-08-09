@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   border-right: 3px solid ${Colors.RED4};
   padding: 5px ${size('log.hPadding')} 0 ${size('log.hPadding')};
   text-align: center;
+  white-space: pre-wrap;
 `
 
 /**
@@ -40,7 +41,12 @@ export default class Marker extends React.Component<Props> {
   public render() {
     const { marker, style } = this.props
 
-    return <Wrapper style={style}>{marker.time}</Wrapper>
+    return (
+      <Wrapper style={style}>
+        {marker.time}
+        {'\n'}
+      </Wrapper>
+    )
   }
 }
 
