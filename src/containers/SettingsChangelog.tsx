@@ -1,4 +1,4 @@
-import { Classes } from '@blueprintjs/core'
+import { Classes, Colors } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -52,12 +52,17 @@ const Changelog = styled.div`
 
   & code,
   .${Classes.DARK} & code {
-    background: rgba(16, 22, 26, 0.3);
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 3px;
     box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.4);
-    color: #bfccd6;
+    color: ${Colors.GRAY1};
     font-size: 1em;
     padding: 2px 5px;
+  }
+
+  .${Classes.DARK} & code {
+    background: rgba(16, 22, 26, 0.3);
+    color: ${Colors.GRAY5};
   }
 
   & ul ul,
