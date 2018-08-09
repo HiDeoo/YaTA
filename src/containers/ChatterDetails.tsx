@@ -25,6 +25,7 @@ import { ActionHandler, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import Twitch, { RawChannel } from 'Libs/Twitch'
+import TwitchTools, { UsernameHistory } from 'Libs/TwitchTools'
 import { isMessage } from 'Store/ducks/logs'
 import { updateNote } from 'Store/ducks/notes'
 import { ApplicationState } from 'Store/reducers'
@@ -135,7 +136,8 @@ const Tools = styled.div`
   margin-bottom: 10px;
 
   & > a,
-  & > button {
+  & > button,
+  & > span.${Classes.POPOVER_WRAPPER} {
     margin-right: 10px;
   }
 
@@ -175,6 +177,34 @@ const Note = styled(EditableText)`
 `
 
 /**
+ * HistoryUsername component.
+ */
+const HistoryUsername = styled(Menu.Item)`
+  &.${Classes.MENU_ITEM}.${Classes.DISABLED}, .${Classes.DARK} &.${Classes.MENU_ITEM}.${Classes.DISABLED} {
+    color: ${Colors.WHITE} !important;
+    cursor: auto !important;
+  }
+`
+
+/**
+ * LastHistoryUsername component.
+ */
+const LastHistoryUsername = styled(HistoryUsername)`
+  &.${Classes.MENU_ITEM}.${Classes.DISABLED}, .${Classes.DARK} &.${Classes.MENU_ITEM}.${Classes.DISABLED} {
+    font-weight: bold;
+  }
+`
+
+/**
+ * HistoryDate component.
+ */
+const HistoryDate = styled(Menu.Item)`
+  &.${Classes.MENU_ITEM}.${Classes.DISABLED}, .${Classes.DARK} &.${Classes.MENU_ITEM}.${Classes.DISABLED} {
+    cursor: auto !important;
+  }
+`
+
+/**
  * React State.
  */
 const initialState = {
@@ -182,6 +212,7 @@ const initialState = {
   error: undefined as Error | undefined,
   isEditingNote: false,
   showBanReasonAlert: false,
+  usernameHistory: [] as UsernameHistory,
 }
 type State = Readonly<typeof initialState>
 
@@ -200,16 +231,18 @@ class ChatterDetails extends React.Component<Props, State> {
 
     if (!_.isNil(chatter) && prevProps.chatter !== chatter) {
       try {
-        let details: RawChannel
+        let id: string
 
         if (chatter.isSelf) {
           const user = await Twitch.fetchAuthenticatedUser()
-          details = await Twitch.fetchChannel(user._id)
+          id = user._id
         } else {
-          details = await Twitch.fetchChannel(chatter.id)
+          id = chatter.id
         }
 
-        this.setState(() => ({ details, error: undefined }))
+        const response = await Promise.all([Twitch.fetchChannel(id), TwitchTools.fetchUsernameHistory(id)])
+
+        this.setState(() => ({ details: response[0], error: undefined, usernameHistory: response[1] }))
       } catch (error) {
         this.setState(() => ({ error }))
       }
@@ -353,7 +386,7 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderDetails() {
-    const { details, error } = this.state
+    const { details, error, usernameHistory } = this.state
     const { chatter } = this.props
 
     if (_.isNil(chatter)) {
@@ -369,6 +402,8 @@ class ChatterDetails extends React.Component<Props, State> {
         </DetailsRow>
       )
     }
+
+    const hasUsernameHistory = _.isArray(usernameHistory) && usernameHistory.length > 0
 
     return (
       <>
@@ -396,11 +431,9 @@ class ChatterDetails extends React.Component<Props, State> {
         )}
         <Tools>
           <ExternalButton text="Open Channel" icon="document-open" href={details.url} />
-          <ExternalButton
-            text="Username History"
-            icon="history"
-            href={`https://twitch-tools.rootonline.de/username_changelogs_search.php?q=${chatter.userName}`}
-          />
+          <Popover disabled={!hasUsernameHistory} content={this.renderUsernameHistory()} usePortal={false}>
+            <Button disabled={!hasUsernameHistory} text="Username History" icon="history" rightIcon="caret-down" />
+          </Popover>
           <Popover content={<ActionMenuItems actionHandler={this.actionHandler} wrap />} usePortal={false}>
             <Button icon="caret-down" />
           </Popover>
@@ -426,6 +459,29 @@ class ChatterDetails extends React.Component<Props, State> {
         copyMessageToClipboard={copyMessageToClipboard}
         logs={logs}
       />
+    )
+  }
+
+  /**
+   * Renders the username history.
+   * @return Element to render.
+   */
+  private renderUsernameHistory() {
+    const { usernameHistory } = this.state
+
+    return (
+      <Menu>
+        {_.map(usernameHistory, (history, index) => {
+          const NewUsername = index === 0 ? LastHistoryUsername : HistoryUsername
+          return (
+            <React.Fragment key={index}>
+              <NewUsername disabled text={history.username_new} />
+              <HistoryDate disabled icon="arrow-up" text={new Date(history.found_at).toLocaleDateString()} />
+              {index === usernameHistory.length - 1 && <HistoryUsername disabled text={history.username_old} />}
+            </React.Fragment>
+          )
+        })}
+      </Menu>
     )
   }
 

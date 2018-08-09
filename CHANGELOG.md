@@ -7,6 +7,7 @@
 - Add follow status (and follow age if following) in the channel details view.
 - Add the `/followed` command.
 - Offer plastic surgery to scrollbars (Firefox is still [afraid after 18 years](https://bugzilla.mozilla.org/show_bug.cgi?id=77790) & didn't show up at the appointment).
+- The username history no longer requires to open a new website and is now directly visible in the application.
 
 ### 🐛 Bug Fix
 

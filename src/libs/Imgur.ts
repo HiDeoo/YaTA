@@ -37,7 +37,7 @@ export default class Imgur {
   /**
    * Fetches an URL.
    * @param  endpoint - The endpoint to fetch.
-   * @param  [method] - The request method.
+   * @param  [method=RequestMethod.Get] - The request method.
    * @param  [body] - The request body.
    * @return The response.
    */

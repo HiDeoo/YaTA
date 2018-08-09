@@ -453,9 +453,9 @@ export default class Twitch {
    * Fetches an URL.
    * @param  api - The Twitch API to use.
    * @param  endpoint - The endpoint to fetch.
-   * @param  [searchParams] - Additional search parameters.
-   * @param  [authenticated] - Defines if the endpoint requires authentication or not.
-   * @param  [method] - The request method.
+   * @param  [searchParams={}] - Additional search parameters.
+   * @param  [authenticated=false] - Defines if the endpoint requires authentication or not.
+   * @param  [method=RequestMethod.Get] - The request method.
    * @return The response.
    */
   private static async fetch(
