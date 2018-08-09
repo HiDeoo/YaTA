@@ -71,9 +71,11 @@ const Login: React.SFC = () => (
           View your email address.
           <em>Your email is never used but the permission is required to fetch various details about yourself.</em>
         </li>
-        <li>Block users on your behalf.</li>
         <li>Log into chat and send messages.</li>
         <li>Create clips from a broadcast or video.</li>
+        <li>Follow users on your behalf.</li>
+        <li>Block users on your behalf.</li>
+        <li>Read your list of ignored users.</li>
       </Permissions>
     </Details>
   </Center>
