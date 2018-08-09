@@ -82,12 +82,12 @@ const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
 /**
  * RegExp used to identify whisper reply command (/r).
  */
-const WhisperReplyRegExp = /^\/r /
+const WhisperReplyRegExp = /^[\/|\.]r /
 
 /**
  * RegExp used to identify the followed command (/followed).
  */
-const FollowedRegExp = /^\/followed(?:$| .*)/
+const FollowedRegExp = /^[\/|\.]followed(?:$| .*)/
 
 /**
  * React State.

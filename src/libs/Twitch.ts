@@ -36,12 +36,12 @@ export enum ClipPeriod {
 /**
  * RegExp used to identify whisper command (/w user message).
  */
-const WhisperRegExp = /^\/w (\S+) (.+)/
+const WhisperRegExp = /^[\/|\.]w (\S+) (.+)/
 
 /**
  * RegExp used to identify marker command (/marker [message]).
  */
-const MarkerRegExp = /^\/marker(?:$|\s)/
+const MarkerRegExp = /^[\/|.]marker(?:$|\s)/
 
 /**
  * CORS proxy URL.

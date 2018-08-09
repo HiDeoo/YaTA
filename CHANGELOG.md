@@ -9,6 +9,7 @@
 - Offer plastic surgery to scrollbars (Firefox is still [afraid after 18 years](https://bugzilla.mozilla.org/show_bug.cgi?id=77790) & didn't show up at the appointment).
 - The username history no longer requires to open a new website and is now directly visible in the application.
 - You can now follow / unfollow users directly from the chatter details dialog.
+- All commands can now be used with their dot equivalent without any issues (`.command` instead of `/command`).
 
 ### 🐛 Bug Fix
 
