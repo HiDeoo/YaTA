@@ -267,7 +267,7 @@ class Search extends React.Component<Props, State> {
         return _.every(
           filters,
           (filter) =>
-            log.text.includes(filter) ||
+            log.text.toLowerCase().includes(filter) ||
             log.user.userName.includes(filter) ||
             log.user.displayName.toLowerCase().includes(filter)
         )

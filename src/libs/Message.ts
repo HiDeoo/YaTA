@@ -54,7 +54,7 @@ export default class Message implements Serializable<SerializedMessage> {
     this.date = userstate['tmi-sent-ts']
     this.user = new Chatter(userstate, this.parseOptions.theme)
     this.type = userstate['message-type']
-    this.text = message.toLowerCase()
+    this.text = message.trim()
     this.highlighted = !self && Resources.manager().shouldAlwaysHighlight(this.user.userName)
 
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
