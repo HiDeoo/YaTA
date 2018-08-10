@@ -2,9 +2,35 @@ import { AnchorButton, Callout, Classes, Intent } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import Center from 'Components/Center'
+import FlexContent from 'Components/FlexContent'
+import FlexLayout from 'Components/FlexLayout'
+import PreviewImg from 'Images/preview.png'
 import Twitch from 'Libs/Twitch'
 import { color } from 'Utils/styled'
+
+/**
+ * Wrapper component.
+ */
+const Wrapper = styled(FlexLayout)`
+  align-items: center;
+`
+
+/**
+ * LoginWrapper component.
+ */
+const LoginWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 80px 0 10px 0;
+`
+
+/**
+ * PreviewWrapper component.
+ */
+const PreviewWrapper = styled(FlexContent)`
+  overflow: hidden;
+`
 
 /**
  * Details component.
@@ -27,6 +53,18 @@ const Details = styled(Callout)`
         top: 11px;
       }
     }
+  }
+`
+
+/**
+ * Preview component.
+ */
+const Preview = styled.img`
+  display: block;
+  max-width: 800px;
+
+  @media (max-width: 800px) {
+    max-width: 100%;
   }
 `
 
@@ -56,28 +94,33 @@ const Permissions = styled.ul`
  * Login Component.
  */
 const Login: React.SFC = () => (
-  <Center>
-    <AnchorButton
-      text="Login with Twitch"
-      intent={Intent.PRIMARY}
-      large
-      icon="log-in"
-      rightIcon="document-open"
-      href={Twitch.getAuthURL().toString()}
-    />
-    <Details title="Required permissions" intent={Intent.WARNING} icon="key">
-      <Permissions>
-        <li>
-          View your email address.
-          <em>Your email is never used but the permission is required to fetch various details about yourself.</em>
-        </li>
-        <li>Log into chat and send messages.</li>
-        <li>Create clips from a broadcast or video.</li>
-        <li>Follow users on your behalf.</li>
-        <li>Block users on your behalf.</li>
-      </Permissions>
-    </Details>
-  </Center>
+  <Wrapper vertical>
+    <LoginWrapper>
+      <AnchorButton
+        text="Login with Twitch"
+        intent={Intent.PRIMARY}
+        large
+        icon="log-in"
+        rightIcon="document-open"
+        href={Twitch.getAuthURL().toString()}
+      />
+      <Details title="Required permissions" intent={Intent.WARNING} icon="key">
+        <Permissions>
+          <li>
+            View your email address.
+            <em>Your email is never used but the permission is required to fetch various details about yourself.</em>
+          </li>
+          <li>Log into chat and send messages.</li>
+          <li>Create clips from a broadcast or video.</li>
+          <li>Follow users on your behalf.</li>
+          <li>Block users on your behalf.</li>
+        </Permissions>
+      </Details>
+    </LoginWrapper>
+    <PreviewWrapper>
+      <Preview src={PreviewImg} />
+    </PreviewWrapper>
+  </Wrapper>
 )
 
 export default Login
