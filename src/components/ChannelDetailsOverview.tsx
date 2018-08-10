@@ -243,7 +243,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
     window.open(
       `https://player.twitch.tv/?muted&channel=${this.props.channel}`,
       'videoPopupWindow',
-      'height=360,width=640'
+      'height=360,width=600'
     )
   }
 }
