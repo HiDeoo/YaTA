@@ -435,7 +435,7 @@ class ChatterDetails extends React.Component<Props, State> {
           <Tools>
             <Button icon="envelope" onClick={this.onClickWhisper} text="Whisper" />
             <Button
-              icon={followed ? 'following' : 'follower'}
+              icon={followed ? 'follower' : 'following'}
               intent={Intent.PRIMARY}
               onClick={this.onClickFollowUnfollow}
               text={followed ? 'Unfollow' : 'Follow'}
@@ -446,6 +446,7 @@ class ChatterDetails extends React.Component<Props, State> {
               onClick={this.onClickBlockUnblock}
               text={chatter.blocked ? 'Unblock' : 'Block'}
             />
+            <ExternalButton intent={Intent.DANGER} text="Report" icon="badge" href={`${details.url}/report`} />
           </Tools>
         )}
         <Tools>

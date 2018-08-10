@@ -11,6 +11,7 @@
 - You can now follow / unfollow users directly from the chatter details dialog.
 - All commands can now be used with their dot equivalent without any issues (`.command` instead of `/command`).
 - Clicking the video preview in the channel details will now popout the video player (still muted).
+- Add a button to report users from the chatter details dialog.
 
 ### 🐛 Bug Fix
 
