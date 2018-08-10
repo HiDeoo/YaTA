@@ -64,6 +64,7 @@ const PreviewWrapper = styled.div`
  * PlayIcon component.
  */
 const PlayIcon = styled(Icon)`
+  filter: drop-shadow(1px 1px 0 ${Colors.DARK_GRAY5});
   height: 100px;
   left: calc(50% - 50px);
   pointer-events: none;
@@ -78,17 +79,6 @@ const PlayIcon = styled(Icon)`
 const Preview = styled.img`
   border: 1px solid ${Colors.DARK_GRAY3};
   display: block;
-  max-width: 100%;
-`
-
-/**
- * Player component.
- */
-const Player = styled.iframe.attrs({
-  // @ts-ignore
-  allowfullscreen: 'true',
-})`
-  border: 0;
   max-width: 100%;
 `
 
@@ -130,7 +120,6 @@ const ChannelDetailsPanels = {
 const initialState = {
   didFail: false,
   relationship: undefined as RawRelationship | null | undefined,
-  showPlayer: false,
   stream: undefined as RawStream | null | undefined,
 }
 type State = Readonly<typeof initialState>
@@ -200,7 +189,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    */
   private renderStream() {
     const { channel } = this.props
-    const { relationship, showPlayer, stream } = this.state
+    const { relationship, stream } = this.state
 
     if (_.isNil(stream) || _.isNil(channel)) {
       return <NonIdealState small title="Currently offline!" />
@@ -224,14 +213,8 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
             : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`}
         </Meta>
         <PreviewWrapper>
-          {showPlayer ? (
-            <Player src={`http://player.twitch.tv/?channel=${channel}&muted=true`} scrolling="no" />
-          ) : (
-            <>
-              <Preview src={stream.preview.medium} onClick={this.onClickPreview} />
-              <PlayIcon icon="play" />
-            </>
-          )}
+          <Preview src={stream.preview.medium} onClick={this.onClickPreview} />
+          <PlayIcon icon="play" />
         </PreviewWrapper>
       </>
     )
@@ -257,7 +240,11 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * Triggered when a preview is clicked.
    */
   private onClickPreview = () => {
-    this.setState(() => ({ showPlayer: true }))
+    window.open(
+      `https://player.twitch.tv/?muted&channel=${this.props.channel}`,
+      'videoPopupWindow',
+      'height=360,width=640'
+    )
   }
 }
 
