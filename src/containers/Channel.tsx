@@ -186,7 +186,7 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { focusedChatter, isUploadingFile, showFollowOmnibar, showChatters, showPollEditor, showSearch } = this.state
+    const { focusedChatter, isUploadingFile, showChatters, showFollowOmnibar, showPollEditor, showSearch } = this.state
     const { allLogs, channel, chatters, copyMessageOnDoubleClick, loginDetails, showContextMenu } = this.props
 
     if (_.isNil(channel)) {
@@ -207,8 +207,8 @@ class Channel extends React.Component<Props, State> {
           onError={this.onUploadError}
           onStart={this.onUploadStart}
         />
-        <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
         <Chatters toggle={this.toggleChatters} visible={showChatters} channel={channel} />
+        <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -555,55 +555,45 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Toggles the chatters list.
+   * Toggles a UI and focus the chat input if closing it.
+   * @param ui - The UI to toggle.
    */
-  private toggleChatters = () => {
-    const closing = this.state.showChatters
+  private toggleUI(ui: ToggleableUI) {
+    const closing = this.state[ui]
 
-    this.setState(({ showChatters }) => ({ showChatters: !showChatters }))
+    this.setState((prevState) => ({ ...prevState, [ui]: !prevState[ui] }))
 
     if (closing) {
       this.focusChatInput()
     }
+  }
+
+  /**
+   * Toggles the chatters list.
+   */
+  private toggleChatters = () => {
+    this.toggleUI(ToggleableUI.Chatters)
   }
 
   /**
    * Toggles the poll editor.
    */
   private togglePollEditor = () => {
-    const closing = this.state.showPollEditor
-
-    this.setState(({ showPollEditor }) => ({ showPollEditor: !showPollEditor }))
-
-    if (closing) {
-      this.focusChatInput()
-    }
+    this.toggleUI(ToggleableUI.PollEditor)
   }
 
   /**
    * Toggles the channel omnibar.
    */
   private toggleFollowOmnibar = () => {
-    const closing = this.state.showFollowOmnibar
-
-    this.setState(({ showFollowOmnibar }) => ({ showFollowOmnibar: !showFollowOmnibar }))
-
-    if (closing) {
-      this.focusChatInput()
-    }
+    this.toggleUI(ToggleableUI.FollowOmnibar)
   }
 
   /**
    * Toggles the search.
    */
   private toggleSearch = () => {
-    const closing = this.state.showSearch
-
-    this.setState(({ showSearch }) => ({ showSearch: !showSearch }))
-
-    if (closing) {
-      this.focusChatInput()
-    }
+    this.toggleUI(ToggleableUI.Search)
   }
 
   /**
@@ -1248,3 +1238,14 @@ interface OwnProps extends WithHeaderProps {
  * React Props.
  */
 type Props = StateProps & DispatchProps & OwnProps
+
+/**
+ * List of toggleable UIs with visibility controlled in the state.
+ * Note: The string value is the state property controlling the visibility.
+ */
+enum ToggleableUI {
+  Chatters = 'showChatters',
+  FollowOmnibar = 'showFollowOmnibar',
+  PollEditor = 'showPollEditor',
+  Search = 'showSearch',
+}
