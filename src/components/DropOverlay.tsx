@@ -8,21 +8,12 @@ import Imgur from 'Libs/Imgur'
 import { color } from 'Utils/styled'
 
 /**
- * Overlay transition name.
- */
-const DropOverlayTransitionName = 'bp3-overlay'
-
-/**
  * Wrapper component.
  */
 const Wrapper = styled.div`
   height: 100vh;
   pointer-events: none;
   width: 100vw;
-
-  &.bp3-overlay-transition-enter {
-    background-color: red !important;
-  }
 `
 
 /**
@@ -58,13 +49,13 @@ const Tooltip = styled(Callout)`
     }
   }
 
-  .${DropOverlayTransitionName}-appear &,
-  .${DropOverlayTransitionName}-enter & {
+  .${Classes.OVERLAY}-appear &,
+  .${Classes.OVERLAY}-enter & {
     transform: translateY(-50vh) rotate(-10deg);
   }
 
-  .${DropOverlayTransitionName}-appear-active &,
-  .${DropOverlayTransitionName}-enter-active & {
+  .${Classes.OVERLAY}-appear-active &,
+  .${Classes.OVERLAY}-enter-active & {
     transform: translateY(0) rotate(0deg);
     transition-property: transform;
     transition-duration: 0.3s;
@@ -72,11 +63,11 @@ const Tooltip = styled(Callout)`
     transition-delay: 0;
   }
 
-  .${DropOverlayTransitionName}-exit & {
+  .${Classes.OVERLAY}-exit & {
     transform: translateY(0) rotate(0deg);
   }
 
-  .${DropOverlayTransitionName}-exit-active & {
+  .${Classes.OVERLAY}-exit-active & {
     transform: translateY(150vh) rotate(-20deg);
     transition-property: transform;
     transition-duration: 0.5s;
