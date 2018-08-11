@@ -180,4 +180,10 @@ export default {
       user: UserInitialState,
     }
   },
+  24: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      user: UserInitialState,
+    }
+  },
 }

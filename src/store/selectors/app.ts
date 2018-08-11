@@ -62,6 +62,13 @@ export const getEmotes = createSelector([getAppState], (app) => {
 export const getRoomState = createSelector([getAppState], (app) => app.roomState)
 
 /**
+ * Returns the channel id when defined.
+ * @param  state - The Redux state.
+ * @return The channel id.
+ */
+export const getChannelId = createSelector([getAppState], (app) => _.get(app.roomState, 'roomId'))
+
+/**
  * Returns the username of the last person that sent us a whisper.
  * @param  state - The Redux state.
  * @return The username.

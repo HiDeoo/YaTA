@@ -9,6 +9,7 @@ import * as ReactTooltip from 'react-tooltip'
 import { compose } from 'recompose'
 import styled from 'styled-components'
 
+import BroadcasterOverlay from 'Components/BroadcasterOverlay'
 import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
 import DropOverlay from 'Components/DropOverlay'
@@ -96,6 +97,7 @@ const initialState = {
   focusedChatter: null as SerializedChatter | null,
   inputValue: '',
   isUploadingFile: false,
+  showBroadcasterOverlay: false,
   showChatters: false,
   showFollowOmnibar: false,
   showPollEditor: false,
@@ -186,7 +188,15 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { focusedChatter, isUploadingFile, showChatters, showFollowOmnibar, showPollEditor, showSearch } = this.state
+    const {
+      focusedChatter,
+      isUploadingFile,
+      showBroadcasterOverlay,
+      showChatters,
+      showFollowOmnibar,
+      showPollEditor,
+      showSearch,
+    } = this.state
     const { allLogs, channel, chatters, copyMessageOnDoubleClick, loginDetails, showContextMenu } = this.props
 
     if (_.isNil(channel)) {
@@ -209,6 +219,7 @@ class Channel extends React.Component<Props, State> {
         />
         <Chatters toggle={this.toggleChatters} visible={showChatters} channel={channel} />
         <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
+        <BroadcasterOverlay toggle={this.toggleBroadcasterOverlay} visible={showBroadcasterOverlay} />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -282,11 +293,12 @@ class Channel extends React.Component<Props, State> {
    * @return Element to render.
    */
   private setHeaderComponents() {
-    const { channel, isAutoScrollPaused, isMod, roomState } = this.props
+    const { channel, isAutoScrollPaused, isMod, loginDetails, roomState } = this.props
 
     const channelId = _.get(roomState, 'roomId')
 
     const connected = !_.isNil(roomState)
+    const isBroadcaster = !_.isNil(loginDetails) && !_.isNil(channel) && isMod && loginDetails.username === channel
 
     const headerRightComponent = (
       <>
@@ -317,6 +329,11 @@ class Channel extends React.Component<Props, State> {
             />
           </Menu>
         </Popover>
+        {isBroadcaster && (
+          <HeaderTooltip content="Broadcaster Tools">
+            <Button onClick={this.toggleBroadcasterOverlay} icon="mobile-video" minimal />
+          </HeaderTooltip>
+        )}
         {connected && (
           <HeaderTooltip content="Search">
             <Button onClick={this.toggleSearch} icon="search" minimal />
@@ -580,6 +597,13 @@ class Channel extends React.Component<Props, State> {
    */
   private togglePollEditor = () => {
     this.toggleUI(ToggleableUI.PollEditor)
+  }
+
+  /**
+   * Toggles the broadcaster overlay.
+   */
+  private toggleBroadcasterOverlay = () => {
+    this.toggleUI(ToggleableUI.BroadcasterOverlay)
   }
 
   /**
@@ -1244,6 +1268,7 @@ type Props = StateProps & DispatchProps & OwnProps
  * Note: The string value is the state property controlling the visibility.
  */
 enum ToggleableUI {
+  BroadcasterOverlay = 'showBroadcasterOverlay',
   Chatters = 'showChatters',
   FollowOmnibar = 'showFollowOmnibar',
   PollEditor = 'showPollEditor',

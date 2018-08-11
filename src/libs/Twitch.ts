@@ -73,7 +73,7 @@ export default class Twitch {
       client_id: REACT_APP_TWITCH_CLIENT_ID,
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
-      scope: 'openid chat_login user_read user_blocks_edit clips:edit user_follows_edit',
+      scope: 'openid chat_login user_read user_blocks_edit clips:edit user_follows_edit channel_editor',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -190,6 +190,60 @@ export default class Twitch {
    */
   public static async fetchChannel(id: string): Promise<RawChannel> {
     const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`)
+
+    return response.json()
+  }
+
+  /**
+   * Updates a channel.
+   * @param  id - The id of the channel to update.
+   * @param  title - The channel status / title.
+   * @param  game - The channel game.
+   * @return The updated channel.
+   */
+  public static async updateChannel(id: string, title: string, game: string): Promise<RawChannel> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`, undefined, true, RequestMethod.Put, {
+      channel: { game, status: title },
+    })
+
+    return response.json()
+  }
+
+  /**
+   * Fetches a channel live notification.
+   * @param  id - The id of the channel.
+   * @return The channel live notification.
+   */
+  public static async fetchChannelLiveNotification(id: string): Promise<RawNotification> {
+    const response = await Twitch.fetch(
+      TwitchApi.Kraken,
+      `/users/${id}/notifications/custom`,
+      { notification_type: 'streamup' },
+      true,
+      RequestMethod.Get
+    )
+
+    return response.json()
+  }
+
+  /**
+   * Searches for games.
+   * @param  query - The query to use for the search.
+   * @return The results.
+   */
+  public static async searchGames(query: string): Promise<RawGames> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, '/search/games', { query })
+
+    return response.json()
+  }
+
+  /**
+   * Fetches channel communities.
+   * @param  id - The id of the channel.
+   * @return The communities.
+   */
+  public static async fetchCommunities(id: string): Promise<RawCommunities> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}/communities`)
 
     return response.json()
   }
@@ -489,6 +543,7 @@ export default class Twitch {
    * @param  [searchParams={}] - Additional search parameters.
    * @param  [authenticated=false] - Defines if the endpoint requires authentication or not.
    * @param  [method=RequestMethod.Get] - The request method.
+   * @param  [body] - The request body.
    * @return The response.
    */
   private static async fetch(
@@ -496,13 +551,15 @@ export default class Twitch {
     endpoint: string,
     searchParams: { [key: string]: string } = {},
     authenticated = false,
-    method = RequestMethod.Get
+    method = RequestMethod.Get,
+    body?: object
   ) {
     const url = Twitch.getUrl(api, endpoint, searchParams)
 
     const headers = new Headers({
       Accept: 'application/vnd.twitchtv.v5+json',
       'Client-ID': process.env.REACT_APP_TWITCH_CLIENT_ID,
+      'Content-Type': 'application/json; charset=UTF-8',
     })
 
     if (authenticated) {
@@ -513,7 +570,13 @@ export default class Twitch {
       })
     }
 
-    const request = new Request(url, { method, headers })
+    const init: RequestInit = { headers, method }
+
+    if (!_.isNil(body)) {
+      init.body = JSON.stringify(body)
+    }
+
+    const request = new Request(url, init)
 
     const response = await fetch(request)
 
@@ -897,6 +960,63 @@ export type RawRelationship = {
   from_id: string
   to_id: string
   followed_at: string
+}
+
+/**
+ * Twitch notification.
+ */
+export type RawNotification = {
+  is_default: boolean
+  message: string
+  notification_type: string
+  user_id: string
+}
+
+/**
+ * Twitch games & categories.
+ */
+export type RawGames = {
+  games: RawGame[] | null
+}
+
+/**
+ * Twitch game or category.
+ */
+export type RawGame = {
+  box: RawPreview
+  giantbomb_id: number
+  locale: string
+  localized_name: string
+  logo: RawPreview
+  name: string
+  popularity: number
+  _id: number
+}
+
+/**
+ * Twitch communities.
+ */
+export type RawCommunities = {
+  communities: RawCommunity[] | null
+}
+
+/**
+ * Twitch community.
+ */
+export type RawCommunity = {
+  avatar_image_template: string
+  avatar_image_url: string
+  cover_image_template: string
+  cover_image_url: string
+  description: string
+  display_name: string
+  language: string
+  name: string
+  owner_id: string
+  rules: string
+  rules_html: string
+  summary: string
+  _id: string
 }
 
 /**

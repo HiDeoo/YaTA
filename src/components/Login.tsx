@@ -114,6 +114,7 @@ const Login: React.SFC = () => (
           <li>Create clips from a broadcast or video.</li>
           <li>Follow users on your behalf.</li>
           <li>Block users on your behalf.</li>
+          <li>Update your channel's metadata.</li>
         </Permissions>
       </Details>
     </LoginWrapper>
