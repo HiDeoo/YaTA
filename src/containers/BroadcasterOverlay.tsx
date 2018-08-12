@@ -1,10 +1,16 @@
 import { Classes, Colors, Overlay } from '@blueprintjs/core'
+import * as _ from 'lodash'
 import * as React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import BroadcasterInformations from 'Components/BroadcasterInformations'
 import Center from 'Components/Center'
+import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
-import BroadcasterInformations from 'Containers/BroadcasterInformations'
+import Twitch, { RawChannel } from 'Libs/Twitch'
+import { ApplicationState } from 'Store/reducers'
+import { getChannelId } from 'Store/selectors/app'
 
 /**
  * Wrapper component.
@@ -66,14 +72,42 @@ const Content = styled.div`
 /**
  * React State.
  */
-const initialState = { ready: false }
+const initialState = { channel: undefined as RawChannel | null | undefined, didFail: false, ready: false }
 type State = Readonly<typeof initialState>
 
 /**
  * BroadcasterOverlay Component.
  */
-export default class BroadcasterOverlay extends React.Component<Props, State> {
+class BroadcasterOverlay extends React.Component<Props, State> {
   public state: State = initialState
+
+  /**
+   * Lifecycle: componentDidUpdate.
+   * @param prevProps - The previous props.
+   */
+  public async componentDidUpdate(prevProps: Props) {
+    const { visible } = this.props
+
+    if (prevProps.visible !== visible) {
+      if (!visible) {
+        this.setState(initialState)
+      } else {
+        try {
+          const { channelId } = this.props
+
+          if (_.isNil(channelId)) {
+            throw new Error('Missing channel id.')
+          }
+
+          const channel = await Twitch.fetchChannel(channelId)
+
+          this.setState(() => ({ channel, didFail: false, ready: true }))
+        } catch (error) {
+          this.setState(() => ({ didFail: true, ready: true }))
+        }
+      }
+    }
+  }
 
   /**
    * Renders the component.
@@ -81,22 +115,37 @@ export default class BroadcasterOverlay extends React.Component<Props, State> {
    */
   public render() {
     const { visible } = this.props
-    const { ready } = this.state
 
     return (
       <Overlay isOpen={visible} onClose={this.onClose}>
         <Wrapper>
-          <Content>
-            {!ready && (
-              <Center>
-                <Spinner large />
-              </Center>
-            )}
-            <BroadcasterInformations onReady={this.onRequiredSectionReady} />
-          </Content>
+          <Content>{this.renderContent()}</Content>
         </Wrapper>
       </Overlay>
     )
+  }
+
+  /**
+   * Renders the content.
+   * @return Element to render.
+   */
+  private renderContent() {
+    const { channel, didFail, ready } = this.state
+    const { channelId } = this.props
+
+    if (didFail) {
+      return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
+    }
+
+    if (!ready || _.isNil(channel) || _.isNil(channelId)) {
+      return (
+        <Center>
+          <Spinner large />
+        </Center>
+      )
+    }
+
+    return <BroadcasterInformations channel={channel} channelId={channelId} />
   }
 
   /**
@@ -107,26 +156,28 @@ export default class BroadcasterOverlay extends React.Component<Props, State> {
 
     this.props.toggle()
   }
+}
 
-  /**
-   * Triggered when a required section is ready to be rendered.
-   */
-  private onRequiredSectionReady = () => {
-    this.setState(() => ({ ready: true }))
-  }
+export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
+  channelId: getChannelId(state),
+}))(BroadcasterOverlay)
+
+/**
+ * React Props.
+ */
+type StateProps = {
+  channelId: ReturnType<typeof getChannelId>
 }
 
 /**
  * React Props.
  */
-type Props = {
+type OwnProps = {
   toggle: () => void
   visible: boolean
 }
 
 /**
- * Broadcaster Required Section Props.
+ * React Props.
  */
-export type BroadcasterRequiredSectionProps = {
-  onReady: () => void
-}
+type Props = StateProps & OwnProps

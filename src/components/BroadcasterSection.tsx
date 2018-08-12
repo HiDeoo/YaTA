@@ -2,6 +2,9 @@ import { Classes, H3 } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import Center from 'Components/Center'
+import Spinner from 'Components/Spinner'
+
 /**
  * Wrapper component.
  */
@@ -16,6 +19,13 @@ const Title = styled(H3)`
   &.${Classes.HEADING} {
     margin-bottom: 15px;
   }
+`
+
+/**
+ * Loading component.
+ */
+const Loading = styled(Spinner)`
+  margin: 20px 0;
 `
 
 /**
@@ -40,11 +50,19 @@ const Divider = styled.hr`
 /**
  * BroadcasterSection Component.
  */
-const BroadcasterSection: React.SFC<Props> = ({ children, title }) => (
+const BroadcasterSection: React.SFC<Props> = ({ children, ready, title }) => (
   <>
     <Wrapper>
       <Title>{title}</Title>
-      <div>{children}</div>
+      <div>
+        {ready ? (
+          children
+        ) : (
+          <Center>
+            <Loading />
+          </Center>
+        )}
+      </div>
     </Wrapper>
     <Divider />
   </>
@@ -56,5 +74,6 @@ export default BroadcasterSection
  * React Props.
  */
 type Props = {
+  ready: boolean
   title: string
 }

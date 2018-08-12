@@ -3,16 +3,12 @@ import { ItemRenderer, MultiSelect, Suggest } from '@blueprintjs/select'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import { BroadcasterRequiredSectionProps } from 'Components/BroadcasterOverlay'
 import BroadcasterSection from 'Components/BroadcasterSection'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawChannel, RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
-import { ApplicationState } from 'Store/reducers'
-import { getChannelId } from 'Store/selectors/app'
 
 /**
  * Game suggest component.
@@ -147,7 +143,6 @@ const InputMaxLengths = {
  * React State.
  */
 const initialState = {
-  channel: undefined as RawChannel | null | undefined,
   didFail: false,
   games: null as RawGame[] | null,
   isModified: false,
@@ -164,7 +159,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterInformations Component.
  */
-class BroadcasterInformations extends React.Component<Props, State> {
+export default class BroadcasterInformations extends React.Component<Props, State> {
   public state: State = initialState
   private lastGameQuery = ''
   private lastGameSearchController: AbortController | null = null
@@ -174,24 +169,21 @@ class BroadcasterInformations extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     try {
-      const { channelId } = this.props
+      const { channel, channelId } = this.props
 
-      if (_.isNil(channelId)) {
-        throw new Error('Missing channel id.')
+      if (_.isNil(channel) || _.isNil(channelId)) {
+        throw new Error('Missing channel informations.')
       }
 
       const response = await Promise.all([
-        Twitch.fetchChannel(channelId),
         Twitch.fetchChannelLiveNotification(channelId),
         Twitch.fetchCommunities(channelId),
       ])
 
-      const channel = response[0]
-      const liveNotification = response[1]
-      const { communities } = response[2]
+      const liveNotification = response[0]
+      const { communities } = response[1]
 
       this.setState(() => ({
-        channel,
         didFail: false,
         liveNotification,
         ready: true,
@@ -202,8 +194,6 @@ class BroadcasterInformations extends React.Component<Props, State> {
       }))
     } catch (error) {
       this.setState(() => ({ didFail: true, ready: true }))
-    } finally {
-      this.props.onReady()
     }
   }
 
@@ -213,7 +203,6 @@ class BroadcasterInformations extends React.Component<Props, State> {
    */
   public render() {
     const {
-      channel,
       didFail,
       games,
       isModified,
@@ -224,17 +213,14 @@ class BroadcasterInformations extends React.Component<Props, State> {
       [Input.Notification]: notification,
       [Input.Title]: title,
     } = this.state
+    const { channel } = this.props
 
-    if (!ready) {
-      return null
-    }
-
-    if (didFail || _.isNil(channel)) {
+    if (didFail) {
       return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
     }
 
     return (
-      <BroadcasterSection title="Stream Informations">
+      <BroadcasterSection title="Stream Informations" ready={ready}>
         <FormGroup label="Title" labelFor="title" labelInfo={this.getInputLabelInfo(Input.Title)} disabled={isUpdating}>
           <InfoInput
             onChange={this.onChangeTitle}
@@ -434,7 +420,6 @@ class BroadcasterInformations extends React.Component<Props, State> {
       const channel = await Twitch.updateChannel(channelId, title, game)
 
       this.setState(() => ({
-        channel,
         isModified: false,
         isUpdating: false,
         [Input.Game]: channel.game || '',
@@ -474,25 +459,17 @@ class BroadcasterInformations extends React.Component<Props, State> {
   private getModificationsState(title: string, game: string) {
     const sanitizedTitle = title.substring(0, InputMaxLengths[Input.Title])
 
-    const { channel } = this.state
+    const { channel } = this.props
     const isModified = (!_.isNil(channel) && channel.status !== title) || (!_.isNil(channel) && channel.game !== game)
 
     return { isModified, [Input.Game]: game, [Input.Title]: sanitizedTitle }
   }
 }
 
-export default connect<StateProps, {}, BroadcasterRequiredSectionProps, ApplicationState>((state) => ({
-  channelId: getChannelId(state),
-}))(BroadcasterInformations)
-
 /**
  * React Props.
  */
-type StateProps = {
-  channelId: ReturnType<typeof getChannelId>
+type Props = {
+  channel: RawChannel
+  channelId: string
 }
-
-/**
- * React Props.
- */
-type Props = StateProps & BroadcasterRequiredSectionProps
