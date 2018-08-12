@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Spinner from 'Components/Spinner'
-import BroadcasterSectionInfo from 'Containers/BroadcasterSectionInfo'
+import BroadcasterInformations from 'Containers/BroadcasterInformations'
 
 /**
  * Wrapper component.
@@ -92,7 +92,7 @@ export default class BroadcasterOverlay extends React.Component<Props, State> {
                 <Spinner large />
               </Center>
             )}
-            <BroadcasterSectionInfo onReady={this.onRequiredSectionReady} />
+            <BroadcasterInformations onReady={this.onRequiredSectionReady} />
           </Content>
         </Wrapper>
       </Overlay>

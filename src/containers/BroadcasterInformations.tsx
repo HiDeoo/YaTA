@@ -162,11 +162,12 @@ const initialState = {
 type State = Readonly<typeof initialState>
 
 /**
- * BroadcasterSectionInfo Component.
+ * BroadcasterInformations Component.
  */
-class BroadcasterSectionInfo extends React.Component<Props, State> {
+class BroadcasterInformations extends React.Component<Props, State> {
   public state: State = initialState
   private lastGameQuery = ''
+  private lastGameSearchController: AbortController | null = null
 
   /**
    * Lifecycle: componentDidMount.
@@ -389,9 +390,22 @@ class BroadcasterSectionInfo extends React.Component<Props, State> {
     this.setState(() => ({ games: [] }))
 
     if (query.length > 0) {
-      const { games } = await Twitch.searchGames(query)
+      try {
+        if (!_.isNil(this.lastGameSearchController)) {
+          this.lastGameSearchController.abort()
+          this.lastGameSearchController = null
+        }
 
-      this.setState(() => ({ games }))
+        this.lastGameSearchController = new AbortController()
+
+        const { games } = await Twitch.searchGames(query, this.lastGameSearchController.signal)
+
+        this.lastGameSearchController = null
+
+        this.setState(() => ({ games }))
+      } catch (error) {
+        //
+      }
     }
   }
 
@@ -469,7 +483,7 @@ class BroadcasterSectionInfo extends React.Component<Props, State> {
 
 export default connect<StateProps, {}, BroadcasterRequiredSectionProps, ApplicationState>((state) => ({
   channelId: getChannelId(state),
-}))(BroadcasterSectionInfo)
+}))(BroadcasterInformations)
 
 /**
  * React Props.

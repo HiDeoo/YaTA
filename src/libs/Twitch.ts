@@ -229,10 +229,19 @@ export default class Twitch {
   /**
    * Searches for games.
    * @param  query - The query to use for the search.
+   * @param  [signal] - A signal to abort the search if necessary.
    * @return The results.
    */
-  public static async searchGames(query: string): Promise<RawGames> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, '/search/games', { query })
+  public static async searchGames(query: string, signal?: AbortSignal): Promise<RawGames> {
+    const response = await Twitch.fetch(
+      TwitchApi.Kraken,
+      '/search/games',
+      { query },
+      false,
+      RequestMethod.Get,
+      undefined,
+      signal
+    )
 
     return response.json()
   }
@@ -544,6 +553,7 @@ export default class Twitch {
    * @param  [authenticated=false] - Defines if the endpoint requires authentication or not.
    * @param  [method=RequestMethod.Get] - The request method.
    * @param  [body] - The request body.
+   * @param  [signal] - A signal to abort the query.
    * @return The response.
    */
   private static async fetch(
@@ -552,7 +562,8 @@ export default class Twitch {
     searchParams: { [key: string]: string } = {},
     authenticated = false,
     method = RequestMethod.Get,
-    body?: object
+    body?: object,
+    signal?: AbortSignal
   ) {
     const url = Twitch.getUrl(api, endpoint, searchParams)
 
@@ -574,6 +585,10 @@ export default class Twitch {
 
     if (!_.isNil(body)) {
       init.body = JSON.stringify(body)
+    }
+
+    if (!_.isNil(signal)) {
+      init.signal = signal
     }
 
     const request = new Request(url, init)
