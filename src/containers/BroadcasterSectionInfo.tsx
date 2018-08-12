@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { BroadcasterRequiredSectionProps } from 'Components/BroadcasterOverlay'
+import BroadcasterSection from 'Components/BroadcasterSection'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawChannel, RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
@@ -32,13 +33,6 @@ const disabledDarkInput = () => `
     inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4);
   color: #f5f8fa;
   opacity: 0.5
-`
-
-/**
- * Wrapper component.
- */
-const Wrapper = styled.div`
-  padding: 20px;
 `
 
 /**
@@ -122,6 +116,13 @@ const CommunitiesInput = styled(CommunitiesMultiSelect)`
       color: ${Colors.LIGHT_GRAY5};
     }
   }
+`
+
+/**
+ * UpdateButton component.
+ */
+const UpdateButton = styled(Button)`
+  margin-top: 5px;
 `
 
 /**
@@ -232,7 +233,7 @@ class BroadcasterSectionInfo extends React.Component<Props, State> {
     }
 
     return (
-      <Wrapper>
+      <BroadcasterSection title="Stream Informations">
         <FormGroup label="Title" labelFor="title" labelInfo={this.getInputLabelInfo(Input.Title)} disabled={isUpdating}>
           <InfoInput
             onChange={this.onChangeTitle}
@@ -289,7 +290,7 @@ class BroadcasterSectionInfo extends React.Component<Props, State> {
         >
           <InfoInput placeholder={`${channel.name} went live!`} value={notification} id="notification" disabled />
         </FormGroup>
-        <Button
+        <UpdateButton
           onClick={this.onClickUpdate}
           text="Update informations"
           intent={Intent.PRIMARY}
@@ -297,7 +298,7 @@ class BroadcasterSectionInfo extends React.Component<Props, State> {
           loading={isUpdating}
           icon="floppy-disk"
         />
-      </Wrapper>
+      </BroadcasterSection>
     )
   }
 
