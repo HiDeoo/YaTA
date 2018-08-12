@@ -10,6 +10,19 @@ const dark = {
   about: {
     description: Colors.GRAY4,
   },
+  broadcaster: {
+    background: '#354553',
+    border: Colors.GRAY2,
+    hover: Colors.DARK_GRAY3,
+    statistics: {
+      hover: {
+        name: Colors.LIGHT_GRAY1,
+        value: Colors.BLUE5,
+      },
+      name: Colors.GRAY3,
+      value: Colors.LIGHT_GRAY1,
+    },
+  },
   channel: {
     background: Colors.DARK_GRAY3,
     border: Colors.DARK_GRAY1,

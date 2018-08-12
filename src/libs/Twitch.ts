@@ -373,6 +373,19 @@ export default class Twitch {
   }
 
   /**
+   * Fetches hosts of a specific channel.
+   * @param  channelId - The channel id.
+   * @return The hosts.
+   */
+  public static async fetchHosts(channelId: string): Promise<RawHosts> {
+    const response = await fetch(
+      Twitch.getUrl(TwitchApi.Tmi, '/hosts', { include_logins: '1', target: channelId }, true)
+    )
+
+    return response.json()
+  }
+
+  /**
    * Fetches follows for the current user which consist of online streams and offline channels.
    * @return The streams and follows.
    */
@@ -1035,6 +1048,25 @@ export type RawCommunity = {
   rules_html: string
   summary: string
   _id: string
+}
+
+/**
+ * Twitch hosts.
+ */
+export type RawHosts = {
+  hosts: RawHost[]
+}
+
+/**
+ * Twitch host.
+ */
+export type RawHost = {
+  host_id: string
+  targer_id: string
+  host_login: string
+  target_login: string
+  host_display_name: string
+  target_display_name: string
 }
 
 /**

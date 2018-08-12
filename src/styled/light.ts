@@ -10,6 +10,19 @@ const light = {
   about: {
     description: Colors.GRAY1,
   },
+  broadcaster: {
+    background: '#fafafa',
+    border: Colors.LIGHT_GRAY1,
+    hover: Colors.LIGHT_GRAY3,
+    statistics: {
+      hover: {
+        name: Colors.GRAY2,
+        value: Colors.BLUE3,
+      },
+      name: Colors.GRAY4,
+      value: Colors.DARK_GRAY5,
+    },
+  },
   channel: {
     background: Colors.LIGHT_GRAY5,
     border: Colors.GRAY5,

@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import BroadcasterInformations from 'Components/BroadcasterInformations'
+import BroadcasterLists from 'Components/BroadcasterLists'
+import BroadcasterStatistics from 'Components/BroadcasterStatistics'
 import Center from 'Components/Center'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
@@ -31,6 +33,7 @@ const Content = styled.div`
   height: 100%;
   max-width: 600px;
   min-width: 450px;
+  overflow-y: auto;
   pointer-events: auto;
   position: absolute;
   right: 0;
@@ -145,7 +148,13 @@ class BroadcasterOverlay extends React.Component<Props, State> {
       )
     }
 
-    return <BroadcasterInformations channel={channel} channelId={channelId} />
+    return (
+      <>
+        <BroadcasterInformations channel={channel} channelId={channelId} />
+        <BroadcasterStatistics channel={channel} channelId={channelId} />
+        <BroadcasterLists channel={channel} channelId={channelId} />
+      </>
+    )
   }
 
   /**
