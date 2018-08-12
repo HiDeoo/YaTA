@@ -169,7 +169,9 @@ export default class Twitch {
       (await Twitch.fetch(TwitchApi.Badges, `/channels/${channelId}/display`)).json(),
     ])
 
-    return { ...response[0].badge_sets, ...response[1].badge_sets }
+    const [globalBadges, channelBadges] = response
+
+    return { ...globalBadges.badge_sets, ...channelBadges.badge_sets }
   }
 
   /**
@@ -272,10 +274,11 @@ export default class Twitch {
    * Returns the top clips for a specific channel.
    * @param  channel - The channel.
    * @param  period - The period to include.
+   * @param  [limit=10] - The number of clips to return.
    * @return The top clips.
    */
-  public static async fetchTopClips(channel: string, period: ClipPeriod): Promise<RawClips> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/clips/top`, { channel, period })
+  public static async fetchTopClips(channel: string, period: ClipPeriod, limit = 10): Promise<RawClips> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/clips/top`, { channel, limit: limit.toString(), period })
 
     return response.json()
   }

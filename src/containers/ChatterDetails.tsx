@@ -247,11 +247,13 @@ class ChatterDetails extends React.Component<Props, State> {
           TwitchTools.fetchUsernameHistory(id),
         ])
 
+        const [details, relationship, usernameHistory] = response
+
         this.setState(() => ({
-          details: response[0],
+          details,
           error: undefined,
-          relationship: response[1],
-          usernameHistory: response[2],
+          relationship,
+          usernameHistory,
         }))
       } catch (error) {
         this.setState(() => ({ error }))

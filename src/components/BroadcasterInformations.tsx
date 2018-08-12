@@ -180,8 +180,7 @@ export default class BroadcasterInformations extends React.Component<Props, Stat
         Twitch.fetchCommunities(channelId),
       ])
 
-      const liveNotification = response[0]
-      const { communities } = response[1]
+      const [liveNotification, { communities }] = response
 
       this.setState(() => ({
         didFail: false,

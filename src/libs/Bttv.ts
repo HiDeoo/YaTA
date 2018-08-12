@@ -21,18 +21,18 @@ export default class Bttv {
       (await Bttv.fetch(`${baseAPIUrl}/channels/${channel}`)).json(),
     ])
 
-    const isChannelRegistered = response[1].status === 200
+    const [emotesInfo, channelInfo] = response
 
-    let rawEmotes: BttvEmote[] = isChannelRegistered
-      ? [...response[0].emotes, ...response[1].emotes]
-      : response[0].emotes
+    const isChannelRegistered = channelInfo.status === 200
+
+    let rawEmotes: BttvEmote[] = isChannelRegistered ? [...emotesInfo.emotes, ...channelInfo.emotes] : emotesInfo.emotes
 
     // Remove Night's emotes.
     rawEmotes = _.filter(rawEmotes, (emote) => _.get(emote.restrictions, 'emoticonSet') !== 'night')
 
-    const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? response[1].bots : null
+    const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? channelInfo.bots : null
 
-    const emotes = new EmotesProvider(EmoteProviderPrefix.Bttv, rawEmotes, response[0].urlTemplate, 'x')
+    const emotes = new EmotesProvider(EmoteProviderPrefix.Bttv, rawEmotes, emotesInfo.urlTemplate, 'x')
 
     return {
       bots,

@@ -140,7 +140,9 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
       try {
         const response = await Promise.all([Twitch.fetchStream(id), Twitch.fetchRelationship(id)])
 
-        this.setState(() => ({ didFail: false, stream: response[0].stream, relationship: response[1] }))
+        const [{ stream }, relationship] = response
+
+        this.setState(() => ({ didFail: false, stream, relationship }))
       } catch (error) {
         this.setState(() => ({ didFail: true }))
       }
