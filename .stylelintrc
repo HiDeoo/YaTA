@@ -17,6 +17,8 @@
     "value-list-max-empty-lines": null,
     "value-list-comma-newline-after": null,
     "selector-list-comma-newline-after": "always-multi-line",
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "declaration-block-semicolon-newline-after": null,
+    "rule-empty-line-before": null
   }
 }

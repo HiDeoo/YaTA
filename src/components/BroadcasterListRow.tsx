@@ -1,4 +1,4 @@
-import { Classes, Colors, Text } from '@blueprintjs/core'
+import { Classes, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'

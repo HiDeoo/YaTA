@@ -8,7 +8,7 @@ import BroadcasterListRow, { Row } from 'Components/BroadcasterListRow'
 import BroadcasterSection from 'Components/BroadcasterSection'
 import NonIdealState from 'Components/NonIdealState'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
-import Twitch, { ClipPeriod, RawChannel } from 'Libs/Twitch'
+import Twitch, { ClipPeriod } from 'Libs/Twitch'
 import { color } from 'Utils/styled'
 
 /**
