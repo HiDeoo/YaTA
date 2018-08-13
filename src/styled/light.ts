@@ -11,17 +11,14 @@ const light = {
     description: Colors.GRAY1,
   },
   broadcaster: {
-    background: '#fafafa',
     border: Colors.LIGHT_GRAY1,
-    hover: Colors.LIGHT_GRAY3,
-    statistics: {
-      hover: {
-        name: Colors.GRAY2,
-        value: Colors.BLUE3,
-      },
-      name: Colors.GRAY4,
-      value: Colors.DARK_GRAY5,
+    color: Colors.DARK_GRAY5,
+    hover: {
+      background: Colors.LIGHT_GRAY4,
+      color: Colors.BLUE3,
+      meta: Colors.GRAY2,
     },
+    meta: Colors.GRAY4,
   },
   channel: {
     background: Colors.LIGHT_GRAY5,

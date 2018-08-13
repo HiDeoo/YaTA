@@ -25,7 +25,6 @@ const Stats = styled.div`
  * Stat component.
  */
 const Stat = styled.div`
-  background-color: ${color('broadcaster.background')};
   border-bottom: 1px solid ${color('broadcaster.border')};
   border-right: 1px solid ${color('broadcaster.border')};
   padding: 8px 4px;
@@ -33,13 +32,13 @@ const Stat = styled.div`
   width: 136px;
 
   &:hover {
-    background-color: ${color('broadcaster.hover')};
+    background-color: ${color('broadcaster.hover.background')};
 
     & > div {
-      color: ${color('broadcaster.statistics.hover.value')};
+      color: ${color('broadcaster.hover.color')};
 
       & + div {
-        color: ${color('broadcaster.statistics.hover.name')};
+        color: ${color('broadcaster.hover.meta')};
       }
     }
   }
@@ -49,7 +48,7 @@ const Stat = styled.div`
  * Name component.
  */
 const Name = styled.div`
-  color: ${color('broadcaster.statistics.name')};
+  color: ${color('broadcaster.meta')};
   font-size: 0.78rem;
 `
 
@@ -59,7 +58,7 @@ const Name = styled.div`
 const Value = styled(Text).attrs({
   ellipsize: true,
 })`
-  color: ${color('broadcaster.statistics.value')};
+  color: ${color('broadcaster.color')};
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 4px;

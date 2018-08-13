@@ -14,7 +14,6 @@ import { color } from 'Utils/styled'
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  background-color: ${color('broadcaster.background')};
   border: 1px solid ${color('broadcaster.border')};
   height: 247px;
   overflow-y: auto;
