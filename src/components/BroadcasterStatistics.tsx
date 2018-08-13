@@ -7,7 +7,8 @@ import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
 import NonIdealState from 'Components/NonIdealState'
-import Twitch, { ClipPeriod, RawChannel } from 'Libs/Twitch'
+import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
+import Twitch, { ClipPeriod } from 'Libs/Twitch'
 import { color } from 'Utils/styled'
 
 /**
@@ -77,7 +78,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterStatistics Component.
  */
-export default class BroadcasterStatistics extends React.Component<Props, State> {
+export default class BroadcasterStatistics extends React.Component<BroadcasterSectionProps, State> {
   public state: State = initialState
 
   /**
@@ -85,7 +86,7 @@ export default class BroadcasterStatistics extends React.Component<Props, State>
    * @class
    * @param props - The props of the component.
    */
-  constructor(props: Props) {
+  constructor(props: BroadcasterSectionProps) {
     super(props)
 
     const { channel } = props
@@ -175,14 +176,6 @@ export default class BroadcasterStatistics extends React.Component<Props, State>
   private uptimeRenderer: Formatter = (value, units) => {
     return `${value.toString()} ${_.isNil(units) ? '' : pluralize(units, value)}`
   }
-}
-
-/**
- * React Props.
- */
-type Props = {
-  channel: RawChannel
-  channelId: string
 }
 
 /**

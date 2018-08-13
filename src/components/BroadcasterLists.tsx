@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import BroadcasterListRow, { Row } from 'Components/BroadcasterListRow'
 import BroadcasterSection from 'Components/BroadcasterSection'
 import NonIdealState from 'Components/NonIdealState'
+import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { ClipPeriod, RawChannel } from 'Libs/Twitch'
 import { color } from 'Utils/styled'
 
@@ -50,7 +51,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterLists Component.
  */
-export default class BroadcasterLists extends React.Component<Props, State> {
+export default class BroadcasterLists extends React.Component<BroadcasterSectionProps, State> {
   public state: State = initialState
 
   /**
@@ -131,12 +132,4 @@ export default class BroadcasterLists extends React.Component<Props, State> {
       </Wrapper>
     )
   }
-}
-
-/**
- * React Props.
- */
-type Props = {
-  channel: RawChannel
-  channelId: string
 }

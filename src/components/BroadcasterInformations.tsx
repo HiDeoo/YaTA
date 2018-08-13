@@ -8,7 +8,8 @@ import styled from 'styled-components'
 import BroadcasterSection from 'Components/BroadcasterSection'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
-import Twitch, { RawChannel, RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
+import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
+import Twitch, { RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
 
 /**
  * Game suggest component.
@@ -159,7 +160,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterInformations Component.
  */
-export default class BroadcasterInformations extends React.Component<Props, State> {
+export default class BroadcasterInformations extends React.Component<BroadcasterSectionProps, State> {
   public state: State = initialState
   private lastGameQuery = ''
   private lastGameSearchController: AbortController | null = null
@@ -463,12 +464,4 @@ export default class BroadcasterInformations extends React.Component<Props, Stat
 
     return { isModified, [Input.Game]: game, [Input.Title]: sanitizedTitle }
   }
-}
-
-/**
- * React Props.
- */
-type Props = {
-  channel: RawChannel
-  channelId: string
 }

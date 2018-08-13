@@ -73,6 +73,11 @@ const Content = styled.div`
 `
 
 /**
+ * Broadcaster overlay sections.
+ */
+const BroadcasterOverlaySections = [BroadcasterInformations, BroadcasterStatistics, BroadcasterLists]
+
+/**
  * React State.
  */
 const initialState = { channel: undefined as RawChannel | null | undefined, didFail: false, ready: false }
@@ -148,13 +153,9 @@ class BroadcasterOverlay extends React.Component<Props, State> {
       )
     }
 
-    return (
-      <>
-        <BroadcasterInformations channel={channel} channelId={channelId} />
-        <BroadcasterStatistics channel={channel} channelId={channelId} />
-        <BroadcasterLists channel={channel} channelId={channelId} />
-      </>
-    )
+    return _.map(BroadcasterOverlaySections, (Section, index) => (
+      <Section key={index} channel={channel} channelId={channelId} />
+    ))
   }
 
   /**
@@ -190,3 +191,11 @@ type OwnProps = {
  * React Props.
  */
 type Props = StateProps & OwnProps
+
+/**
+ * Broadcaster section props automatically provided to each section.
+ */
+export type BroadcasterSectionProps = {
+  channel: RawChannel
+  channelId: string
+}
