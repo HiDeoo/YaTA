@@ -30,7 +30,8 @@ const Stat = styled.div`
   border-right: 1px solid ${color('broadcaster.border')};
   padding: 8px 4px;
   text-align: center;
-  width: 136px;
+  min-width: 131px;
+  max-width: 136px;
 
   &:hover {
     background-color: ${color('broadcaster.hover.background')};

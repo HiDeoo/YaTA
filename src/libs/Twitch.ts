@@ -34,6 +34,11 @@ export enum ClipPeriod {
 }
 
 /**
+ * Twitch commercial durations.
+ */
+export type CommercialDuration = 30 | 60 | 90 | 120 | 150 | 180
+
+/**
  * RegExp used to identify whisper command (/w user message).
  */
 const WhisperRegExp = /^[\/|\.]w (\S+) (.+)/
@@ -73,7 +78,8 @@ export default class Twitch {
       client_id: REACT_APP_TWITCH_CLIENT_ID,
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
-      scope: 'openid chat_login user_read user_blocks_edit clips:edit user_follows_edit channel_editor',
+      scope:
+        'openid chat_login user_read user_blocks_edit clips:edit user_follows_edit channel_editor channel_commercial',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -207,6 +213,26 @@ export default class Twitch {
     const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`, undefined, true, RequestMethod.Put, {
       channel: { game, status: title },
     })
+
+    return response.json()
+  }
+
+  /**
+   * Starts a commercial on a channel.
+   * @param id - The id of the channel.
+   * @param duration - The commercial duration.
+   */
+  public static async startCommercial(id: string, duration: CommercialDuration) {
+    const response = await Twitch.fetch(
+      TwitchApi.Kraken,
+      `/channels/${id}/commercial`,
+      undefined,
+      true,
+      RequestMethod.Post,
+      {
+        length: duration,
+      }
+    )
 
     return response.json()
   }

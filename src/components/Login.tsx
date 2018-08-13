@@ -115,6 +115,7 @@ const Login: React.SFC = () => (
           <li>Follow users on your behalf.</li>
           <li>Block users on your behalf.</li>
           <li>Update your channel's metadata.</li>
+          <li>Trigger commercials on your channel.</li>
         </Permissions>
       </Details>
     </LoginWrapper>

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
+import BroadcasterControls from 'Components/BroadcasterControls'
 import BroadcasterInformations from 'Components/BroadcasterInformations'
 import BroadcasterLists from 'Components/BroadcasterLists'
 import BroadcasterStatistics from 'Components/BroadcasterStatistics'
@@ -75,7 +76,12 @@ const Content = styled.div`
 /**
  * Broadcaster overlay sections.
  */
-const BroadcasterOverlaySections = [BroadcasterInformations, BroadcasterStatistics, BroadcasterLists]
+const BroadcasterOverlaySections = [
+  BroadcasterInformations,
+  BroadcasterControls,
+  BroadcasterStatistics,
+  BroadcasterLists,
+]
 
 /**
  * React State.
