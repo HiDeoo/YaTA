@@ -79,6 +79,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
+    const { channel } = this.props
     const { host, status } = this.state
 
     let statusIcon: JSX.Element | undefined
@@ -108,7 +109,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
             />
           )}
           {this.renderCommercialButton()}
-          {_.isNil(host) && <div />}
+          {_.isNil(host) && channel.partner && <div />}
           <ExternalButton
             href="https://twitchstatus.com/"
             rightIcon={statusIcon}
