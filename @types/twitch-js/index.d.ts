@@ -184,6 +184,7 @@ declare module 'twitch-js' {
     emoteonlyoff(channel: string): void
     clear(channel: string): void
     unban(channel: string, username: string): void
+    unhost(channel: string): void
   }
 
   namespace Client {

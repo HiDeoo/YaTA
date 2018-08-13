@@ -1,4 +1,5 @@
 import { Button, Colors, Icon, Intent, Menu, Popover, Position } from '@blueprintjs/core'
+import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -6,7 +7,7 @@ import BroadcasterSection from 'Components/BroadcasterSection'
 import ExternalButton from 'Components/ExternalButton'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Toaster from 'Libs/Toaster'
-import Twitch, { CommercialDuration } from 'Libs/Twitch'
+import Twitch, { CommercialDuration, RawHost } from 'Libs/Twitch'
 import TwitchStatus, { Status } from 'Libs/TwitchStatus'
 
 /**
@@ -16,7 +17,8 @@ const Row = styled.div`
   margin-bottom: 10px;
 
   & > a,
-  & > span {
+  & > span,
+  & > button {
     margin-right: 10px;
 
     &:last-child {
@@ -32,22 +34,39 @@ const Row = styled.div`
 /**
  * React State.
  */
-const initialState = { isStartingCommercial: false, status: Status.Unknown as Status }
+const initialState = {
+  host: undefined as RawHost | undefined,
+  isStartingCommercial: false,
+  status: Status.Unknown as Status,
+}
 type State = Readonly<typeof initialState>
 
 /**
  * BroadcasterControls Component.
  */
-export default class BroadcasterControls extends React.Component<BroadcasterSectionProps, State> {
+export default class BroadcasterControls extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
    * Lifecycle: componentDidMount.
    */
   public async componentDidMount() {
-    const status = await TwitchStatus.fetchGlobalStatus()
+    try {
+      const response = await Promise.all([TwitchStatus.fetchGlobalStatus(), Twitch.fetchHost(this.props.channelId)])
 
-    this.setState(() => ({ status }))
+      const [status, { hosts }] = response
+
+      let currentHost: RawHost | undefined
+      const actualHost = _.head(hosts)
+
+      if (!_.isNil(actualHost) && _.has(actualHost, 'target_display_name')) {
+        currentHost = actualHost
+      }
+
+      this.setState(() => ({ host: currentHost, status }))
+    } catch (error) {
+      //
+    }
   }
 
   /**
@@ -55,7 +74,7 @@ export default class BroadcasterControls extends React.Component<BroadcasterSect
    * @return Element to render.
    */
   public render() {
-    const { status } = this.state
+    const { host, status } = this.state
 
     let statusIcon: JSX.Element | undefined
 
@@ -68,13 +87,23 @@ export default class BroadcasterControls extends React.Component<BroadcasterSect
     return (
       <BroadcasterSection title="Tools" ready>
         <Row>
+          {!_.isNil(host) && (
+            <Button
+              text={`Unhost ${host.target_display_name}`}
+              intent={Intent.WARNING}
+              onClick={this.onClickUnhost}
+              icon="cut"
+            />
+          )}
+          {this.renderCommercialButton()}
+        </Row>
+        <Row>
           <ExternalButton
             href="https://twitchstatus.com/"
             rightIcon={statusIcon}
             icon="globe-network"
             text="Twitch Status"
           />
-          {this.renderCommercialButton()}
         </Row>
       </BroadcasterSection>
     )
@@ -137,6 +166,15 @@ export default class BroadcasterControls extends React.Component<BroadcasterSect
   }
 
   /**
+   * Triggered when the unhost button is clicked.
+   */
+  private onClickUnhost = () => {
+    this.props.unhost()
+
+    this.setState(() => ({ host: undefined }))
+  }
+
+  /**
    * Triggered when the 30s commercial menu item is clicked.
    */
   private onClickCommercial30S = () => {
@@ -177,4 +215,11 @@ export default class BroadcasterControls extends React.Component<BroadcasterSect
   private onClickCommercial3M = () => {
     this.startCommercial(180)
   }
+}
+
+/**
+ * React Props.
+ */
+interface Props extends BroadcasterSectionProps {
+  unhost: () => void
 }

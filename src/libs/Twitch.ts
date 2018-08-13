@@ -412,6 +412,17 @@ export default class Twitch {
   }
 
   /**
+   * Fetches the current host of a specific channel.
+   * @param  channelId - The channel id.
+   * @return The host.
+   */
+  public static async fetchHost(channelId: string): Promise<RawHosts> {
+    const response = await fetch(Twitch.getUrl(TwitchApi.Tmi, '/hosts', { include_logins: '1', host: channelId }, true))
+
+    return response.json()
+  }
+
+  /**
    * Fetches follows for the current user which consist of online streams and offline channels.
    * @return The streams and follows.
    */

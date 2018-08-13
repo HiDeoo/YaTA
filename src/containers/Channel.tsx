@@ -219,7 +219,11 @@ class Channel extends React.Component<Props, State> {
         />
         <Chatters toggle={this.toggleChatters} visible={showChatters} channel={channel} />
         <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
-        <BroadcasterOverlay toggle={this.toggleBroadcasterOverlay} visible={showBroadcasterOverlay} />
+        <BroadcasterOverlay
+          toggle={this.toggleBroadcasterOverlay}
+          visible={showBroadcasterOverlay}
+          unhost={this.unhost}
+        />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -1136,6 +1140,22 @@ class Channel extends React.Component<Props, State> {
         } else {
           await client.emoteonly(channel)
         }
+      } catch (error) {
+        //
+      }
+    }
+  }
+
+  /**
+   * Unhosts a channel.
+   */
+  private unhost = async () => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.unhost(channel)
       } catch (error) {
         //
       }

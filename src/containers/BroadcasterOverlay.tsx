@@ -145,7 +145,7 @@ class BroadcasterOverlay extends React.Component<Props, State> {
    */
   private renderContent() {
     const { channel, didFail, ready } = this.state
-    const { channelId } = this.props
+    const { channelId, unhost } = this.props
 
     if (didFail) {
       return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
@@ -159,9 +159,19 @@ class BroadcasterOverlay extends React.Component<Props, State> {
       )
     }
 
-    return _.map(BroadcasterOverlaySections, (Section, index) => (
-      <Section key={index} channel={channel} channelId={channelId} />
-    ))
+    return _.map(BroadcasterOverlaySections, (Section, index) => {
+      const props = {
+        channel,
+        channelId,
+        unhost: undefined as UnhostAction | undefined,
+      }
+
+      if (Section === BroadcasterControls) {
+        props.unhost = unhost
+      }
+
+      return <Section key={index} {...props} />
+    })
   }
 
   /**
@@ -190,6 +200,7 @@ type StateProps = {
  */
 type OwnProps = {
   toggle: () => void
+  unhost: UnhostAction
   visible: boolean
 }
 
@@ -197,6 +208,11 @@ type OwnProps = {
  * React Props.
  */
 type Props = StateProps & OwnProps
+
+/**
+ * Unhost action.
+ */
+type UnhostAction = () => void
 
 /**
  * Broadcaster section props automatically provided to each section.
