@@ -101,9 +101,13 @@ export default class BroadcasterLists extends React.Component<BroadcasterSection
     return (
       <BroadcasterSection title="Miscellaneous" ready={ready}>
         <Tabs id="lists">
-          {_.map(List, (list) => (
-            <Tab key={list} id={`lists-${list}`} title={list} panel={this.renderList(list)} />
-          ))}
+          {_.map(List, (list) => {
+            const rows = this.state[list]
+
+            return (
+              <Tab key={list} id={`lists-${list}`} title={`${list} (${rows.length})`} panel={this.renderList(list)} />
+            )
+          })}
         </Tabs>
       </BroadcasterSection>
     )

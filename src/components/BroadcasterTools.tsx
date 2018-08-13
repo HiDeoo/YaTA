@@ -1,4 +1,4 @@
-import { Button, Colors, Icon, Intent, Menu, Popover, Position } from '@blueprintjs/core'
+import { Button, Classes, Colors, Icon, Intent, Menu, Popover, Position } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -11,23 +11,28 @@ import Twitch, { CommercialDuration, RawHost } from 'Libs/Twitch'
 import TwitchStatus, { Status } from 'Libs/TwitchStatus'
 
 /**
- * Row component.
+ * Wrapper component.
  */
-const Row = styled.div`
-  margin-bottom: 10px;
+const Wrapper = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
 
-  & > a,
-  & > span,
-  & > button {
-    margin-right: 10px;
+  & > span.${Classes.POPOVER_WRAPPER} > span {
+    width: 100%;
 
-    &:last-child {
-      margin-right: 0;
+    & > button {
+      width: 100%;
     }
   }
 
-  &:last-child {
-    margin-bottom: 0;
+  & .${Classes.BUTTON} {
+    display: flex;
+
+    & > span.${Classes.BUTTON_TEXT} {
+      flex: 1;
+      text-align: left;
+    }
   }
 `
 
@@ -42,9 +47,9 @@ const initialState = {
 type State = Readonly<typeof initialState>
 
 /**
- * BroadcasterControls Component.
+ * BroadcasterTools Component.
  */
-export default class BroadcasterControls extends React.Component<Props, State> {
+export default class BroadcasterTools extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -86,25 +91,32 @@ export default class BroadcasterControls extends React.Component<Props, State> {
 
     return (
       <BroadcasterSection title="Tools" ready>
-        <Row>
+        <Wrapper>
+          <ExternalButton
+            href="https://www.twitch.tv/dashboard/live"
+            text="Twitch Live Dashboard"
+            intent={Intent.PRIMARY}
+            icon="dashboard"
+          />
+          <div />
           {!_.isNil(host) && (
             <Button
               text={`Unhost ${host.target_display_name}`}
-              intent={Intent.WARNING}
               onClick={this.onClickUnhost}
+              intent={Intent.WARNING}
               icon="cut"
             />
           )}
           {this.renderCommercialButton()}
-        </Row>
-        <Row>
+          {_.isNil(host) && <div />}
           <ExternalButton
             href="https://twitchstatus.com/"
             rightIcon={statusIcon}
             icon="globe-network"
             text="Twitch Status"
           />
-        </Row>
+          <ExternalButton href="https://twitter.com/TwitchSupport" text="Twitch Support" icon="help" />
+        </Wrapper>
       </BroadcasterSection>
     )
   }

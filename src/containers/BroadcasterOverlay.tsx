@@ -4,10 +4,10 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import BroadcasterControls from 'Components/BroadcasterControls'
 import BroadcasterInformations from 'Components/BroadcasterInformations'
 import BroadcasterLists from 'Components/BroadcasterLists'
 import BroadcasterStatistics from 'Components/BroadcasterStatistics'
+import BroadcasterTools from 'Components/BroadcasterTools'
 import Center from 'Components/Center'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
@@ -76,12 +76,7 @@ const Content = styled.div`
 /**
  * Broadcaster overlay sections.
  */
-const BroadcasterOverlaySections = [
-  BroadcasterInformations,
-  BroadcasterControls,
-  BroadcasterStatistics,
-  BroadcasterLists,
-]
+const BroadcasterOverlaySections = [BroadcasterInformations, BroadcasterTools, BroadcasterStatistics, BroadcasterLists]
 
 /**
  * React State.
@@ -166,7 +161,7 @@ class BroadcasterOverlay extends React.Component<Props, State> {
         unhost: undefined as UnhostAction | undefined,
       }
 
-      if (Section === BroadcasterControls) {
+      if (Section === BroadcasterTools) {
         props.unhost = unhost
       }
 

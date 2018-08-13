@@ -19,7 +19,6 @@ const Stats = styled.div`
   border-top: 1px solid ${color('broadcaster.border')};
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-columns: 100px;
 `
 
 /**
@@ -64,6 +63,20 @@ const Value = styled(Text).attrs({
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 4px;
+`
+
+/**
+ * Links component.
+ */
+const Links = styled.div`
+  color: ${color('broadcaster.meta')};
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+
+  & > a {
+    margin-left: 2px;
+  }
 `
 
 /**
@@ -151,6 +164,7 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
    */
   public render() {
     const { didFail, ready, statistics } = this.state
+    const { channel } = this.props
 
     if (didFail) {
       return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
@@ -166,6 +180,23 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
             </Stat>
           ))}
         </Stats>
+        <Links>
+          <a target="_blank" href="https://www.twitch.tv/dashboard/stream-summary">
+            Stream Summary
+          </a>{' '}
+          -
+          <a target="_blank" href="https://www.twitch.tv/dashboard/channel-analytics">
+            Channel Analytics
+          </a>{' '}
+          -
+          <a target="_blank" href={`https://twinge.tv/channels/${channel.name}`}>
+            Twinge
+          </a>{' '}
+          -
+          <a target="_blank" href={`https://sullygnome.com/channel/${channel.name}`}>
+            SullyGnome
+          </a>
+        </Links>
       </BroadcasterSection>
     )
   }
