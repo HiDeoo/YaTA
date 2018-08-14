@@ -3,8 +3,10 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { BroadcasterList } from 'Components/BroadcasterLists'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
+import Player from 'Libs/Player'
 import { color, ifProp } from 'Utils/styled'
 
 /**
@@ -118,10 +120,14 @@ export default class BroadcasterListRow extends React.Component<Props> {
    * Triggered when a row is clicked.
    */
   private onClick = () => {
-    const { url } = this.props.row
+    const { row } = this.props
 
-    if (!_.isNil(url)) {
-      window.open(url)
+    if (!_.isNil(row.url)) {
+      if (row.type === BroadcasterList.Clips) {
+        Player.playTwitchClip(row.id)
+      } else {
+        window.open(row.url)
+      }
     }
   }
 }
@@ -148,5 +154,6 @@ export type Row = {
   meta?: string
   text: string
   thumbnail?: string
+  type: BroadcasterList
   url?: string
 }

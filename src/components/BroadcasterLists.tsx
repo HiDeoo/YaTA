@@ -32,7 +32,7 @@ const EmptyWrapper = styled(Wrapper)`
 /**
  * Available lists.
  */
-enum List {
+export enum BroadcasterList {
   Clips = 'Recent Clips',
   Hosts = 'Hosts',
 }
@@ -43,8 +43,8 @@ enum List {
 const initialState = {
   didFail: false,
   ready: false,
-  [List.Clips]: [] as Row[],
-  [List.Hosts]: [] as Row[],
+  [BroadcasterList.Clips]: [] as Row[],
+  [BroadcasterList.Hosts]: [] as Row[],
 }
 type State = Readonly<typeof initialState>
 
@@ -77,15 +77,22 @@ export default class BroadcasterLists extends React.Component<BroadcasterSection
         meta: `${clip.views.toLocaleString()} ${pluralize('views', clip.views)} - ${clip.curator.display_name}`,
         text: clip.title,
         thumbnail: clip.thumbnails.tiny,
+        type: BroadcasterList.Clips,
         url: clip.url,
       }))
       const hostRows = _.map(hosts, (host) => ({
         id: host.host_id,
         text: host.host_display_name,
+        type: BroadcasterList.Hosts,
         url: `https://twitch.tv/${host.host_login}`,
       }))
 
-      this.setState(() => ({ didFail: false, ready: true, [List.Clips]: clipRows, [List.Hosts]: hostRows }))
+      this.setState(() => ({
+        didFail: false,
+        ready: true,
+        [BroadcasterList.Clips]: clipRows,
+        [BroadcasterList.Hosts]: hostRows,
+      }))
     } catch (error) {
       this.setState(() => ({ didFail: true, ready: true }))
     }
@@ -101,7 +108,7 @@ export default class BroadcasterLists extends React.Component<BroadcasterSection
     return (
       <BroadcasterSection title="Miscellaneous" ready={ready}>
         <Tabs id="lists">
-          {_.map(List, (list) => {
+          {_.map(BroadcasterList, (list) => {
             const rows = this.state[list]
 
             return (
@@ -117,7 +124,7 @@ export default class BroadcasterLists extends React.Component<BroadcasterSection
    * Renders a specific list.
    * @return Element to render.
    */
-  private renderList(list: List) {
+  private renderList(list: BroadcasterList) {
     const rows = this.state[list]
 
     if (rows.length === 0) {

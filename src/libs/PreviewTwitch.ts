@@ -7,7 +7,7 @@ import Twitch from 'Libs/Twitch'
 /**
  * Preview types.
  */
-enum TwitchPreviewType {
+export enum TwitchPreviewType {
   Clip,
   Video,
 }

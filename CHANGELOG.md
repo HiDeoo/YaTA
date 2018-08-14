@@ -1,3 +1,14 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Why leave this comfy place? Clips now opens in-app instead of opening in a new window or tab.
+- Add new broadcaster tools:
+  - Edit channel metadata.
+  - Quickly unhost or run commercials, check Twitch status, etc.
+  - Check your channel and stream statistics.
+  - Take a look at your recent clips, who is hosting you, etc.
+
 # 1.1.0
 
 ### 🚀 New Feature

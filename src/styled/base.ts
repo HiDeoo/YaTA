@@ -86,6 +86,10 @@ export default {
   notice: {
     color: Colors.GRAY2,
   },
+  player: {
+    height: 282,
+    width: 500,
+  },
   settings: {
     height: 550,
   },

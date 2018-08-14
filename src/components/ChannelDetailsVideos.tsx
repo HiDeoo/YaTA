@@ -42,6 +42,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
             )}`,
             thumbnail: video.preview.small,
             title: video.title,
+            type: type as VideoType,
             url: video.url,
           }))
 
@@ -59,6 +60,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
             )} - ${clip.curator.display_name}`,
             thumbnail: clip.thumbnails.small,
             title: clip.title,
+            type: type as VideoType,
             url: clip.url,
           }))
 
@@ -107,8 +109,13 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
  * React Props.
  */
 type Props = {
-  type: ChannelDetailsType.LastVods | ChannelDetailsType.RecentClips | ChannelDetailsType.TopClips
+  type: VideoType
 }
+
+/**
+ * Channel video type.
+ */
+type VideoType = ChannelDetailsType.LastVods | ChannelDetailsType.RecentClips | ChannelDetailsType.TopClips
 
 /**
  * Channel details video.
@@ -118,5 +125,6 @@ export type Video = {
   meta: string
   thumbnail: string
   title: string
+  type: VideoType
   url: string
 }

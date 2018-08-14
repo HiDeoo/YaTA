@@ -2,9 +2,11 @@ import { Colors, Text } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { ChannelDetailsType } from 'Components/ChannelDetailsOverview'
 import { Video } from 'Components/ChannelDetailsVideos'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
+import Player from 'Libs/Player'
 import { color } from 'Utils/styled'
 
 /**
@@ -81,7 +83,13 @@ export default class ChannelDetailsVideo extends React.Component<Props> {
    * Triggered when a video is clicked.
    */
   private onClick = () => {
-    window.open(this.props.video.url)
+    const { video } = this.props
+
+    if (video.type === ChannelDetailsType.RecentClips || video.type === ChannelDetailsType.TopClips) {
+      Player.playTwitchClip(video.id)
+    } else {
+      window.open(video.url)
+    }
   }
 }
 

@@ -5,7 +5,9 @@ import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
+import Player from 'Libs/Player'
 import { isResolved, Preview as ResolvedPreview, UnresolvedPreview } from 'Libs/PreviewProvider'
+import PreviewTwitch, { TwitchPreviewType } from 'Libs/PreviewTwitch'
 import { color } from 'Utils/styled'
 
 /**
@@ -116,8 +118,12 @@ export default class Preview extends React.Component<Props> {
   private onClick = () => {
     const { preview } = this.props
 
-    if (isResolved(preview)) {
-      window.open(preview.url)
+    if (isResolved(preview) && !_.isNil(preview.url)) {
+      if (preview.provider === PreviewTwitch.getProviderId() && preview.type === TwitchPreviewType.Clip) {
+        Player.playTwitchClip(preview.id)
+      } else {
+        window.open(preview.url)
+      }
     }
   }
 }
