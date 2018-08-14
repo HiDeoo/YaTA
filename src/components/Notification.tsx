@@ -2,16 +2,23 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { SerializedNotification } from 'Libs/Notification'
-import { color, size } from 'Utils/styled'
+import notificationBorder from 'Images/notificationBorder.png'
+import { NotificationEvent, SerializedNotification } from 'Libs/Notification'
+import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = styled.div`
+const Wrapper = styled.div<WrapperProps>`
   background-color: ${color('notification.background')};
-  border-left: 3px solid ${color('notification.border')};
+  border-color: ${ifProp('highlight', 'initial', color('notification.border'))};
+  border-image-repeat: repeat;
+  border-image-slice: 1 30;
+  border-image-source: ${ifProp('highlight', `url(${notificationBorder})`, 'initial')};
+  border-style: solid;
+  border-width: 0 0 0 3px;
   padding: 4px ${size('log.hPadding')} 4px calc(${size('log.hPadding')} - 1px);
+  position: relative;
 `
 
 /**
@@ -47,10 +54,24 @@ export default class Notification extends React.Component<Props> {
     const { notification, style } = this.props
 
     return (
-      <Wrapper style={style}>
+      <Wrapper style={style} highlight={this.shouldHighlightNotification()}>
         <div>{notification.title}</div>
         {!_.isNil(notification.message) && <Message>“{notification.message}”</Message>}
       </Wrapper>
+    )
+  }
+
+  /**
+   * Defines which notification event should be highlighted.
+   * @return `true` to highlight.
+   */
+  private shouldHighlightNotification() {
+    const { event } = this.props.notification
+
+    return (
+      event === NotificationEvent.Subscription ||
+      event === NotificationEvent.ReSub ||
+      event === NotificationEvent.SubGift
     )
   }
 }
@@ -61,4 +82,11 @@ export default class Notification extends React.Component<Props> {
 type Props = {
   notification: SerializedNotification
   style: React.CSSProperties
+}
+
+/**
+ * React Props.
+ */
+type WrapperProps = {
+  highlight: boolean
 }
