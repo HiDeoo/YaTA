@@ -2,6 +2,7 @@
 
 ### 🚀 New Feature
 
+- Add the `/shrug` snippet because ¯\\\_(ツ)\_/¯ (this will show in-place so you can see the actual message you're about to send).
 - When streaming, your own stream now appears at the first position on the homepage.
 
 # 1.2.0

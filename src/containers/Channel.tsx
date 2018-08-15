@@ -91,6 +91,11 @@ const WhisperReplyRegExp = /^[\/|\.]r /
 const FollowedRegExp = /^[\/|\.]followed(?:$| .*)/
 
 /**
+ * RegExp used to identify a shrug command (/shrug).
+ */
+const ShrugRegExp = /(^|.* )[\/|\.]shrug($| .*)/
+
+/**
  * React State.
  */
 const initialState = {
@@ -506,9 +511,22 @@ class Channel extends React.Component<Props, State> {
       const inputValue = `/w ${this.props.lastWhisperSender}${lastWhisperSender.length > 0 ? ' ' : ''}`
 
       this.setState(() => ({ inputValue }))
-    } else {
-      this.setState(() => ({ inputValue: value }))
+
+      return
+    } else if (ShrugRegExp.test(value)) {
+      const matches = value.match(ShrugRegExp)
+
+      if (!_.isNil(matches)) {
+        const before = matches[1]
+        const after = matches[2]
+
+        this.setState(() => ({ inputValue: `${before}¯\\_(ツ)_/¯ ${after}` }))
+
+        return
+      }
     }
+
+    this.setState(() => ({ inputValue: value }))
   }
 
   /**
