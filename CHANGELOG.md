@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Use the official [Twitch Status page](https://devstatus.twitch.tv/) in the broadcaster tools.
+
 # 1.2.1
 
 ### 🚀 New Feature

@@ -11,6 +11,7 @@ enum TwitchApi {
   Base = 'https://api.twitch.tv',
   Helix = 'https://api.twitch.tv/helix',
   Kraken = 'https://api.twitch.tv/kraken',
+  Status = 'https://devstatus.twitch.tv',
   Tmi = 'https://tmi.twitch.tv',
 }
 
@@ -31,6 +32,15 @@ export enum ClipPeriod {
   Day = 'day',
   Month = 'month',
   Week = 'week',
+}
+
+/**
+ * Twitch status.
+ */
+export enum Status {
+  Disrupted,
+  Online,
+  Unknown,
 }
 
 /**
@@ -163,6 +173,18 @@ export default class Twitch {
    */
   public static isMarkerCommand(message: string) {
     return MarkerRegExp.test(message)
+  }
+
+  /**
+   * Fetches Twitch global status.
+   * @return Twitch global status.
+   */
+  public static async fetchGlobalStatus(): Promise<Status> {
+    const response = await Twitch.fetch(TwitchApi.Status, '/index.json')
+
+    const { status } = (await response.json()) as RawStatus
+
+    return status.indicator === 'none' ? Status.Online : Status.Disrupted
   }
 
   /**
@@ -1120,6 +1142,16 @@ export type RawHost = {
   target_login: string
   host_display_name: string
   target_display_name: string
+}
+
+/**
+ * Twitch status.
+ */
+type RawStatus = {
+  status: {
+    description: string
+    indicator: string
+  }
 }
 
 /**

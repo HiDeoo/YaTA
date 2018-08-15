@@ -7,8 +7,7 @@ import BroadcasterSection from 'Components/BroadcasterSection'
 import ExternalButton from 'Components/ExternalButton'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Toaster from 'Libs/Toaster'
-import Twitch, { CommercialDuration, RawHost } from 'Libs/Twitch'
-import TwitchStatus, { Status } from 'Libs/TwitchStatus'
+import Twitch, { CommercialDuration, RawHost, Status } from 'Libs/Twitch'
 
 /**
  * Wrapper component.
@@ -57,7 +56,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     try {
-      const response = await Promise.all([TwitchStatus.fetchGlobalStatus(), Twitch.fetchHost(this.props.channelId)])
+      const response = await Promise.all([Twitch.fetchGlobalStatus(), Twitch.fetchHost(this.props.channelId)])
 
       const [status, { hosts }] = response
 
@@ -111,7 +110,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
           {this.renderCommercialButton()}
           {_.isNil(host) && channel.partner && <div />}
           <ExternalButton
-            href="https://twitchstatus.com/"
+            href="https://devstatus.twitch.tv"
             rightIcon={statusIcon}
             icon="globe-network"
             text="Twitch Status"
