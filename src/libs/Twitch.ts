@@ -423,17 +423,33 @@ export default class Twitch {
   }
 
   /**
-   * Fetches follows for the current user which consist of online streams and offline channels.
+   * Fetches follows for the current user which consist of online streams, offline channels and its own online stream if
+   * streaming.
    * @return The streams and follows.
    */
   public static async fetchFollows(): Promise<RawFollow[]> {
-    const allFollow = await Twitch.fetchAuthenticatedUserFollows()
+    const { follows } = await Twitch.fetchAuthenticatedUserFollows()
     const { streams } = await Twitch.fetchAuthenticatedUserStreams()
 
-    const follows = _.map(allFollow.follows, 'channel')
+    const offlineFollows = _.reduce(
+      follows,
+      (offline, follow) => {
+        if (_.isNil(_.find(streams, ['channel.name', follow.channel.name]))) {
+          offline.push(follow.channel)
+        }
 
-    const onlineStreams = _.map(streams, 'channel.name')
-    const offlineFollows = _.filter(follows, (follow) => !_.includes(onlineStreams, follow.name))
+        return offline
+      },
+      [] as RawChannel[]
+    )
+
+    if (!_.isNil(this.userId)) {
+      const { stream } = await Twitch.fetchStream(this.userId)
+
+      if (!_.isNil(stream)) {
+        streams.unshift(stream)
+      }
+    }
 
     return [...streams, ...offlineFollows]
   }

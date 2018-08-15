@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- When streaming, your own stream now appears at the first position on the homepage.
+
 # 1.2.0
 
 ### 🚀 New Feature
