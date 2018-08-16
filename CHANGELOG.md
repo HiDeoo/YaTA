@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue with some Github link previews.
+
 # 1.2.1
 
 ### 🚀 New Feature
