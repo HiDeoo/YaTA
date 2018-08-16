@@ -11,6 +11,7 @@ import SettingsHighlight from 'Components/SettingsHighlight'
 import SettingsHighlightColorMenu from 'Components/SettingsHighlightColorMenu'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
+import SettingsTable from 'Components/SettingsTable'
 import Key from 'Constants/key'
 import Highlight, { HighlightColors } from 'Libs/Highlight'
 import {
@@ -25,7 +26,6 @@ import {
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getHighlights, getHighlightsIgnoredUsers, getHighlightsPermanentUsers } from 'Store/selectors/settings'
-import { color } from 'Utils/styled'
 
 /**
  * Notice component.
@@ -45,12 +45,8 @@ const Form = styled(FlexContent)`
 /**
  * Highlights component.
  */
-const Highlights = styled.div`
-  background-color: ${color('settings.table.background')};
-  border: 1px solid ${color('settings.table.border')};
+const Highlights = styled(SettingsTable)`
   height: calc(100% - 218px);
-  overflow-y: auto;
-  margin: 20px 0;
 `
 
 /**
