@@ -4,7 +4,6 @@ import * as shortid from 'shortid'
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
 import { escape } from 'Utils/html'
-import { Serializable } from 'Utils/typescript'
 
 /**
  * Notice class.

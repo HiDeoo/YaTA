@@ -87,7 +87,7 @@ const BroadcasterOverlaySections = [
 /**
  * React State.
  */
-const initialState = { channel: undefined as RawChannel | null | undefined, didFail: false, isReady: false }
+const initialState = { channel: undefined as Optional<RawChannel>, didFail: false, isReady: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -164,7 +164,7 @@ class BroadcasterOverlay extends React.Component<Props, State> {
       const props = {
         channel,
         channelId,
-        unhost: undefined as UnhostAction | undefined,
+        unhost: undefined as Optional<UnhostAction>,
       }
 
       if (Section === BroadcasterTools) {

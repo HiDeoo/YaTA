@@ -34,7 +34,7 @@ export function color(path: string) {
  * @param  [unit='px'] - The size unit which default to pixel.
  * @return The size value getter.
  */
-export function size(path: string, unit: string | undefined = 'px') {
+export function size(path: string, unit: Optional<string> = 'px') {
   if (_.isNil(unit)) {
     return (props: object) => _.get(props, `theme.${path}`) as number
   }

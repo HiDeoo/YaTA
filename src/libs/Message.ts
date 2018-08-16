@@ -12,7 +12,6 @@ import Resources from 'Libs/Resources'
 import { CheermoteImageBackground, RawCheermoteImage } from 'Libs/Twitch'
 import { escape } from 'Utils/html'
 import { padTimeUnit } from 'Utils/time'
-import { Serializable } from 'Utils/typescript'
 
 /**
  * Message class representing either a chat message, an action (/me) or a whisper.

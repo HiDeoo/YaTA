@@ -71,7 +71,7 @@ const UploadProgressBar = styled(ProgressBar)`
  */
 const initialState = {
   intent: '',
-  lastKnownCursor: null as CursorPosition | null,
+  lastKnownCursor: undefined as Optional<CursorPosition>,
   toasts: [] as IToastOptions[],
 }
 type State = Readonly<typeof initialState>

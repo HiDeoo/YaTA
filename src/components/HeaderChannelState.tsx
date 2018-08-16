@@ -164,7 +164,7 @@ interface Props {
   isAutoScrollPaused: boolean
   roomState: SerializedRoomState | null
   scrollToNewestLog: () => void
-  viewerCount: number | null
+  viewerCount?: number
 }
 
 /**

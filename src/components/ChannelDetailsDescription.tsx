@@ -60,7 +60,7 @@ const Content = styled.div`
 /**
  * React State.
  */
-const initialState = { didFail: false, panels: undefined as RawPanels | undefined }
+const initialState = { didFail: false, panels: undefined as Optional<RawPanels> }
 type State = Readonly<typeof initialState>
 
 /**

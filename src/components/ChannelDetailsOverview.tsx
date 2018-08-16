@@ -119,8 +119,8 @@ const ChannelDetailsPanels = {
  */
 const initialState = {
   didFail: false,
-  relationship: undefined as RawRelationship | null | undefined,
-  stream: undefined as RawStream | null | undefined,
+  relationship: undefined as Optional<RawRelationship> | null,
+  stream: undefined as Optional<RawStream> | null,
 }
 type State = Readonly<typeof initialState>
 

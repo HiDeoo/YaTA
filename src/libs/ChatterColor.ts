@@ -163,4 +163,4 @@ type Color = tinycolor.Instance
 /**
  * A color, null or undefined.
  */
-type MaybeColor = Color | null | undefined
+type MaybeColor = Optional<Color> | null

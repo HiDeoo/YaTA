@@ -65,7 +65,7 @@ const Content = styled.div`
 /**
  * React State.
  */
-const initialState = { isOpened: false, url: undefined as string | undefined }
+const initialState = { isOpened: false, url: undefined as Optional<string> }
 type State = Readonly<typeof initialState>
 
 /**

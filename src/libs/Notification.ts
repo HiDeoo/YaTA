@@ -1,7 +1,6 @@
 import * as shortid from 'shortid'
 
 import LogType from 'Constants/logType'
-import { Serializable } from 'Utils/typescript'
 
 /**
  * Notification class.

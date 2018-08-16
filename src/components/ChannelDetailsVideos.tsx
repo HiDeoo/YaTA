@@ -14,7 +14,7 @@ import Twitch, { ClipPeriod } from 'Libs/Twitch'
 /**
  * React State.
  */
-const initialState = { didFail: false, videos: undefined as Video[] | null | undefined }
+const initialState = { didFail: false, videos: undefined as Optional<Video[]> }
 type State = Readonly<typeof initialState>
 
 /**

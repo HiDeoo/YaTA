@@ -1,8 +1,6 @@
 import * as _ from 'lodash'
 import { RoomState as RawRoomState } from 'twitch-js'
 
-import { Serializable } from 'Utils/typescript'
-
 /**
  * Room state class.
  */

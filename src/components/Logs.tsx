@@ -160,7 +160,7 @@ export default class Logs extends React.Component<Props> {
   private logRenderer: ListRowRenderer = ({ key, index, parent, style }) => {
     const log = this.props.logs[index]
 
-    let LogComponent: JSX.Element | null = null
+    let LogComponent: Optional<JSX.Element>
 
     const {
       actionHandler,

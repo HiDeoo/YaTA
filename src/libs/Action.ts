@@ -2,7 +2,6 @@ import * as _ from 'lodash'
 import * as shortid from 'shortid'
 
 import { SerializedChatter } from 'Libs/Chatter'
-import { Serializable } from 'Utils/typescript'
 
 /**
  * RegExp used to identify a valid action text.
@@ -148,4 +147,4 @@ export type SerializedAction = {
 /**
  * Action handler.
  */
-export type ActionHandler = (action: SerializedAction, chatter?: SerializedChatter | null) => void
+export type ActionHandler = (action: SerializedAction, chatter: Optional<SerializedChatter>) => void

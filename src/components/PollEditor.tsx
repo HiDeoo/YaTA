@@ -114,11 +114,11 @@ const initialState = {
   formState: FormState.Invalid as FormState,
   multipleAnswers: false,
   options: '',
-  optionsError: null as string | null,
+  optionsError: undefined as Optional<string>,
   optionsIntent: Intent.NONE as Intent,
   question: '',
   questionIntent: Intent.NONE as Intent,
-  url: null as string | null,
+  url: undefined as Optional<string>,
 }
 type State = Readonly<typeof initialState>
 
@@ -371,7 +371,7 @@ export default class PollEditor extends React.Component<Props, State> {
    * @return The validation state.
    */
   private getValidationState(question: string, options: string) {
-    let optionsError = null
+    let optionsError
     let optionsIntent: Intent = Intent.NONE
     const questionIntent = question.length > 0 ? Intent.SUCCESS : Intent.NONE
     let formState: FormState = FormState.Invalid

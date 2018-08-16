@@ -6,7 +6,6 @@ import LogType from 'Constants/logType'
 import Theme from 'Constants/theme'
 import ChatterColor from 'Libs/ChatterColor'
 import base, { TwitchUserColorMap } from 'Styled/base'
-import { Serializable } from 'Utils/typescript'
 
 /**
  * Chatter class.

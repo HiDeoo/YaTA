@@ -206,7 +206,7 @@ class Search extends React.Component<Props, State> {
 
     const result = results[index]
 
-    let LogComponent: JSX.Element | null = null
+    let LogComponent: Optional<JSX.Element>
 
     if (isMessage(result)) {
       LogComponent = (

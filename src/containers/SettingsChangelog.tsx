@@ -74,7 +74,7 @@ const Changelog = styled.div`
 /**
  * React State.
  */
-const initialState = { isThemeConfirmationOpened: false, changelog: null as string | null }
+const initialState = { isThemeConfirmationOpened: false, changelog: undefined as Optional<string> }
 type State = Readonly<typeof initialState>
 
 /**

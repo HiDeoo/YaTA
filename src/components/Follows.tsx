@@ -43,10 +43,10 @@ const Search = styled(InputGroup)`
  * React State.
  */
 const initialState = {
-  error: undefined as Error | undefined,
+  error: undefined as Optional<Error>,
   filter: '',
-  filteredFollows: null as RawFollow[] | null,
-  follows: null as RawFollow[] | null,
+  filteredFollows: undefined as Optional<RawFollow[]>,
+  follows: undefined as Optional<RawFollow[]>,
 }
 type State = Readonly<typeof initialState>
 
@@ -137,7 +137,7 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
   private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const filter = event.currentTarget.value
 
-    let filteredFollows: RawFollow[] | null = null
+    let filteredFollows: Optional<RawFollow[]>
 
     const { follows } = this.state
 

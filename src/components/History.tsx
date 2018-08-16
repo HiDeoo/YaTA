@@ -108,7 +108,7 @@ export default class History extends React.Component<Props> {
     const { logs } = this.props
     const log = logs[index]
 
-    let LogComponent: JSX.Element | null = null
+    let LogComponent: Optional<JSX.Element>
 
     if (isMessage(log)) {
       LogComponent = <HeadlessMessage style={style} onDoubleClick={this.onDoubleClick} message={log} />

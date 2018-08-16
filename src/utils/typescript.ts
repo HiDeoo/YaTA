@@ -1,10 +1,17 @@
 import * as _ from 'lodash'
 
-/**
- * Serializable interface.
- */
-export interface Serializable<T> {
-  serialize(): T
+declare global {
+  /**
+   * Optional value.
+   */
+  export type Optional<T> = T | undefined
+
+  /**
+   * Serializable interface.
+   */
+  export interface Serializable<T> {
+    serialize(): T
+  }
 }
 
 /**

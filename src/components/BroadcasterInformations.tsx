@@ -149,7 +149,7 @@ const initialState = {
   isModified: false,
   isReady: false,
   isUpdating: false,
-  liveNotification: undefined as RawNotification | undefined,
+  liveNotification: undefined as Optional<RawNotification>,
   [Input.Communities]: [] as RawCommunity[],
   [Input.Game]: '',
   [Input.Notification]: '',

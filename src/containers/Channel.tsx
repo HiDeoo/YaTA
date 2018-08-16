@@ -100,10 +100,10 @@ const ShrugRegExp = /(^|.* )[\/|\.]shrug($| .*)/
  * React State.
  */
 const initialState = {
-  focusedChatter: null as SerializedChatter | null,
+  focusedChatter: undefined as Optional<SerializedChatter>,
   inputValue: '',
   isUploadingFile: false,
-  viewerCount: null as number | null,
+  viewerCount: undefined as Optional<number>,
   [ToggleableUI.BroadcasterOverlay]: false,
   [ToggleableUI.Chatters]: false,
   [ToggleableUI.FollowOmnibar]: false,
@@ -550,7 +550,7 @@ class Channel extends React.Component<Props, State> {
       window.clearInterval(this.viewerCountMonitorId)
       this.viewerCountMonitorId = undefined
 
-      this.setState(() => ({ viewerCount: null }))
+      this.setState(() => ({ viewerCount: undefined }))
     }
   }
 
@@ -559,7 +559,7 @@ class Channel extends React.Component<Props, State> {
    */
   private monitorViewerCount = async () => {
     const { roomState } = this.props
-    let viewers: number | null = null
+    let viewers: number
 
     if (!_.isNil(roomState)) {
       const channelId = _.get(roomState, 'roomId')
@@ -650,7 +650,7 @@ class Channel extends React.Component<Props, State> {
    */
   private handleAction = async (
     action: SerializedAction,
-    chatter: SerializedChatter | null = this.state.focusedChatter
+    chatter: Optional<SerializedChatter> = this.state.focusedChatter
   ) => {
     const { channel } = this.props
 
@@ -707,7 +707,7 @@ class Channel extends React.Component<Props, State> {
    * Unfocuses any focused chatter.
    */
   private unfocusChatter = () => {
-    this.setState(() => ({ focusedChatter: null }))
+    this.setState(() => ({ focusedChatter: undefined }))
   }
 
   /**

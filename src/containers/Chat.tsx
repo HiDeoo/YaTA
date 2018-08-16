@@ -61,7 +61,7 @@ import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
 /**
  * React State.
  */
-const initialState = { error: undefined as Error | undefined }
+const initialState = { error: undefined as Optional<Error> }
 type State = Readonly<typeof initialState>
 
 /**

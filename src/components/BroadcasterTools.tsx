@@ -39,7 +39,7 @@ const Wrapper = styled.div`
  * React State.
  */
 const initialState = {
-  host: undefined as RawHost | undefined,
+  host: undefined as Optional<RawHost>,
   isStartingCommercial: false,
   status: Status.Unknown as Status,
 }
@@ -60,7 +60,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
 
       const [status, { hosts }] = response
 
-      let currentHost: RawHost | undefined
+      let currentHost: Optional<RawHost>
       const actualHost = _.head(hosts)
 
       if (!_.isNil(actualHost) && _.has(actualHost, 'target_display_name')) {
@@ -81,7 +81,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
     const { channel } = this.props
     const { host, status } = this.state
 
-    let statusIcon: JSX.Element | undefined
+    let statusIcon: Optional<JSX.Element>
 
     if (status === Status.Online) {
       statusIcon = <Icon icon="dot" color={Colors.GREEN3} />

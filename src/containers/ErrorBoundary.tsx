@@ -9,7 +9,7 @@ import { ApplicationState } from 'Store/reducers'
 /**
  * React State.
  */
-const initialState = { hasError: false, error: null as Error | null }
+const initialState = { hasError: false, error: undefined as Optional<Error> }
 type State = Readonly<typeof initialState>
 
 /**

@@ -209,10 +209,10 @@ const HistoryDate = styled(Menu.Item)`
  * React State.
  */
 const initialState = {
-  details: null as RawChannel | null,
-  error: undefined as Error | undefined,
+  details: undefined as Optional<RawChannel>,
+  error: undefined as Optional<Error>,
   isEditingNote: false,
-  relationship: undefined as RawRelationship | null | undefined,
+  relationship: undefined as Optional<RawRelationship> | null,
   usernameHistory: [] as UsernameHistory,
   [ToggleableUI.Reason]: false,
 }
@@ -729,7 +729,7 @@ interface OwnProps {
   ban: (username: string, reason?: string) => void
   block: (targetId: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
-  chatter: SerializedChatter | null
+  chatter?: SerializedChatter
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
   follow: (targetId: string) => void

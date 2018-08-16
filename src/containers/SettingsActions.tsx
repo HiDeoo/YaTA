@@ -70,7 +70,7 @@ const Actions = styled.div`
  */
 const initialState = {
   editing: false,
-  id: undefined as string | undefined,
+  id: undefined as Optional<string>,
   name: '',
   recipient: '',
   text: '',

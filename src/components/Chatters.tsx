@@ -63,11 +63,11 @@ const GroupOrder: Array<keyof RawChatters> = ['staff', 'global_mods', 'admins', 
  * React State.
  */
 const initialState = {
-  chatters: null as ChattersRows | null,
-  count: null as number | null,
+  chatters: undefined as Optional<ChattersRows>,
+  count: undefined as Optional<number>,
   didFail: false,
   filter: '',
-  filteredChatters: null as ChattersRows | null,
+  filteredChatters: undefined as Optional<ChattersRows>,
 }
 type State = Readonly<typeof initialState>
 
@@ -196,7 +196,7 @@ export default class Chatters extends React.Component<Props, State> {
   private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const filter = event.currentTarget.value
 
-    let filteredChatters: ChattersRows | null = null
+    let filteredChatters: Optional<ChattersRows>
 
     const { chatters } = this.state
 

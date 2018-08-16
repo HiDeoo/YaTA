@@ -102,7 +102,7 @@ const EmoteProviderIconMap: { [key in EmoteProviderPrefix]: string } = {
 const initialState = {
   filter: '',
   filteredSet: [] as Emote[],
-  hovered: null as Emote | null,
+  hovered: undefined as Optional<Emote>,
   prefix: EmoteProviderPrefix.Twitch,
   visible: false,
 }
@@ -356,7 +356,9 @@ class EmotePicker extends React.Component<Props, State> {
    * @param emote - The emote.
    */
   private onMouseLeaveEmote = (emote: Emote) => {
-    this.setState(({ hovered }) => ({ hovered: !_.isNil(hovered) && hovered.code === emote.code ? null : hovered }))
+    this.setState(({ hovered }) => ({
+      hovered: !_.isNil(hovered) && hovered.code === emote.code ? undefined : hovered,
+    }))
   }
 
   /**
@@ -368,7 +370,7 @@ class EmotePicker extends React.Component<Props, State> {
 
     this.setState(({ filteredSet }) => ({
       filteredSet: this.isFiltering() ? this.getFilteredEmotesSet(this.props.sets[prefix], filter) : filteredSet,
-      hovered: null,
+      hovered: undefined,
       prefix,
     }))
   }
@@ -383,7 +385,7 @@ class EmotePicker extends React.Component<Props, State> {
     this.setState(({ prefix }) => ({
       filter,
       filteredSet: this.getFilteredEmotesSet(this.props.sets[prefix], filter),
-      hovered: null,
+      hovered: undefined,
     }))
   }
 
