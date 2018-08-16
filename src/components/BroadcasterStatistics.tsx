@@ -6,6 +6,7 @@ import TimeAgo, { Formatter } from 'react-timeago'
 import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
+import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
@@ -29,8 +30,6 @@ const Stat = styled.div`
   border-right: 1px solid ${color('broadcaster.border')};
   padding: 8px 4px;
   text-align: center;
-  min-width: 131px;
-  max-width: 136px;
 
   &:hover {
     background-color: ${color('broadcaster.hover.background')};
@@ -181,21 +180,10 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
           ))}
         </Stats>
         <Links>
-          <a target="_blank" href="https://www.twitch.tv/dashboard/stream-summary">
-            Stream Summary
-          </a>{' '}
-          -
-          <a target="_blank" href="https://www.twitch.tv/dashboard/channel-analytics">
-            Channel Analytics
-          </a>{' '}
-          -
-          <a target="_blank" href={`https://twinge.tv/channels/${channel.name}`}>
-            Twinge
-          </a>{' '}
-          -
-          <a target="_blank" href={`https://sullygnome.com/channel/${channel.name}`}>
-            SullyGnome
-          </a>
+          <ExternalLink href="https://www.twitch.tv/dashboard/stream-summary">Stream Summary</ExternalLink> -
+          <ExternalLink href="https://www.twitch.tv/dashboard/channel-analytics">Channel Analytics</ExternalLink> -
+          <ExternalLink href={`https://twinge.tv/channels/${channel.name}`}>Twinge</ExternalLink> -
+          <ExternalLink href={`https://sullygnome.com/channel/${channel.name}`}>SullyGnome</ExternalLink>
         </Links>
       </BroadcasterSection>
     )

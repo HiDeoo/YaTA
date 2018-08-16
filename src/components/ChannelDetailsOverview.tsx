@@ -9,6 +9,7 @@ import ChannelDetailsDescription from 'Components/ChannelDetailsDescription'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
 import ChannelDetailsPanelButton from 'Components/ChannelDetailsPanelButton'
 import ChannelDetailsVideos from 'Components/ChannelDetailsVideos'
+import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawRelationship, RawStream } from 'Libs/Twitch'
@@ -195,9 +196,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
     return (
       <>
         <Title>
-          <a href={stream.channel.url} target="_blank">
-            {stream.channel.status}
-          </a>
+          <ExternalLink href={stream.channel.url}>{stream.channel.status}</ExternalLink>
         </Title>
         <Game>{stream.channel.game}</Game>
         <Meta>{stream.viewers.toLocaleString()} viewers</Meta>

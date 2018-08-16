@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
+import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawPanels } from 'Libs/Twitch'
@@ -114,11 +115,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
           let image = hasImage ? <img src={panel.data.image} /> : null
 
           if (hasLink) {
-            image = (
-              <a href={panel.data.link} target="_blank">
-                {image}
-              </a>
-            )
+            image = <ExternalLink href={panel.data.link}>{image}</ExternalLink>
           }
 
           return (

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { AutoSizer, List, ListRowRenderer } from 'react-virtualized'
 import styled from 'styled-components'
 
+import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import { ToggleableProps } from 'Constants/toggleable'
@@ -171,9 +172,7 @@ export default class Chatters extends React.Component<Props, State> {
     if (chatter.type === RowType.Chatter) {
       return (
         <Chatter {...props}>
-          <a href={`https://www.twitch.tv/${chatter.name}`} target="_blank">
-            {chatter.name}
-          </a>
+          <ExternalLink href={`https://www.twitch.tv/${chatter.name}`}>{chatter.name}</ExternalLink>
         </Chatter>
       )
     } else if (chatter.type === RowType.Separator) {

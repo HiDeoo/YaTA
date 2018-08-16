@@ -2,6 +2,7 @@ import { Colors, Icon } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import ExternalLink from 'Components/ExternalLink'
 import SettingsPanel from 'Components/SettingsPanel'
 import { color } from 'Utils/styled'
 
@@ -76,22 +77,14 @@ export default () => (
         Brewed using lots of <Coffee>☕</Coffee>
       </p>
       <p>
-        Source code available on{' '}
-        <a target="_blank" href="https://github.com/HiDeoo/yata">
-          Github
-        </a>
+        Source code available on <ExternalLink href="https://github.com/HiDeoo/yata">Github</ExternalLink>
       </p>
       <p>
-        Hosted by{' '}
-        <a target="_blank" href="https://zeit.co">
-          △ZEIT
-        </a>
+        Hosted by <ExternalLink href="https://zeit.co">△ZEIT</ExternalLink>
       </p>
       <p>
         Notification sound by{' '}
-        <a target="_blank" href="https://freesound.org/people/rhodesmas/sounds/342759/">
-          rhodesmas
-        </a>
+        <ExternalLink href="https://freesound.org/people/rhodesmas/sounds/342759/">rhodesmas</ExternalLink>
       </p>
     </Content>
   </SettingsPanel>

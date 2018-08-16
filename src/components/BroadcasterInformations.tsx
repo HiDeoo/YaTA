@@ -6,6 +6,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
+import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
@@ -297,10 +298,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
     return (
       <>
         This can only be updated on your{' '}
-        <a href="https://www.twitch.tv/dashboard" target="_blank">
-          Twitch Dasboard
-        </a>
-        .
+        <ExternalLink href="https://www.twitch.tv/dashboard">Twitch Dasboard</ExternalLink>.
       </>
     )
   }
