@@ -4,8 +4,8 @@ import * as pluralize from 'pluralize'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import BroadcasterResource, { Resource } from 'Components/BroadcasterResource'
 import BroadcasterSection from 'Components/BroadcasterSection'
+import ExternalResource, { Resource, ResourceType } from 'Components/ExternalResource'
 import NonIdealState from 'Components/NonIdealState'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
@@ -30,9 +30,17 @@ const EmptyWrapper = styled(Wrapper)`
 `
 
 /**
- * Available resource types.
+ * BroadcasterResource component.
  */
-export enum ResourceType {
+const BroadcasterResource = styled(ExternalResource)`
+  font-size: 15px;
+  padding: 8px;
+`
+
+/**
+ * Broadcaster resource types.
+ */
+export enum BroadcasterResourceType {
   Clips = 'Recent Clips',
   Hosts = 'Hosts',
 }
@@ -43,8 +51,8 @@ export enum ResourceType {
 const initialState = {
   didFail: false,
   isReady: false,
-  [ResourceType.Clips]: [] as Resource[],
-  [ResourceType.Hosts]: [] as Resource[],
+  [BroadcasterResourceType.Clips]: [] as Resource[],
+  [BroadcasterResourceType.Hosts]: [] as Resource[],
 }
 type State = Readonly<typeof initialState>
 
@@ -77,21 +85,21 @@ export default class BroadcasterResources extends React.Component<BroadcasterSec
         meta: `${clip.views.toLocaleString()} ${pluralize('views', clip.views)} - ${clip.curator.display_name}`,
         text: clip.title,
         thumbnail: clip.thumbnails.tiny,
-        type: ResourceType.Clips,
+        type: ResourceType.Clip,
         url: clip.url,
       }))
       const hostResources = _.map(hosts, (host) => ({
         id: host.host_id,
         text: host.host_display_name,
-        type: ResourceType.Hosts,
+        type: ResourceType.Host,
         url: `https://twitch.tv/${host.host_login}`,
       }))
 
       this.setState(() => ({
         didFail: false,
         isReady: true,
-        [ResourceType.Clips]: clipResources,
-        [ResourceType.Hosts]: hostResources,
+        [BroadcasterResourceType.Clips]: clipResources,
+        [BroadcasterResourceType.Hosts]: hostResources,
       }))
     } catch (error) {
       this.setState(() => ({ didFail: true, isReady: true }))
@@ -107,16 +115,16 @@ export default class BroadcasterResources extends React.Component<BroadcasterSec
 
     return (
       <BroadcasterSection title="Miscellaneous" ready={isReady}>
-        <Tabs id="lists">
-          {_.map(ResourceType, (list) => {
-            const resources = this.state[list]
+        <Tabs id="resources">
+          {_.map(BroadcasterResourceType, (resource) => {
+            const resources = this.state[resource]
 
             return (
               <Tab
-                key={list}
-                id={`lists-${list}`}
-                title={`${list} (${resources.length})`}
-                panel={this.renderList(list)}
+                key={resource}
+                id={`resources-${resource}`}
+                title={`${resource} (${resources.length})`}
+                panel={this.renderResource(resource)}
               />
             )
           })}
@@ -127,23 +135,24 @@ export default class BroadcasterResources extends React.Component<BroadcasterSec
 
   /**
    * Renders a specific resource.
+   * @param resource - The resource to render.
    * @return Element to render.
    */
-  private renderList(list: ResourceType) {
-    const resources = this.state[list]
+  private renderResource(resource: BroadcasterResourceType) {
+    const resources = this.state[resource]
 
     if (resources.length === 0) {
       return (
         <EmptyWrapper>
-          <NonIdealState small title={`No ${list.toLowerCase()} yet!`} />
+          <NonIdealState small title={`No ${resource.toLowerCase()} yet!`} />
         </EmptyWrapper>
       )
     }
 
     return (
       <Wrapper>
-        {_.map(resources, (resource) => (
-          <BroadcasterResource key={resource.id} resource={resource} />
+        {_.map(resources, (aResource) => (
+          <BroadcasterResource key={aResource.id} resource={aResource} divider />
         ))}
       </Wrapper>
     )

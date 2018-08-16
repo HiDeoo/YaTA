@@ -13,18 +13,6 @@ const dark = {
   broadcaster: {
     border: Colors.GRAY2,
     color: Colors.LIGHT_GRAY1,
-    divider: `linear-gradient(
-        90deg,
-        rgba(116, 134, 147, 1) 0%,
-        rgba(116, 134, 147, 0.4) 50%,
-        rgba(116, 134, 147, 0) 100%
-      )
-    `,
-    hover: {
-      background: Colors.DARK_GRAY4,
-      color: Colors.BLUE5,
-      meta: Colors.LIGHT_GRAY1,
-    },
     input: {
       disabled: `background: rgba(16, 22, 26, 0.3);
         box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0),
@@ -92,6 +80,21 @@ const dark = {
     detail: Colors.GRAY5,
   },
   previews: {
+    meta: Colors.GRAY3,
+  },
+  resource: {
+    divider: `linear-gradient(
+      90deg,
+      rgba(116, 134, 147, 1) 0%,
+      rgba(116, 134, 147, 0.4) 50%,
+      rgba(116, 134, 147, 0) 100%
+    )
+  `,
+    hover: {
+      background: Colors.DARK_GRAY4,
+      color: Colors.BLUE5,
+      meta: Colors.LIGHT_GRAY1,
+    },
     meta: Colors.GRAY3,
   },
   settings: {

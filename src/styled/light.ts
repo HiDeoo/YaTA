@@ -13,18 +13,6 @@ const light = {
   broadcaster: {
     border: Colors.LIGHT_GRAY1,
     color: Colors.DARK_GRAY5,
-    divider: `linear-gradient(
-        90deg,
-        rgba(206, 217, 224, 1) 0%,
-        rgba(206, 217, 224, 0.7) 50%,
-        rgba(206, 217, 224, 0) 100%
-      )
-    `,
-    hover: {
-      background: Colors.LIGHT_GRAY4,
-      color: Colors.BLUE3,
-      meta: Colors.GRAY2,
-    },
     input: {
       disabled: '',
     },
@@ -89,6 +77,21 @@ const light = {
   },
   previews: {
     meta: Colors.GRAY1,
+  },
+  resource: {
+    divider: `linear-gradient(
+      90deg,
+      rgba(206, 217, 224, 1) 0%,
+      rgba(206, 217, 224, 0.7) 50%,
+      rgba(206, 217, 224, 0) 100%
+    )
+  `,
+    hover: {
+      background: Colors.LIGHT_GRAY4,
+      color: Colors.BLUE3,
+      meta: Colors.GRAY2,
+    },
+    meta: Colors.GRAY4,
   },
   settings: {
     description: Colors.GRAY1,

@@ -2,19 +2,30 @@ import { IPanelProps } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
+import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import { ChannelDetailsType } from 'Components/ChannelDetailsOverview'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
-import ChannelDetailsVideo from 'Components/ChannelDetailsVideo'
+import ExternalResource, { Resource, ResourceType } from 'Components/ExternalResource'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
+import { color } from 'Utils/styled'
+
+/**
+ * ChannelDetailsVideo component.
+ */
+const ChannelDetailsVideo = styled(ExternalResource)`
+  &:hover {
+    background-color: ${color('channel.background')};
+  }
+`
 
 /**
  * React State.
  */
-const initialState = { didFail: false, videos: undefined as Optional<Video[]> }
+const initialState = { didFail: false, videos: undefined as Optional<Resource[]> }
 type State = Readonly<typeof initialState>
 
 /**
@@ -39,9 +50,9 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
             'views',
             video.views
           )}`,
+          text: video.title,
           thumbnail: video.preview.small,
-          title: video.title,
-          type: type as VideoType,
+          type: ResourceType.Vod,
           url: video.url,
         }))
 
@@ -57,9 +68,9 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
             'views',
             clip.views
           )} - ${clip.curator.display_name}`,
+          text: clip.title,
           thumbnail: clip.thumbnails.small,
-          title: clip.title,
-          type: type as VideoType,
+          type: ResourceType.Clip,
           url: clip.url,
         }))
 
@@ -94,7 +105,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     return (
       <ChannelDetailsPanel minimal>
         {_.map(videos, (video) => (
-          <ChannelDetailsVideo key={video.id} video={video} />
+          <ChannelDetailsVideo key={video.id} resource={video} />
         ))}
       </ChannelDetailsPanel>
     )

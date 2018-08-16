@@ -32,13 +32,13 @@ const Stat = styled.div`
   text-align: center;
 
   &:hover {
-    background-color: ${color('broadcaster.hover.background')};
+    background-color: ${color('resource.hover.background')};
 
     & > div {
-      color: ${color('broadcaster.hover.color')};
+      color: ${color('resource.hover.color')};
 
       & + div {
-        color: ${color('broadcaster.hover.meta')};
+        color: ${color('resource.hover.meta')};
       }
     }
   }
@@ -74,7 +74,7 @@ const Links = styled.div`
   text-align: center;
 
   & > a {
-    margin-left: 2px;
+    margin-left: 3px;
   }
 `
 
