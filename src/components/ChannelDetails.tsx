@@ -15,28 +15,22 @@ const ChannelDetailsPanels = styled(PanelStack)`
 /**
  * ChannelDetails Component.
  */
-export default class ChannelDetails extends React.Component<ChannelDetailsProps> {
-  /**
-   * Renders the component.
-   * @return Element to render.
-   */
-  public render() {
-    const { channel, id } = this.props
-
-    const initialPanel: IPanel<any> = {
-      component: ChannelDetailsOverview,
-      props: { channel, id },
-      title: 'Overview',
-    }
-
-    return <ChannelDetailsPanels initialPanel={initialPanel} />
+const ChannelDetails: React.SFC<ChannelDetailsProps> = ({ id, name }) => {
+  const initialPanel: IPanel<any> = {
+    component: ChannelDetailsOverview,
+    props: { id, name },
+    title: 'Overview',
   }
+
+  return <ChannelDetailsPanels initialPanel={initialPanel} />
 }
+
+export default ChannelDetails
 
 /**
  * React Props.
  */
 export type ChannelDetailsProps = {
-  channel: string | null
-  id?: string
+  id: string
+  name: string
 }

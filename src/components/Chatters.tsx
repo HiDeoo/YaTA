@@ -109,9 +109,9 @@ export default class Chatters extends React.Component<Props, State> {
     let content: JSX.Element
 
     if (didFail) {
-      content = <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
+      content = <NonIdealState retry />
     } else if (!_.isNil(count) && count === 0) {
-      content = <NonIdealState title="Looks like you're alone!" details="Maybe try again in a few minutes." />
+      content = <NonIdealState title="Looks like you're alone!" retry />
     } else if (!_.isNil(count)) {
       content = this.renderList()
     } else {

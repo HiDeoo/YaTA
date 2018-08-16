@@ -14,7 +14,7 @@ const StreamsAndFollowsOmnibar = Omnibar.ofType<RawFollow>()
 /**
  * React State.
  */
-const initialState = { follows: [] as RawFollow[], ready: false }
+const initialState = { follows: [] as RawFollow[], isReady: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -32,7 +32,7 @@ class FollowOmnibar extends React.Component<Props, State> {
       try {
         const follows = await Twitch.fetchFollows()
 
-        this.setState(() => ({ follows, ready: true }))
+        this.setState(() => ({ follows, isReady: true }))
       } catch (error) {
         this.props.toggle()
       }
@@ -88,7 +88,7 @@ class FollowOmnibar extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderInitialContent() {
-    return this.state.ready ? null : <Menu.Item disabled text="Loading…" />
+    return this.state.isReady ? null : <Menu.Item disabled text="Loading…" />
   }
 
   /**

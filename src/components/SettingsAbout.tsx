@@ -62,7 +62,7 @@ const Coffee = styled.span`
 /**
  * SettingsAbout Component.
  */
-const SettingsAbout: React.SFC = () => (
+export default () => (
   <SettingsPanel>
     <Content>
       <Logo>
@@ -96,5 +96,3 @@ const SettingsAbout: React.SFC = () => (
     </Content>
   </SettingsPanel>
 )
-
-export default SettingsAbout

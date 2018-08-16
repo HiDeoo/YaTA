@@ -84,7 +84,7 @@ const Links = styled.div`
  */
 const initialState = {
   didFail: false,
-  ready: false,
+  isReady: false,
   statistics: [] as Statistic[],
 }
 type State = Readonly<typeof initialState>
@@ -149,12 +149,12 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
 
         return {
           didFail: false,
-          ready: true,
+          isReady: true,
           statistics: newStatistics,
         }
       })
     } catch (error) {
-      this.setState(() => ({ didFail: true, ready: true }))
+      this.setState(() => ({ didFail: true, isReady: true }))
     }
   }
 
@@ -163,15 +163,15 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
    * @return Element to render.
    */
   public render() {
-    const { didFail, ready, statistics } = this.state
+    const { didFail, isReady, statistics } = this.state
     const { channel } = this.props
 
     if (didFail) {
-      return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
+      return <NonIdealState retry />
     }
 
     return (
-      <BroadcasterSection title="Statistics" ready={ready}>
+      <BroadcasterSection title="Statistics" ready={isReady}>
         <Stats>
           {_.map(statistics, ({ name, value }) => (
             <Stat key={name}>

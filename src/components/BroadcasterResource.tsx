@@ -3,7 +3,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { BroadcasterList } from 'Components/BroadcasterLists'
+import { ResourceType } from 'Components/BroadcasterResources'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Player from 'Libs/Player'
@@ -90,15 +90,15 @@ const Divider = styled.hr`
 `
 
 /**
- * BroadcasterListRow Component.
+ * BroadcasterResource Component.
  */
-export default class BroadcasterListRow extends React.Component<Props> {
+export default class BroadcasterResource extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { meta, text, thumbnail, url } = this.props.row
+    const { meta, text, thumbnail, url } = this.props.resource
 
     return (
       <>
@@ -120,13 +120,13 @@ export default class BroadcasterListRow extends React.Component<Props> {
    * Triggered when a row is clicked.
    */
   private onClick = () => {
-    const { row } = this.props
+    const { resource } = this.props
 
-    if (!_.isNil(row.url)) {
-      if (row.type === BroadcasterList.Clips) {
-        Player.playTwitchClip(row.id)
+    if (!_.isNil(resource.url)) {
+      if (resource.type === ResourceType.Clips) {
+        Player.playTwitchClip(resource.id)
       } else {
-        window.open(row.url)
+        window.open(resource.url)
       }
     }
   }
@@ -136,7 +136,7 @@ export default class BroadcasterListRow extends React.Component<Props> {
  * React Props.
  */
 type Props = {
-  row: Row
+  resource: Resource
 }
 
 /**
@@ -147,13 +147,13 @@ type ListRowProps = {
 }
 
 /**
- * Broadcaster list row.
+ * Broadcaster resource.
  */
-export type Row = {
+export type Resource = {
   id: string
   meta?: string
   text: string
   thumbnail?: string
-  type: BroadcasterList
+  type: ResourceType
   url?: string
 }

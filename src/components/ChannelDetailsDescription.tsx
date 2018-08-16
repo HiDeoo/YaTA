@@ -73,17 +73,13 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
    * Lifecycle: componentDidMount.
    */
   public async componentDidMount() {
-    const { channel } = this.props
+    const { name } = this.props
 
-    if (!_.isNil(channel)) {
-      try {
-        const panels = await Twitch.fetchPanels(channel)
+    try {
+      const panels = await Twitch.fetchPanels(name)
 
-        this.setState(() => ({ didFail: false, panels }))
-      } catch (error) {
-        this.setState(() => ({ didFail: true }))
-      }
-    } else {
+      this.setState(() => ({ didFail: false, panels }))
+    } catch (error) {
       this.setState(() => ({ didFail: true }))
     }
   }
@@ -96,7 +92,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     const { didFail, panels } = this.state
 
     if (didFail) {
-      return <NonIdealState small title="Something went wrong!" details="Please try again in a few minutes." />
+      return <NonIdealState small retry />
     }
 
     if (_.isUndefined(panels)) {
@@ -104,7 +100,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     }
 
     if (_.isNil(panels) || _.size(panels) === 0) {
-      return <NonIdealState small title="Nothing yet!" details="Maybe try again in a while." />
+      return <NonIdealState small title="Nothing yet!" retry />
     }
 
     return (

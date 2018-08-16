@@ -65,7 +65,7 @@ const Content = styled.div`
 /**
  * React State.
  */
-const initialState = { opened: false, url: undefined as string | undefined }
+const initialState = { isOpened: false, url: undefined as string | undefined }
 type State = Readonly<typeof initialState>
 
 /**
@@ -89,13 +89,13 @@ export default class Player extends React.Component<{}, State> {
    * @return Element to render.
    */
   public render() {
-    const { opened, url } = this.state
+    const { isOpened, url } = this.state
 
     return (
       <Overlay isOpen={!_.isNil(url)} onClose={this.onClose} onOpened={this.onOpened} onClosed={this.onClosed}>
         <Wrapper>
           <Content>
-            {opened ? (
+            {isOpened ? (
               <iframe
                 height={base.player.height}
                 width={base.player.width}
@@ -134,13 +134,13 @@ export default class Player extends React.Component<{}, State> {
    * Triggered when the overlay is opened.
    */
   private onOpened = () => {
-    this.setState(() => ({ opened: true }))
+    this.setState(() => ({ isOpened: true }))
   }
 
   /**
    * Triggered when the overlay is closed.
    */
   private onClosed = () => {
-    this.setState(() => ({ opened: false }))
+    this.setState(() => ({ isOpened: false }))
   }
 }

@@ -12,9 +12,7 @@ export default class ActionTypeMenuItem extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { type } = this.props
-
-    return <Menu.Item text={type} onClick={this.onClick} />
+    return <Menu.Item text={this.props.type} onClick={this.onClick} />
   }
 
   /**

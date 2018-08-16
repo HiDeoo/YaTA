@@ -15,10 +15,10 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import BanReason from 'Components/BanReason'
 import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
 import History from 'Components/History'
+import ReasonDialog from 'Components/ReasonDialog'
 import ActionMenuItems from 'Containers/ActionMenuItems'
 import Dialog from 'Containers/Dialog'
 import { ActionHandler, SerializedAction } from 'Libs/Action'
@@ -294,7 +294,7 @@ class ChatterDetails extends React.Component<Props, State> {
         onClose={this.onClose}
         title={header}
       >
-        <BanReason
+        <ReasonDialog
           onConfirmBanReason={this.onConfirmBanReason}
           toggle={this.toggleBanReasonAlert}
           visible={showBanReasonAlert}

@@ -147,9 +147,9 @@ const initialState = {
   didFail: false,
   games: null as RawGame[] | null,
   isModified: false,
+  isReady: false,
   isUpdating: false,
   liveNotification: undefined as RawNotification | undefined,
-  ready: false,
   [Input.Communities]: [] as RawCommunity[],
   [Input.Game]: '',
   [Input.Notification]: '',
@@ -185,15 +185,15 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
 
       this.setState(() => ({
         didFail: false,
+        isReady: true,
         liveNotification,
-        ready: true,
         [Input.Communities]: communities || [],
         [Input.Game]: channel.game || '',
         [Input.Notification]: liveNotification.message || '',
         [Input.Title]: channel.status || '',
       }))
     } catch (error) {
-      this.setState(() => ({ didFail: true, ready: true }))
+      this.setState(() => ({ didFail: true, isReady: true }))
     }
   }
 
@@ -207,7 +207,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
       games,
       isModified,
       isUpdating,
-      ready,
+      isReady,
       [Input.Communities]: communities,
       [Input.Game]: game,
       [Input.Notification]: notification,
@@ -216,11 +216,11 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
     const { channel } = this.props
 
     if (didFail) {
-      return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
+      return <NonIdealState retry />
     }
 
     return (
-      <BroadcasterSection title="Stream Informations" ready={ready}>
+      <BroadcasterSection title="Stream Informations" ready={isReady}>
         <FormGroup label="Title" labelFor="title" labelInfo={this.getInputLabelInfo(Input.Title)} disabled={isUpdating}>
           <InfoInput
             onChange={this.onChangeTitle}

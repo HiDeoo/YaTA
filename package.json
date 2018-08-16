@@ -38,7 +38,6 @@
     "node-jose": "1.0.0",
     "pluralize": "7.0.0",
     "react": "16.4.2",
-    "react-confetti": "2.3.0",
     "react-dom": "16.4.2",
     "react-helmet": "5.2.0",
     "react-redux": "5.0.7",
@@ -48,7 +47,7 @@
     "react-tooltip": "3.6.1",
     "react-transition-group": "2.4.0",
     "react-virtualized": "9.20.1",
-    "recompose": "0.28.1",
+    "recompose": "0.28.2",
     "redux": "4.0.0",
     "redux-persist": "5.10.0",
     "reselect": "3.0.1",
@@ -67,14 +66,14 @@
     "@types/lodash": "4.14.116",
     "@types/marked": "0.4.0",
     "@types/pluralize": "0.0.29",
-    "@types/react": "16.4.7",
+    "@types/react": "16.4.11",
     "@types/react-dom": "16.0.6",
     "@types/react-helmet": "5.0.7",
     "@types/react-redux": "6.0.6",
     "@types/react-router-dom": "4.3.0",
     "@types/react-tooltip": "3.3.5",
     "@types/react-transition-group": "2.0.12",
-    "@types/react-virtualized": "9.18.5",
+    "@types/react-virtualized": "9.18.6",
     "@types/recompose": "0.26.3",
     "@types/shortid": "0.0.29",
     "@types/tinycolor2": "1.4.1",
@@ -94,7 +93,7 @@
     "typescript": "3.0.1"
   },
   "resolutions": {
-    "@types/react": "16.4.7"
+    "@types/react": "16.4.11"
   },
   "lint-staged": {
     "**/*.{ts,tsx,md,json,css}": [

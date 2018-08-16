@@ -68,15 +68,15 @@ const ActionText = styled(Text).attrs({
 `
 
 /**
- * Action Component.
+ * SettingsAction Component.
  */
-export default class Action extends React.Component<Props> {
+export default class SettingsAction extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { action, editing } = this.props
+    const { action, isEditing } = this.props
 
     const recipient =
       action.type === ActionType.Whisper ? (
@@ -98,11 +98,11 @@ export default class Action extends React.Component<Props> {
           <ActionText>{action.text}</ActionText>
         </FlexContent>
         {this.renderOrderButtons()}
-        <Button disabled={editing} minimal icon="edit" onClick={this.onClickEdit} title="Edit" />
+        <Button disabled={isEditing} minimal icon="edit" onClick={this.onClickEdit} title="Edit" />
         <Button
           onClick={this.onClickRemove}
           intent={Intent.DANGER}
-          disabled={editing}
+          disabled={isEditing}
           title="Remove"
           icon="trash"
           minimal
@@ -116,19 +116,16 @@ export default class Action extends React.Component<Props> {
    * @return Element to render.
    */
   private renderOrderButtons() {
-    const { count, index } = this.props
+    const { canMoveDown, canMoveUp } = this.props
 
-    const showUpButton = count > 1 && index > 0
-    const showDownButton = count > 1 && index < count - 1
-
-    if (!showUpButton && !showDownButton) {
+    if (!canMoveDown && !canMoveUp) {
       return null
     }
 
     return (
       <OrderButtonGroup minimal vertical>
-        {showUpButton && <Button icon="caret-up" title="Move up" onClick={this.onClickMoveUp} />}
-        {showDownButton && <Button icon="caret-down" title="Move down" onClick={this.onClickMoveDown} />}
+        {canMoveUp && <Button icon="caret-up" title="Move up" onClick={this.onClickMoveUp} />}
+        {canMoveDown && <Button icon="caret-down" title="Move down" onClick={this.onClickMoveDown} />}
       </OrderButtonGroup>
     )
   }
@@ -175,10 +172,10 @@ export default class Action extends React.Component<Props> {
  */
 type Props = {
   action: SerializedAction
-  count: number
+  canMoveUp: boolean
+  canMoveDown: boolean
   edit: (id: string) => void
-  editing: boolean
-  index: number
+  isEditing: boolean
   move: (id: string, down: boolean) => void
   remove: (id: string) => void
 }

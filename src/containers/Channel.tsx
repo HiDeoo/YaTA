@@ -16,10 +16,10 @@ import FlexLayout from 'Components/FlexLayout'
 import FollowOmnibar from 'Components/FollowOmnibar'
 import { withHeader, WithHeaderProps } from 'Components/Header'
 import HeaderChannelState from 'Components/HeaderChannelState'
-import HeaderModerationMenuItems from 'Components/HeaderModerationMenuItems'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs from 'Components/Logs'
+import ModerationMenuItems from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
 import ReadyState from 'Constants/readyState'
@@ -326,7 +326,7 @@ class Channel extends React.Component<Props, State> {
             {connected && <Menu.Item onClick={this.clip} icon="film" text="Create clip" />}
             <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
             {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
-            <HeaderModerationMenuItems
+            <ModerationMenuItems
               toggleFollowersOnly={this.toggleFollowersOnly}
               toggleEmoteOnly={this.toggleEmoteOnly}
               toggleSlowMode={this.toggleSlowMode}
@@ -352,7 +352,7 @@ class Channel extends React.Component<Props, State> {
           <HeaderTooltip content="Channel Details">
             <Button icon="eye-open" minimal />
           </HeaderTooltip>
-          <ChannelDetails channel={channel} id={channelId} />
+          {!_.isNil(channel) && !_.isNil(channelId) && <ChannelDetails id={channelId} name={channel} />}
         </Popover>
         <HeaderTooltip content="Chatters List">
           <Button onClick={this.toggleChatters} icon="people" minimal />

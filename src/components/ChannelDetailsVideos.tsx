@@ -27,51 +27,47 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
    * Lifecycle: componentDidMount.
    */
   public async componentDidMount() {
-    const { channel, id, type } = this.props
+    const { id, name, type } = this.props
 
-    if (!_.isNil(id) && !_.isNil(channel)) {
-      try {
-        if (type === ChannelDetailsType.LastVods) {
-          const { videos } = await Twitch.fetchChannelVideos(id, 10)
+    try {
+      if (type === ChannelDetailsType.LastVods) {
+        const { videos } = await Twitch.fetchChannelVideos(id, 10)
 
-          const parsedVideos = _.map(videos, (video) => ({
-            id: video._id,
-            meta: `${new Date(video.created_at).toLocaleDateString()} - ${video.views.toLocaleString()} ${pluralize(
-              'views',
-              video.views
-            )}`,
-            thumbnail: video.preview.small,
-            title: video.title,
-            type: type as VideoType,
-            url: video.url,
-          }))
+        const parsedVideos = _.map(videos, (video) => ({
+          id: video._id,
+          meta: `${new Date(video.created_at).toLocaleDateString()} - ${video.views.toLocaleString()} ${pluralize(
+            'views',
+            video.views
+          )}`,
+          thumbnail: video.preview.small,
+          title: video.title,
+          type: type as VideoType,
+          url: video.url,
+        }))
 
-          this.setState(() => ({ didFail: false, videos: parsedVideos }))
-        } else if (type === ChannelDetailsType.TopClips || type === ChannelDetailsType.RecentClips) {
-          const period = type === ChannelDetailsType.TopClips ? ClipPeriod.All : ClipPeriod.Week
+        this.setState(() => ({ didFail: false, videos: parsedVideos }))
+      } else if (type === ChannelDetailsType.TopClips || type === ChannelDetailsType.RecentClips) {
+        const period = type === ChannelDetailsType.TopClips ? ClipPeriod.All : ClipPeriod.Week
 
-          const { clips } = await Twitch.fetchTopClips(channel, period)
+        const { clips } = await Twitch.fetchTopClips(name, period)
 
-          const parsedVideos = _.map(clips, (clip) => ({
-            id: clip.slug,
-            meta: `${new Date(clip.created_at).toLocaleDateString()} - ${clip.views.toLocaleString()} ${pluralize(
-              'views',
-              clip.views
-            )} - ${clip.curator.display_name}`,
-            thumbnail: clip.thumbnails.small,
-            title: clip.title,
-            type: type as VideoType,
-            url: clip.url,
-          }))
+        const parsedVideos = _.map(clips, (clip) => ({
+          id: clip.slug,
+          meta: `${new Date(clip.created_at).toLocaleDateString()} - ${clip.views.toLocaleString()} ${pluralize(
+            'views',
+            clip.views
+          )} - ${clip.curator.display_name}`,
+          thumbnail: clip.thumbnails.small,
+          title: clip.title,
+          type: type as VideoType,
+          url: clip.url,
+        }))
 
-          this.setState(() => ({ didFail: false, videos: parsedVideos }))
-        } else {
-          this.setState(() => ({ didFail: true }))
-        }
-      } catch (error) {
+        this.setState(() => ({ didFail: false, videos: parsedVideos }))
+      } else {
         this.setState(() => ({ didFail: true }))
       }
-    } else {
+    } catch (error) {
       this.setState(() => ({ didFail: true }))
     }
   }
@@ -84,7 +80,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     const { didFail, videos } = this.state
 
     if (didFail) {
-      return <NonIdealState small title="Something went wrong!" details="Please try again in a few minutes." />
+      return <NonIdealState small retry />
     }
 
     if (_.isUndefined(videos)) {
@@ -92,7 +88,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     }
 
     if (_.isNil(videos) || _.size(videos) === 0) {
-      return <NonIdealState small title="Nothing yet!" details="Maybe try again in a while." />
+      return <NonIdealState small title="Nothing yet!" retry />
     }
 
     return (

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import BroadcasterInformations from 'Components/BroadcasterInformations'
-import BroadcasterLists from 'Components/BroadcasterLists'
+import BroadcasterResources from 'Components/BroadcasterResources'
 import BroadcasterStatistics from 'Components/BroadcasterStatistics'
 import BroadcasterTools from 'Components/BroadcasterTools'
 import Center from 'Components/Center'
@@ -76,12 +76,17 @@ const Content = styled.div`
 /**
  * Broadcaster overlay sections.
  */
-const BroadcasterOverlaySections = [BroadcasterInformations, BroadcasterTools, BroadcasterStatistics, BroadcasterLists]
+const BroadcasterOverlaySections = [
+  BroadcasterInformations,
+  BroadcasterTools,
+  BroadcasterStatistics,
+  BroadcasterResources,
+]
 
 /**
  * React State.
  */
-const initialState = { channel: undefined as RawChannel | null | undefined, didFail: false, ready: false }
+const initialState = { channel: undefined as RawChannel | null | undefined, didFail: false, isReady: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -110,9 +115,9 @@ class BroadcasterOverlay extends React.Component<Props, State> {
 
           const channel = await Twitch.fetchChannel(channelId)
 
-          this.setState(() => ({ channel, didFail: false, ready: true }))
+          this.setState(() => ({ channel, didFail: false, isReady: true }))
         } catch (error) {
-          this.setState(() => ({ didFail: true, ready: true }))
+          this.setState(() => ({ didFail: true, isReady: true }))
         }
       }
     }
@@ -139,14 +144,14 @@ class BroadcasterOverlay extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderContent() {
-    const { channel, didFail, ready } = this.state
+    const { channel, didFail, isReady } = this.state
     const { channelId, unhost } = this.props
 
     if (didFail) {
-      return <NonIdealState title="Something went wrong!" details="Please try again in a few minutes." />
+      return <NonIdealState retry />
     }
 
-    if (!ready || _.isNil(channel) || _.isNil(channelId)) {
+    if (!isReady || _.isNil(channel) || _.isNil(channelId)) {
       return (
         <Center>
           <Spinner large />

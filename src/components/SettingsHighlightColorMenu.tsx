@@ -50,6 +50,13 @@ const ColorName = styled.div`
  */
 export default class SettingsHighlightColorMenu extends React.Component<Props> {
   /**
+   * React Default Props.
+   */
+  public static defaultProps = {
+    small: false,
+  }
+
+  /**
    * Renders the component.
    * @return Element to render.
    */
@@ -83,7 +90,7 @@ export default class SettingsHighlightColorMenu extends React.Component<Props> {
 type Props = {
   color: HighlightColors
   onSelect: (color: HighlightColors) => void
-  small?: boolean
+  small: boolean
 }
 
 /**

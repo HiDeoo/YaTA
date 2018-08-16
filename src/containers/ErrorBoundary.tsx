@@ -49,7 +49,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     const { hasError } = this.state
 
     if (hasError) {
-      return <NonIdealState title="Something went wrong!" details="Try reloading the application." />
+      return <NonIdealState details="Try reloading the application." />
     }
 
     return this.props.children

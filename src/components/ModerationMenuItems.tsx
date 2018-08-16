@@ -5,9 +5,9 @@ import * as React from 'react'
 import { SerializedRoomState } from 'Libs/RoomState'
 
 /**
- * HeaderModerationMenuItems Component.
+ * ModerationMenuItems Component.
  */
-export default class HeaderModerationMenuItems extends React.Component<Props> {
+export default class ModerationMenuItems extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

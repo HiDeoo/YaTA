@@ -33,11 +33,17 @@ const Shrug = styled.div<SizeProps>`
 /**
  * NonIdealState Component.
  */
-const NonIdealState: React.SFC<Props> = ({ details, small, title }) => (
-  <Wrapper small={!!small}>
-    <Shrug small={!!small}>¯\_(ツ)_/¯</Shrug>
+const NonIdealState: React.SFC<Props> = ({
+  details,
+  retry = false,
+  small = false,
+  title = 'Something went wrong!',
+}: Props) => (
+  <Wrapper small={small}>
+    <Shrug small={small}>¯\_(ツ)_/¯</Shrug>
     {!_.isNil(title) && <H1>{title}</H1>}
-    {!_.isNil(details) && <p>{details}</p>}
+    {retry && <p>Maybe try again in a few moments.</p>}
+    {!retry && !_.isNil(details) && <p>{details}</p>}
   </Wrapper>
 )
 
@@ -48,6 +54,7 @@ export default NonIdealState
  */
 type Props = {
   details?: string | JSX.Element
+  retry?: boolean
   small?: boolean
   title?: string
 }

@@ -31,7 +31,7 @@ export default class HighlightColorMenuItem extends React.Component<Props> {
     return (
       <Menu.Item
         text={highlightColor}
-        icon={selected === true ? 'tick' : 'blank'}
+        icon={selected ? 'tick' : 'blank'}
         onClick={this.onClick}
         labelElement={<ColorPreview highlightColor={highlightColor} />}
       />
@@ -54,7 +54,7 @@ export default class HighlightColorMenuItem extends React.Component<Props> {
 type Props = {
   color: HighlightColors
   onClick: (color: HighlightColors) => void
-  selected?: boolean
+  selected: boolean
 }
 
 /**

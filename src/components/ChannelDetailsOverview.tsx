@@ -136,17 +136,13 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
   public async componentDidMount() {
     const { id } = this.props
 
-    if (!_.isNil(id)) {
-      try {
-        const response = await Promise.all([Twitch.fetchStream(id), Twitch.fetchRelationship(id)])
+    try {
+      const response = await Promise.all([Twitch.fetchStream(id), Twitch.fetchRelationship(id)])
 
-        const [{ stream }, relationship] = response
+      const [{ stream }, relationship] = response
 
-        this.setState(() => ({ didFail: false, stream, relationship }))
-      } catch (error) {
-        this.setState(() => ({ didFail: true }))
-      }
-    } else {
+      this.setState(() => ({ didFail: false, stream, relationship }))
+    } catch (error) {
       this.setState(() => ({ didFail: true }))
     }
   }
@@ -159,7 +155,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
     const { didFail, stream } = this.state
 
     if (didFail) {
-      return <NonIdealState small title="Something went wrong!" details="Please try again in a few minutes." />
+      return <NonIdealState small retry />
     }
 
     if (_.isUndefined(stream)) {
@@ -190,10 +186,9 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * @return Element to render.
    */
   private renderStream() {
-    const { channel } = this.props
     const { relationship, stream } = this.state
 
-    if (_.isNil(stream) || _.isNil(channel)) {
+    if (_.isNil(stream)) {
       return <NonIdealState small title="Currently offline!" />
     }
 
@@ -227,11 +222,11 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * @param type - The panel type.
    */
   private showPanel = (type: ChannelDetailsType) => {
-    const { channel, id } = this.props
+    const { id, name } = this.props
 
     const panel: IPanel<any> = {
       component: ChannelDetailsPanels[type].component,
-      props: { channel, id, type },
+      props: { id, name, type },
       title: type,
     }
 
@@ -243,7 +238,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    */
   private onClickPreview = () => {
     window.open(
-      `https://player.twitch.tv/?muted&channel=${this.props.channel}`,
+      `https://player.twitch.tv/?muted&channel=${this.props.name}`,
       'videoPopupWindow',
       'height=360,width=600'
     )

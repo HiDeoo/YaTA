@@ -15,15 +15,13 @@ const ReasonInput = styled(InputGroup)`
 /**
  * React State.
  */
-const initialState = {
-  reason: '',
-}
+const initialState = { reason: '' }
 type State = Readonly<typeof initialState>
 
 /**
- * BanReason Component.
+ * ReasonDialog Component.
  */
-export default class BanReason extends React.Component<Props, State> {
+export default class ReasonDialog extends React.Component<Props, State> {
   public state: State = initialState
   private reason: HTMLInputElement | null = null
 
@@ -32,9 +30,6 @@ export default class BanReason extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { visible } = this.props
-    const { reason } = this.state
-
     return (
       <Alert
         onConfirm={this.confirmBanReason}
@@ -43,7 +38,7 @@ export default class BanReason extends React.Component<Props, State> {
         confirmButtonText="Ban"
         intent={Intent.DANGER}
         onOpened={this.focus}
-        isOpen={visible}
+        isOpen={this.props.visible}
         icon="disable"
       >
         <ReasonInput
@@ -51,7 +46,7 @@ export default class BanReason extends React.Component<Props, State> {
           onKeyDown={this.onKeyDownReason}
           onChange={this.onChangeReason}
           placeholder="Ban reason…"
-          value={reason}
+          value={this.state.reason}
           large
         />
       </Alert>

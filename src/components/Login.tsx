@@ -93,7 +93,7 @@ const Permissions = styled.ul`
 /**
  * Login Component.
  */
-const Login: React.SFC = () => (
+export default () => (
   <Wrapper vertical>
     <LoginWrapper>
       <AnchorButton
@@ -124,5 +124,3 @@ const Login: React.SFC = () => (
     </PreviewWrapper>
   </Wrapper>
 )
-
-export default Login

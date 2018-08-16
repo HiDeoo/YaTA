@@ -46,6 +46,13 @@ const Username = styled.span`
  */
 export default class HeadlessMessage extends React.Component<Props> {
   /**
+   * React Default Props.
+   */
+  public static defaultProps = {
+    showUsername: false,
+  }
+
+  /**
    * Renders the component.
    * @return Element to render.
    */
@@ -89,7 +96,7 @@ export default class HeadlessMessage extends React.Component<Props> {
 type Props = {
   message: SerializedMessage
   onDoubleClick: (message: SerializedMessage) => void
-  showUsername?: boolean
+  showUsername: boolean
   style: React.CSSProperties
 }
 

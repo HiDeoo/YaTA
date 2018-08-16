@@ -50,7 +50,7 @@ const Divider = styled.hr`
 /**
  * BroadcasterSection Component.
  */
-const BroadcasterSection: React.SFC<Props> = ({ children, ready, title }) => (
+const BroadcasterSection: React.SFC<Props> = ({ children, ready = true, title }) => (
   <>
     <Wrapper>
       <Title>{title}</Title>
@@ -74,6 +74,6 @@ export default BroadcasterSection
  * React Props.
  */
 type Props = {
-  ready: boolean
+  ready?: boolean
   title: string
 }

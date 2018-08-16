@@ -4,12 +4,12 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 
-import ActionRow from 'Components/Action'
 import ActionTypeMenuItem from 'Components/ActionTypeMenuItem'
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Help from 'Components/Help'
 import NonIdealState from 'Components/NonIdealState'
+import SettingsAction from 'Components/SettingsAction'
 import SettingsInput from 'Components/SettingsInput'
 import SettingsPanel from 'Components/SettingsPanel'
 import Action, { ActionPlaceholder, ActionType } from 'Libs/Action'
@@ -150,15 +150,15 @@ class SettingsActions extends React.Component<Props, State> {
         <Actions>
           {actions.length > 0 ? (
             _.map(actions, (action, index) => (
-              <ActionRow
+              <SettingsAction
+                canMoveDown={actions.length > 1 && index < actions.length - 1}
+                canMoveUp={actions.length > 1 && index > 0}
                 remove={this.props.removeAction}
                 move={this.props.moveAction}
-                count={actions.length}
-                editing={editing}
+                isEditing={editing}
                 edit={this.edit}
                 action={action}
                 key={action.id}
-                index={index}
               />
             ))
           ) : (
