@@ -69,11 +69,11 @@ const ProxyURL = 'https://cors-anywhere.herokuapp.com/'
 export default class Twitch {
   /**
    * Sets the Twitch token and user id to use for authenticated calls.
-   * @param id - The user id or null to invalidate.
+   * @param userId - The user id or null to invalidate.
    * @param token - The token or null to invalidate.
    */
-  public static setAuthDetails(id: string | null, token: string | null = null) {
-    Twitch.userId = id
+  public static setAuthDetails(userId: string | null, token: string | null = null) {
+    Twitch.userId = userId
     Twitch.token = token
   }
 
@@ -189,6 +189,7 @@ export default class Twitch {
 
   /**
    * Fetches Twitch badges.
+   * @param channelId - The id of the channel.
    * @return The badges.
    */
   public static async fetchBadges(channelId: string): Promise<RawBadges> {
@@ -204,50 +205,57 @@ export default class Twitch {
 
   /**
    * Fetches details about a specific user.
-   * @param  id - The user id.
+   * @param  userId - The user id.
    * @return The user details.
    */
-  public static async fetchUser(id: string): Promise<RawUser> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${id}`)
+  public static async fetchUser(userId: string): Promise<RawUser> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${userId}`)
 
     return response.json()
   }
 
   /**
    * Fetches details about a channel.
-   * @param  id - The channel id.
+   * @param  channelId - The channel id.
    * @return The channel details.
    */
-  public static async fetchChannel(id: string): Promise<RawChannel> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`)
+  public static async fetchChannel(channelId: string): Promise<RawChannel> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}`)
 
     return response.json()
   }
 
   /**
    * Updates a channel.
-   * @param  id - The id of the channel to update.
+   * @param  channelId - The id of the channel to update.
    * @param  title - The channel status / title.
    * @param  game - The channel game.
    * @return The updated channel.
    */
-  public static async updateChannel(id: string, title: string, game: string): Promise<RawChannel> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}`, undefined, true, RequestMethod.Put, {
-      channel: { game, status: title },
-    })
+  public static async updateChannel(channelId: string, title: string, game: string): Promise<RawChannel> {
+    const response = await Twitch.fetch(
+      TwitchApi.Kraken,
+      `/channels/${channelId}`,
+      undefined,
+      true,
+      RequestMethod.Put,
+      {
+        channel: { game, status: title },
+      }
+    )
 
     return response.json()
   }
 
   /**
    * Starts a commercial on a channel.
-   * @param id - The id of the channel.
+   * @param channelId - The id of the channel.
    * @param duration - The commercial duration.
    */
-  public static async startCommercial(id: string, duration: CommercialDuration) {
+  public static async startCommercial(channelId: string, duration: CommercialDuration) {
     const response = await Twitch.fetch(
       TwitchApi.Kraken,
-      `/channels/${id}/commercial`,
+      `/channels/${channelId}/commercial`,
       undefined,
       true,
       RequestMethod.Post,
@@ -261,13 +269,13 @@ export default class Twitch {
 
   /**
    * Fetches a channel live notification.
-   * @param  id - The id of the channel.
+   * @param  channelId - The id of the channel.
    * @return The channel live notification.
    */
-  public static async fetchChannelLiveNotification(id: string): Promise<RawNotification> {
+  public static async fetchChannelLiveNotification(channelId: string): Promise<RawNotification> {
     const response = await Twitch.fetch(
       TwitchApi.Kraken,
-      `/users/${id}/notifications/custom`,
+      `/users/${channelId}/notifications/custom`,
       { notification_type: 'streamup' },
       true,
       RequestMethod.Get
@@ -298,11 +306,11 @@ export default class Twitch {
 
   /**
    * Fetches channel communities.
-   * @param  id - The id of the channel.
+   * @param  channelId - The id of the channel.
    * @return The communities.
    */
-  public static async fetchCommunities(id: string): Promise<RawCommunities> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}/communities`)
+  public static async fetchCommunities(channelId: string): Promise<RawCommunities> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}/communities`)
 
     return response.json()
   }
@@ -333,42 +341,46 @@ export default class Twitch {
 
   /**
    * Fetches details about a stream.
-   * @param  id - The channel id.
+   * @param  channelId - The channel id.
    * @return The stream details.
    */
-  public static async fetchStream(id: string): Promise<{ stream: RawStream | null }> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/streams/${id}`)
+  public static async fetchStream(channelId: string): Promise<{ stream: RawStream | null }> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/streams/${channelId}`)
 
     return response.json()
   }
 
   /**
    * Fetches videos for a channel.
-   * @param  id - The channel id.
+   * @param  channelId - The channel id.
    * @param  [limit=10] - Number of videos to return.
    * @param  [type=BroadcastType.Archive] - Type of videos to return.
    * @return The channel videos.
    */
-  public static async fetchChannelVideos(id: string, limit = 10, type = BroadcastType.Archive): Promise<RawVideos> {
+  public static async fetchChannelVideos(
+    channelId: string,
+    limit = 10,
+    type = BroadcastType.Archive
+  ): Promise<RawVideos> {
     const params = {
       broadcast_type: type,
       limit: limit.toString(),
     }
 
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${id}/videos`, params)
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}/videos`, params)
 
     return response.json()
   }
 
   /**
    * Creates a clip.
-   * @param  id - The channel id.
+   * @param  channelId - The channel id.
    * @param  [withDelay=false] - Add a delay before capturing the clip.
    * @return The new clip details.
    */
-  public static async createClip(id: string, withDelay = false): Promise<RawNewClips> {
+  public static async createClip(channelId: string, withDelay = false): Promise<RawNewClips> {
     const params = {
-      broadcaster_id: id,
+      broadcaster_id: channelId,
       has_delay: withDelay.toString(),
     }
 
@@ -400,11 +412,11 @@ export default class Twitch {
 
   /**
    * Fetches details about a video.
-   * @param  id - The video id.
+   * @param  videoId - The video id.
    * @return The video details.
    */
-  public static async fetchVideo(id: string): Promise<RawVideo> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/videos/${id}`)
+  public static async fetchVideo(videoId: string): Promise<RawVideo> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, `/videos/${videoId}`)
 
     return response.json()
   }
@@ -478,17 +490,17 @@ export default class Twitch {
 
   /**
    * Fetches the follow relationship between the current user and another user.
-   * @param  id - The target user id.
+   * @param  targetId - The target user id.
    * @return The follow relationship if any.
    */
-  public static async fetchRelationship(id: string) {
+  public static async fetchRelationship(targetId: string) {
     if (_.isNil(Twitch.userId)) {
       throw new Error('Missing source user id for relationship fetching.')
     }
 
     const params = {
       from_id: Twitch.userId,
-      to_id: id,
+      to_id: targetId,
     }
 
     const response = await Twitch.fetch(TwitchApi.Helix, '/users/follows', params)
