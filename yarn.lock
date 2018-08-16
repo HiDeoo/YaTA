@@ -87,22 +87,7 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@blueprintjs/core@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.2.0.tgz#bdc783d84713de499f3e095c0560ffa37f3d19b5"
-  dependencies:
-    "@blueprintjs/icons" "^3.0.0"
-    "@types/dom4" "^2.0.0"
-    classnames "^2.2"
-    dom4 "^2.0.1"
-    normalize.css "^8.0.0"
-    popper.js "^1.14.1"
-    react-popper "^1.0.0"
-    react-transition-group "^2.2.1"
-    resize-observer-polyfill "^1.5.0"
-    tslib "^1.9.0"
-
-"@blueprintjs/core@^3.1.0":
+"@blueprintjs/core@3.3.0", "@blueprintjs/core@^3.1.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.3.0.tgz#6fc5c7d811d1c0693c0c3d7a472549e171c455db"
   dependencies:
@@ -205,9 +190,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@16.0.6":
-  version "16.0.6"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
+"@types/react-dom@16.0.7":
+  version "16.0.7"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.0.7.tgz#54d0f867a76b90597e8432030d297982f25c20ba"
   dependencies:
     "@types/node" "*"
     "@types/react" "*"
@@ -240,15 +225,15 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-tooltip@3.3.5":
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/@types/react-tooltip/-/react-tooltip-3.3.5.tgz#7b1b16ce00d76436328106a6ca7c4ad60de525d6"
+"@types/react-tooltip@3.3.6":
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/@types/react-tooltip/-/react-tooltip-3.3.6.tgz#c9b0dbfc981e9543a6ab94a9ab495513460393fd"
   dependencies:
     "@types/react" "*"
 
-"@types/react-transition-group@2.0.12":
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.12.tgz#ee2dc2abe8930d888ea3d88d759518f739b740c9"
+"@types/react-transition-group@2.0.13":
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-2.0.13.tgz#7769fb61eb71d64d087a713956f086a42c3ee171"
   dependencies:
     "@types/react" "*"
 
@@ -266,9 +251,9 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/recompose@0.26.3":
-  version "0.26.3"
-  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.26.3.tgz#85e00e7adc403d7835d581ee53988b932c28cabf"
+"@types/recompose@0.26.4":
+  version "0.26.4"
+  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.26.4.tgz#93dd6c4e28857cd799e9a807a470f66a40c49c3f"
   dependencies:
     "@types/react" "*"
 
@@ -284,9 +269,9 @@
   version "1.13.6"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.13.6.tgz#128d1685a7c34d31ed17010fc87d6a12c1de6976"
 
-"@zeit/schemas@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-1.7.0.tgz#84624e270a0d420714be7279ffabc7e1745afc1a"
+"@zeit/schemas@2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.1.1.tgz#bca9d84df177c85f2d2a7dad37512f384761b23d"
 
 abab@^1.0.4:
   version "1.0.4"
@@ -426,10 +411,6 @@ anymatch@^2.0.0:
   dependencies:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
-
-app-root-path@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/app-root-path/-/app-root-path-2.1.0.tgz#98bf6599327ecea199309866e8140368fd2e646a"
 
 append-transform@^1.0.0:
   version "1.0.0"
@@ -4691,7 +4672,7 @@ jest-validate@^22.4.4:
     leven "^2.1.0"
     pretty-format "^22.4.0"
 
-jest-validate@^23.0.0:
+jest-validate@^23.5.0:
   version "23.5.0"
   resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-23.5.0.tgz#f5df8f761cf43155e1b2e21d6e9de8a2852d0231"
   dependencies:
@@ -4944,11 +4925,10 @@ linkifyjs@2.1.6:
     react "^16.2.0"
     react-dom "^16.2.0"
 
-lint-staged@7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-7.2.0.tgz#bdf4bb7f2f37fe689acfaec9999db288a5b26888"
+lint-staged@7.2.2:
+  version "7.2.2"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-7.2.2.tgz#0983d55d497f19f36d11ff2c8242b2f56cc2dd05"
   dependencies:
-    app-root-path "^2.0.1"
     chalk "^2.3.1"
     commander "^2.14.1"
     cosmiconfig "^5.0.2"
@@ -4958,7 +4938,7 @@ lint-staged@7.2.0:
     find-parent-dir "^0.3.0"
     is-glob "^4.0.0"
     is-windows "^1.0.2"
-    jest-validate "^23.0.0"
+    jest-validate "^23.5.0"
     listr "^0.14.1"
     lodash "^4.17.5"
     log-symbols "^2.2.0"
@@ -5782,9 +5762,9 @@ normalize.css@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.0.tgz#14ac5e461612538a4ce9be90a7da23f86e718493"
 
-now@11.3.8:
-  version "11.3.8"
-  resolved "https://registry.yarnpkg.com/now/-/now-11.3.8.tgz#8a92eda141c665b5a909579bdfe56e97ce64ed24"
+now@11.3.10:
+  version "11.3.10"
+  resolved "https://registry.yarnpkg.com/now/-/now-11.3.10.tgz#ec0512d4ff53a8b9529eb3ac07e16ce2cffe2ac7"
 
 npm-bundled@^1.0.1:
   version "1.0.5"
@@ -5920,17 +5900,13 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-open@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/open/-/open-0.0.5.tgz#42c3e18ec95466b6bf0dc42f3a2945c3f0cad8fc"
-
 opn@5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.2.0.tgz#71fdf934d6827d676cecbea1531f95d354641225"
   dependencies:
     is-wsl "^1.1.0"
 
-opn@^5.1.0:
+opn@^5.1.0, opn@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.3.0.tgz#64871565c863875f052cfdf53d3e3cb5adb53b1c"
   dependencies:
@@ -6634,11 +6610,7 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@1.14.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.0.tgz#847c235522035fd988100f1f43cf20a7d24f9372"
-
-prettier@^1.7.4:
+prettier@1.14.2, prettier@^1.7.4:
   version "1.14.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
 
@@ -6820,7 +6792,7 @@ randomfill@^1.0.3:
     randombytes "^2.0.5"
     safe-buffer "^5.1.0"
 
-range-parser@^1.0.3, range-parser@~1.2.0:
+range-parser@1.2.0, range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
@@ -6940,9 +6912,9 @@ react-router@^4.3.1:
     prop-types "^15.6.1"
     warning "^4.0.1"
 
-react-scripts-ts@2.16.0:
-  version "2.16.0"
-  resolved "https://registry.yarnpkg.com/react-scripts-ts/-/react-scripts-ts-2.16.0.tgz#45f831a12139c3b59d6bb729c1b6ef51e0f22908"
+react-scripts-ts@2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/react-scripts-ts/-/react-scripts-ts-2.17.0.tgz#398bae19a30c9b39b3dfe0720ebb40c60c2f6574"
   dependencies:
     autoprefixer "7.1.6"
     babel-jest "^22.1.0"
@@ -7600,9 +7572,9 @@ serialize-javascript@^1.4.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.5.0.tgz#1aa336162c88a890ddad5384baebc93a655161fe"
 
-serve-handler@3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/serve-handler/-/serve-handler-3.6.0.tgz#f4167c06d0a26c38ed753418230ed43a59adf9cb"
+serve-handler@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/serve-handler/-/serve-handler-4.0.0.tgz#cf2a40f27f7a5ec29cbbd1732fcd6a16afdc0c41"
   dependencies:
     bytes "3.0.0"
     content-disposition "0.5.2"
@@ -7612,6 +7584,7 @@ serve-handler@3.6.0:
     minimatch "3.0.4"
     path-is-inside "1.0.2"
     path-to-regexp "2.2.1"
+    range-parser "1.2.0"
 
 serve-index@^1.7.2:
   version "1.9.1"
@@ -7634,17 +7607,17 @@ serve-static@1.13.2:
     parseurl "~1.3.2"
     send "0.16.2"
 
-serve@9.4.0:
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/serve/-/serve-9.4.0.tgz#d04c988e9df908e053b92c1e22148c139224140f"
+serve@9.6.0:
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/serve/-/serve-9.6.0.tgz#303f198c03ad2d47eb90972447c7bd5878a4c7ac"
   dependencies:
-    "@zeit/schemas" "1.7.0"
+    "@zeit/schemas" "2.1.1"
     ajv "6.5.2"
     arg "2.0.0"
     boxen "1.3.0"
     chalk "2.4.1"
     clipboardy "1.2.3"
-    serve-handler "3.6.0"
+    serve-handler "4.0.0"
     update-check "1.5.2"
 
 serviceworker-cache-polyfill@^4.0.0:
@@ -7723,9 +7696,9 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
 
-shortid@2.2.12:
-  version "2.2.12"
-  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.12.tgz#8e9a95ffbc671fff8f09e985dbc7874102b0cfd2"
+shortid@2.2.13:
+  version "2.2.13"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.13.tgz#b2441e71c664ace458a341d343959f677910ef5b"
   dependencies:
     nanoid "^1.0.7"
 
@@ -7802,15 +7775,15 @@ source-list-map@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.0.tgz#aaa47403f7b245a92fbc97ea08f250d6087ed085"
 
-source-map-explorer@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-1.5.0.tgz#654e2ba0db158fecfc99b9cefdf891b755b767d1"
+source-map-explorer@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-1.6.0.tgz#46d6de167b7aff1c4f14d0ee3b6c8beca186f075"
   dependencies:
     btoa "^1.1.2"
     convert-source-map "^1.1.1"
     docopt "^0.6.2"
     glob "^7.1.2"
-    open "0.0.5"
+    opn "^5.3.0"
     source-map "^0.5.1"
     temp "^0.8.3"
     underscore "^1.8.3"
@@ -8110,15 +8083,14 @@ style-search@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/style-search/-/style-search-0.1.0.tgz#7958c793e47e32e07d2b5cafe5c0bf8e12e77902"
 
-styled-components@3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.3.3.tgz#09e702055ab11f7a8eab8229b1c0d0b855095686"
+styled-components@3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.4.2.tgz#8f518419932327e47fe9144824e3184b3e2da95d"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
     fbjs "^0.8.16"
     hoist-non-react-statics "^2.5.0"
-    is-plain-object "^2.0.1"
     prop-types "^15.5.4"
     react-is "^16.3.1"
     stylis "^3.5.0"
