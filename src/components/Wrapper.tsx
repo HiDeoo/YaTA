@@ -32,6 +32,6 @@ export default Wrapper
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   storeConfiguration: StoreConfiguration
 }

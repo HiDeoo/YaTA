@@ -910,7 +910,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
@@ -931,7 +931,7 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   addLog: typeof addLog
   addChatter: typeof addChatter
   addPotentialChatter: typeof addPotentialChatter

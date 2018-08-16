@@ -131,6 +131,6 @@ export default class Preview extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   preview: UnresolvedPreview | ResolvedPreview
 }

@@ -349,14 +349,14 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   actions: ReturnType<typeof getActions>
 }
 
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   addAction: typeof addAction
   moveAction: typeof moveAction
   removeAction: typeof removeAction

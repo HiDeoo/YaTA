@@ -234,7 +234,7 @@ export default class Logs extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   actionHandler: ActionHandler
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
@@ -257,6 +257,6 @@ type Props = {
 /**
  * React Props.
  */
-type WrapperProps = {
+interface WrapperProps {
   pauseAutoScroll: boolean
 }

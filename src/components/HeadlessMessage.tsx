@@ -93,7 +93,7 @@ export default class HeadlessMessage extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   message: SerializedMessage
   onDoubleClick: (message: SerializedMessage) => void
   showUsername: boolean
@@ -103,6 +103,6 @@ type Props = {
 /**
  * React Props.
  */
-type NameProps = {
+interface NameProps {
   color: string
 }

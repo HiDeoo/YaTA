@@ -96,6 +96,6 @@ export default class ChannelDetailsVideo extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   video: Video
 }

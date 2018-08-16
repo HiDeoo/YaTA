@@ -419,14 +419,14 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   sets: ReturnType<typeof getEmotesSets>
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps {
   onCancel: () => void
   onPick: (emote: Emote, withShiftKey: boolean) => void
 }
@@ -439,6 +439,6 @@ type Props = StateProps & OwnProps
 /**
  * React Props.
  */
-type EmotePickerButtonProps = {
+interface EmotePickerButtonProps {
   isOpen: boolean
 }

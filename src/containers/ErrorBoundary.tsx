@@ -64,14 +64,14 @@ export default connect<{}, DispatchProps, OwnProps, ApplicationState>(
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   resetUser: typeof resetUser
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps {
   children: React.ReactNode
 }
 

@@ -53,7 +53,7 @@ export default class Marker extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   marker: SerializedMarker
   style: React.CSSProperties
 }

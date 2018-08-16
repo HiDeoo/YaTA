@@ -218,7 +218,7 @@ export default class Header extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   goHome: (event: React.MouseEvent<HTMLElement>) => void
   highlightChangelog: boolean
   isLoggedIn: boolean
@@ -233,7 +233,7 @@ type Props = {
 /**
  * React Props.
  */
-export type WithHeaderProps = {
+export interface WithHeaderProps {
   setHeaderRightComponent: HeaderConfiguration['setRightComponent']
   setHeaderTitleComponent: HeaderConfiguration['setTitleComponent']
 }

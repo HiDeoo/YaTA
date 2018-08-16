@@ -59,14 +59,14 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   actions: ReturnType<typeof getActions>
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps {
   actionHandler: ActionHandler
   chatter?: SerializedChatter
   endDivider?: boolean

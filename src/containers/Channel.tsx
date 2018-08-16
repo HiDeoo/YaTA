@@ -24,6 +24,7 @@ import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
+import { ToggleableUI } from 'Constants/toggleable'
 import BroadcasterOverlay from 'Containers/BroadcasterOverlay'
 import Chat, { ChatClient } from 'Containers/Chat'
 import ChatterDetails from 'Containers/ChatterDetails'
@@ -102,12 +103,12 @@ const initialState = {
   focusedChatter: null as SerializedChatter | null,
   inputValue: '',
   isUploadingFile: false,
-  showBroadcasterOverlay: false,
-  showChatters: false,
-  showFollowOmnibar: false,
-  showPollEditor: false,
-  showSearch: false,
   viewerCount: null as number | null,
+  [ToggleableUI.BroadcasterOverlay]: false,
+  [ToggleableUI.Chatters]: false,
+  [ToggleableUI.FollowOmnibar]: false,
+  [ToggleableUI.PollEditor]: false,
+  [ToggleableUI.Search]: false,
 }
 type State = Readonly<typeof initialState>
 
@@ -196,11 +197,11 @@ class Channel extends React.Component<Props, State> {
     const {
       focusedChatter,
       isUploadingFile,
-      showBroadcasterOverlay,
-      showChatters,
-      showFollowOmnibar,
-      showPollEditor,
-      showSearch,
+      [ToggleableUI.BroadcasterOverlay]: showBroadcasterOverlay,
+      [ToggleableUI.Chatters]: showChatters,
+      [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
+      [ToggleableUI.PollEditor]: showPollEditor,
+      [ToggleableUI.Search]: showSearch,
     } = this.state
     const { allLogs, channel, chatters, copyMessageOnDoubleClick, loginDetails, showContextMenu } = this.props
 
@@ -1253,7 +1254,7 @@ export default enhance(Channel)
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   allLogs: ReturnType<typeof getLogs>
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   channel: ReturnType<typeof getChannel>
@@ -1276,7 +1277,7 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   addLog: typeof addLog
   addMarker: typeof addMarker
   addToHistory: typeof addToHistory
@@ -1300,15 +1301,3 @@ interface OwnProps extends WithHeaderProps {
  * React Props.
  */
 type Props = StateProps & DispatchProps & OwnProps
-
-/**
- * List of toggleable UIs with visibility controlled in the state.
- * Note: The string value is the state property controlling the visibility.
- */
-enum ToggleableUI {
-  BroadcasterOverlay = 'showBroadcasterOverlay',
-  Chatters = 'showChatters',
-  FollowOmnibar = 'showFollowOmnibar',
-  PollEditor = 'showPollEditor',
-  Search = 'showSearch',
-}

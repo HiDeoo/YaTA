@@ -48,7 +48,7 @@ export default class Notice extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   notice: SerializedNotice
   style: React.CSSProperties
 }

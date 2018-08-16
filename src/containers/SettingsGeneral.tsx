@@ -318,7 +318,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
@@ -337,7 +337,7 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations

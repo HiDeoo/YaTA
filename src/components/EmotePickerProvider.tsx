@@ -65,7 +65,7 @@ export default class EmotePickerProvider extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   icon: string
   onClick: (prefix: EmoteProviderPrefix) => void
   prefix: EmoteProviderPrefix
@@ -75,6 +75,6 @@ type Props = {
 /**
  * React Props.
  */
-type WrapperProps = {
+interface WrapperProps {
   selected: boolean
 }

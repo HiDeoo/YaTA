@@ -134,7 +134,7 @@ export default connect<{}, DispatchProps, {}, ApplicationState>(
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
 }

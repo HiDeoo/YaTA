@@ -57,7 +57,7 @@ export default class ChannelDetailsPanelButton extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   onClick: (type: ChannelDetailsType) => void
   panel: ChannelDetailsPanel
   type: ChannelDetailsType

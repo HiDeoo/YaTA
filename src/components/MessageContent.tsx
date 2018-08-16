@@ -86,13 +86,13 @@ export default MessageContent
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   message: SerializedMessage
 }
 
 /**
  * React Props.
  */
-type MessageProps = {
+interface MessageProps {
   color: string
 }

@@ -16,6 +16,7 @@ import Login from 'Components/Login'
 import Settings, { SettingsTab } from 'Components/Settings'
 import Page from 'Constants/page'
 import Theme from 'Constants/theme'
+import { ToggleableUI } from 'Constants/toggleable'
 import Auth from 'Containers/Auth'
 import Channel from 'Containers/Channel'
 import Twitch from 'Libs/Twitch'
@@ -35,7 +36,7 @@ import light from 'Styled/light'
 const initialState = {
   headerConfiguration: defaultHeaderConfiguration,
   settingSelectedTab: SettingsTab.General,
-  showSettings: false,
+  [ToggleableUI.Settings]: false,
 }
 type State = Readonly<typeof initialState>
 
@@ -106,7 +107,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
-    const { showSettings, settingSelectedTab } = this.state
+    const { settingSelectedTab, [ToggleableUI.Settings]: showSettings } = this.state
     const { pathname } = location
 
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
@@ -177,9 +178,9 @@ class App extends React.Component<Props, State> {
    * Toggles the settings panel.
    */
   private toggleSettings = () => {
-    this.setState(({ showSettings }) => ({
+    this.setState(({ [ToggleableUI.Settings]: showSettings }) => ({
       settingSelectedTab: SettingsTab.General,
-      showSettings: !showSettings,
+      [ToggleableUI.Settings]: !showSettings,
     }))
   }
 
@@ -187,9 +188,9 @@ class App extends React.Component<Props, State> {
    * Toggles the changelog panel.
    */
   private toggleChangelog = () => {
-    this.setState(({ showSettings }) => ({
+    this.setState(({ [ToggleableUI.Settings]: showSettings }) => ({
       settingSelectedTab: SettingsTab.Changelog,
-      showSettings: !showSettings,
+      [ToggleableUI.Settings]: !showSettings,
     }))
   }
 
@@ -267,7 +268,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: ReturnType<typeof getLastKnownVersion>
   loginDetails: ReturnType<typeof getLoginDetails>
@@ -279,7 +280,7 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   resetUser: typeof resetUser
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
@@ -288,7 +289,7 @@ type DispatchProps = {
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps {
   history: History
   location: Location
 }

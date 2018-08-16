@@ -32,7 +32,7 @@ export default class ActionMenuItem extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   action: SerializedAction
   chatter?: SerializedChatter
   handler: ActionHandler

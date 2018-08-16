@@ -30,7 +30,7 @@ export default ChannelDetails
 /**
  * React Props.
  */
-export type ChannelDetailsProps = {
+export interface ChannelDetailsProps {
   id: string
   name: string
 }

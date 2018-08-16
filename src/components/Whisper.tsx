@@ -88,7 +88,7 @@ export default class Whisper extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   style: React.CSSProperties
@@ -98,6 +98,6 @@ type Props = {
 /**
  * React Props.
  */
-type UsernameProps = {
+interface UsernameProps {
   color: string
 }

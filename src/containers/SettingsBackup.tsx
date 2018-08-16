@@ -140,7 +140,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   notes: ReturnType<typeof getNotesBackup>
   settings: ReturnType<typeof getSettingsBackup>
 }
@@ -148,7 +148,7 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   restoreNotes: typeof restoreNotes
   restoreSettings: typeof restoreSettings
 }

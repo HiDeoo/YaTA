@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
+import { ToggleableProps } from 'Constants/toggleable'
 import Dialog from 'Containers/Dialog'
 import Twitch, { RawChatters } from 'Libs/Twitch'
 import base from 'Styled/base'
@@ -276,10 +277,8 @@ export default class Chatters extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props extends ToggleableProps {
   channel: string
-  toggle: () => void
-  visible: boolean
 }
 
 /**

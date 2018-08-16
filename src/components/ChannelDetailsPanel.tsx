@@ -14,6 +14,6 @@ export default styled.section<Props>`
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   minimal?: boolean
 }

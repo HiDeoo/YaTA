@@ -160,7 +160,7 @@ export default class HeaderChannelState extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   isAutoScrollPaused: boolean
   roomState: SerializedRoomState | null
   scrollToNewestLog: () => void
@@ -170,6 +170,6 @@ type Props = {
 /**
  * React Props.
  */
-type TwitchStateProps = {
+interface TwitchStateProps {
   unique: boolean
 }

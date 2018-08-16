@@ -386,7 +386,7 @@ export default class Input extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   disabled: boolean
   getCompletions: (word: string, excludeEmotes: boolean) => string[]
   getHistory: (previous?: boolean) => { entry: string | null; atStart: boolean }

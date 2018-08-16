@@ -76,7 +76,7 @@ export default class EmotePickerEmote extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   emote: Emote
   style: React.CSSProperties
   onClick: (emote: Emote, withShiftKey: boolean) => void

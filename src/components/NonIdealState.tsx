@@ -52,7 +52,7 @@ export default NonIdealState
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   details?: string | JSX.Element
   retry?: boolean
   small?: boolean
@@ -62,6 +62,6 @@ type Props = {
 /**
  * React Props.
  */
-type SizeProps = {
+interface SizeProps {
   small: boolean
 }

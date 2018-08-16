@@ -406,7 +406,7 @@ export default class Message extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   actionHandler: ActionHandler
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
@@ -428,7 +428,7 @@ type Props = {
 /**
  * React Props.
  */
-type WrapperProps = {
+interface WrapperProps {
   highlighted: boolean
   mentionned: boolean
   purged: boolean
@@ -437,6 +437,6 @@ type WrapperProps = {
 /**
  * React Props.
  */
-type NameProps = {
+interface NameProps {
   color: string
 }

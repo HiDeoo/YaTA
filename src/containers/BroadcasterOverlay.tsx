@@ -11,6 +11,7 @@ import BroadcasterTools from 'Components/BroadcasterTools'
 import Center from 'Components/Center'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
+import { ToggleableProps } from 'Constants/toggleable'
 import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { getChannelId } from 'Store/selectors/app'
@@ -191,17 +192,15 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   channelId: ReturnType<typeof getChannelId>
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
-  toggle: () => void
+interface OwnProps extends ToggleableProps {
   unhost: UnhostAction
-  visible: boolean
 }
 
 /**
@@ -217,7 +216,7 @@ type UnhostAction = () => void
 /**
  * Broadcaster section props automatically provided to each section.
  */
-export type BroadcasterSectionProps = {
+export interface BroadcasterSectionProps {
   channel: RawChannel
   channelId: string
 }

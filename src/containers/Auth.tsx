@@ -61,21 +61,21 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
 }
 
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   setTokens: typeof setTokens
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps {
   location: Location
 }
 

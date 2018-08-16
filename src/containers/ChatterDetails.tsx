@@ -19,6 +19,7 @@ import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
 import History from 'Components/History'
 import ReasonDialog from 'Components/ReasonDialog'
+import { ToggleableUI } from 'Constants/toggleable'
 import ActionMenuItems from 'Containers/ActionMenuItems'
 import Dialog from 'Containers/Dialog'
 import { ActionHandler, SerializedAction } from 'Libs/Action'
@@ -212,8 +213,8 @@ const initialState = {
   error: undefined as Error | undefined,
   isEditingNote: false,
   relationship: undefined as RawRelationship | null | undefined,
-  showBanReasonAlert: false,
   usernameHistory: [] as UsernameHistory,
+  [ToggleableUI.Reason]: false,
 }
 type State = Readonly<typeof initialState>
 
@@ -269,7 +270,7 @@ class ChatterDetails extends React.Component<Props, State> {
    */
   public render() {
     const { chatter, logs } = this.props
-    const { details, isEditingNote, showBanReasonAlert } = this.state
+    const { details, isEditingNote, [ToggleableUI.Reason]: showReasonDialog } = this.state
 
     if (_.isNil(chatter)) {
       return null
@@ -296,8 +297,8 @@ class ChatterDetails extends React.Component<Props, State> {
       >
         <ReasonDialog
           onConfirmBanReason={this.onConfirmBanReason}
-          toggle={this.toggleBanReasonAlert}
-          visible={showBanReasonAlert}
+          toggle={this.toggleReasonAlert}
+          visible={showReasonDialog}
         />
         <div className={Classes.DIALOG_BODY}>
           {this.renderDetails()}
@@ -319,10 +320,10 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
-   * Toggles the ban reason alert.
+   * Toggles the reason alert.
    */
-  private toggleBanReasonAlert = () => {
-    this.setState(({ showBanReasonAlert }) => ({ showBanReasonAlert: !showBanReasonAlert }))
+  private toggleReasonAlert = () => {
+    this.setState(({ [ToggleableUI.Reason]: showReasonDialog }) => ({ [ToggleableUI.Reason]: !showReasonDialog }))
   }
 
   /**
@@ -364,7 +365,7 @@ class ChatterDetails extends React.Component<Props, State> {
 
     const banMenu = (
       <Menu>
-        <Menu.Item text="Ban with reason" icon="disable" onClick={this.toggleBanReasonAlert} />
+        <Menu.Item text="Ban with reason" icon="disable" onClick={this.toggleReasonAlert} />
       </Menu>
     )
 
@@ -545,7 +546,7 @@ class ChatterDetails extends React.Component<Props, State> {
    * @param reason - The ban reason.
    */
   private onConfirmBanReason = (reason: string) => {
-    this.toggleBanReasonAlert()
+    this.toggleReasonAlert()
 
     const { ban, chatter, unfocus } = this.props
 
@@ -708,7 +709,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   logs: ReturnType<typeof getLogsByIds> | null
   note: string
 }
@@ -716,14 +717,14 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   updateNote: typeof updateNote
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps {
   actionHandler: ActionHandler
   ban: (username: string, reason?: string) => void
   block: (targetId: string) => void
@@ -748,6 +749,6 @@ type Props = OwnProps & DispatchProps & StateProps
 /**
  * React Props.
  */
-type DetailsRowProps = {
+interface DetailsRowProps {
   loading?: boolean
 }

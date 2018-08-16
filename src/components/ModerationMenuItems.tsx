@@ -80,7 +80,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   clearChat: () => void
   isMod: boolean
   roomState: SerializedRoomState | null

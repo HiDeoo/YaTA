@@ -87,7 +87,7 @@ export default class SettingsHighlightColorMenu extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   color: HighlightColors
   onSelect: (color: HighlightColors) => void
   small: boolean
@@ -96,6 +96,6 @@ type Props = {
 /**
  * React Props.
  */
-type ColorPreviewProps = {
+interface ColorPreviewProps {
   highlightColor: HighlightColors
 }

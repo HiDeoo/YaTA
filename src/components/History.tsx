@@ -154,7 +154,7 @@ export default class History extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
   logs: Array<SerializedMessage | SerializedNotification>

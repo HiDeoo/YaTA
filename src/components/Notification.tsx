@@ -79,7 +79,7 @@ export default class Notification extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   notification: SerializedNotification
   style: React.CSSProperties
 }
@@ -87,6 +87,6 @@ type Props = {
 /**
  * React Props.
  */
-type WrapperProps = {
+interface WrapperProps {
   highlight: boolean
 }

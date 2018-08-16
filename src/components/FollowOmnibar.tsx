@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router'
 
+import { ToggleableProps } from 'Constants/toggleable'
 import Twitch, { RawFollow } from 'Libs/Twitch'
 
 /**
@@ -134,9 +135,6 @@ class FollowOmnibar extends React.Component<Props, State> {
 /**
  * React Props.
  */
-interface Props extends RouteComponentProps<{}> {
-  toggle: () => void
-  visible: boolean
-}
+type Props = RouteComponentProps<{}> & ToggleableProps
 
 export default withRouter(FollowOmnibar)

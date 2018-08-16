@@ -310,7 +310,7 @@ export default class DropOverlay extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   onInvalid: () => void
   onError: (error: Error) => void
   onStart: () => void

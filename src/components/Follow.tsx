@@ -130,7 +130,7 @@ export default class Follow extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   follow: RawFollow
   goToChannel: (channel: string) => void
 }
@@ -138,6 +138,6 @@ type Props = {
 /**
  * React Props.
  */
-type WrapperProps = {
+interface WrapperProps {
   type: string
 }

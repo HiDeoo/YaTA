@@ -52,6 +52,6 @@ export default class SettingsPanelSection extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   title: string
 }

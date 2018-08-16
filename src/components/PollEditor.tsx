@@ -16,6 +16,7 @@ import styled from 'styled-components'
 
 import FlexLayout from 'Components/FlexLayout'
 import Key from 'Constants/key'
+import { ToggleableProps } from 'Constants/toggleable'
 import Dialog from 'Containers/Dialog'
 import StrawPoll, { StrawPollDuplicationStrategy } from 'Libs/StrawPoll'
 import Toaster from 'Libs/Toaster'
@@ -417,7 +418,4 @@ export default class PollEditor extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
-  toggle: () => void
-  visible: boolean
-}
+type Props = ToggleableProps

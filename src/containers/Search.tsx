@@ -12,6 +12,7 @@ import HeadlessMessage from 'Components/HeadlessMessage'
 import NonIdealState from 'Components/NonIdealState'
 import Notification from 'Components/Notification'
 import Spinner from 'Components/Spinner'
+import { ToggleableProps } from 'Constants/toggleable'
 import Dialog from 'Containers/Dialog'
 import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotification } from 'Store/ducks/logs'
@@ -323,18 +324,16 @@ export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   allLogs: ReturnType<typeof getLogs>
 }
 
 /**
  * React Props.
  */
-type OwnProps = {
+interface OwnProps extends ToggleableProps {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
-  toggle: () => void
-  visible: boolean
 }
 
 /**

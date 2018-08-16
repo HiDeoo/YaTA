@@ -6,6 +6,7 @@ import Dialog from 'Containers/Dialog'
 import { size } from 'Utils/styled'
 
 import SettingsAbout from 'Components/SettingsAbout'
+import { ToggleableProps } from 'Constants/toggleable'
 import SettingsActions from 'Containers/SettingsActions'
 import SettingsBackup from 'Containers/SettingsBackup'
 import SettingsChangelog from 'Containers/SettingsChangelog'
@@ -71,8 +72,6 @@ export default class Settings extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props extends ToggleableProps {
   defaultTab: SettingsTab
-  toggle: () => void
-  visible: boolean
 }

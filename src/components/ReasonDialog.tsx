@@ -4,6 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Key from 'Constants/key'
+import { ToggleableProps } from 'Constants/toggleable'
 
 /**
  * ReasonInput component.
@@ -119,8 +120,6 @@ export default class ReasonDialog extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props extends ToggleableProps {
   onConfirmBanReason: (reason: string) => void
-  toggle: () => void
-  visible: boolean
 }

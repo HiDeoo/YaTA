@@ -28,7 +28,7 @@ export default class ActionTypeMenuItem extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   onClick: (type: ActionType) => void
   type: ActionType
 }

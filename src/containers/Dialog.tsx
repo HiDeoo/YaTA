@@ -23,7 +23,7 @@ export default connect<StateProps, {}, IDialogProps, ApplicationState>((state) =
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
 }
 

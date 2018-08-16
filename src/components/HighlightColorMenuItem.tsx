@@ -51,7 +51,7 @@ export default class HighlightColorMenuItem extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   color: HighlightColors
   onClick: (color: HighlightColors) => void
   selected: boolean
@@ -60,6 +60,6 @@ type Props = {
 /**
  * React Props.
  */
-type ColorPreviewProps = {
+interface ColorPreviewProps {
   highlightColor: HighlightColors
 }

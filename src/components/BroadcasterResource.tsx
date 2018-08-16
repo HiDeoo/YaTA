@@ -135,14 +135,14 @@ export default class BroadcasterResource extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   resource: Resource
 }
 
 /**
  * React Props.
  */
-type ListRowProps = {
+interface ListRowProps {
   link: boolean
 }
 

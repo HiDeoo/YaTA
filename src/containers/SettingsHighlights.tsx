@@ -271,7 +271,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 /**
  * React Props.
  */
-type StateProps = {
+interface StateProps {
   highlights: ReturnType<typeof getHighlights>
   ignoredUsers: ReturnType<typeof getHighlightsIgnoredUsers>
   permanentUsers: ReturnType<typeof getHighlightsPermanentUsers>
@@ -280,7 +280,7 @@ type StateProps = {
 /**
  * React Props.
  */
-type DispatchProps = {
+interface DispatchProps {
   addHighlight: typeof addHighlight
   addHighlightsIgnoredUsers: typeof addHighlightsIgnoredUsers
   addHighlightsPermanentUsers: typeof addHighlightsPermanentUsers

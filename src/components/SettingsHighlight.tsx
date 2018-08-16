@@ -151,7 +151,7 @@ export default class SettingsHighlight extends React.Component<Props, State> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   highlight: SerializedHighlight
   remove: (id: string) => void
   updateColor: (id: string, color: HighlightColors) => void

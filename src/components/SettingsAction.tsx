@@ -170,7 +170,7 @@ export default class SettingsAction extends React.Component<Props> {
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   action: SerializedAction
   canMoveUp: boolean
   canMoveDown: boolean

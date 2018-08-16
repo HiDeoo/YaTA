@@ -29,7 +29,7 @@ export default Spinner
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   large?: boolean
   small?: boolean
 }

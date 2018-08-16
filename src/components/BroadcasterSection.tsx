@@ -73,7 +73,7 @@ export default BroadcasterSection
 /**
  * React Props.
  */
-type Props = {
+interface Props {
   ready?: boolean
   title: string
 }
