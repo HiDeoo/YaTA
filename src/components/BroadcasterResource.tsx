@@ -1,4 +1,4 @@
-import { Classes, Text } from '@blueprintjs/core'
+import { Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -64,25 +64,11 @@ const Thumbnail = styled.img`
  * Divider component.
  */
 const Divider = styled.hr`
-  background-image: linear-gradient(
-    90deg,
-    rgba(206, 217, 224, 1) 0%,
-    rgba(206, 217, 224, 0.7) 50%,
-    rgba(206, 217, 224, 0) 100%
-  );
+  background-image: ${color('broadcaster.divider')};
   border: 0;
   height: 1px;
   margin: 0;
   padding: 0;
-
-  .${Classes.DARK} & {
-    background-image: linear-gradient(
-      90deg,
-      rgba(116, 134, 147, 1) 0%,
-      rgba(116, 134, 147, 0.4) 50%,
-      rgba(116, 134, 147, 0) 100%
-    );
-  }
 
   &:last-of-type {
     display: none;

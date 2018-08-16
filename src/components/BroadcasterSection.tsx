@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Spinner from 'Components/Spinner'
+import { color } from 'Utils/styled'
 
 /**
  * Wrapper component.
@@ -32,15 +33,11 @@ const Loading = styled(Spinner)`
  * Divider component.
  */
 const Divider = styled.hr`
-  background-image: linear-gradient(90deg, rgba(16, 22, 26, 0.15) 70%, rgba(16, 22, 26, 0) 100%);
+  background-image: ${color('broadcaster.section')};
   border: 0;
   height: 1px;
   margin: 0;
   padding: 0;
-
-  .${Classes.DARK} & {
-    background-image: linear-gradient(90deg, rgba(16, 22, 26, 0.4) 70%, rgba(16, 22, 26, 0) 100%);
-  }
 
   &:last-of-type {
     display: none;

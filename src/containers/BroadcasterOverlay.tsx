@@ -15,6 +15,7 @@ import { ToggleableProps } from 'Constants/toggleable'
 import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { getChannelId } from 'Store/selectors/app'
+import { color } from 'Utils/styled'
 
 /**
  * Wrapper component.
@@ -31,7 +32,7 @@ const Wrapper = styled.div`
  */
 const Content = styled.div`
   background-color: ${Colors.WHITE};
-  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2), 0 18px 46px 6px rgba(16, 22, 26, 0.2);
+  box-shadow: ${color('broadcaster.shadow')};
   height: 100%;
   max-width: 600px;
   min-width: 450px;
@@ -44,7 +45,6 @@ const Content = styled.div`
 
   .${Classes.DARK} & {
     background-color: ${Colors.DARK_GRAY5};
-    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.2), 0 4px 8px rgba(16, 22, 26, 0.4), 0 18px 46px 6px rgba(16, 22, 26, 0.4);
   }
 
   .${Classes.OVERLAY}-appear &,

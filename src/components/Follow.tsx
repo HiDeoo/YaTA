@@ -12,11 +12,11 @@ import { color, ifProp, size } from 'Utils/styled'
  * Wrapper component.
  */
 const Wrapper = styled(Card)<WrapperProps & ICardProps>`
-  border: 2px solid ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.4)', 'transparent')};
+  border: 2px solid ${ifProp({ type: 'stream' }, color('follow.border'), 'transparent')};
   height: ${size('follows.height')};
 
   &.${Classes.CARD}, .${Classes.DARK} &.${Classes.CARD} {
-    background-color: ${ifProp({ type: 'stream' }, 'rgba(219, 55, 55, 0.05)', 'inherit')};
+    background-color: ${ifProp({ type: 'stream' }, color('follow.background'), 'inherit')};
     padding: 10px;
   }
 `

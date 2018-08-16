@@ -9,6 +9,7 @@ import Spinner from 'Components/Spinner'
 import { setShouldReadChangelog } from 'Store/ducks/app'
 import { setVersion } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
+import { color } from 'Utils/styled'
 
 /**
  * Changelog component.
@@ -52,16 +53,16 @@ const Changelog = styled.div`
 
   & code,
   .${Classes.DARK} & code {
-    background: rgba(255, 255, 255, 0.7);
+    background: ${color('changelog.background')};
     border-radius: 3px;
-    box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.4);
+    box-shadow: inset 0 0 0 1px ${color('changelog.shadow')};
     color: ${Colors.GRAY1};
     font-size: 1em;
     padding: 2px 5px;
   }
 
   .${Classes.DARK} & code {
-    background: rgba(16, 22, 26, 0.3);
+    background: ${color('changelog.dark')};
     color: ${Colors.GRAY5};
   }
 

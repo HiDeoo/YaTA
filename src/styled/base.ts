@@ -15,6 +15,11 @@ export default {
     height: 200,
     width: 500,
   },
+  changelog: {
+    background: 'rgba(255, 255, 255, 0.7)',
+    dark: 'rgba(16, 22, 26, 0.3)',
+    shadow: 'rgba(16, 22, 26, 0.4)',
+  },
   chatter: {
     avatar: {
       margin: '7px 10px 7px 0',
@@ -56,6 +61,10 @@ export default {
     padding: 10,
     width: 344,
   },
+  follow: {
+    background: 'rgba(219, 55, 55, 0.05)',
+    border: 'rgba(219, 55, 55, 0.4)',
+  },
   follows: {
     height: 68,
     margin: 10,
@@ -77,7 +86,9 @@ export default {
       Yellow: { color: Colors.DARK_GRAY1, background: Colors.GOLD5 },
     } as { [key in HighlightColors]: HighlightColor },
     minHeight: 33,
+    pause: 'rgba(245, 86, 86, 0.78)',
   },
+  logo: '#c2ccd6',
   message: {
     time: {
       color: Colors.GRAY2,

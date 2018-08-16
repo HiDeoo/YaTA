@@ -11,6 +11,7 @@ import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
+import { color } from 'Utils/styled'
 
 /**
  * Game suggest component.
@@ -23,22 +24,11 @@ const GameSuggest = Suggest.ofType<RawGame>()
 const CommunitiesMultiSelect = MultiSelect.ofType<RawCommunity>()
 
 /**
- * CSS for disabling an input when using the dark theme.
- */
-const disabledDarkInput = () => `
-  background: rgba(16, 22, 26, 0.3);
-  box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0),
-    inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4);
-  color: #f5f8fa;
-  opacity: 0.5
-`
-
-/**
  * InfoInput component.
  */
 const InfoInput = styled(InputGroup)`
   .${Classes.DARK} & > .${Classes.INPUT}.${Classes.DISABLED}, .${Classes.DARK} & > .${Classes.INPUT}:disabled {
-    ${disabledDarkInput()};
+    ${color('broadcaster.input.disabled')};
   }
 `
 
@@ -67,7 +57,7 @@ const GameInput = styled(GameSuggest)`
 
   .${Classes.DARK} & .${Classes.INPUT} {
     &.${Classes.DISABLED}, &:disabled {
-      ${disabledDarkInput()};
+      ${color('broadcaster.input.disabled')};
     }
 
     &::placeholder {
@@ -107,7 +97,7 @@ const CommunitiesInput = styled(CommunitiesMultiSelect)`
 
   .${Classes.DARK} & .${Classes.INPUT} {
     &.${Classes.DISABLED}, &:disabled {
-      ${disabledDarkInput()};
+      ${color('broadcaster.input.disabled')};
     }
 
     & .${Classes.INPUT_GHOST}::placeholder {

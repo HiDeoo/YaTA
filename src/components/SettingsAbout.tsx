@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import ExternalLink from 'Components/ExternalLink'
 import SettingsPanel from 'Components/SettingsPanel'
+import base from 'Styled/base'
 import { color } from 'Utils/styled'
 
 /**
@@ -67,7 +68,7 @@ export default () => (
   <SettingsPanel>
     <Content>
       <Logo>
-        <Icon icon="chat" iconSize={70} color="#c2ccd6" />
+        <Icon icon="chat" iconSize={70} color={base.logo} />
       </Logo>
       <Name>
         YaTA <em>v{process.env.REACT_APP_VERSION}</em>
