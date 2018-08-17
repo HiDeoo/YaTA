@@ -1,8 +1,12 @@
-# Unreleased
+# 1.2.2
 
 ### 🐛 Bug Fix
 
 - Fix an issue with some Github link previews.
+
+### ⚙️ Internal
+
+- Fire the guy who wrote the 1000+ lines of code removed in this version.
 
 # 1.2.1
 
