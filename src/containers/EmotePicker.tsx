@@ -26,7 +26,7 @@ const EmotePickerButton = styled.button<EmotePickerButtonProps>`
   cursor: pointer;
   filter: ${ifProp('isOpen', 'none', 'grayscale(100%)')};
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 20px;
 
   &:hover {
@@ -91,8 +91,8 @@ const Notice = styled.div`
 /**
  * Emote provider icon mapping.
  */
-const EmoteProviderIconMap: { [key in EmoteProviderPrefix]: string } = {
-  [EmoteProviderPrefix.Twitch]: '115847',
+const EmoteProviderIconMap: { [key in EmoteProviderPrefix]: string | string[] } = {
+  [EmoteProviderPrefix.Twitch]: ['115847', '28087', '64138', '68856', '123171', '30259', '4339', '114836', '425618'],
   [EmoteProviderPrefix.Bttv]: '56e9f494fff3cc5c35e5287e',
 }
 
@@ -100,6 +100,7 @@ const EmoteProviderIconMap: { [key in EmoteProviderPrefix]: string } = {
  * React State.
  */
 const initialState = {
+  buttonIcon: undefined as Optional<string>,
   filter: '',
   filteredSet: [] as Emote[],
   hovered: undefined as Optional<Emote>,
@@ -119,15 +120,24 @@ class EmotePicker extends React.Component<Props, State> {
   private rowHeight = base.emotePicker.cellSize + base.emotePicker.cellGutter
 
   /**
+   * Lifecycle: componentDidUpdate.
+   * @param prevProps - The previous props.
+   * @param prevState - The previous state.
+   */
+  public componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (_.isNil(prevState.buttonIcon)) {
+      this.updateButtonIcon()
+    }
+  }
+
+  /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { visible } = this.state
+    const { buttonIcon, visible } = this.state
 
-    const icon = this.getProviderIcon(EmoteProviderPrefix.Twitch)
-
-    if (_.isNil(icon)) {
+    if (_.isNil(buttonIcon)) {
       return null
     }
 
@@ -140,8 +150,8 @@ class EmotePicker extends React.Component<Props, State> {
         popoverClassName="emotePickerPopover"
         minimal
       >
-        <EmotePickerButton title="Emote Picker" isOpen={visible}>
-          <img src={icon} />
+        <EmotePickerButton title="Emote Picker" isOpen={visible} onMouseEnter={this.onMouseEnterButton}>
+          <img src={buttonIcon} />
         </EmotePickerButton>
       </Popover>
     )
@@ -279,6 +289,21 @@ class EmotePicker extends React.Component<Props, State> {
   }
 
   /**
+   * Updates the emote provider button icon.
+   */
+  private updateButtonIcon() {
+    const buttonIcon = this.getProviderIcon(EmoteProviderPrefix.Twitch, true)
+
+    if (!_.isNil(buttonIcon)) {
+      if (this.state.buttonIcon !== buttonIcon) {
+        this.setState(() => ({ buttonIcon }))
+      } else {
+        this.updateButtonIcon()
+      }
+    }
+  }
+
+  /**
    * Returns the current emote provider.
    * @return The provider.
    */
@@ -289,16 +314,26 @@ class EmotePicker extends React.Component<Props, State> {
   /**
    * Returns the emote provider icon if possible.
    * @param  prefix - The emote provider prefix.
+   * @param  [random=false] - Defines if the icon should be randomized if possible.
    * @return The emote provider icon.
    */
-  private getProviderIcon(prefix: EmoteProviderPrefix): string | null {
+  private getProviderIcon(prefix: EmoteProviderPrefix, random = false): string | null {
     const provider = Resources.manager().getEmotesProvider(prefix)
 
     if (_.isNil(provider)) {
       return null
     }
 
-    return provider.getEmoteTagUrls(EmoteProviderIconMap[prefix])['1x']
+    const ids = EmoteProviderIconMap[prefix]
+    let id: string
+
+    if (_.isString(ids)) {
+      id = ids
+    } else {
+      id = random ? (_.sample(EmoteProviderIconMap[prefix]) as string) : EmoteProviderIconMap[prefix][0]
+    }
+
+    return provider.getEmoteTagUrls(id)['1x']
   }
 
   /**
@@ -328,6 +363,15 @@ class EmotePicker extends React.Component<Props, State> {
     const sanitizedFilter = filter.toLowerCase()
 
     return _.filter(set, (emote) => emote.code.toLowerCase().includes(sanitizedFilter))
+  }
+
+  /**
+   * Triggered when the mouse enters the emote picker button.
+   */
+  private onMouseEnterButton = () => {
+    if (!this.state.visible) {
+      this.updateButtonIcon()
+    }
   }
 
   /**
