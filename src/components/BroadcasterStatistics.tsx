@@ -117,10 +117,6 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
     try {
       const { channel, channelId } = this.props
 
-      if (_.isNil(channel) || _.isNil(channelId)) {
-        throw new Error('Missing channel informations.')
-      }
-
       const response = await Promise.all([
         Twitch.fetchTopClips(channel.name, ClipPeriod.Day, 100),
         Twitch.fetchStream(channelId),

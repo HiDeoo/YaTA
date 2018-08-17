@@ -163,10 +163,6 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
     try {
       const { channel, channelId } = this.props
 
-      if (_.isNil(channel) || _.isNil(channelId)) {
-        throw new Error('Missing channel informations.')
-      }
-
       const response = await Promise.all([
         Twitch.fetchChannelLiveNotification(channelId),
         Twitch.fetchCommunities(channelId),
