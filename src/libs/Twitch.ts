@@ -462,8 +462,8 @@ export default class Twitch {
    * @return The streams and follows.
    */
   public static async fetchFollows(): Promise<RawFollow[]> {
-    const { follows } = await Twitch.fetchAuthenticatedUserFollows()
-    const { streams } = await Twitch.fetchAuthenticatedUserStreams()
+    const follows = await Twitch.fetchAuthenticatedUserFollows()
+    const streams = await Twitch.fetchAuthenticatedUserStreams()
 
     const offlineFollows = _.reduce(
       follows,
@@ -519,32 +519,58 @@ export default class Twitch {
 
   /**
    * Fetches all followed streams for the current authenticated user.
+   * @param  [offset=0] - The offset to use while fetching follows.
+   * @param  [limit=100] - The number of follows to fetch per query.
    * @return The follows.
    */
-  public static async fetchAuthenticatedUserFollows(): Promise<RawFollows> {
+  public static async fetchAuthenticatedUserFollows(offset = 0, limit = 100): Promise<RawFollower[]> {
     const params = {
-      limit: '100',
+      limit: limit.toString(),
+      offset: offset.toString(),
       sortby: 'last_broadcast',
     }
 
     const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${Twitch.userId}/follows/channels`, params, true)
 
-    return response.json()
+    const { follows } = (await response.json()) as RawFollows
+
+    let allFollows = [...follows]
+
+    if (follows.length === limit) {
+      const nextFollows = await Twitch.fetchAuthenticatedUserFollows(offset + limit, limit)
+
+      allFollows = [...allFollows, ...nextFollows]
+    }
+
+    return allFollows
   }
 
   /**
    * Fetches all online followed streams for the current authenticated user.
+   * @param  [offset=0] - The offset to use while fetching streams.
+   * @param  [limit=100] - The number of streams to fetch per query.
    * @return The streams.
    */
-  public static async fetchAuthenticatedUserStreams(): Promise<RawStreams> {
+  public static async fetchAuthenticatedUserStreams(offset = 0, limit = 100): Promise<RawStream[]> {
     const params = {
-      limit: '100',
+      limit: limit.toString(),
+      offset: offset.toString(),
       stream_type: 'live',
     }
 
     const response = await Twitch.fetch(TwitchApi.Kraken, '/streams/followed', params, true)
 
-    return response.json()
+    const { streams } = (await response.json()) as RawStreams
+
+    let allStreams = [...streams]
+
+    if (allStreams.length === limit) {
+      const nextStreams = await Twitch.fetchAuthenticatedUserStreams(offset + limit, limit)
+
+      allStreams = [...allStreams, ...nextStreams]
+    }
+
+    return allStreams
   }
 
   /**
@@ -919,9 +945,14 @@ type RawBlockedUser = {
  * Twitch follows.
  */
 export type RawFollows = {
-  follows: Array<{ created_at: string; notifications: true; channel: RawChannel }>
+  follows: RawFollower[]
   _total: number
 }
+
+/**
+ * Twitch follower.
+ */
+export type RawFollower = { created_at: string; notifications: true; channel: RawChannel }
 
 /**
  * Twitch streams.

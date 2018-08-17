@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue limiting the number of streams or follows to be displayed on the homepage at 100.
+
 # 1.2.2
 
 ### 🐛 Bug Fix
