@@ -170,3 +170,10 @@ export const getPlaySoundOnMentions = createSelector([getSettingsState], (settin
  * @return The 'Play sound on whispers' setting.
  */
 export const getPlaySoundOnWhispers = createSelector([getSettingsState], (settings) => settings.playSoundOnWhispers)
+
+/**
+ * Returns the 'Follows sort order' setting.
+ * @param  state - The Redux state.
+ * @return The 'Follows sort order' setting.
+ */
+export const getFollowsSortOrder = createSelector([getSettingsState], (settings) => settings.followsSortOrder)

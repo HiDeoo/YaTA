@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
-import Twitch, { RawFollow } from 'Libs/Twitch'
+import Twitch, { Follower } from 'Libs/Twitch'
 import base from 'Styled/base'
 import { color, ifProp, size } from 'Utils/styled'
 
@@ -168,7 +168,7 @@ export default class Follow extends React.Component<Props> {
  * React Props.
  */
 interface Props {
-  follow: RawFollow
+  follow: Follower
   goToChannel: (channel: string) => void
 }
 

@@ -1,5 +1,11 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Give some well-deserved attention to the homepage:
+  - You can now sort streams by viewers, uptime, ascending or descending order, you name it.
+  - All these preferences are persistent and saved just like you would expect.
+
 ### 🐛 Bug Fix
 
 - Fix an issue limiting the number of streams or follows to be displayed on the homepage at 100.

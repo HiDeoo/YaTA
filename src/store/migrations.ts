@@ -186,4 +186,10 @@ export default {
       user: UserInitialState,
     }
   },
+  25: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, followsSortOrder: SettingsInitialState.followsSortOrder },
+    }
+  },
 }

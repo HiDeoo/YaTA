@@ -459,33 +459,35 @@ export default class Twitch {
   /**
    * Fetches follows for the current user which consist of online streams, offline channels and its own online stream if
    * streaming.
-   * @return The streams and follows.
+   * @return The streams and channels.
    */
-  public static async fetchFollows(): Promise<RawFollow[]> {
+  public static async fetchFollows(): Promise<Followers> {
     const follows = await Twitch.fetchAuthenticatedUserFollows()
     const streams = await Twitch.fetchAuthenticatedUserStreams()
 
-    const offlineFollows = _.reduce(
+    const offline = _.reduce(
       follows,
-      (offline, follow) => {
+      (offlines, follow) => {
         if (_.isNil(_.find(streams, ['channel.name', follow.channel.name]))) {
-          offline.push(follow.channel)
+          offlines.push(follow.channel)
         }
 
-        return offline
+        return offlines
       },
       [] as RawChannel[]
     )
+
+    let own: RawStream | null = null
 
     if (!_.isNil(this.userId)) {
       const { stream } = await Twitch.fetchStream(this.userId)
 
       if (!_.isNil(stream)) {
-        streams.unshift(stream)
+        own = stream
       }
     }
 
-    return [...streams, ...offlineFollows]
+    return { offline, online: streams, own }
   }
 
   /**
@@ -518,12 +520,12 @@ export default class Twitch {
   }
 
   /**
-   * Fetches all followed streams for the current authenticated user.
+   * Fetches all follows for the current authenticated user.
    * @param  [offset=0] - The offset to use while fetching follows.
    * @param  [limit=100] - The number of follows to fetch per query.
    * @return The follows.
    */
-  public static async fetchAuthenticatedUserFollows(offset = 0, limit = 100): Promise<RawFollower[]> {
+  public static async fetchAuthenticatedUserFollows(offset = 0, limit = 100): Promise<RawFollow[]> {
     const params = {
       limit: limit.toString(),
       offset: offset.toString(),
@@ -647,9 +649,9 @@ export default class Twitch {
   }
 
   /**
-   * Defines if an object is either a live stream or a followed channel.
+   * Defines if an object is either a stream or a channel.
    * @param  streamOrChannel - The stream or channel to identify.
-   * @return `true` of the parameter is a live stream.
+   * @return `true` of the parameter is a stream.
    */
   public static isStream(streamOrChannel: RawStream | RawChannel): streamOrChannel is RawStream {
     return !_.isNil(_.get(streamOrChannel, 'stream_type'))
@@ -945,14 +947,14 @@ type RawBlockedUser = {
  * Twitch follows.
  */
 export type RawFollows = {
-  follows: RawFollower[]
+  follows: RawFollow[]
   _total: number
 }
 
 /**
- * Twitch follower.
+ * Twitch follow.
  */
-export type RawFollower = { created_at: string; notifications: true; channel: RawChannel }
+export type RawFollow = { created_at: string; notifications: true; channel: RawChannel }
 
 /**
  * Twitch streams.
@@ -1215,6 +1217,15 @@ type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
 
 /**
+ * Online stream, offline channel and own stream if online.
+ */
+export type Followers = {
+  offline: RawChannel[]
+  online: RawStream[]
+  own: RawStream | null
+}
+
+/**
  * Online stream or offline channel.
  */
-export type RawFollow = RawStream | RawChannel
+export type Follower = RawStream | RawChannel

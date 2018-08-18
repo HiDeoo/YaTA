@@ -8,6 +8,16 @@ import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
 import { createAction, RehydrateAction } from 'Utils/redux'
 
 /**
+ * Follows sort order.
+ */
+export enum FollowsSortOrder {
+  ViewersDesc,
+  ViewersAsc,
+  UptimeDesc,
+  UptimeAsc,
+}
+
+/**
  * Actions types.
  */
 export enum Actions {
@@ -38,6 +48,7 @@ export enum Actions {
   UPDATE_AUTO_HOST_THRESHOLD = 'settings/UPDATE_AUTO_HOST_THRESHOLD',
   TOGGLE_PLAY_SOUND_ON_MENTIONS = 'settings/TOGGLE_PLAY_SOUND_ON_MENTIONS',
   TOGGLE_PLAY_SOUND_ON_WHISPERS = 'settings/TOGGLE_PLAY_SOUND_ON_WHISPERS',
+  SET_FOLLOWS_SORT_ORDER = 'settings/SET_FOLLOWS_SORT_ORDER',
 }
 
 /**
@@ -52,6 +63,7 @@ export const initialState = {
   autoHostThreshold: 1,
   copyMessageOnDoubleClick: true,
   disableDialogAnimations: false,
+  followsSortOrder: FollowsSortOrder.ViewersDesc,
   hideWhispers: false,
   highlightAllMentions: false,
   highlights: {},
@@ -289,6 +301,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         playSoundOnWhispers: !state.playSoundOnWhispers,
+      }
+    }
+    case Actions.SET_FOLLOWS_SORT_ORDER: {
+      return {
+        ...state,
+        followsSortOrder: action.payload.order,
       }
     }
     default: {
@@ -534,6 +552,16 @@ export const togglePlaySoundOnMentions = () => createAction(Actions.TOGGLE_PLAY_
 export const togglePlaySoundOnWhispers = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_WHISPERS)
 
 /**
+ * Sets the follows sort order.
+ * @param  order - The new sort order.
+ * @return The action.
+ */
+export const setFollowsSortOrder = (order: FollowsSortOrder) =>
+  createAction(Actions.SET_FOLLOWS_SORT_ORDER, {
+    order,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -565,6 +593,7 @@ export type SettingsActions =
   | ReturnType<typeof updateAutoHostThreshold>
   | ReturnType<typeof togglePlaySoundOnMentions>
   | ReturnType<typeof togglePlaySoundOnWhispers>
+  | ReturnType<typeof setFollowsSortOrder>
 
 /**
  * Settings state.
@@ -669,6 +698,11 @@ export type SettingsState = {
    * Plays a sound on whispers.
    */
   playSoundOnWhispers: boolean
+
+  /**
+   * Follows sort order.
+   */
+  followsSortOrder: FollowsSortOrder
 }
 
 /**

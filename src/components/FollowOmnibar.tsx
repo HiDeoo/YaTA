@@ -5,17 +5,17 @@ import * as React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router'
 
 import { ToggleableProps } from 'Constants/toggleable'
-import Twitch, { RawFollow } from 'Libs/Twitch'
+import Twitch, { Follower } from 'Libs/Twitch'
 
 /**
  * Omnibar for either online streams or offline follows.
  */
-const StreamsAndFollowsOmnibar = Omnibar.ofType<RawFollow>()
+const StreamsAndFollowsOmnibar = Omnibar.ofType<Follower>()
 
 /**
  * React State.
  */
-const initialState = { follows: [] as RawFollow[], isReady: false }
+const initialState = { follows: [] as Follower[], isReady: false }
 type State = Readonly<typeof initialState>
 
 /**
@@ -31,7 +31,9 @@ class FollowOmnibar extends React.Component<Props, State> {
   public async componentDidUpdate(prevProps: Props) {
     if (prevProps.visible !== this.props.visible && this.props.visible) {
       try {
-        const follows = await Twitch.fetchFollows()
+        const { offline, online, own } = await Twitch.fetchFollows()
+
+        const follows = !_.isNil(own) ? [own, ...online, ...offline] : [...online, ...offline]
 
         this.setState(() => ({ follows, isReady: true }))
       } catch (error) {
@@ -68,7 +70,7 @@ class FollowOmnibar extends React.Component<Props, State> {
    * @param  itemProps - The props to pass along to the follow.
    * @return Element to render.
    */
-  private itemRenderer: ItemRenderer<RawFollow> = (follow, { handleClick, modifiers }) => {
+  private itemRenderer: ItemRenderer<Follower> = (follow, { handleClick, modifiers }) => {
     const title = this.getFollowTitle(follow)
     const label = Twitch.isStream(follow) ? <Icon icon="record" color={Colors.RED3} /> : undefined
 
@@ -106,7 +108,7 @@ class FollowOmnibar extends React.Component<Props, State> {
    * @param  follow - The follow to test.
    * @return `true` when the query matches the follow.
    */
-  private itemPredicate: ItemPredicate<RawFollow> = (query, follow) => {
+  private itemPredicate: ItemPredicate<Follower> = (query, follow) => {
     return this.getFollowTitle(follow)
       .toLowerCase()
       .includes(query.toLowerCase())
@@ -116,7 +118,7 @@ class FollowOmnibar extends React.Component<Props, State> {
    * Triggered when a follow is selected.
    * @param follow - The selected follow.
    */
-  private onSelectFollow = (follow: RawFollow) => {
+  private onSelectFollow = (follow: Follower) => {
     this.props.toggle()
 
     this.props.history.push(`/${Twitch.isStream(follow) ? follow.channel.name : follow.name}`)
@@ -127,7 +129,7 @@ class FollowOmnibar extends React.Component<Props, State> {
    * @param  follow - The follow.
    * @return The title.
    */
-  private getFollowTitle(follow: RawFollow) {
+  private getFollowTitle(follow: Follower) {
     return Twitch.isStream(follow) ? follow.channel.display_name : follow.display_name
   }
 }
