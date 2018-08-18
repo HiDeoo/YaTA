@@ -116,7 +116,7 @@ export default appReducer
  * @param  channel - The new channel.
  * @return The action.
  */
-export const setChannel = (channel: string) =>
+export const setChannel = (channel: string | null) =>
   createAction(Actions.SET_CHANNEL, {
     channel,
   })

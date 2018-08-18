@@ -178,6 +178,8 @@ class Channel extends React.Component<Props, State> {
    * Lifecycle: componentWillUnmount.
    */
   public componentWillUnmount() {
+    this.props.setChannel(null)
+
     this.props.setHeaderTitleComponent(null)
     this.props.setHeaderRightComponent(null)
 
