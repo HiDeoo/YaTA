@@ -177,3 +177,10 @@ export const getPlaySoundOnWhispers = createSelector([getSettingsState], (settin
  * @return The 'Follows sort order' setting.
  */
 export const getFollowsSortOrder = createSelector([getSettingsState], (settings) => settings.followsSortOrder)
+
+/**
+ * Returns the 'Hide offline follows' setting.
+ * @param  state - The Redux state.
+ * @return The 'Hide offline follows' setting.
+ */
+export const getHideOfflineFollows = createSelector([getSettingsState], (settings) => settings.hideOfflineFollows)

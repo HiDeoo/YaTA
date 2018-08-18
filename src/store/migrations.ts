@@ -192,4 +192,10 @@ export default {
       settings: { ...state.settings, followsSortOrder: SettingsInitialState.followsSortOrder },
     }
   },
+  26: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, hideOfflineFollows: SettingsInitialState.hideOfflineFollows },
+    }
+  },
 }

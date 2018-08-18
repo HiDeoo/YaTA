@@ -49,6 +49,7 @@ export enum Actions {
   TOGGLE_PLAY_SOUND_ON_MENTIONS = 'settings/TOGGLE_PLAY_SOUND_ON_MENTIONS',
   TOGGLE_PLAY_SOUND_ON_WHISPERS = 'settings/TOGGLE_PLAY_SOUND_ON_WHISPERS',
   SET_FOLLOWS_SORT_ORDER = 'settings/SET_FOLLOWS_SORT_ORDER',
+  TOGGLE_HIDE_OFFLINE_FOLLOWS = 'settings/TOGGLE_HIDE_OFFLINE_FOLLOWS',
 }
 
 /**
@@ -64,6 +65,7 @@ export const initialState = {
   copyMessageOnDoubleClick: true,
   disableDialogAnimations: false,
   followsSortOrder: FollowsSortOrder.ViewersDesc,
+  hideOfflineFollows: false,
   hideWhispers: false,
   highlightAllMentions: false,
   highlights: {},
@@ -307,6 +309,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         followsSortOrder: action.payload.order,
+      }
+    }
+    case Actions.TOGGLE_HIDE_OFFLINE_FOLLOWS: {
+      return {
+        ...state,
+        hideOfflineFollows: !state.hideOfflineFollows,
       }
     }
     default: {
@@ -562,6 +570,11 @@ export const setFollowsSortOrder = (order: FollowsSortOrder) =>
   })
 
 /**
+ * Toggle the 'Hide offline follows' setting.
+ * @return The action.
+ */
+export const toggleHideOfflineFollows = () => createAction(Actions.TOGGLE_HIDE_OFFLINE_FOLLOWS)
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -594,6 +607,7 @@ export type SettingsActions =
   | ReturnType<typeof togglePlaySoundOnMentions>
   | ReturnType<typeof togglePlaySoundOnWhispers>
   | ReturnType<typeof setFollowsSortOrder>
+  | ReturnType<typeof toggleHideOfflineFollows>
 
 /**
  * Settings state.
@@ -703,6 +717,11 @@ export type SettingsState = {
    * Follows sort order.
    */
   followsSortOrder: FollowsSortOrder
+
+  /**
+   * Hide offline follows.
+   */
+  hideOfflineFollows: boolean
 }
 
 /**
