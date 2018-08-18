@@ -241,13 +241,17 @@ class Follows extends React.Component<Props, State> {
           <div>{this.renderSortOrderButtons()}</div>
         </Toolbar>
         <Wrapper>
-          <Flipper flipKey={`${filter}-${followsSortOrder}`}>
-            <Grid>
-              {_.map(followsToRender, (follow) => (
-                <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />
-              ))}
-            </Grid>
-          </Flipper>
+          {followsToRender.length > 0 ? (
+            <Flipper flipKey={`${filter}-${followsSortOrder}`}>
+              <Grid>
+                {_.map(followsToRender, (follow) => (
+                  <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />
+                ))}
+              </Grid>
+            </Flipper>
+          ) : (
+            <NonIdealState details="Maybe try another query." title="No results!" />
+          )}
         </Wrapper>
       </>
     )
