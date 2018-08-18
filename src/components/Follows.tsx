@@ -1,6 +1,7 @@
 import { InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
+import { Flipper } from 'react-flip-toolkit'
 import { RouteComponentProps, withRouter } from 'react-router'
 import styled from 'styled-components'
 
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
   border-top: 1px solid ${color('follows.border')};
   height: calc(100% - 50px);
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
 `
 
 /**
@@ -45,8 +46,8 @@ const Search = styled(InputGroup)`
 const initialState = {
   error: undefined as Optional<Error>,
   filter: '',
-  filteredFollows: undefined as Optional<RawFollow[]>,
-  follows: undefined as Optional<RawFollow[]>,
+  filteredFollows: undefined as Optional<FilterableFollow[]>,
+  follows: undefined as Optional<FilterableFollow[]>,
 }
 type State = Readonly<typeof initialState>
 
@@ -64,8 +65,23 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
     try {
       const follows = await Twitch.fetchFollows()
 
+      const filterableFollows = _.map(follows, (follow) => {
+        let name: string
+        let title: string
+
+        if (Twitch.isStream(follow)) {
+          name = follow.channel.name
+          title = follow.channel.status || ''
+        } else {
+          name = follow.name
+          title = follow.status || ''
+        }
+
+        return { ...follow, content: `${name} ${title.toLowerCase()}` }
+      })
+
       this.setState(
-        () => ({ follows }),
+        () => ({ follows: filterableFollows }),
         () => {
           if (!_.isNil(this.search)) {
             this.search.focus()
@@ -120,11 +136,13 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
           inputRef={this.setSearchElementRef}
         />
         <Wrapper>
-          <Grid>
-            {_.map(followsToRender, (follow) => (
-              <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />
-            ))}
-          </Grid>
+          <Flipper flipKey={filter}>
+            <Grid>
+              {_.map(followsToRender, (follow) => (
+                <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />
+              ))}
+            </Grid>
+          </Flipper>
         </Wrapper>
       </>
     )
@@ -137,19 +155,14 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
   private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const filter = event.currentTarget.value
 
-    let filteredFollows: Optional<RawFollow[]>
+    let filteredFollows: Optional<FilterableFollow[]>
 
     const { follows } = this.state
 
     if (!_.isNil(follows) && filter.length > 0) {
       const sanitizedFilter = filter.toLowerCase()
 
-      filteredFollows = _.filter(follows, (follow) => {
-        const name = Twitch.isStream(follow) ? follow.channel.name : follow.name
-        const title = _.defaultTo(Twitch.isStream(follow) ? follow.channel.status : follow.status, '')
-
-        return name.includes(sanitizedFilter) || title.toLowerCase().includes(sanitizedFilter)
-      })
+      filteredFollows = _.filter(follows, (follow) => follow.content.includes(sanitizedFilter))
     }
 
     this.setState(() => ({ filter, filteredFollows }))
@@ -172,3 +185,8 @@ class Follows extends React.Component<RouteComponentProps<{}>, State> {
 }
 
 export default withRouter(Follows)
+
+/**
+ * Follow optimized for filtering by computing ahead of time filterable content.
+ */
+type FilterableFollow = RawFollow & { content: string }

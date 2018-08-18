@@ -1,11 +1,14 @@
 import { Card, Classes, ICardProps, Text } from '@blueprintjs/core'
+import * as anime from 'animejs'
 import * as _ from 'lodash'
 import * as React from 'react'
+import { Flipped } from 'react-flip-toolkit'
 import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Twitch, { RawFollow } from 'Libs/Twitch'
+import base from 'Styled/base'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
@@ -103,17 +106,21 @@ export default class Follow extends React.Component<Props> {
     }
 
     return (
-      <Wrapper interactive onClick={this.onClick} type={isStream ? 'stream' : 'follow'}>
-        <FlexLayout>
-          <Preview>
-            <img src={previewUrl} />
-          </Preview>
-          <Details>
-            <Title ellipsize>{title}</Title>
-            <Meta>{meta}</Meta>
-          </Details>
-        </FlexLayout>
-      </Wrapper>
+      <Flipped flipId={follow._id.toString()} onDelayedAppear={this.onAppear} onExit={this.onExit}>
+        <div>
+          <Wrapper interactive onClick={this.onClick} type={isStream ? 'stream' : 'follow'}>
+            <FlexLayout>
+              <Preview>
+                <img src={previewUrl} />
+              </Preview>
+              <Details>
+                <Title ellipsize>{title}</Title>
+                <Meta>{meta}</Meta>
+              </Details>
+            </FlexLayout>
+          </Wrapper>
+        </div>
+      </Flipped>
     )
   }
 
@@ -124,6 +131,36 @@ export default class Follow extends React.Component<Props> {
     const { follow, goToChannel } = this.props
 
     goToChannel(Twitch.isStream(follow) ? follow.channel.name : follow.name)
+  }
+
+  /**
+   * Triggered when the component appears.
+   * @param element - The associated DOM node.
+   */
+  private onAppear(element: HTMLElement) {
+    anime({
+      duration: base.follows.flip,
+      easing: 'easeOutSine',
+      opacity: [0, 1],
+      targets: element,
+    })
+  }
+
+  /**
+   * Triggered when the component disappears.
+   * @param element - The associated DOM node.
+   * @param index - The element index.
+   * @param removeElement - The callback to remove the DOM node after the animation.
+   */
+  private onExit(element: HTMLElement, index: number, removeElement: (anim: anime.AnimeInstance) => void) {
+    anime({
+      complete: removeElement,
+      delay: index,
+      duration: base.follows.flip,
+      easing: 'easeOutSine',
+      opacity: 0,
+      targets: element,
+    })
   }
 }
 

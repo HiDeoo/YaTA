@@ -66,6 +66,7 @@ export default {
     border: 'rgba(219, 55, 55, 0.4)',
   },
   follows: {
+    flip: 150,
     height: 68,
     margin: 10,
     width: 350,
