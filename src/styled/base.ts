@@ -67,7 +67,7 @@ export default {
   },
   follows: {
     flip: 150,
-    height: 68,
+    height: 78,
     margin: 10,
     width: 350,
   },

@@ -52,7 +52,22 @@ const dark = {
     strong: Colors.LIGHT_GRAY1,
   },
   follows: {
+    background: Colors.DARK_GRAY4,
     border: Colors.DARK_GRAY1,
+    details: Colors.LIGHT_GRAY1,
+    hover: {
+      details: Colors.WHITE,
+      meta: Colors.GRAY3,
+      shadow1: Colors.BLUE3,
+      shadow2: 'rgba(78, 147, 208, 0.2)',
+      title: Colors.BLUE5,
+    },
+    liveBackground: Colors.DARK_GRAY3,
+    meta: Colors.GRAY2,
+    shadow: Colors.DARK_GRAY2,
+    thumbnail: Colors.DARK_GRAY5,
+    titleChannel: Colors.LIGHT_GRAY1,
+    titleStream: Colors.WHITE,
   },
   history: {
     background: Colors.DARK_GRAY4,

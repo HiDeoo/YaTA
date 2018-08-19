@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Give some well-deserved attention to the homepage:
+  - admArt the thingy.
   - You can now sort streams by viewers, uptime, ascending or descending order, you name it.
   - All these preferences are persistent and saved just like you would expect.
 

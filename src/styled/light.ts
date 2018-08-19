@@ -48,7 +48,22 @@ const light = {
     strong: Colors.DARK_GRAY5,
   },
   follows: {
+    background: Colors.LIGHT_GRAY4,
     border: Colors.LIGHT_GRAY1,
+    details: Colors.DARK_GRAY3,
+    hover: {
+      details: Colors.DARK_GRAY1,
+      meta: Colors.GRAY1,
+      shadow1: Colors.BLUE4,
+      shadow2: 'rgba(78, 147, 208, 0.2)',
+      title: Colors.BLUE4,
+    },
+    liveBackground: Colors.LIGHT_GRAY5,
+    meta: Colors.GRAY2,
+    shadow: Colors.GRAY4,
+    thumbnail: Colors.LIGHT_GRAY5,
+    titleChannel: Colors.DARK_GRAY5,
+    titleStream: Colors.DARK_GRAY1,
   },
   history: {
     background: Colors.LIGHT_GRAY2,

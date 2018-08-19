@@ -1,72 +1,151 @@
-import { Card, Classes, ICardProps, Text } from '@blueprintjs/core'
+import { Colors, Icon, Text } from '@blueprintjs/core'
 import * as anime from 'animejs'
 import * as _ from 'lodash'
+import * as pluralize from 'pluralize'
 import * as React from 'react'
 import { Flipped } from 'react-flip-toolkit'
+import TimeAgo, { Formatter } from 'react-timeago'
 import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
-import Twitch, { Follower } from 'Libs/Twitch'
+import Twitch, { Follower, RawChannel, RawStream } from 'Libs/Twitch'
 import base from 'Styled/base'
 import { color, ifProp, size } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = styled(Card)<WrapperProps & ICardProps>`
-  border: 2px solid ${ifProp({ type: 'stream' }, color('follow.border'), 'transparent')};
+const Wrapper = styled(FlexLayout)`
+  background-color: ${color('follows.background')};
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px ${color('follows.shadow')};
+  cursor: pointer;
   height: ${size('follows.height')};
+  position: relative;
+  transition: box-shadow 0.25s cubic-bezier(0.4, 1, 0.75, 0.9);
 
-  &.${Classes.CARD}, .${Classes.DARK} &.${Classes.CARD} {
-    background-color: ${ifProp({ type: 'stream' }, color('follow.background'), 'inherit')};
-    padding: 10px;
+  &:hover {
+    box-shadow: 0 0 0 1px ${color('follows.hover.shadow1')}, 0 0 0 3px ${color('follows.hover.shadow2')};
   }
 `
 
 /**
- * Preview component.
+ * ThumbnailWrapper component.
  */
-const Preview = styled.div`
-  display: flex;
-  justify-content: center;
-  height: 45px;
-  width: 80px;
+const ThumbnailWrapper = styled.div`
+  background-color: ${color('follows.thumbnail')};
+  border-right: 1px solid ${color('follows.shadow')};
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  overflow: hidden;
+`
 
-  & > img {
-    height: 45px;
-    object-fit: cover;
-    width: 80px;
+/**
+ * Thumbnail component.
+ */
+const Thumbnail = styled.img`
+  height: ${size('follows.height')};
+  object-fit: cover;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.4, 1, 0.75, 0.9);
+  width: 120px;
+
+  ${Wrapper}:hover & {
+    transform: scale(1.15);
   }
+`
+
+/**
+ * LiveIconBackground component.
+ */
+const LiveIconBackground = styled(Icon)`
+  color: ${color('follows.liveBackground')};
+  position: absolute;
+  right: -5px;
+  top: -5px;
+`
+
+/**
+ * LiveIcon component.
+ */
+const LiveIcon = styled(Icon)`
+  color: ${Colors.RED3};
+  opacity: 0.8;
+  position: absolute;
+  right: -2px;
+  top: -2px;
+`
+
+/**
+ * AvatarBackground component.
+ */
+const AvatarBackground = styled(Icon)`
+  bottom: -8px;
+  color: ${color('follows.liveBackground')};
+  left: -8px;
+  position: absolute;
+`
+
+/**
+ * Avatar component.
+ */
+const Avatar = styled.img`
+  border-radius: 50%;
+  bottom: -5px;
+  left: -5px;
+  position: absolute;
+  width: 24px;
 `
 
 /**
  * Details component.
  */
 const Details = styled(FlexContent)`
-  padding-left: 10px;
-  padding-top: 2px;
+  color: ${color('follows.details')};
+  font-size: 0.8rem;
+  padding: 8px;
+
+  ${Wrapper}:hover & {
+    color: ${color('follows.hover.details')};
+  }
+
+  & > div {
+    margin-bottom: 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 `
 
 /**
  * Title component.
  */
-const Title = styled(Text)`
-  font-size: 0.9rem;
-  line-height: 1.4rem;
+const Title = styled(Text).attrs({
+  ellipsize: true,
+})<TitleProps>`
+  color: ${ifProp('stream', color('follows.titleStream'), color('follows.titleChannel'))};
+  font-size: 0.88rem;
+  font-weight: bold;
+  position: relative;
+
+  ${Wrapper}:hover & {
+    color: ${color('follows.hover.title')};
+  }
 `
 
 /**
  * Meta component.
  */
-const Meta = styled.div`
-  color: ${color('follow.meta')};
-  font-size: 0.8rem;
-  line-height: 1.3rem;
+const Meta = styled(Text).attrs({
+  ellipsize: true,
+})`
+  color: ${color('follows.meta')};
+  font-size: 0.76rem;
 
-  strong {
-    color: ${color('follow.strong')};
-    font-weight: normal;
+  ${Wrapper}:hover & {
+    color: ${color('follows.hover.meta')};
   }
 `
 
@@ -81,47 +160,70 @@ export default class Follow extends React.Component<Props> {
   public render() {
     const { follow } = this.props
 
-    const isStream = Twitch.isStream(follow)
-
-    let previewUrl: string
-    let title: string
-    let meta: JSX.Element
-
-    if (Twitch.isStream(follow)) {
-      previewUrl = follow.preview.small
-      title = follow.channel.status || ''
-      meta = (
-        <Text ellipsize>
-          <strong>{follow.channel.display_name}</strong> - {follow.game} - {follow.viewers.toLocaleString()} viewers
-        </Text>
-      )
-    } else {
-      previewUrl = follow.logo
-      title = follow.display_name
-      meta = (
-        <Text ellipsize>{`Last seen ${new Date(follow.updated_at).toLocaleDateString()}${
-          !_.isNil(follow.game) ? ` in ${follow.game}` : ''
-        }`}</Text>
-      )
-    }
-
     return (
       <Flipped flipId={follow._id.toString()} onDelayedAppear={this.onAppear} onExit={this.onExit}>
         <div>
-          <Wrapper interactive onClick={this.onClick} type={isStream ? 'stream' : 'follow'}>
-            <FlexLayout>
-              <Preview>
-                <img src={previewUrl} />
-              </Preview>
-              <Details>
-                <Title ellipsize>{title}</Title>
-                <Meta>{meta}</Meta>
-              </Details>
-            </FlexLayout>
+          <Wrapper onClick={this.onClick}>
+            {Twitch.isStream(follow) ? this.renderStream(follow) : this.renderChannel(follow)}
           </Wrapper>
         </div>
       </Flipped>
     )
+  }
+
+  /**
+   * Renders a stream.
+   * @return Element to render.
+   */
+  private renderStream(stream: RawStream) {
+    return (
+      <>
+        <ThumbnailWrapper>
+          <Thumbnail src={stream.preview.medium} />
+        </ThumbnailWrapper>
+        <LiveIconBackground icon="full-circle" iconSize={16} />
+        <LiveIcon icon="full-circle" iconSize={10} />
+        <AvatarBackground icon="full-circle" iconSize={30} />
+        <Avatar src={stream.channel.logo} />
+        <Details>
+          <Title stream>{stream.channel.status || ''}</Title>
+          <Text ellipsize>
+            {stream.channel.display_name} - {stream.game}
+          </Text>
+          <Meta>
+            {stream.viewers.toLocaleString()} viewers -{' '}
+            <TimeAgo date={new Date(stream.created_at)} formatter={this.uptimeRenderer} />
+          </Meta>
+        </Details>
+      </>
+    )
+  }
+
+  /**
+   * Renders a channel.
+   * @return Element to render.
+   */
+  private renderChannel(channel: RawChannel) {
+    return (
+      <>
+        <ThumbnailWrapper>
+          <Thumbnail src={channel.logo} />
+        </ThumbnailWrapper>
+        <Details>
+          <Title>{channel.display_name}</Title>
+          {!_.isNil(channel.game) && <Meta>{channel.game}</Meta>}
+          <Meta>Last seen {new Date(channel.updated_at).toLocaleDateString()}</Meta>
+        </Details>
+      </>
+    )
+  }
+
+  /**
+   * Renders the uptime.
+   * @return Element to render.
+   */
+  private uptimeRenderer: Formatter = (value, units) => {
+    return `${value.toString()} ${_.isNil(units) ? '' : pluralize(units, value)}`
   }
 
   /**
@@ -175,6 +277,6 @@ interface Props {
 /**
  * React Props.
  */
-interface WrapperProps {
-  type: string
+interface TitleProps {
+  stream?: boolean
 }
