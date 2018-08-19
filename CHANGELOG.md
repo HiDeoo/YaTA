@@ -1,15 +1,15 @@
-# Unreleased
+# 1.3.0
 
 ### 🚀 New Feature
 
 - Give some well-deserved attention to the homepage:
-  - admArt the thingy.
-  - You can now sort streams by viewers, uptime, ascending or descending order, you name it.
-  - All these preferences are persistent and saved just like you would expect.
+  - admArt the whole thingy.
+  - You can now sort streams by number of viewers, uptime, descending or ascending order, you name it.
+  - All these preferences are persistent and automatically saved just like you would expect.
 
 ### 🐛 Bug Fix
 
-- Fix an issue limiting the number of streams or follows to be displayed on the homepage at 100.
+- Fix an issue limiting the number of streams or channels to be displayed on the homepage at 100.
 
 # 1.2.2
 
