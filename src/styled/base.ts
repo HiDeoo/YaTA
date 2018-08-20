@@ -68,7 +68,7 @@ export default {
   follows: {
     flip: 150,
     height: 78,
-    margin: 10,
+    margin: 14,
     width: 350,
   },
   history: {

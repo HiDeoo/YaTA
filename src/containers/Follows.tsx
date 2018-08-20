@@ -62,7 +62,7 @@ const Grid = styled.div`
   grid-column-gap: ${size('follows.margin')};
   grid-row-gap: ${size('follows.margin')};
   grid-template-columns: repeat(auto-fit, minmax(${size('follows.width')}, 1fr));
-  padding: ${size('follows.margin')};
+  padding: ${size('follows.margin')} 10px ${size('follows.margin')} ${size('follows.margin')};
 `
 
 /**
