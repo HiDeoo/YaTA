@@ -1,13 +1,13 @@
-import { ButtonGroup, Classes, Colors, Icon, IconName, IPanel, IPanelProps, Text } from '@blueprintjs/core'
+import { ButtonGroup, Classes, Colors, Icon, IconName, Intent, IPanel, IPanelProps, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import TimeAgo from 'react-timeago'
 import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
+import ChannelDetailsButton from 'Components/ChannelDetailsButton'
 import ChannelDetailsDescription from 'Components/ChannelDetailsDescription'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
-import ChannelDetailsPanelButton from 'Components/ChannelDetailsPanelButton'
 import ChannelDetailsVideos from 'Components/ChannelDetailsVideos'
 import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
@@ -120,6 +120,7 @@ const ChannelDetailsPanels = {
  */
 const initialState = {
   didFail: false,
+  isFollowingOrUnfollowing: false,
   relationship: undefined as Optional<RawRelationship> | null,
   stream: undefined as Optional<RawStream> | null,
 }
@@ -153,7 +154,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    * @return Element to render.
    */
   public render() {
-    const { didFail, stream } = this.state
+    const { didFail, isFollowingOrUnfollowing, relationship, stream } = this.state
 
     if (didFail) {
       return <NonIdealState small retry />
@@ -163,15 +164,28 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
       return <Spinner />
     }
 
+    const followed = !_.isNil(relationship)
+    const followedTooltip = `${followed ? 'Unfollow' : 'Follow'} ${this.props.name}`
+
     return (
       <>
         <ChannelDetailsPanel>{this.renderStream()}</ChannelDetailsPanel>
         <PanelButtons>
           <ButtonGroup fill minimal large>
+            <ChannelDetailsButton
+              buttonProps={{
+                disabled: isFollowingOrUnfollowing,
+                icon: followed ? 'follower' : 'following',
+                intent: followed ? Intent.DANGER : Intent.PRIMARY,
+                loading: isFollowingOrUnfollowing,
+              }}
+              onClick={this.onClickFollowUnfollow}
+              tooltip={followedTooltip}
+            />
             {_.map(ChannelDetailsType, (type) => (
-              <ChannelDetailsPanelButton
+              <ChannelDetailsButton
                 panel={ChannelDetailsPanels[type]}
-                onClick={this.showPanel}
+                onClickPanel={this.showPanel}
                 type={type}
                 key={type}
               />
@@ -230,6 +244,31 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
     }
 
     this.props.openPanel(panel)
+  }
+
+  /**
+   * Triggered when the follow or unfollow button is clicked.
+   */
+  private onClickFollowUnfollow = async () => {
+    const { id } = this.props
+
+    try {
+      this.setState(() => ({ isFollowingOrUnfollowing: true }))
+
+      let relationship: RawRelationship | null
+
+      if (!_.isNil(this.state.relationship)) {
+        await Twitch.unfollowChannel(id)
+        relationship = null
+      } else {
+        await Twitch.followChannel(id)
+        relationship = { from_id: '', to_id: id, followed_at: new Date().toString() }
+      }
+
+      this.setState(() => ({ isFollowingOrUnfollowing: false, relationship }))
+    } catch (error) {
+      this.setState(() => ({ isFollowingOrUnfollowing: false }))
+    }
   }
 
   /**

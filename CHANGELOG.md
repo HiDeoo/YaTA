@@ -1,3 +1,11 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Add a button to follow or unfollow the current channel in the channel details dialog.
+
+### 🐛 Bug Fix
+
 # 1.3.0
 
 ### 🚀 New Feature
