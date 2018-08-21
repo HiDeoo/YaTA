@@ -1,12 +1,11 @@
 import { AnchorButton, Callout, Classes, Intent } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import PreviewImg from 'Images/preview.png'
 import Twitch from 'Libs/Twitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -80,7 +79,7 @@ const Permissions = styled.ul`
     margin: 4px 0;
 
     & > em {
-      color: ${color('permissions.detail')};
+      color: ${theme('permissions.detail')};
       display: block;
       font-size: 0.72rem;
       font-style: normal;

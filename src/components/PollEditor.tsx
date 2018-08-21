@@ -12,7 +12,6 @@ import {
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import FlexLayout from 'Components/FlexLayout'
 import Key from 'Constants/key'
@@ -20,6 +19,7 @@ import { ToggleableProps } from 'Constants/toggleable'
 import Dialog from 'Containers/Dialog'
 import StrawPoll, { StrawPollDuplicationStrategy } from 'Libs/StrawPoll'
 import Toaster from 'Libs/Toaster'
+import styled from 'Styled'
 
 /**
  * Options component.

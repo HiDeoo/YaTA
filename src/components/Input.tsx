@@ -2,22 +2,21 @@ import { Classes, Intent, IToastOptions, Position, ProgressBar, Toast, Toaster }
 import * as classnames from 'classnames'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import Key from 'Constants/key'
 import Message from 'Constants/message'
 import EmotePicker from 'Containers//EmotePicker'
 import { Emote } from 'Libs/EmotesProvider'
 import Twitch from 'Libs/Twitch'
+import styled, { theme } from 'Styled'
 import { endWithWhiteSpace, getWordAtPosition, startWithWhiteSpace } from 'Utils/string'
-import { color } from 'Utils/styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  background-color: ${color('chatInput.background')};
-  border-top: 1px solid ${color('chatInput.border')};
+  background-color: ${theme('chatInput.background')};
+  border-top: 1px solid ${theme('chatInput.border')};
   padding: 10px;
   position: relative;
 `

@@ -2,7 +2,6 @@ import { Classes, Colors, Overlay } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import BroadcasterInformations from 'Components/BroadcasterInformations'
 import BroadcasterResources from 'Components/BroadcasterResources'
@@ -15,7 +14,7 @@ import { ToggleableProps } from 'Constants/toggleable'
 import Twitch, { RawChannel } from 'Libs/Twitch'
 import { ApplicationState } from 'Store/reducers'
 import { getChannelId } from 'Store/selectors/app'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -32,7 +31,7 @@ const Wrapper = styled.div`
  */
 const Content = styled.div`
   background-color: ${Colors.WHITE};
-  box-shadow: ${color('broadcaster.shadow')};
+  box-shadow: ${theme('broadcaster.shadow')};
   height: 100%;
   max-width: 600px;
   min-width: 450px;

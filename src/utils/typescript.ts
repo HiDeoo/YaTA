@@ -12,6 +12,11 @@ declare global {
   export interface Serializable<T> {
     serialize(): T
   }
+
+  /**
+   * Recursive Partial<T>.
+   */
+  export type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> }
 }
 
 /**

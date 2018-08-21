@@ -1,10 +1,9 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import MessageContent from 'Components/MessageContent'
 import { SerializedMessage } from 'Libs/Message'
-import { color, size } from 'Utils/styled'
+import styled, { prop, size, theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -19,7 +18,7 @@ const Wrapper = styled.div`
  * Time component.
  */
 const Time = styled.span`
-  color: ${color('message.time.color')};
+  color: ${theme('message.time.color')};
   font-size: 0.77rem;
   padding-right: 6px;
 `
@@ -28,7 +27,7 @@ const Time = styled.span`
  * Name component.
  */
 const Name = styled.span<NameProps>`
-  color: ${(props) => props.color};
+  color: ${prop('color')};
   font-weight: bold;
   padding-right: 2px;
 `

@@ -2,7 +2,6 @@ import { Button, Classes, H5, Intent, Popover } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import NumericInput from 'Components/NumericInput'
 import SettingsPanel from 'Components/SettingsPanel'
@@ -41,6 +40,7 @@ import {
   getShowViewerCount,
   getTheme,
 } from 'Store/selectors/settings'
+import styled from 'Styled'
 
 /**
  * ConfirmationControls component.

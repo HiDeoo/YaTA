@@ -2,7 +2,6 @@ import { IPanelProps } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import { ChannelDetailsType } from 'Components/ChannelDetailsOverview'
@@ -11,14 +10,14 @@ import ExternalResource, { Resource, ResourceType } from 'Components/ExternalRes
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * ChannelDetailsVideo component.
  */
 const ChannelDetailsVideo = styled(ExternalResource)`
   &:hover {
-    background-color: ${color('channel.background')};
+    background-color: ${theme('channel.background')};
   }
 `
 

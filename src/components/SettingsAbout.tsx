@@ -1,11 +1,9 @@
 import { Colors, Icon } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import ExternalLink from 'Components/ExternalLink'
 import SettingsPanel from 'Components/SettingsPanel'
-import base from 'Styled/base'
-import { color } from 'Utils/styled'
+import styled, { theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * Content component.
@@ -46,7 +44,7 @@ const Name = styled.div`
  * Description component.
  */
 const Description = styled.div`
-  color: ${color('about.description')};
+  color: ${theme('about.description')};
   font-size: 0.8rem;
   line-height: 1.8rem;
   margin-bottom: 30px;
@@ -64,11 +62,11 @@ const Coffee = styled.span`
 /**
  * SettingsAbout Component.
  */
-export default () => (
+const SettingsAbout: React.SFC<ThemeProps> = (props) => (
   <SettingsPanel>
     <Content>
       <Logo>
-        <Icon icon="chat" iconSize={70} color={base.logo} />
+        <Icon icon="chat" iconSize={70} color={props.theme.logo} />
       </Logo>
       <Name>
         YaTA <em>v{process.env.REACT_APP_VERSION}</em>
@@ -90,3 +88,5 @@ export default () => (
     </Content>
   </SettingsPanel>
 )
+
+export default withTheme(SettingsAbout)

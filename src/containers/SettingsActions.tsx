@@ -2,7 +2,6 @@ import { Button, ButtonGroup, Intent, Menu, Popover, Position, Tag } from '@blue
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import ActionTypeMenuItem from 'Components/ActionTypeMenuItem'
 import FlexContent from 'Components/FlexContent'
@@ -17,6 +16,7 @@ import Action, { ActionPlaceholder, ActionType } from 'Libs/Action'
 import { addAction, moveAction, removeAction, updateAction } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getActions } from 'Store/selectors/settings'
+import styled from 'Styled'
 
 /**
  * Notice component.

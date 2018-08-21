@@ -1,14 +1,13 @@
 import { Card, Classes, Icon, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Player from 'Libs/Player'
 import { isResolved, Preview as ResolvedPreview, UnresolvedPreview } from 'Libs/PreviewProvider'
 import PreviewTwitch, { TwitchPreviewType } from 'Libs/PreviewTwitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -54,7 +53,7 @@ const Title = styled(Text).attrs({
 const Meta = styled(Text).attrs({
   ellipsize: true,
 })`
-  color: ${color('previews.meta')};
+  color: ${theme('previews.meta')};
   font-size: 0.72rem;
 `
 
@@ -69,7 +68,7 @@ const IconWrapper = styled.div`
   margin-right: 10px;
 
   & > svg {
-    color: ${color('previews.meta')};
+    color: ${theme('previews.meta')};
     height: 25px;
     width: 25px;
   }

@@ -12,12 +12,12 @@ import {
 import * as _ from 'lodash'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
-import styled from 'styled-components'
 
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Page from 'Constants/page'
 import Status from 'Constants/status'
 import { AppState } from 'Store/ducks/app'
+import styled from 'Styled'
 import { enumIncludes } from 'Utils/typescript'
 
 /**

@@ -2,20 +2,19 @@ import { Tab, Tabs } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
 import ExternalResource, { Resource, ResourceType } from 'Components/ExternalResource'
 import NonIdealState from 'Components/NonIdealState'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  border: 1px solid ${color('broadcaster.border')};
+  border: 1px solid ${theme('broadcaster.border')};
   height: 247px;
   overflow-y: auto;
 `

@@ -2,7 +2,6 @@ import { InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, List, ListRowRenderer } from 'react-virtualized'
-import styled from 'styled-components'
 
 import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
@@ -10,8 +9,7 @@ import Spinner from 'Components/Spinner'
 import { ToggleableProps } from 'Constants/toggleable'
 import Dialog from 'Containers/Dialog'
 import Twitch, { RawChatters } from 'Libs/Twitch'
-import base from 'Styled/base'
-import { color } from 'Utils/styled'
+import styled, { theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * Content component.
@@ -33,7 +31,7 @@ const Chatter = styled.div`
  * Type component.
  */
 const Group = styled.div`
-  color: ${color('chattersList.typeColor')};
+  color: ${theme('chattersList.typeColor')};
   font-weight: bold;
   padding-left: 15px;
 `
@@ -75,7 +73,7 @@ type State = Readonly<typeof initialState>
 /**
  * Chatters Component.
  */
-export default class Chatters extends React.Component<Props, State> {
+class Chatters extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -144,12 +142,12 @@ export default class Chatters extends React.Component<Props, State> {
         <AutoSizer>
           {({ height, width }) => (
             <List
-              height={height}
+              rowHeight={this.props.theme.chattersList.height}
               noRowsRenderer={this.noRowsRenderer}
-              overscanRowCount={5}
-              rowCount={rows.length}
-              rowHeight={base.chattersList.height}
               rowRenderer={this.rowRenderer}
+              rowCount={rows.length}
+              overscanRowCount={5}
+              height={height}
               width={width}
             />
           )}
@@ -273,10 +271,12 @@ export default class Chatters extends React.Component<Props, State> {
   }
 }
 
+export default withTheme(Chatters)
+
 /**
  * React Props.
  */
-interface Props extends ToggleableProps {
+interface Props extends ToggleableProps, ThemeProps {
   channel: string
 }
 

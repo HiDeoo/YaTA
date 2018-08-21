@@ -2,10 +2,10 @@ import { Classes, Overlay } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Spinner from 'Components/Spinner'
+import styled from 'Styled'
 import base from 'Styled/base'
 
 /**

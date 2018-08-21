@@ -3,7 +3,6 @@ import { ItemRenderer, MultiSelect, Suggest } from '@blueprintjs/select'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
 import ExternalLink from 'Components/ExternalLink'
@@ -11,7 +10,7 @@ import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Game suggest component.
@@ -28,7 +27,7 @@ const CommunitiesMultiSelect = MultiSelect.ofType<RawCommunity>()
  */
 const InfoInput = styled(InputGroup)`
   .${Classes.DARK} & > .${Classes.INPUT}.${Classes.DISABLED}, .${Classes.DARK} & > .${Classes.INPUT}:disabled {
-    ${color('broadcaster.input.disabled')};
+    ${theme('broadcaster.input.disabled')};
   }
 `
 
@@ -57,7 +56,7 @@ const GameInput = styled(GameSuggest)`
 
   .${Classes.DARK} & .${Classes.INPUT} {
     &.${Classes.DISABLED}, &:disabled {
-      ${color('broadcaster.input.disabled')};
+      ${theme('broadcaster.input.disabled')};
     }
 
     &::placeholder {
@@ -97,7 +96,7 @@ const CommunitiesInput = styled(CommunitiesMultiSelect)`
 
   .${Classes.DARK} & .${Classes.INPUT} {
     &.${Classes.DISABLED}, &:disabled {
-      ${color('broadcaster.input.disabled')};
+      ${theme('broadcaster.input.disabled')};
     }
 
     & .${Classes.INPUT_GHOST}::placeholder {

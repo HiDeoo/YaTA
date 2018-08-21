@@ -2,31 +2,20 @@ import { Button, Classes, Tooltip } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
-import styled from 'styled-components'
 
 import HeadlessMessage from 'Components/HeadlessMessage'
 import Notification from 'Components/Notification'
 import { SerializedMessage } from 'Libs/Message'
 import { SerializedNotification } from 'Libs/Notification'
 import { isMessage, isNotification } from 'Store/ducks/logs'
-import base from 'Styled/base'
-import { color, size } from 'Utils/styled'
-
-/**
- * Log measures cache.
- */
-const logMeasureCache = new CellMeasurerCache({
-  defaultHeight: base.log.minHeight,
-  fixedWidth: true,
-  minHeight: base.log.minHeight,
-})
+import styled, { size, theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  background-color: ${color('history.background')};
-  border: 1px solid ${color('history.border')};
+  background-color: ${theme('history.background')};
+  border: 1px solid ${theme('history.border')};
   font-size: 0.82rem;
   height: ${size('history.height')};
   line-height: 1.4rem;
@@ -59,7 +48,23 @@ const CopyButton = styled(Button)`
 /**
  * History Component.
  */
-export default class History extends React.Component<Props> {
+class History extends React.Component<Props> {
+  private logMeasureCache: CellMeasurerCache
+
+  /**
+   * Creates a new instance of the component.
+   * @param props - The props of the component.
+   */
+  constructor(props: Props) {
+    super(props)
+
+    this.logMeasureCache = new CellMeasurerCache({
+      defaultHeight: props.theme.log.minHeight,
+      fixedWidth: true,
+      minHeight: props.theme.log.minHeight,
+    })
+  }
+
   /**
    * Renders the component.
    * @return Element to render.
@@ -72,13 +77,13 @@ export default class History extends React.Component<Props> {
         <AutoSizer onResize={this.onResize} disableHeight>
           {({ width }) => (
             <List
-              deferredMeasurementCache={logMeasureCache}
-              height={base.history.height - 2}
-              overscanRowCount={10}
-              rowCount={logs.length}
-              rowHeight={logMeasureCache.rowHeight}
-              rowRenderer={this.logRenderer}
+              deferredMeasurementCache={this.logMeasureCache}
+              height={this.props.theme.history.height - 2}
+              rowHeight={this.logMeasureCache.rowHeight}
               scrollToIndex={logs.length - 1}
+              rowRenderer={this.logRenderer}
+              rowCount={logs.length}
+              overscanRowCount={10}
               width={width}
             />
           )}
@@ -96,7 +101,7 @@ export default class History extends React.Component<Props> {
    * Clears the measures cache when resize the window.
    */
   private onResize = () => {
-    logMeasureCache.clearAll()
+    this.logMeasureCache.clearAll()
   }
 
   /**
@@ -121,7 +126,7 @@ export default class History extends React.Component<Props> {
     }
 
     return (
-      <CellMeasurer cache={logMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
+      <CellMeasurer cache={this.logMeasureCache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
         {LogComponent}
       </CellMeasurer>
     )
@@ -151,10 +156,12 @@ export default class History extends React.Component<Props> {
   }
 }
 
+export default withTheme(History)
+
 /**
  * React Props.
  */
-interface Props {
+interface Props extends ThemeProps {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
   logs: Array<SerializedMessage | SerializedNotification>

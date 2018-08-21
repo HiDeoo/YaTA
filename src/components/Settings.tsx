@@ -1,9 +1,8 @@
 import { Classes, Navbar, Tab, Tabs } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import Dialog from 'Containers/Dialog'
-import { size } from 'Utils/styled'
+import styled, { size } from 'Styled'
 
 import SettingsAbout from 'Components/SettingsAbout'
 import { ToggleableProps } from 'Constants/toggleable'

@@ -1,19 +1,18 @@
 import { Icon } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import MessageContent from 'Components/MessageContent'
 import { SerializedMessage } from 'Libs/Message'
-import { color, size } from 'Utils/styled'
+import styled, { prop, size, theme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  background-color: ${color('whisper.background')};
-  border-left: 3px solid ${color('whisper.border')};
-  padding: 4px ${size('log.hPadding')} 4px calc(${size('log.hPadding')} - 1px);
+  background-color: ${theme('whisper.background')};
+  border-left: 3px solid ${theme('whisper.border')};
+  padding: 4px ${size('log.hPadding')} 4px ${size('log.hPadding', -1)};
   white-space: pre-wrap;
 `
 
@@ -21,7 +20,7 @@ const Wrapper = styled.div`
  * InboxIcon component.
  */
 const InboxIcon = styled(Icon)`
-  color: ${color('whisper.border')};
+  color: ${theme('whisper.border')};
   margin-right: 10px;
   margin-top: 3px;
 `
@@ -30,7 +29,7 @@ const InboxIcon = styled(Icon)`
  * Username component.
  */
 const Username = styled.span<UsernameProps>`
-  color: ${(props) => props.color};
+  color: ${prop('color')};
   font-weight: bold;
   padding-right: 6px;
 `

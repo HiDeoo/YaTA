@@ -1,15 +1,14 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { SerializedNotice } from 'Libs/Notice'
-import { color, size } from 'Utils/styled'
+import styled, { size, theme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  color: ${color('notice.color')};
+  color: ${theme('notice.color')};
   padding: 5px ${size('log.hPadding')} 0 ${size('log.hPadding')};
   white-space: pre-wrap;
 `

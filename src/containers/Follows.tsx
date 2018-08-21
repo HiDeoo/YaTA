@@ -5,7 +5,6 @@ import { Flipper } from 'react-flip-toolkit'
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router'
 import { compose } from 'recompose'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
@@ -16,13 +15,13 @@ import Twitch, { Follower, Followers } from 'Libs/Twitch'
 import { FollowsSortOrder, setFollowsSortOrder, toggleHideOfflineFollows } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getFollowsSortOrder, getHideOfflineFollows } from 'Store/selectors/settings'
-import { color, size } from 'Utils/styled'
+import styled, { size, theme } from 'Styled'
 
 /**
  * Toolbar component.
  */
 const Toolbar = styled(FlexLayout)`
-  border-bottom: 1px solid ${color('follows.border')};
+  border-bottom: 1px solid ${theme('follows.border')};
   display: flex;
   align-items: center;
   padding-right: 10px;
@@ -62,7 +61,8 @@ const Grid = styled.div`
   grid-column-gap: ${size('follows.margin')};
   grid-row-gap: ${size('follows.margin')};
   grid-template-columns: repeat(auto-fit, minmax(${size('follows.width')}, 1fr));
-  padding: ${size('follows.margin')} 10px ${size('follows.margin')} ${size('follows.margin')};
+  padding: ${size('follows.margin')};
+  padding-right: 10px;
 `
 
 /**

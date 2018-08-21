@@ -1,7 +1,6 @@
 import { Colors, IPanelProps } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
@@ -9,6 +8,7 @@ import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawPanels } from 'Libs/Twitch'
+import styled from 'Styled'
 
 /**
  * Wrapper component.

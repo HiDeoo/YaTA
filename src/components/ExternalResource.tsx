@@ -1,12 +1,11 @@
 import { Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Player from 'Libs/Player'
-import { color, ifProp } from 'Utils/styled'
+import styled, { ifProp, theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -16,7 +15,7 @@ const Wrapper = styled.div<WrapperProps>`
   padding: 10px;
 
   &:hover {
-    background-color: ${color('resource.hover.background')};
+    background-color: ${theme('resource.hover.background')};
   }
 `
 
@@ -31,7 +30,7 @@ const Content = styled(FlexContent)`
   justify-content: center;
 
   ${Wrapper}:hover & {
-    color: ${color('resource.hover.color')};
+    color: ${theme('resource.hover.color')};
   }
 `
 
@@ -41,13 +40,13 @@ const Content = styled(FlexContent)`
 const Meta = styled(Text).attrs({
   ellipsize: true,
 })`
-  color: ${color('resource.meta')};
+  color: ${theme('resource.meta')};
   font-size: 0.84em;
   font-weight: normal;
   margin-top: 5px;
 
   ${Wrapper}:hover & {
-    color: ${color('resource.hover.meta')};
+    color: ${theme('resource.hover.meta')};
   }
 `
 
@@ -65,7 +64,7 @@ const Thumbnail = styled.img`
  * Divider component.
  */
 const Divider = styled.hr`
-  background-image: ${color('resource.divider')};
+  background-image: ${theme('resource.divider')};
   border: 0;
   height: 1px;
   margin: 0;

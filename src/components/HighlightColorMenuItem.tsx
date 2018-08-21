@@ -1,15 +1,14 @@
 import { Menu } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { HighlightColors } from 'Libs/Highlight'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * ColorPreview component.
  */
 const ColorPreview = styled.div<ColorPreviewProps>`
-  background-color: ${(props) => color(`log.highlight.${props.highlightColor}.background`)};
+  background-color: ${(props) => theme(`log.highlight.${props.highlightColor}.background`)};
   border-radius: 2px;
   height: 15px;
   margin-right: 2px;

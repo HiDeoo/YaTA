@@ -1,13 +1,13 @@
 import { Button, Classes, Colors, Icon, Intent, Menu, Popover, Position } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
 import ExternalButton from 'Components/ExternalButton'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Toaster from 'Libs/Toaster'
 import Twitch, { CommercialDuration, RawHost, Status } from 'Libs/Twitch'
+import styled from 'Styled'
 
 /**
  * Wrapper component.

@@ -1,17 +1,16 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import LogType from 'Constants/logType'
 import { HighlightColors } from 'Libs/Highlight'
 import { SerializedMessage } from 'Libs/Message'
-import { color } from 'Utils/styled'
+import styled, { prop, theme } from 'Styled'
 
 /**
  * Message component.
  */
 const Message = styled.span<MessageProps>`
-  color: ${(props) => props.color};
+  color: ${prop('color')};
   word-wrap: break-word;
 
   .emoteWrapper {
@@ -35,12 +34,12 @@ const Message = styled.span<MessageProps>`
   }
 
   .mention {
-    background-color: ${color('log.mention.color')};
+    background-color: ${theme('log.mention.color')};
     border-radius: 2px;
     padding: 1px 3px 2px 3px;
 
     &.self {
-      background-color: ${color('log.mention.self.color')};
+      background-color: ${theme('log.mention.self.color')};
     }
   }
 
@@ -59,8 +58,8 @@ const Message = styled.span<MessageProps>`
         if (HighlightColors.hasOwnProperty(highlightColor)) {
           rules += `
             &.${highlightColor} {
-              background-color: ${color(`log.highlight.${highlightColor}.background`)(props)};
-              color: ${color(`log.highlight.${highlightColor}.color`)(props)};
+              background-color: ${theme(`log.highlight.${highlightColor}.background`)(props)};
+              color: ${theme(`log.highlight.${highlightColor}.color`)(props)};
             }
           `
         }

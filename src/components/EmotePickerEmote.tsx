@@ -1,9 +1,8 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
 import FlexLayout from 'Components/FlexLayout'
 import { Emote, EmoteTagUrls } from 'Libs/EmotesProvider'
-import { size } from 'Utils/styled'
+import styled, { size } from 'Styled'
 
 /**
  * Emote component.

@@ -2,6 +2,7 @@ import { Colors } from '@blueprintjs/core'
 import * as _ from 'lodash'
 
 import base from 'Styled/base'
+import ITheme from 'Styled/theme'
 
 /**
  * Light theme.
@@ -125,4 +126,4 @@ const light = {
   },
 }
 
-export default _.merge(_.cloneDeep(base), light)
+export default _.merge(_.cloneDeep(base), light) as ITheme

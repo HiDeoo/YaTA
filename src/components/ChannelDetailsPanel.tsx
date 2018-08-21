@@ -1,6 +1,4 @@
-import styled from 'styled-components'
-
-import { ifProp } from 'Utils/styled'
+import styled, { ifProp } from 'Styled'
 
 /**
  * ChannelDetailsPanel component.

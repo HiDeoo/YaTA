@@ -3,7 +3,6 @@ import * as FileSaver from 'file-saver'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
 import Toaster from 'Libs/Toaster'
@@ -12,6 +11,7 @@ import { restoreSettings } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getNotesBackup } from 'Store/selectors/notes'
 import { getSettingsBackup } from 'Store/selectors/settings'
+import styled from 'Styled'
 import { readTextFile } from 'Utils/html'
 
 /**

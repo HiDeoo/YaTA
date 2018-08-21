@@ -1,16 +1,15 @@
 import { Button, Classes, IButtonProps, Position, Tooltip } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { ChannelDetailsPanel, ChannelDetailsType } from 'Components/ChannelDetailsOverview'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * ButtonTooltip component.
  */
 const ButtonTooltip = styled(Tooltip)`
-  border-right: 1px solid ${color('channel.lightBorder')};
+  border-right: 1px solid ${theme('channel.lightBorder')};
   flex: 1;
 
   &:last-child {

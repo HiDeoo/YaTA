@@ -4,7 +4,7 @@ import * as pluralize from 'pluralize'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
-import styled from 'styled-components'
+import { compose } from 'recompose'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
@@ -18,8 +18,7 @@ import { SerializedMessage } from 'Libs/Message'
 import { isMessage, isNotification } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import { getLogs } from 'Store/selectors/logs'
-import base from 'Styled/base'
-import { color } from 'Utils/styled'
+import styled, { theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * Content component.
@@ -40,7 +39,7 @@ const SearchInput = styled(InputGroup)`
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  border-top: 1px solid ${color('follows.border')};
+  border-top: 1px solid ${theme('follows.border')};
   height: 100%;
   line-height: 1.4rem;
   overflow-x: hidden;
@@ -95,10 +94,10 @@ class Search extends React.Component<Props, State> {
     super(props)
 
     this.logMeasureCache = new CellMeasurerCache({
-      defaultHeight: base.log.minHeight,
+      defaultHeight: props.theme.log.minHeight,
       fixedWidth: true,
       keyMapper: (index) => _.get(this.props.allLogs.logs[index], 'id'),
-      minHeight: base.log.minHeight,
+      minHeight: props.theme.log.minHeight,
     })
   }
 
@@ -317,9 +316,17 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
-  allLogs: getLogs(state),
-}))(Search)
+/**
+ * Component enhancer.
+ */
+const enhance = compose<Props, OwnProps>(
+  connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
+    allLogs: getLogs(state),
+  })),
+  withTheme
+)
+
+export default enhance(Search)
 
 /**
  * React Props.
@@ -339,4 +346,4 @@ interface OwnProps extends ToggleableProps {
 /**
  * React Props.
  */
-type Props = StateProps & OwnProps
+type Props = StateProps & OwnProps & ThemeProps

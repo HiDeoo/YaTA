@@ -1,11 +1,10 @@
 import { Button, Classes, Colors, Icon, NavbarDivider } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import HeaderTooltip from 'Components/HeaderTooltip'
 import { SerializedRoomState } from 'Libs/RoomState'
-import { ifProp, size } from 'Utils/styled'
+import styled, { ifProp, size } from 'Styled'
 
 /**
  * TwitchState component.

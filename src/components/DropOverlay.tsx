@@ -1,11 +1,10 @@
 import { Callout, Classes, Intent, Overlay } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Imgur from 'Libs/Imgur'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -26,7 +25,7 @@ const Tooltip = styled(Callout)`
     width: 360px;
 
     &.${Classes.INTENT_PRIMARY} {
-      background-color: ${color('dropOverlay.background')};
+      background-color: ${theme('dropOverlay.background')};
     }
 
     & h4.${Classes.HEADING} {

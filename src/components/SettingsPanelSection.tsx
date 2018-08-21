@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
-import { color } from 'Utils/styled'
+
+import styled, { theme } from 'Styled'
 
 /**
  * Title component.
@@ -9,8 +9,8 @@ import { color } from 'Utils/styled'
 const Title = styled.h1`
   &,
   .${Classes.DARK} & {
-    border-top: 1px solid ${color('settings.section.border')};
-    color: ${color('settings.section.color')};
+    border-top: 1px solid ${theme('settings.section.border')};
+    color: ${theme('settings.section.color')};
     font-size: 0.9rem;
     line-height: initial;
     margin: 20px 0 20px 0;

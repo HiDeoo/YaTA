@@ -3,7 +3,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Grid, GridCellRenderer } from 'react-virtualized'
-import styled from 'styled-components'
+import { compose } from 'recompose'
 
 import EmotePickerEmote from 'Components/EmotePickerEmote'
 import EmotePickerProvider from 'Components/EmotePickerProvider'
@@ -14,8 +14,7 @@ import { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
 import Resources from 'Libs/Resources'
 import { ApplicationState } from 'Store/reducers'
 import { getEmotesSets } from 'Store/selectors/app'
-import base from 'Styled/base'
-import { color, ifProp, size } from 'Utils/styled'
+import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * EmotePickerButton component.
@@ -45,9 +44,9 @@ const Header = styled(FlexLayout)`
  * Emotes component.
  */
 const Emotes = styled(FlexContent)`
-  border-bottom: 1px solid ${color('emotePicker.border')};
-  border-top: 1px solid ${color('emotePicker.border')};
-  background-color: ${color('emotePicker.background')};
+  border-bottom: 1px solid ${theme('emotePicker.border')};
+  border-top: 1px solid ${theme('emotePicker.border')};
+  background-color: ${theme('emotePicker.background')};
 
   & > div::-webkit-scrollbar {
     display: none;
@@ -59,11 +58,11 @@ const Emotes = styled(FlexContent)`
  */
 const Preview = styled(FlexLayout)`
   align-items: center;
-  height: ${base.emotePicker.cellSize * 2 + base.emotePicker.padding * 2}px;
+  height: ${(props) => props.theme.emotePicker.cellSize * 2 + props.theme.emotePicker.padding * 2}px;
   padding: ${size('emotePicker.padding')};
 
   img {
-    max-height: ${base.emotePicker.maxSize * 2}px;
+    max-height: ${size('emotePicker.maxSize', 'double')};
     max-width: 100%;
   }
 `
@@ -73,10 +72,10 @@ const Preview = styled(FlexLayout)`
  */
 const PreviewImage = styled(FlexLayout)`
   align-items: center;
-  height: ${base.emotePicker.cellSize * 2}px;
+  height: ${size('emotePicker.cellSize', 'double')};
   justify-content: center;
   margin-right: 10px;
-  width: ${base.emotePicker.cellSize * 2}px;
+  width: ${size('emotePicker.cellSize', 'double')};
 `
 
 /**
@@ -115,9 +114,23 @@ type State = Readonly<typeof initialState>
 class EmotePicker extends React.Component<Props, State> {
   public state: State = initialState
   private search: HTMLInputElement | null = null
-  private columnCount = _.floor(base.emotePicker.width / (base.emotePicker.cellSize + base.emotePicker.cellGutter))
-  private columnWidth = base.emotePicker.cellSize + base.emotePicker.cellGutter
-  private rowHeight = base.emotePicker.cellSize + base.emotePicker.cellGutter
+  private columnCount: number
+  private columnWidth: number
+  private rowHeight: number
+
+  /**
+   * Creates a new instance of the component.
+   * @param props - The props of the component.
+   */
+  constructor(props: Props) {
+    super(props)
+
+    this.columnCount = _.floor(
+      props.theme.emotePicker.width / (props.theme.emotePicker.cellSize + props.theme.emotePicker.cellGutter)
+    )
+    this.columnWidth = props.theme.emotePicker.cellSize + props.theme.emotePicker.cellGutter
+    this.rowHeight = props.theme.emotePicker.cellSize + props.theme.emotePicker.cellGutter
+  }
 
   /**
    * Lifecycle: componentDidUpdate.
@@ -177,34 +190,34 @@ class EmotePicker extends React.Component<Props, State> {
 
             return (
               <EmotePickerProvider
-                key={providerPrefix}
-                prefix={providerPrefix}
-                onClick={this.onClickProvider}
                 selected={providerPrefix === prefix}
+                onClick={this.onClickProvider}
+                prefix={providerPrefix}
+                key={providerPrefix}
                 icon={icon}
               />
             )
           })}
           <InputGroup
-            placeholder="Filter…"
-            type="search"
-            leftIcon="search"
-            value={filter}
+            inputRef={this.setSearchElementRef}
             onChange={this.onChangeFilter}
             className={Classes.FILL}
-            inputRef={this.setSearchElementRef}
+            placeholder="Filter…"
+            leftIcon="search"
+            value={filter}
+            type="search"
           />
         </Header>
         <Emotes>
           <Grid
-            cellRenderer={this.emoteRenderer}
+            rowCount={_.ceil(_.size(this.getEmotesSet()) / this.columnCount)}
+            height={this.props.theme.emotePicker.height}
+            width={this.props.theme.emotePicker.width}
             noContentRenderer={this.noEmoteRenderer}
+            cellRenderer={this.emoteRenderer}
             columnCount={this.columnCount}
             columnWidth={this.columnWidth}
-            height={base.emotePicker.height}
-            rowCount={_.ceil(_.size(this.getEmotesSet()) / this.columnCount)}
             rowHeight={this.rowHeight}
-            width={base.emotePicker.width}
             filter={filter}
             prefix={prefix}
           />
@@ -458,9 +471,17 @@ class EmotePicker extends React.Component<Props, State> {
   }
 }
 
-export default connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
-  sets: getEmotesSets(state),
-}))(EmotePicker)
+/**
+ * Component enhancer.
+ */
+const enhance = compose<Props, OwnProps>(
+  connect<StateProps, {}, OwnProps, ApplicationState>((state) => ({
+    sets: getEmotesSets(state),
+  })),
+  withTheme
+)
+
+export default enhance(EmotePicker)
 
 /**
  * React Props.
@@ -480,7 +501,7 @@ interface OwnProps {
 /**
  * React Props.
  */
-type Props = StateProps & OwnProps
+type Props = StateProps & OwnProps & ThemeProps
 
 /**
  * React Props.

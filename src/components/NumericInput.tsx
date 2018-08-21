@@ -1,10 +1,9 @@
 import { INumericInputProps, NumericInput as OriginalNumericInput } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -17,7 +16,7 @@ const Wrapper = styled(FlexLayout)`
  * Description component.
  */
 const Description = styled.div`
-  color: ${color('settings.description')};
+  color: ${theme('settings.description')};
   font-size: 12px;
   margin-top: 3px;
 `

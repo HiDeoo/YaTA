@@ -1,11 +1,10 @@
 import { Button, Classes, Menu, Popover, Position } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import HighlightColorMenuItem from 'Components/HighlightColorMenuItem'
 import { HighlightColors } from 'Libs/Highlight'
-import { color, ifProp } from 'Utils/styled'
+import styled, { ifProp, theme } from 'Styled'
 
 /**
  * ColorMenuButton component.
@@ -30,7 +29,7 @@ const ColorMenuButton = styled(Button)`
  * ColorPreview component.
  */
 const ColorPreview = styled.div<ColorPreviewProps>`
-  background-color: ${(props) => color(`log.highlight.${props.highlightColor}.background`)};
+  background-color: ${(props) => theme(`log.highlight.${props.highlightColor}.background`)};
   border-radius: 2px;
   height: 11px;
   margin-right: 10px;

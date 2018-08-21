@@ -5,28 +5,26 @@ import * as pluralize from 'pluralize'
 import * as React from 'react'
 import { Flipped } from 'react-flip-toolkit'
 import TimeAgo, { Formatter } from 'react-timeago'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Twitch, { Follower, RawChannel, RawStream } from 'Libs/Twitch'
-import base from 'Styled/base'
-import { color, ifProp, size } from 'Utils/styled'
+import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled(FlexLayout)`
-  background-color: ${color('follows.background')};
+  background-color: ${theme('follows.background')};
   border-radius: 4px;
-  box-shadow: 0 0 0 1px ${color('follows.shadow')};
+  box-shadow: 0 0 0 1px ${theme('follows.shadow')};
   cursor: pointer;
   height: ${size('follows.height')};
   position: relative;
   transition: box-shadow 0.25s cubic-bezier(0.4, 1, 0.75, 0.9);
 
   &:hover {
-    box-shadow: 0 0 0 1px ${color('follows.hover.shadow1')}, 0 0 0 3px ${color('follows.hover.shadow2')};
+    box-shadow: 0 0 0 1px ${theme('follows.hover.shadow1')}, 0 0 0 3px ${theme('follows.hover.shadow2')};
   }
 `
 
@@ -34,8 +32,8 @@ const Wrapper = styled(FlexLayout)`
  * ThumbnailWrapper component.
  */
 const ThumbnailWrapper = styled.div`
-  background-color: ${color('follows.thumbnail')};
-  border-right: 1px solid ${color('follows.shadow')};
+  background-color: ${theme('follows.thumbnail')};
+  border-right: 1px solid ${theme('follows.shadow')};
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
   overflow: hidden;
@@ -60,7 +58,7 @@ const Thumbnail = styled.img`
  * LiveIconBackground component.
  */
 const LiveIconBackground = styled(Icon)`
-  color: ${color('follows.liveBackground')};
+  color: ${theme('follows.liveBackground')};
   position: absolute;
   right: -5px;
   top: -5px;
@@ -82,7 +80,7 @@ const LiveIcon = styled(Icon)`
  */
 const AvatarBackground = styled(Icon)`
   bottom: -8px;
-  color: ${color('follows.liveBackground')};
+  color: ${theme('follows.liveBackground')};
   left: -8px;
   position: absolute;
 `
@@ -102,12 +100,12 @@ const Avatar = styled.img`
  * Details component.
  */
 const Details = styled(FlexContent)`
-  color: ${color('follows.details')};
+  color: ${theme('follows.details')};
   font-size: 0.8rem;
   padding: 8px;
 
   ${Wrapper}:hover & {
-    color: ${color('follows.hover.details')};
+    color: ${theme('follows.hover.details')};
   }
 
   & > div {
@@ -125,13 +123,13 @@ const Details = styled(FlexContent)`
 const Title = styled(Text).attrs({
   ellipsize: true,
 })<TitleProps>`
-  color: ${ifProp('stream', color('follows.titleStream'), color('follows.titleChannel'))};
+  color: ${ifProp('stream', theme('follows.titleStream'), theme('follows.titleChannel'))};
   font-size: 0.88rem;
   font-weight: bold;
   position: relative;
 
   ${Wrapper}:hover & {
-    color: ${color('follows.hover.title')};
+    color: ${theme('follows.hover.title')};
   }
 `
 
@@ -141,18 +139,18 @@ const Title = styled(Text).attrs({
 const Meta = styled(Text).attrs({
   ellipsize: true,
 })`
-  color: ${color('follows.meta')};
+  color: ${theme('follows.meta')};
   font-size: 0.76rem;
 
   ${Wrapper}:hover & {
-    color: ${color('follows.hover.meta')};
+    color: ${theme('follows.hover.meta')};
   }
 `
 
 /**
  * Follow Component.
  */
-export default class Follow extends React.Component<Props> {
+class Follow extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
@@ -239,9 +237,9 @@ export default class Follow extends React.Component<Props> {
    * Triggered when the component appears.
    * @param element - The associated DOM node.
    */
-  private onAppear(element: HTMLElement) {
+  private onAppear = (element: HTMLElement) => {
     anime({
-      duration: base.follows.flip,
+      duration: this.props.theme.follows.flip,
       easing: 'easeOutSine',
       opacity: [0, 1],
       targets: element,
@@ -254,11 +252,11 @@ export default class Follow extends React.Component<Props> {
    * @param index - The element index.
    * @param removeElement - The callback to remove the DOM node after the animation.
    */
-  private onExit(element: HTMLElement, index: number, removeElement: (anim: anime.AnimeInstance) => void) {
+  private onExit = (element: HTMLElement, index: number, removeElement: (anim: anime.AnimeInstance) => void) => {
     anime({
       complete: removeElement,
       delay: index,
-      duration: base.follows.flip,
+      duration: this.props.theme.follows.flip,
       easing: 'easeOutSine',
       opacity: 0,
       targets: element,
@@ -266,10 +264,12 @@ export default class Follow extends React.Component<Props> {
   }
 }
 
+export default withTheme(Follow)
+
 /**
  * React Props.
  */
-interface Props {
+interface Props extends ThemeProps {
   follow: Follower
   goToChannel: (channel: string) => void
 }

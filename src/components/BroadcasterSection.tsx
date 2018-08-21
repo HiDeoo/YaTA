@@ -1,10 +1,9 @@
 import { Classes, H3 } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import Center from 'Components/Center'
 import Spinner from 'Components/Spinner'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -33,7 +32,7 @@ const Loading = styled(Spinner)`
  * Divider component.
  */
 const Divider = styled.hr`
-  background-image: ${color('broadcaster.section')};
+  background-image: ${theme('broadcaster.section')};
   border: 0;
   height: 1px;
   margin: 0;

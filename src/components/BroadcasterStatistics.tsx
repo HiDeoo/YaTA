@@ -3,21 +3,20 @@ import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
 import TimeAgo, { Formatter } from 'react-timeago'
-import styled from 'styled-components'
 
 import BroadcasterSection from 'Components/BroadcasterSection'
 import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
 import Twitch, { ClipPeriod } from 'Libs/Twitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Stats component.
  */
 const Stats = styled.div`
-  border-left: 1px solid ${color('broadcaster.border')};
-  border-top: 1px solid ${color('broadcaster.border')};
+  border-left: 1px solid ${theme('broadcaster.border')};
+  border-top: 1px solid ${theme('broadcaster.border')};
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 `
@@ -26,19 +25,19 @@ const Stats = styled.div`
  * Stat component.
  */
 const Stat = styled.div`
-  border-bottom: 1px solid ${color('broadcaster.border')};
-  border-right: 1px solid ${color('broadcaster.border')};
+  border-bottom: 1px solid ${theme('broadcaster.border')};
+  border-right: 1px solid ${theme('broadcaster.border')};
   padding: 8px 4px;
   text-align: center;
 
   &:hover {
-    background-color: ${color('resource.hover.background')};
+    background-color: ${theme('resource.hover.background')};
 
     & > div {
-      color: ${color('resource.hover.color')};
+      color: ${theme('resource.hover.color')};
 
       & + div {
-        color: ${color('resource.hover.meta')};
+        color: ${theme('resource.hover.meta')};
       }
     }
   }
@@ -48,7 +47,7 @@ const Stat = styled.div`
  * Name component.
  */
 const Name = styled.div`
-  color: ${color('broadcaster.meta')};
+  color: ${theme('broadcaster.meta')};
   font-size: 0.78rem;
 `
 
@@ -58,7 +57,7 @@ const Name = styled.div`
 const Value = styled(Text).attrs({
   ellipsize: true,
 })`
-  color: ${color('broadcaster.color')};
+  color: ${theme('broadcaster.color')};
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 4px;
@@ -68,7 +67,7 @@ const Value = styled(Text).attrs({
  * Links component.
  */
 const Links = styled.div`
-  color: ${color('broadcaster.meta')};
+  color: ${theme('broadcaster.meta')};
   font-size: 12px;
   margin-top: 12px;
   text-align: center;

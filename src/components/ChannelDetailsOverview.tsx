@@ -2,7 +2,6 @@ import { ButtonGroup, Classes, Colors, Icon, IconName, Intent, IPanel, IPanelPro
 import * as _ from 'lodash'
 import * as React from 'react'
 import TimeAgo from 'react-timeago'
-import styled from 'styled-components'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
 import ChannelDetailsButton from 'Components/ChannelDetailsButton'
@@ -13,7 +12,7 @@ import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawRelationship, RawStream } from 'Libs/Twitch'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Detail component.
@@ -48,7 +47,7 @@ const Game = styled(Detail)`
  * Meta component.
  */
 const Meta = styled(Detail)`
-  color: ${color('follow.meta')};
+  color: ${theme('follow.meta')};
   font-size: 0.82rem;
 `
 
@@ -87,11 +86,11 @@ const Preview = styled.img`
  * PanelButtons component.
  */
 const PanelButtons = styled.div`
-  border-top: 1px solid ${color('channel.border')};
+  border-top: 1px solid ${theme('channel.border')};
   padding: 0;
 
   & .${Classes.BUTTON_GROUP}.${Classes.MINIMAL}.${Classes.FILL} {
-    background-color: ${color('channel.background')};
+    background-color: ${theme('channel.background')};
   }
 `
 

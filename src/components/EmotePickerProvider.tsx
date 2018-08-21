@@ -1,9 +1,8 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import { ifProp } from 'Utils/styled'
+import styled, { ifProp } from 'Styled'
 
 /**
  * Wrapper component.

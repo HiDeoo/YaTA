@@ -1,8 +1,8 @@
 import { IPanel, PanelStack } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import ChannelDetailsOverview from 'Components/ChannelDetailsOverview'
+import styled from 'Styled'
 
 /**
  * ChannelDetailsPanels component.

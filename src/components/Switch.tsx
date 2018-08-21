@@ -1,10 +1,9 @@
 import { ISwitchProps, Switch as OriginalSwitch } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import Sound, { Sounds } from 'Libs/Sound'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Wrapper component.
@@ -17,7 +16,7 @@ const Wrapper = styled.div`
  * Description component.
  */
 const Description = styled.div`
-  color: ${color('settings.description')};
+  color: ${theme('settings.description')};
   font-size: 12px;
   margin-bottom: 10px;
   margin-left: 39px;

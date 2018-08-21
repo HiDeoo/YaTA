@@ -7,7 +7,6 @@ import { connect } from 'react-redux'
 import { match } from 'react-router'
 import * as ReactTooltip from 'react-tooltip'
 import { compose } from 'recompose'
-import styled from 'styled-components'
 
 import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
@@ -18,7 +17,7 @@ import { withHeader, WithHeaderProps } from 'Components/Header'
 import HeaderChannelState from 'Components/HeaderChannelState'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
-import Logs from 'Components/Logs'
+import Logs, { Logs as InnerLogs } from 'Components/Logs'
 import ModerationMenuItems from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
@@ -58,6 +57,7 @@ import {
   getShowViewerCount,
 } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
+import styled from 'Styled'
 import { replaceImgTagByAlt, sanitizeUrlForPreview } from 'Utils/html'
 
 /**
@@ -119,7 +119,7 @@ class Channel extends React.Component<Props, State> {
   public state: State = initialState
   public chatClient = React.createRef<any>()
   private logsWrapper = React.createRef<HTMLElement>()
-  private logsComponent = React.createRef<Logs>()
+  private logsComponent = React.createRef<InnerLogs>()
   private input = React.createRef<Input>()
   private viewerCountMonitorId?: number
 
@@ -251,7 +251,7 @@ class Channel extends React.Component<Props, State> {
           quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
-          ref={this.logsComponent}
+          innerRef={this.logsComponent}
           timeout={this.timeout}
           logs={allLogs.logs}
           chatters={chatters}

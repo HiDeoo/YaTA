@@ -2,14 +2,13 @@ import { Classes, Colors } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import SettingsPanel from 'Components/SettingsPanel'
 import Spinner from 'Components/Spinner'
 import { setShouldReadChangelog } from 'Store/ducks/app'
 import { setVersion } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { color } from 'Utils/styled'
+import styled, { theme } from 'Styled'
 
 /**
  * Changelog component.
@@ -53,16 +52,16 @@ const Changelog = styled.div`
 
   & code,
   .${Classes.DARK} & code {
-    background: ${color('changelog.background')};
+    background: ${theme('changelog.background')};
     border-radius: 3px;
-    box-shadow: inset 0 0 0 1px ${color('changelog.shadow')};
+    box-shadow: inset 0 0 0 1px ${theme('changelog.shadow')};
     color: ${Colors.GRAY1};
     font-size: 1em;
     padding: 2px 5px;
   }
 
   .${Classes.DARK} & code {
-    background: ${color('changelog.dark')};
+    background: ${theme('changelog.dark')};
     color: ${Colors.GRAY5};
   }
 

@@ -1,10 +1,10 @@
 import { Classes, Colors, FocusStyleManager } from '@blueprintjs/core'
 import * as React from 'react'
 import { render } from 'react-dom'
-import { injectGlobal } from 'styled-components'
 
 import Wrapper from 'Components/Wrapper'
 import configureStore, { StoreConfiguration } from 'Store'
+import { injectGlobal } from 'Styled'
 import base from 'Styled/base'
 
 import 'node_modules/@blueprintjs/core/lib/css/blueprint.css'

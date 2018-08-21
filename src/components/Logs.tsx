@@ -2,7 +2,6 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import * as ReactTooltip from 'react-tooltip'
 import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import Marker from 'Components/Marker'
@@ -15,15 +14,14 @@ import { SerializedChatter } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import { ChattersState } from 'Store/ducks/chatters'
 import { isMarker, isMessage, isNotice, isNotification, isWhisper, Log } from 'Store/ducks/logs'
-import base from 'Styled/base'
-import { color, ifProp, size } from 'Utils/styled'
+import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled(FlexContent)<WrapperProps>`
-  border-bottom: ${size('log.border.bottom')} solid ${ifProp('pauseAutoScroll', color('log.pause'), 'transparent')};
-  border-top: ${size('log.border.top')} solid ${ifProp('pauseAutoScroll', color('log.pause'), 'transparent')};
+  border-bottom: ${size('log.border.bottom')} solid ${ifProp('pauseAutoScroll', theme('log.pause'), 'transparent')};
+  border-top: ${size('log.border.top')} solid ${ifProp('pauseAutoScroll', theme('log.pause'), 'transparent')};
   font-size: 0.82rem;
   line-height: 1.4rem;
   overflow: hidden;
@@ -32,7 +30,7 @@ const Wrapper = styled(FlexContent)<WrapperProps>`
 /**
  * Logs Component.
  */
-export default class Logs extends React.Component<Props> {
+export class Logs extends React.Component<Props> {
   public list = React.createRef<List>()
   private pauseAutoScroll: boolean = false
   private previousPauseAutoScroll: boolean = false
@@ -46,10 +44,10 @@ export default class Logs extends React.Component<Props> {
     super(props)
 
     this.logMeasureCache = new CellMeasurerCache({
-      defaultHeight: base.log.minHeight,
+      defaultHeight: props.theme.log.minHeight,
       fixedWidth: true,
       keyMapper: (index) => _.get(this.props.logs[index], 'id'),
-      minHeight: base.log.minHeight,
+      minHeight: props.theme.log.minHeight,
     })
   }
 
@@ -66,7 +64,7 @@ export default class Logs extends React.Component<Props> {
    */
   public render() {
     const { copyMessageOnDoubleClick, logs, purgedCount, showContextMenu } = this.props
-    const { bottom, top } = base.log.border
+    const { bottom, top } = this.props.theme.log.border
 
     const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
 
@@ -230,10 +228,12 @@ export default class Logs extends React.Component<Props> {
   }
 }
 
+export default withTheme(Logs)
+
 /**
  * React Props.
  */
-interface Props {
+interface Props extends ThemeProps {
   actionHandler: ActionHandler
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
@@ -242,6 +242,7 @@ interface Props {
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  innerRef?: React.RefObject<Logs>
   logs: Log[]
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number

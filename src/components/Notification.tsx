@@ -1,23 +1,22 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import notificationBorder from 'Images/notificationBorder.png'
 import { NotificationEvent, SerializedNotification } from 'Libs/Notification'
-import { color, ifProp, size } from 'Utils/styled'
+import styled, { ifProp, size, theme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div<WrapperProps>`
-  background-color: ${color('notification.background')};
-  border-color: ${ifProp('highlight', 'initial', color('notification.border'))};
+  background-color: ${theme('notification.background')};
+  border-color: ${ifProp('highlight', 'initial', theme('notification.border'))};
   border-image-repeat: repeat;
   border-image-slice: 1 30;
   border-image-source: ${ifProp('highlight', `url(${notificationBorder})`, 'initial')};
   border-style: solid;
   border-width: 0 0 0 3px;
-  padding: 4px ${size('log.hPadding')} 4px calc(${size('log.hPadding')} - 1px);
+  padding: 4px ${size('log.hPadding')} 4px ${size('log.hPadding', -1)};
   position: relative;
 `
 
@@ -25,7 +24,7 @@ const Wrapper = styled.div<WrapperProps>`
  * Message component.
  */
 const Message = styled.div`
-  color: ${color('notification.message')};
+  color: ${theme('notification.message')};
   font-style: italic;
   margin-top: 4px;
 `

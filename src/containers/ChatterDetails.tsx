@@ -13,7 +13,6 @@ import {
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import ExternalButton from 'Components/ExternalButton'
 import FlexLayout from 'Components/FlexLayout'
@@ -33,7 +32,7 @@ import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterLogs } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { makeGetChatterNote } from 'Store/selectors/notes'
-import { color, ifProp, size } from 'Utils/styled'
+import styled, { ifProp, size, theme } from 'Styled'
 
 /**
  * DetailsRow component.
@@ -52,8 +51,8 @@ const DetailsRow = styled(FlexLayout)<DetailsRowProps>`
  * DetailsCell component.
  */
 const DetailsCell = styled.div`
-  border-right: 1px solid ${color('chatter.details.border')};
-  color: ${color('chatter.details.color')};
+  border-right: 1px solid ${theme('chatter.details.border')};
+  color: ${theme('chatter.details.color')};
   font-size: 0.82rem;
   padding: 0 20px 0 12px;
 
@@ -66,7 +65,7 @@ const DetailsCell = styled.div`
   }
 
   & > strong {
-    color: ${color('chatter.details.strong')};
+    color: ${theme('chatter.details.strong')};
     display: block;
     font-weight: 600;
     font-size: 0.9rem;
@@ -104,9 +103,9 @@ const Avatar = styled.div`
   & > svg.${Classes.ICON}, .${Classes.DARK} & > svg.${Classes.ICON} {
     color: ${Colors.DARK_GRAY5};
     display: block;
-    height: calc(${size('chatter.avatar.size')} - 15px);
+    height: ${size('chatter.avatar.size', -15)};
     margin: 0;
-    width: calc(${size('chatter.avatar.size')} - 15px);
+    width: ${size('chatter.avatar.size', -15)};
   }
 `
 

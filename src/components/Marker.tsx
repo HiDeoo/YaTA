@@ -1,16 +1,15 @@
 import { Colors } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { SerializedMarker } from 'Store/ducks/logs'
-import { color, size } from 'Utils/styled'
+import styled, { size, theme } from 'Styled'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  background-color: ${color('notification.background')};
+  background-color: ${theme('notification.background')};
   border-left: 3px solid ${Colors.RED4};
   border-right: 3px solid ${Colors.RED4};
   padding: 5px ${size('log.hPadding')} 0 ${size('log.hPadding')};

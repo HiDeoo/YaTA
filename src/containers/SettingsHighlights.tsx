@@ -2,7 +2,6 @@ import { Classes, Intent, TagInput } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
@@ -26,6 +25,7 @@ import {
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getHighlights, getHighlightsIgnoredUsers, getHighlightsPermanentUsers } from 'Store/selectors/settings'
+import styled from 'Styled'
 
 /**
  * Notice component.
