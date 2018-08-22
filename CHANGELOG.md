@@ -2,6 +2,7 @@
 
 ### 🐛 Bug Fix
 
+- Fix an issue leading to some moderators being temporarily not recognized as such.
 - Use the username color in the chatter details dialog.
 
 # 1.3.1

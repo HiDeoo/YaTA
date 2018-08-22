@@ -514,8 +514,10 @@ export class ChatClient extends React.Component<Props, State> {
    * @param channel - The channel.
    * @param username - The username.
    */
-  private onUnmod = (_channel: string, username: string) => {
-    if (!_.isNil(this.props.loginDetails) && username === this.props.loginDetails.username) {
+  private onUnmod = (channel: string, username: string) => {
+    const { loginDetails } = this.props
+
+    if (!_.isNil(loginDetails) && loginDetails.username !== channel && username === loginDetails.username) {
       this.props.setModerator(false)
     }
   }
