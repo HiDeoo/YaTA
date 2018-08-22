@@ -2,7 +2,7 @@ import { Classes, Colors, Icon, InputGroup, Popover, Position } from '@blueprint
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Grid, GridCellRenderer } from 'react-virtualized'
+import { Grid, GridCellRenderer } from 'react-virtualized/dist/es/Grid'
 import { compose } from 'recompose'
 
 import EmotePickerEmote from 'Components/EmotePickerEmote'

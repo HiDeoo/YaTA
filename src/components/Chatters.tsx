@@ -1,7 +1,8 @@
 import { InputGroup } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
-import { AutoSizer, List, ListRowRenderer } from 'react-virtualized'
+import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
+import { List, ListRowRenderer } from 'react-virtualized/dist/es/List'
 
 import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'

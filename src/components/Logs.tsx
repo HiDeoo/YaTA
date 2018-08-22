@@ -1,7 +1,9 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 import * as ReactTooltip from 'react-tooltip'
-import { AutoSizer, CellMeasurer, CellMeasurerCache, List, ListRowRenderer } from 'react-virtualized'
+import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
+import { CellMeasurer, CellMeasurerCache } from 'react-virtualized/dist/es/CellMeasurer'
+import { List, ListRowRenderer } from 'react-virtualized/dist/es/List'
 
 import FlexContent from 'Components/FlexContent'
 import Marker from 'Components/Marker'
