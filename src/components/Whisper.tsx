@@ -3,6 +3,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 
 import MessageContent from 'Components/MessageContent'
+import { WithNameColorProps } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import styled, { prop, size, theme } from 'Styled'
 
@@ -28,7 +29,7 @@ const InboxIcon = styled(Icon)`
 /**
  * Username component.
  */
-const Username = styled.span<UsernameProps>`
+const Username = styled.span<WithNameColorProps>`
   color: ${prop('color')};
   font-weight: bold;
   padding-right: 6px;
@@ -92,11 +93,4 @@ interface Props {
   copyMessageToClipboard: (message: SerializedMessage) => void
   style: React.CSSProperties
   whisper: SerializedMessage
-}
-
-/**
- * React Props.
- */
-interface UsernameProps {
-  color: string
 }

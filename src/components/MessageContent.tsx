@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 
 import LogType from 'Constants/logType'
+import { WithNameColorProps } from 'Libs/Chatter'
 import { HighlightColors } from 'Libs/Highlight'
 import { SerializedMessage } from 'Libs/Message'
 import styled, { prop, theme } from 'Styled'
@@ -9,7 +10,7 @@ import styled, { prop, theme } from 'Styled'
 /**
  * Message component.
  */
-const Message = styled.span<MessageProps>`
+const Message = styled.span<WithNameColorProps>`
   color: ${prop('color')};
   word-wrap: break-word;
 
@@ -87,11 +88,4 @@ export default MessageContent
  */
 interface Props {
   message: SerializedMessage
-}
-
-/**
- * React Props.
- */
-interface MessageProps {
-  color: string
 }

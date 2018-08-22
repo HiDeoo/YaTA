@@ -136,3 +136,10 @@ export type SerializedChatter = {
   showUserName: boolean
   userName: string
 }
+
+/**
+ * Name color interface.
+ */
+export interface WithNameColorProps {
+  color: string
+}

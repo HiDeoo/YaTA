@@ -6,7 +6,7 @@ import MessageContent from 'Components/MessageContent'
 import Preview from 'Components/Preview'
 import ActionMenuItems from 'Containers/ActionMenuItems'
 import { ActionHandler } from 'Libs/Action'
-import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedChatter, WithNameColorProps } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import styled, { ifProp, prop, size, theme } from 'Styled'
 
@@ -102,7 +102,7 @@ const Badges = styled.span`
 /**
  * Name component.
  */
-const Name = styled.span<NameProps>`
+const Name = styled.span<WithNameColorProps>`
   color: ${prop('color')};
   cursor: pointer;
   font-weight: bold;
@@ -431,11 +431,4 @@ interface WrapperProps {
   highlighted: boolean
   mentionned: boolean
   purged: boolean
-}
-
-/**
- * React Props.
- */
-interface NameProps {
-  color: string
 }

@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 
 import MessageContent from 'Components/MessageContent'
+import { WithNameColorProps } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import styled, { prop, size, theme } from 'Styled'
 
@@ -26,7 +27,7 @@ const Time = styled.span`
 /**
  * Name component.
  */
-const Name = styled.span<NameProps>`
+const Name = styled.span<WithNameColorProps>`
   color: ${prop('color')};
   font-weight: bold;
   padding-right: 2px;
@@ -97,11 +98,4 @@ interface Props {
   onDoubleClick: (message: SerializedMessage) => void
   showUsername: boolean
   style: React.CSSProperties
-}
-
-/**
- * React Props.
- */
-interface NameProps {
-  color: string
 }

@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Use the username color in the chatter details dialog.
+
 # 1.3.1
 
 ### 🚀 New Feature

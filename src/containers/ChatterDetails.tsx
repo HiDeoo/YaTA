@@ -22,7 +22,7 @@ import { ToggleableUI } from 'Constants/toggleable'
 import ActionMenuItems from 'Containers/ActionMenuItems'
 import Dialog from 'Containers/Dialog'
 import { ActionHandler, SerializedAction } from 'Libs/Action'
-import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedChatter, WithNameColorProps } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
 import Twitch, { RawChannel, RawRelationship } from 'Libs/Twitch'
 import TwitchTools, { UsernameHistory } from 'Libs/TwitchTools'
@@ -32,7 +32,7 @@ import { ApplicationState } from 'Store/reducers'
 import { makeGetChatterLogs } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { makeGetChatterNote } from 'Store/selectors/notes'
-import styled, { ifProp, size, theme } from 'Styled'
+import styled, { ifProp, prop, size, theme } from 'Styled'
 
 /**
  * DetailsRow component.
@@ -107,6 +107,15 @@ const Avatar = styled.div`
     margin: 0;
     width: ${size('chatter.avatar.size', -15)};
   }
+`
+
+/**
+ * Name component.
+ */
+const Name = styled.span<WithNameColorProps>`
+  color: ${prop('color')};
+  font-weight: bold;
+  padding-right: 2px;
 `
 
 /**
@@ -278,10 +287,13 @@ class ChatterDetails extends React.Component<Props, State> {
     const lastMessage = _.last(logs)
     const badges = !_.isNil(lastMessage) && isMessage(lastMessage) ? lastMessage.badges : null
 
+    const showUsername = _.get(chatter, 'showUsername', false)
+    const usernameColor = chatter.color as string
+
     const header = (
       <Header>
         <Avatar>{_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} />}</Avatar>
-        {`${chatter.displayName}${chatter.showUserName ? ` (${chatter.userName})` : ''}`}
+        <Name color={usernameColor}>{`${chatter.displayName}${showUsername ? ` (${chatter.userName})` : ''}`}</Name>
         {!_.isNil(badges) && <Badges dangerouslySetInnerHTML={{ __html: badges }} />}
       </Header>
     )
