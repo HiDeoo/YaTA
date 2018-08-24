@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Overhaul the login UI to better showcase actual features.
+
 # 1.3.2
 
 ### 🐛 Bug Fix

@@ -123,6 +123,20 @@ export default interface ITheme {
       border: string
     }
   }
+  login: {
+    feature: {
+      background: string
+      height: number
+      meta: string
+      shadow: string
+      title: string
+      width: number
+    }
+    features: {
+      color: string
+      height: number
+    }
+  }
   logo: string
   message: {
     time: {

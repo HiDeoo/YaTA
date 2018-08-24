@@ -89,6 +89,15 @@ export default {
     minHeight: 33,
     pause: 'rgba(245, 86, 86, 0.78)',
   },
+  login: {
+    feature: {
+      height: 60,
+      width: 280,
+    },
+    features: {
+      height: 500,
+    },
+  },
   logo: '#c2ccd6',
   message: {
     time: {

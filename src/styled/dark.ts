@@ -87,6 +87,17 @@ const dark = {
       border: Colors.GREEN3,
     },
   },
+  login: {
+    feature: {
+      background: Colors.DARK_GRAY4,
+      meta: Colors.GRAY3,
+      shadow: '0 0 0 1px rgba(16, 22, 26, 0.1), 0 2px 4px rgba(16, 22, 26, 0.3), 0 9px 24px 3px rgba(16, 22, 26, 0.3)',
+      title: Colors.WHITE,
+    },
+    features: {
+      color: Colors.DARK_GRAY5,
+    },
+  },
   notification: {
     background: Colors.DARK_GRAY2,
     border: Colors.BLUE4,

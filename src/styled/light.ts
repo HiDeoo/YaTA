@@ -83,6 +83,17 @@ const light = {
       border: Colors.GREEN3,
     },
   },
+  login: {
+    feature: {
+      background: Colors.LIGHT_GRAY3,
+      meta: Colors.GRAY1,
+      shadow: '0 0 0 1px rgba(16,22,26,.1), 0 2px 4px rgba(16,22,26,.2), 0 9px 24px 3px rgba(16,22,26,.2)',
+      title: Colors.DARK_GRAY1,
+    },
+    features: {
+      color: Colors.LIGHT_GRAY3,
+    },
+  },
   notification: {
     background: Colors.LIGHT_GRAY3,
     border: Colors.BLUE4,
