@@ -272,6 +272,7 @@ class Channel extends React.Component<Props, State> {
         <ChatterDetails
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          copyToClipboard={this.copyToClipboard}
           actionHandler={this.handleAction}
           canModerate={this.canModerate}
           unfocus={this.unfocusChatter}
@@ -710,6 +711,8 @@ class Channel extends React.Component<Props, State> {
    */
   private unfocusChatter = () => {
     this.setState(() => ({ focusedChatter: undefined }))
+
+    this.focusChatInput()
   }
 
   /**

@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Overhaul the login UI to better showcase actual features.
+- Names from the username history can now be copied when clicking them.
 
 # 1.3.2
 
