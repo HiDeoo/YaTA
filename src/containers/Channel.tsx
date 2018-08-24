@@ -21,6 +21,7 @@ import Logs, { Logs as InnerLogs } from 'Components/Logs'
 import ModerationMenuItems from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
+import Key from 'Constants/key'
 import ReadyState from 'Constants/readyState'
 import Status from 'Constants/status'
 import { ToggleableUI } from 'Constants/toggleable'
@@ -503,6 +504,10 @@ class Channel extends React.Component<Props, State> {
       event.preventDefault()
 
       this.toggleFollowOmnibar()
+    } else if ((event.code === Key.Semicolon || event.code === 'KeyM') && event.altKey) {
+      event.preventDefault()
+
+      this.props.addMarker()
     }
   }
 

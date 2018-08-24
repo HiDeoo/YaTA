@@ -4,6 +4,7 @@
 
 - Overhaul the login UI to better showcase actual features.
 - Names from the username history can now be copied when clicking them.
+- Markers can now be added using the `Alt` + `m` shortcut.
 
 # 1.3.2
 
