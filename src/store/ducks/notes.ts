@@ -76,4 +76,4 @@ export type NotesActions = ReturnType<typeof updateNote> | ReturnType<typeof res
 /**
  * Notes state.
  */
-export type NotesState = { [key: string]: string }
+export type NotesState = Record<string, string>

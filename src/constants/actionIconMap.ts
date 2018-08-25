@@ -10,4 +10,4 @@ export default {
   [ActionType.Prepare]: 'form',
   [ActionType.Say]: 'chat',
   [ActionType.Whisper]: 'envelope',
-} as { [key in ActionType]: IconName }
+} as Record<ActionType, IconName>

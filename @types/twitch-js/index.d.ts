@@ -33,13 +33,9 @@ declare module 'twitch-js' {
     }
   }
 
-  type Badges = {
-    [key: string]: string
-  }
+  type Badges = Record<string, string>
 
-  export type Emotes = {
-    [key: string]: string[]
-  }
+  export type Emotes = Record<string, string[]>
 
   export type RoomState = {
     'broadcaster-lang'?: string | null
@@ -95,9 +91,7 @@ declare module 'twitch-js' {
     userstate: UserState
   }
 
-  export type EmoteSets = {
-    [key: number]: Array<Emote>
-  }
+  export type EmoteSets = Record<number, Emote[]>
 
   export class Client {
     constructor()

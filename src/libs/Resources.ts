@@ -38,9 +38,9 @@ export default class Resources {
   private highlightsPermanentUsers: string[] = []
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
-  private emoticonsMap: { [key: string]: { code: string; id: string } } = {}
+  private emoticonsMap: Record<string, { code: string; id: string }> = {}
   private emoticonsList = _.flatten(_.map(Emoticons.bySetId, (set) => _.map(set, (id) => id)))
-  private previewProviders: { [key: string]: PreviewProvider }
+  private previewProviders: Record<string, PreviewProvider>
 
   /**
    * Creates a new instance of the class.

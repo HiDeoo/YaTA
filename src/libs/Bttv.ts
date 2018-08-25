@@ -46,7 +46,7 @@ export default class Bttv {
    * @param  additionalHeaders -  Additional headers to pass down to the query.
    * @return The response.
    */
-  private static fetch(url: string, additionalHeaders?: { [key: string]: string }) {
+  private static fetch(url: string, additionalHeaders?: Record<string, string>) {
     const headers = new Headers({
       Accept: 'application/json',
     })

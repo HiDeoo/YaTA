@@ -28,7 +28,7 @@ export default class TwitchTools {
    * @param  [searchParams={}] - Additional search parameters.
    * @return The URL.
    */
-  private static getUrl(endpoint: string, searchParams: { [key: string]: string } = {}) {
+  private static getUrl(endpoint: string, searchParams: Record<string, string> = {}) {
     const url = new URL(BaseUrl.concat(endpoint))
 
     _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
@@ -43,11 +43,7 @@ export default class TwitchTools {
    * @param  [method=RequestMethod.Get] - The request method.
    * @return The response.
    */
-  private static async fetch(
-    endpoint: string,
-    searchParams: { [key: string]: string } = {},
-    method = RequestMethod.Get
-  ) {
+  private static async fetch(endpoint: string, searchParams: Record<string, string> = {}, method = RequestMethod.Get) {
     searchParams.format = 'json'
 
     const url = TwitchTools.getUrl(endpoint, searchParams)

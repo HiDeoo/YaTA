@@ -90,7 +90,7 @@ const Notice = styled.div`
 /**
  * Emote provider icon mapping.
  */
-const EmoteProviderIconMap: { [key in EmoteProviderPrefix]: string | string[] } = {
+const EmoteProviderIconMap: Record<EmoteProviderPrefix, string | string[]> = {
   [EmoteProviderPrefix.Twitch]: ['115847', '28087', '64138', '68856', '123171', '30259', '4339', '114836', '425618'],
   [EmoteProviderPrefix.Bttv]: '56e9f494fff3cc5c35e5287e',
 }

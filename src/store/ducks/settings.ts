@@ -727,9 +727,9 @@ export type SettingsState = {
 /**
  * Highlights.
  */
-export type SerializedHighlights = { [key in SerializedHighlight['id']]: SerializedHighlight }
+export type SerializedHighlights = Record<SerializedHighlight['id'], SerializedHighlight>
 
 /**
  * Actions.
  */
-export type SerializedActions = { [key in SerializedAction['id']]: SerializedAction }
+export type SerializedActions = Record<SerializedAction['id'], SerializedAction>

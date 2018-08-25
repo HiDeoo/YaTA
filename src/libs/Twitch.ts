@@ -668,7 +668,7 @@ export default class Twitch {
    * @param  [proxy=false] - `true` to use a CORS proxy.
    * @return The URL.
    */
-  private static getUrl(api: TwitchApi, endpoint: string, searchParams: { [key: string]: string } = {}, proxy = false) {
+  private static getUrl(api: TwitchApi, endpoint: string, searchParams: Record<string, string> = {}, proxy = false) {
     const url = new URL(`${proxy ? ProxyURL : ''}${api}${endpoint}`)
 
     _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
@@ -690,7 +690,7 @@ export default class Twitch {
   private static async fetch(
     api: TwitchApi,
     endpoint: string,
-    searchParams: { [key: string]: string } = {},
+    searchParams: Record<string, string> = {},
     authenticated = false,
     method = RequestMethod.Get,
     body?: object,
@@ -784,13 +784,7 @@ export type IdToken = {
 /**
  * Twitch badges.
  */
-export type RawBadges = {
-  [key: string]: {
-    versions: {
-      [key: string]: RawBadge
-    }
-  }
-}
+export type RawBadges = Record<string, { versions: Record<string, RawBadge> }>
 
 /**
  * Twitch badge.
@@ -1004,7 +998,7 @@ type RawCheermoteTier = {
   can_cheer: boolean
   color: string
   id: string
-  images: { [key in CheermoteImageBackground]: RawCheermoteImages }
+  images: Record<CheermoteImageBackground, RawCheermoteImages>
   min_bits: number
 }
 
@@ -1202,12 +1196,12 @@ type RawStatus = {
 /**
  * Twitch Cheermote images.
  */
-type RawCheermoteImages = { [key in CheermoteImageType]: RawCheermoteImage }
+type RawCheermoteImages = Record<CheermoteImageType, RawCheermoteImage>
 
 /**
  * Twitch Cheermote image.
  */
-export type RawCheermoteImage = { [key in CheermoteImageScales]: string }
+export type RawCheermoteImage = Record<CheermoteImageScales, string>
 
 /**
  * Cheermotes related types.

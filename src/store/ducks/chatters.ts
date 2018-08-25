@@ -247,11 +247,11 @@ export type ChattersState = {
   /**
    * All chatters keyed by ids.
    */
-  byId: { [key: string]: SerializedChatter & { logs: string[] } }
+  byId: Record<string, SerializedChatter & { logs: string[] }>
 
   /**
    * All chatters keyed by names.
    * Note: this is only a reference to the chatter id.
    */
-  byName: { [key: string]: string }
+  byName: Record<string, string>
 }

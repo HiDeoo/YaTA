@@ -121,7 +121,7 @@ export enum ActionPlaceholder {
 /**
  * Action placeholders replacement values..
  */
-type ActionReplacement = { [key in ActionPlaceholder]: string }
+type ActionReplacement = Record<ActionPlaceholder, string>
 
 /**
  * Types of action available.

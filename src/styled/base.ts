@@ -1,7 +1,6 @@
 import { Colors } from '@blueprintjs/core'
 
 import Theme from 'Constants/theme'
-import { HighlightColor, HighlightColors } from 'Libs/Highlight'
 
 /**
  * Base theme.
@@ -85,7 +84,7 @@ export default {
       Green: { color: Colors.WHITE, background: Colors.GREEN3 },
       Red: { color: Colors.WHITE, background: Colors.RED3 },
       Yellow: { color: Colors.DARK_GRAY1, background: Colors.GOLD5 },
-    } as { [key in HighlightColors]: HighlightColor },
+    },
     minHeight: 33,
     pause: 'rgba(245, 86, 86, 0.78)',
   },

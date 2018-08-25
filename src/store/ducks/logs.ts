@@ -189,7 +189,7 @@ export type LogsState = {
   /**
    * All logs keyed by ids.
    */
-  byId: { [key: string]: Log }
+  byId: Record<string, Log>
 
   /**
    * All logs ordered by ids.

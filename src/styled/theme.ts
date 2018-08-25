@@ -108,7 +108,7 @@ export default interface ITheme {
       top: number
     }
     hPadding: number
-    highlight: { [key in HighlightColors]: HighlightColor }
+    highlight: Record<HighlightColors, HighlightColor>
     mention: {
       color: string
       self: {

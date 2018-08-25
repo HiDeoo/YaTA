@@ -250,7 +250,7 @@ export type AppState = {
   /**
    * Emotes.
    */
-  emotes: { [key: string]: Emote[] }
+  emotes: Record<string, Emote[]>
 
   /**
    * The username of the last user that sent us a whisper.

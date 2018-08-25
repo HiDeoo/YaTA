@@ -24,7 +24,7 @@ export default class Sound {
   }
 
   private static instance: Sound
-  private sounds: { [key: string]: HTMLAudioElement } = {}
+  private sounds: Record<string, HTMLAudioElement> = {}
 
   /**
    * Creates a new instance of the class.

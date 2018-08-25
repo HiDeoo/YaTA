@@ -12,9 +12,7 @@ export interface PreviewProvider {
 /**
  * Preview parsing results.
  */
-export type Previews = {
-  [key: string]: UnresolvedPreview | Preview
-}
+export type Previews = Record<string, UnresolvedPreview | Preview>
 
 /**
  * Unresolved preview.
@@ -24,7 +22,7 @@ export type UnresolvedPreview = {
   provider: string
   resolved: boolean
   type?: string | number
-  extra?: { [key: string]: string | number }
+  extra?: Record<string, string | number>
 }
 
 /**

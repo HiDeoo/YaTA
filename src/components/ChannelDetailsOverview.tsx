@@ -112,7 +112,7 @@ const ChannelDetailsPanels = {
   [ChannelDetailsType.LastVods]: { component: ChannelDetailsVideos, icon: 'video' },
   [ChannelDetailsType.RecentClips]: { component: ChannelDetailsVideos, icon: 'film' },
   [ChannelDetailsType.TopClips]: { component: ChannelDetailsVideos, icon: 'crown' },
-} as { [key in ChannelDetailsType]: ChannelDetailsPanel }
+} as Record<ChannelDetailsType, ChannelDetailsPanel>
 
 /**
  * React State.
