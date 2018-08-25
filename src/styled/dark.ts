@@ -134,6 +134,14 @@ const dark = {
       background: Colors.DARK_GRAY4,
       border: Colors.DARK_GRAY1,
     },
+    viewButton: {
+      hover: {
+        icon: Colors.GRAY3,
+        text: Colors.WHITE,
+      },
+      icon: Colors.GRAY1,
+      text: Colors.GRAY5,
+    },
   },
   whisper: {
     background: Colors.DARK_GRAY2,

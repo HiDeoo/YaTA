@@ -9,8 +9,8 @@ import NonIdealState from 'Components/NonIdealState'
 import SettingsHighlight from 'Components/SettingsHighlight'
 import SettingsHighlightColorMenu from 'Components/SettingsHighlightColorMenu'
 import SettingsInput from 'Components/SettingsInput'
-import SettingsPanel from 'Components/SettingsPanel'
 import SettingsTable from 'Components/SettingsTable'
+import SettingsView from 'Components/SettingsView'
 import Key from 'Constants/key'
 import Highlight, { HighlightColors } from 'Libs/Highlight'
 import {
@@ -28,6 +28,16 @@ import { getHighlights, getHighlightsIgnoredUsers, getHighlightsPermanentUsers }
 import styled from 'Styled'
 
 /**
+ * Wrapper component.
+ */
+const Wrapper = styled(SettingsView)`
+  & > div,
+  & > section {
+    flex-shrink: 0;
+  }
+`
+
+/**
  * Notice component.
  */
 const Notice = styled.div`
@@ -43,13 +53,6 @@ const Form = styled(FlexContent)`
 `
 
 /**
- * Highlights component.
- */
-const Highlights = styled(SettingsTable)`
-  height: calc(100% - 218px);
-`
-
-/**
  * UsersInput component.
  */
 const UsersInput = styled(TagInput)`
@@ -60,7 +63,7 @@ const UsersInput = styled(TagInput)`
   }
 
   &.${Classes.INPUT}, &.${Classes.TAG_INPUT}, & > .${Classes.TAG_INPUT_VALUES} {
-    max-height: 50px;
+    max-height: 30px;
     overflow-y: auto;
   }
 
@@ -91,7 +94,7 @@ class SettingsHighlights extends React.Component<Props, State> {
     const { highlights, ignoredUsers, permanentUsers } = this.props
 
     return (
-      <SettingsPanel>
+      <Wrapper>
         <Notice>Case-insensitive. Username included by default.</Notice>
         <FlexLayout>
           <Form>
@@ -106,7 +109,7 @@ class SettingsHighlights extends React.Component<Props, State> {
           </Form>
           <SettingsHighlightColorMenu color={newColor} onSelect={this.onSelectColor} />
         </FlexLayout>
-        <Highlights>
+        <SettingsTable>
           {_.size(highlights) > 0 ? (
             _.map(highlights, (highlight) => (
               <SettingsHighlight
@@ -121,7 +124,7 @@ class SettingsHighlights extends React.Component<Props, State> {
           ) : (
             <NonIdealState small title="No highlight yet!" details="Try adding some above." />
           )}
-        </Highlights>
+        </SettingsTable>
         <UsersInput
           placeholder="Ignore highlights from users… (space-separated list)"
           onRemove={this.onRemoveIgnoredUser}
@@ -142,7 +145,7 @@ class SettingsHighlights extends React.Component<Props, State> {
           separator=" "
           fill
         />
-      </SettingsPanel>
+      </Wrapper>
     )
   }
 

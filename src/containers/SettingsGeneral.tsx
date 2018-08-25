@@ -3,41 +3,27 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import NumericInput from 'Components/NumericInput'
-import SettingsPanel from 'Components/SettingsPanel'
-import SettingsPanelSection from 'Components/SettingsPanelSection'
+import SettingsView from 'Components/SettingsView'
+import SettingsViewSection from 'Components/SettingsViewSection'
 import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
-import { Sounds } from 'Libs/Sound'
 import {
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
   toggleDisableDialogAnimations,
-  toggleHideWhispers,
   toggleHighlightAllMentions,
-  togglePlaySoundOnMentions,
-  togglePlaySoundOnWhispers,
   togglePrioritizeUsernames,
   toggleShowContextMenu,
-  toggleShowViewerCount,
   toggleTheme,
-  updateAutoHostThreshold,
-  updateHostThreshold,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import {
   getAutoFocusInput,
-  getAutoHostThreshold,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
-  getHideWhispers,
   getHighlightAllMentions,
-  getHostThreshold,
-  getPlaySoundOnMentions,
-  getPlaySoundOnWhispers,
   getPrioritizeUsernames,
   getShowContextMenu,
-  getShowViewerCount,
   getTheme,
 } from 'Store/selectors/settings'
 import styled from 'Styled'
@@ -67,10 +53,8 @@ type State = Readonly<typeof initialState>
 /**
  * SettingsGeneral Component.
  */
-class SettingsGeneral extends React.Component<Props> {
+class SettingsGeneral extends React.Component<Props, State> {
   public state: State = initialState
-  private hostThresholdInput = React.createRef<NumericInput>()
-  private autoHostThresholdInput = React.createRef<NumericInput>()
 
   /**
    * Renders the component.
@@ -79,24 +63,18 @@ class SettingsGeneral extends React.Component<Props> {
   public render() {
     const {
       autoFocusInput,
-      autoHostThreshold,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
-      hideWhispers,
       highlightAllMentions,
-      hostThreshold,
-      playSoundOnMentions,
-      playSoundOnWhispers,
       prioritizeUsernames,
       showContextMenu,
-      showViewerCount,
       theme,
     } = this.props
     const { isThemeConfirmationOpened } = this.state
 
     return (
-      <SettingsPanel>
-        <SettingsPanelSection title="Features">
+      <SettingsView>
+        <SettingsViewSection title="Features">
           <Switch
             onChange={this.props.toggleCopyMessageOnDoubleClick}
             label="Copy message on double click"
@@ -126,8 +104,8 @@ class SettingsGeneral extends React.Component<Props> {
             onChange={this.props.togglePrioritizeUsernames}
             checked={prioritizeUsernames}
           />
-        </SettingsPanelSection>
-        <SettingsPanelSection title="UI">
+        </SettingsViewSection>
+        <SettingsViewSection title="UI">
           <Popover
             popoverClassName={Classes.POPOVER_CONTENT_SIZING}
             isOpen={isThemeConfirmationOpened}
@@ -142,56 +120,8 @@ class SettingsGeneral extends React.Component<Props> {
             checked={disableDialogAnimations}
             label="Disable dialog animations"
           />
-        </SettingsPanelSection>
-        <SettingsPanelSection title="Notifications">
-          <Switch
-            onChange={this.props.togglePlaySoundOnMentions}
-            checkSound={Sounds.Notification}
-            label="Play sound on mentions"
-            checked={playSoundOnMentions}
-          />
-          <Switch
-            onChange={this.props.togglePlaySoundOnWhispers}
-            checkSound={Sounds.Notification}
-            label="Play sound on whispers"
-            checked={playSoundOnWhispers}
-          />
-          <NumericInput
-            description="Hosts with less viewers will be ignored."
-            onValueChange={this.onChangeHostThreshold}
-            onBlur={this.onBlurHostThreshold}
-            ref={this.hostThresholdInput}
-            label="Host threshold"
-            value={hostThreshold}
-            minorStepSize={1}
-            min={0}
-          />
-          <NumericInput
-            description="Auto-hosts with less viewers will be ignored."
-            onValueChange={this.onChangeAutoHostThreshold}
-            onBlur={this.onBlurAutoHostThreshold}
-            ref={this.autoHostThresholdInput}
-            label="Auto-host threshold"
-            value={autoHostThreshold}
-            minorStepSize={1}
-            min={0}
-          />
-        </SettingsPanelSection>
-        <SettingsPanelSection title="Streamer mode">
-          <Switch
-            description="You will still be able to send whispers."
-            onChange={this.props.toggleHideWhispers}
-            checked={hideWhispers}
-            label="Hide whispers"
-          />
-          <Switch
-            onChange={this.props.toggleShowViewerCount}
-            description="Updated every 2mins."
-            checked={showViewerCount}
-            label="Show viewer count"
-          />
-        </SettingsPanelSection>
-      </SettingsPanel>
+        </SettingsViewSection>
+      </SettingsView>
     )
   }
 
@@ -242,76 +172,26 @@ class SettingsGeneral extends React.Component<Props> {
 
     this.props.toggleTheme()
   }
-
-  /**
-   * Triggered when the host threshold input is blurred.
-   */
-  private onBlurHostThreshold = () => {
-    if (!_.isNil(this.hostThresholdInput.current)) {
-      this.hostThresholdInput.current.forceUpdate()
-    }
-  }
-
-  /**
-   * Triggered when the host threshold is changed.
-   * @param numberValue - The new numeric value.
-   */
-  private onChangeHostThreshold = (numberValue: number) => {
-    if (!_.isNaN(numberValue) && _.isInteger(numberValue) && numberValue > 0) {
-      this.props.updateHostThreshold(numberValue)
-    }
-  }
-
-  /**
-   * Triggered when the auto-host threshold input is blurred.
-   */
-  private onBlurAutoHostThreshold = () => {
-    if (!_.isNil(this.autoHostThresholdInput.current)) {
-      this.autoHostThresholdInput.current.forceUpdate()
-    }
-  }
-
-  /**
-   * Triggered when the auto-host threshold is changed.
-   * @param numberValue - The new numeric value.
-   */
-  private onChangeAutoHostThreshold = (numberValue: number) => {
-    if (!_.isNaN(numberValue) && _.isInteger(numberValue) && numberValue > 0) {
-      this.props.updateAutoHostThreshold(numberValue)
-    }
-  }
 }
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     autoFocusInput: getAutoFocusInput(state),
-    autoHostThreshold: getAutoHostThreshold(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     disableDialogAnimations: getDisableDialogAnimations(state),
-    hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
-    hostThreshold: getHostThreshold(state),
-    playSoundOnMentions: getPlaySoundOnMentions(state),
-    playSoundOnWhispers: getPlaySoundOnWhispers(state),
     prioritizeUsernames: getPrioritizeUsernames(state),
     showContextMenu: getShowContextMenu(state),
-    showViewerCount: getShowViewerCount(state),
     theme: getTheme(state),
   }),
   {
     toggleAutoFocusInput,
     toggleCopyMessageOnDoubleClick,
     toggleDisableDialogAnimations,
-    toggleHideWhispers,
     toggleHighlightAllMentions,
-    togglePlaySoundOnMentions,
-    togglePlaySoundOnWhispers,
     togglePrioritizeUsernames,
     toggleShowContextMenu,
-    toggleShowViewerCount,
     toggleTheme,
-    updateAutoHostThreshold,
-    updateHostThreshold,
   }
 )(SettingsGeneral)
 
@@ -320,17 +200,11 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 interface StateProps {
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
-  autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
-  hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
-  hostThreshold: ReturnType<typeof getHostThreshold>
-  playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
-  playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   showContextMenu: ReturnType<typeof getShowContextMenu>
-  showViewerCount: ReturnType<typeof getShowViewerCount>
   theme: ReturnType<typeof getTheme>
 }
 
@@ -341,16 +215,10 @@ interface DispatchProps {
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
-  toggleHideWhispers: typeof toggleHideWhispers
   toggleHighlightAllMentions: typeof toggleHighlightAllMentions
-  togglePlaySoundOnMentions: typeof togglePlaySoundOnMentions
-  togglePlaySoundOnWhispers: typeof togglePlaySoundOnWhispers
   togglePrioritizeUsernames: typeof togglePrioritizeUsernames
   toggleShowContextMenu: typeof toggleShowContextMenu
-  toggleShowViewerCount: typeof toggleShowViewerCount
   toggleTheme: typeof toggleTheme
-  updateAutoHostThreshold: typeof updateAutoHostThreshold
-  updateHostThreshold: typeof updateHostThreshold
 }
 
 /**

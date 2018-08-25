@@ -2,7 +2,7 @@ import { Colors, Icon } from '@blueprintjs/core'
 import * as React from 'react'
 
 import ExternalLink from 'Components/ExternalLink'
-import SettingsPanel from 'Components/SettingsPanel'
+import SettingsView from 'Components/SettingsView'
 import styled, { theme, ThemeProps, withTheme } from 'Styled'
 
 /**
@@ -28,7 +28,7 @@ const Logo = styled.div`
   display: flex;
   height: 128px;
   justify-content: center;
-  margin: 20px auto 40px auto;
+  margin: 40px auto 40px auto;
   width: 128px;
 `
 
@@ -63,7 +63,7 @@ const Coffee = styled.span`
  * SettingsAbout Component.
  */
 const SettingsAbout: React.SFC<ThemeProps> = (props) => (
-  <SettingsPanel>
+  <SettingsView>
     <Content>
       <Logo>
         <Icon icon="chat" iconSize={70} color={props.theme.logo} />
@@ -86,7 +86,7 @@ const SettingsAbout: React.SFC<ThemeProps> = (props) => (
         <ExternalLink href="https://freesound.org/people/rhodesmas/sounds/342759/">rhodesmas</ExternalLink>
       </p>
     </Content>
-  </SettingsPanel>
+  </SettingsView>
 )
 
 export default withTheme(SettingsAbout)

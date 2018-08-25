@@ -11,7 +11,7 @@ import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
 import Header, { defaultHeaderConfiguration, HeaderProvider } from 'Components/Header'
 import Login from 'Components/Login'
-import Settings, { SettingsTab } from 'Components/Settings'
+import Settings, { SettingsViewName } from 'Components/Settings'
 import Page from 'Constants/page'
 import Theme from 'Constants/theme'
 import { ToggleableUI } from 'Constants/toggleable'
@@ -35,7 +35,7 @@ import light from 'Styled/light'
  */
 const initialState = {
   headerConfiguration: defaultHeaderConfiguration,
-  settingSelectedTab: SettingsTab.General,
+  settingDefaultView: undefined as Optional<SettingsViewName>,
   [ToggleableUI.Settings]: false,
 }
 type State = Readonly<typeof initialState>
@@ -107,7 +107,7 @@ class App extends React.Component<Props, State> {
    */
   public render() {
     const { isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
-    const { settingSelectedTab, [ToggleableUI.Settings]: showSettings } = this.state
+    const { settingDefaultView, [ToggleableUI.Settings]: showSettings } = this.state
     const { pathname } = location
 
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
@@ -133,7 +133,7 @@ class App extends React.Component<Props, State> {
               toggleChangelog={this.toggleChangelog}
               toggleSettings={this.toggleSettings}
             />
-            <Settings visible={showSettings} toggle={this.toggleSettings} defaultTab={settingSelectedTab} />
+            <Settings visible={showSettings} toggle={this.toggleSettings} defaultView={settingDefaultView} />
             <FlexContent>
               <Switch>
                 <Route exact path={Page.Home} component={Follows} />
@@ -179,7 +179,7 @@ class App extends React.Component<Props, State> {
    */
   private toggleSettings = () => {
     this.setState(({ [ToggleableUI.Settings]: showSettings }) => ({
-      settingSelectedTab: SettingsTab.General,
+      settingDefaultView: undefined,
       [ToggleableUI.Settings]: !showSettings,
     }))
   }
@@ -189,7 +189,7 @@ class App extends React.Component<Props, State> {
    */
   private toggleChangelog = () => {
     this.setState(({ [ToggleableUI.Settings]: showSettings }) => ({
-      settingSelectedTab: SettingsTab.Changelog,
+      settingDefaultView: SettingsViewName.Changelog,
       [ToggleableUI.Settings]: !showSettings,
     }))
   }

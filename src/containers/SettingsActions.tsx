@@ -10,13 +10,27 @@ import Help from 'Components/Help'
 import NonIdealState from 'Components/NonIdealState'
 import SettingsAction from 'Components/SettingsAction'
 import SettingsInput from 'Components/SettingsInput'
-import SettingsPanel from 'Components/SettingsPanel'
 import SettingsTable from 'Components/SettingsTable'
+import SettingsView from 'Components/SettingsView'
 import Action, { ActionPlaceholder, ActionType } from 'Libs/Action'
 import { addAction, moveAction, removeAction, updateAction } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getActions } from 'Store/selectors/settings'
 import styled from 'Styled'
+
+/**
+ * Wrapper component.
+ */
+const Wrapper = styled(SettingsView)`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  & > div,
+  & > section {
+    flex-shrink: 0;
+  }
+`
 
 /**
  * Notice component.
@@ -55,14 +69,6 @@ const Placeholder = styled(Tag)`
 `
 
 /**
- * Actions component.
- */
-const Actions = styled(SettingsTable)`
-  height: calc(100% - 130px);
-  margin-bottom: 0;
-`
-
-/**
  * React State.
  */
 const initialState = {
@@ -91,7 +97,7 @@ class SettingsActions extends React.Component<Props, State> {
     const { actions } = this.props
 
     return (
-      <SettingsPanel>
+      <Wrapper>
         <Notice>
           <FlexContent>
             Available text placeholders:
@@ -144,7 +150,7 @@ class SettingsActions extends React.Component<Props, State> {
           />
           {this.renderButtons()}
         </Inline>
-        <Actions>
+        <SettingsTable>
           {actions.length > 0 ? (
             _.map(actions, (action, index) => (
               <SettingsAction
@@ -161,8 +167,8 @@ class SettingsActions extends React.Component<Props, State> {
           ) : (
             <NonIdealState small title="No action yet!" details="Try adding some above." />
           )}
-        </Actions>
-      </SettingsPanel>
+        </SettingsTable>
+      </Wrapper>
     )
   }
 

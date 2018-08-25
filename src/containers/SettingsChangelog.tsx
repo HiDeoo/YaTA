@@ -3,7 +3,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import SettingsPanel from 'Components/SettingsPanel'
+import SettingsView from 'Components/SettingsView'
 import Spinner from 'Components/Spinner'
 import { setShouldReadChangelog } from 'Store/ducks/app'
 import { setVersion } from 'Store/ducks/settings'
@@ -16,7 +16,6 @@ import styled, { theme } from 'Styled'
 const Changelog = styled.div`
   font-size: 0.8rem;
   line-height: 1.2rem;
-  overflow-y: auto;
 
   & h1,
   & h2,
@@ -112,16 +111,16 @@ class SettingsChangelog extends React.Component<Props, State> {
 
     if (_.isNil(changelog)) {
       return (
-        <SettingsPanel>
+        <SettingsView>
           <Spinner />
-        </SettingsPanel>
+        </SettingsView>
       )
     }
 
     return (
-      <SettingsPanel>
+      <SettingsView>
         <Changelog dangerouslySetInnerHTML={{ __html: changelog }} />
-      </SettingsPanel>
+      </SettingsView>
     )
   }
 }

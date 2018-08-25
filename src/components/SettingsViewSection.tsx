@@ -30,24 +30,16 @@ const Title = styled.h1`
 `
 
 /**
- * SettingsPanelSection Component.
+ * SettingsViewSection Component.
  */
-export default class SettingsPanelSection extends React.Component<Props> {
-  /**
-   * Renders the component.
-   * @return Element to render.
-   */
-  public render() {
-    const { children, title } = this.props
+const SettingsViewSection: React.SFC<Props> = ({ children, title }) => (
+  <>
+    <Title>{title}</Title>
+    {children}
+  </>
+)
 
-    return (
-      <>
-        <Title>{title}</Title>
-        {children}
-      </>
-    )
-  }
-}
+export default SettingsViewSection
 
 /**
  * React Props.

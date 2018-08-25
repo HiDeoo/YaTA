@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Rework settings UI.
+
 # 1.4.0
 
 ### 🚀 New Feature

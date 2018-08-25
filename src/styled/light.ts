@@ -130,6 +130,14 @@ const light = {
       background: Colors.LIGHT_GRAY2,
       border: Colors.GRAY5,
     },
+    viewButton: {
+      hover: {
+        icon: Colors.GRAY1,
+        text: Colors.DARK_GRAY1,
+      },
+      icon: Colors.GRAY4,
+      text: Colors.GRAY3,
+    },
   },
   whisper: {
     background: Colors.LIGHT_GRAY3,

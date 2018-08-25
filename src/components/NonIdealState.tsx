@@ -37,8 +37,9 @@ const NonIdealState: React.SFC<Props> = ({
   retry = false,
   small = false,
   title = 'Something went wrong!',
+  ...restProps
 }: Props) => (
-  <Wrapper small={small}>
+  <Wrapper small={small} {...restProps}>
     <Shrug small={small}>¯\_(ツ)_/¯</Shrug>
     {!_.isNil(title) && <H1>{title}</H1>}
     {retry && <p>Maybe try again in a while.</p>}

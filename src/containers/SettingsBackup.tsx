@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import SettingsPanel from 'Components/SettingsPanel'
+import SettingsView from 'Components/SettingsView'
 import Toaster from 'Libs/Toaster'
 import { restoreNotes } from 'Store/ducks/notes'
 import { restoreSettings } from 'Store/ducks/settings'
@@ -53,7 +53,7 @@ class SettingsBackup extends React.Component<Props, State> {
     const { importing } = this.state
 
     return (
-      <SettingsPanel>
+      <SettingsView>
         <Section>Backup</Section>
         <div>
           <Notice>Credentials are not included.</Notice>
@@ -76,7 +76,7 @@ class SettingsBackup extends React.Component<Props, State> {
             }}
           />
         </div>
-      </SettingsPanel>
+      </SettingsView>
     )
   }
 
