@@ -82,7 +82,7 @@ export default class ComboPicker extends React.Component<Props, State> {
 
     return (
       <>
-        <Name onClick={this.focus}>{shortcut.name}</Name>
+        <Name>{shortcut.name}</Name>
         <Combo
           readonly={shortcut.readonly || false}
           tabIndex={shortcut.readonly ? -1 : 0}
