@@ -55,16 +55,22 @@ const RemoveButton = styled(Button)`
 const NoShortcut = styled.div`
   opacity: 0.8;
   font-size: 0.8rem;
-  font-style: italic;
   line-height: 1.94rem;
   padding-right: 2px;
   text-align: center;
 `
 
 /**
+ * React State.
+ */
+const initialState = { isEditing: false }
+type State = Readonly<typeof initialState>
+
+/**
  * ComboPicker Component.
  */
-export default class ComboPicker extends React.Component<Props> {
+export default class ComboPicker extends React.Component<Props, State> {
+  public state: State = initialState
   private picker = React.createRef<HTMLDivElement>()
 
   /**
@@ -83,8 +89,12 @@ export default class ComboPicker extends React.Component<Props> {
           onKeyDown={this.onKeyDown}
           className={Classes.INPUT}
           innerRef={this.picker}
+          onClick={this.focus}
+          onBlur={this.onBlur}
         >
-          {!_.isNil(shortcut.combo) ? (
+          {this.state.isEditing ? (
+            <NoShortcut>Type new shortcut</NoShortcut>
+          ) : !_.isNil(shortcut.combo) ? (
             <>
               <KeyCombo combo={shortcut.combo} />
               <RemoveButton
@@ -96,7 +106,7 @@ export default class ComboPicker extends React.Component<Props> {
               />
             </>
           ) : (
-            <NoShortcut>Click to add shortcut…</NoShortcut>
+            <NoShortcut>Click to record shortcut</NoShortcut>
           )}
         </Combo>
       </>
@@ -107,8 +117,19 @@ export default class ComboPicker extends React.Component<Props> {
    * Focus the picker.
    */
   private focus = () => {
+    this.setState(() => ({ isEditing: true }))
+
     if (!_.isNil(this.picker.current)) {
       this.picker.current.focus()
+    }
+  }
+
+  /**
+   * Triggered when blurred.
+   */
+  private onBlur = () => {
+    if (this.state.isEditing) {
+      this.setState(() => ({ isEditing: false }))
     }
   }
 
@@ -124,6 +145,10 @@ export default class ComboPicker extends React.Component<Props> {
 
     if (shortcut.readonly) {
       return
+    }
+
+    if (this.state.isEditing) {
+      this.setState(() => ({ isEditing: false }))
     }
 
     if (event.key === 'Escape' || event.key === 'Enter') {
