@@ -135,8 +135,8 @@ const light = {
         icon: Colors.GRAY1,
         text: Colors.DARK_GRAY1,
       },
-      icon: Colors.GRAY4,
-      text: Colors.GRAY3,
+      icon: Colors.GRAY3,
+      text: Colors.GRAY2,
     },
   },
   whisper: {

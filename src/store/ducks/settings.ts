@@ -2,6 +2,7 @@ import * as _ from 'lodash'
 import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
+import { ShortcutCombo, ShortcutType } from 'Constants/shortcut'
 import Theme from 'Constants/theme'
 import { SerializedAction } from 'Libs/Action'
 import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
@@ -50,6 +51,7 @@ export enum Actions {
   TOGGLE_PLAY_SOUND_ON_WHISPERS = 'settings/TOGGLE_PLAY_SOUND_ON_WHISPERS',
   SET_FOLLOWS_SORT_ORDER = 'settings/SET_FOLLOWS_SORT_ORDER',
   TOGGLE_HIDE_OFFLINE_FOLLOWS = 'settings/TOGGLE_HIDE_OFFLINE_FOLLOWS',
+  SET_SHORTCUT = 'settings/SET_SHORTCUT',
 }
 
 /**
@@ -76,6 +78,17 @@ export const initialState = {
   playSoundOnMentions: false,
   playSoundOnWhispers: false,
   prioritizeUsernames: false,
+  shortcuts: {
+    [ShortcutType.OpenSettings]: 'alt + ,',
+    [ShortcutType.NavigateHome]: 'alt + h',
+    [ShortcutType.CreateClip]: 'alt + x',
+    [ShortcutType.ToggleSearch]: 'alt + f',
+    [ShortcutType.ToggleOmnibar]: 'alt + p',
+    [ShortcutType.TogglePollEditor]: 'alt + c',
+    [ShortcutType.FocusChatInput]: 'alt + a',
+    [ShortcutType.AddMarker]: 'alt + m',
+    [ShortcutType.CreatePoll]: 'alt + enter',
+  },
   showContextMenu: true,
   showViewerCount: false,
   theme: Theme.Dark as SettingsState['theme'],
@@ -315,6 +328,17 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         hideOfflineFollows: !state.hideOfflineFollows,
+      }
+    }
+    case Actions.SET_SHORTCUT: {
+      const { combo, type } = action.payload
+
+      return {
+        ...state,
+        shortcuts: {
+          ...state.shortcuts,
+          [type]: combo,
+        },
       }
     }
     default: {
@@ -574,6 +598,19 @@ export const setFollowsSortOrder = (order: FollowsSortOrder) =>
  * @return The action.
  */
 export const toggleHideOfflineFollows = () => createAction(Actions.TOGGLE_HIDE_OFFLINE_FOLLOWS)
+
+/**
+ * Sets the combo of a specific shortcut type.
+ * @param  type - The shortcut type.
+ * @param  combo - The new combo.
+ * @return The action.
+ */
+export const setShortcut = (type: ShortcutType, combo: ShortcutCombo) =>
+  createAction(Actions.SET_SHORTCUT, {
+    combo,
+    type,
+  })
+
 /**
  * Settings actions.
  */
@@ -608,6 +645,7 @@ export type SettingsActions =
   | ReturnType<typeof togglePlaySoundOnWhispers>
   | ReturnType<typeof setFollowsSortOrder>
   | ReturnType<typeof toggleHideOfflineFollows>
+  | ReturnType<typeof setShortcut>
 
 /**
  * Settings state.
@@ -722,6 +760,11 @@ export type SettingsState = {
    * Hide offline follows.
    */
   hideOfflineFollows: boolean
+
+  /**
+   * Shortcuts.
+   */
+  shortcuts: Record<ShortcutType, ShortcutCombo>
 }
 
 /**

@@ -198,4 +198,10 @@ export default {
       settings: { ...state.settings, hideOfflineFollows: SettingsInitialState.hideOfflineFollows },
     }
   },
+  27: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, shortcuts: SettingsInitialState.shortcuts },
+    }
+  },
 }

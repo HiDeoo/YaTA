@@ -1,4 +1,4 @@
-import { Button, Classes, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
+import { Button, Classes, HotkeysTarget, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
 import * as copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -21,8 +21,8 @@ import Logs, { Logs as InnerLogs } from 'Components/Logs'
 import ModerationMenuItems from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
-import Key from 'Constants/key'
 import ReadyState from 'Constants/readyState'
+import { ShortcutImplementations, ShortcutType } from 'Constants/shortcut'
 import Status from 'Constants/status'
 import { ToggleableUI } from 'Constants/toggleable'
 import BroadcasterOverlay from 'Containers/BroadcasterOverlay'
@@ -54,12 +54,14 @@ import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getPrioritizeUsernames,
+  getShortcuts,
   getShowContextMenu,
   getShowViewerCount,
 } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import styled from 'Styled'
 import { replaceImgTagByAlt, sanitizeUrlForPreview } from 'Utils/html'
+import { renderShorcuts } from 'Utils/shortcuts'
 
 /**
  * ChannelLink component.
@@ -123,6 +125,25 @@ class Channel extends React.Component<Props, State> {
   private logsComponent = React.createRef<InnerLogs>()
   private input = React.createRef<Input>()
   private viewerCountMonitorId?: number
+  private shortcuts: ShortcutImplementations
+
+  /**
+   * Creates a new instance of the component.
+   * @class
+   * @param props - The props of the component.
+   */
+  constructor(props: Props) {
+    super(props)
+
+    this.shortcuts = [
+      { type: ShortcutType.CreateClip, action: this.clip },
+      { type: ShortcutType.ToggleSearch, action: this.toggleSearch },
+      { type: ShortcutType.ToggleOmnibar, action: this.toggleFollowOmnibar },
+      { type: ShortcutType.TogglePollEditor, action: this.togglePollEditor },
+      { type: ShortcutType.FocusChatInput, action: this.focusChatInput },
+      { type: ShortcutType.AddMarker, action: this.props.addMarker },
+    ]
+  }
 
   /**
    * Lifecycle: componentDidMount.
@@ -132,7 +153,6 @@ class Channel extends React.Component<Props, State> {
     this.setHeaderComponents()
 
     window.addEventListener('focus', this.onFocusWindow)
-    window.addEventListener('keydown', this.onKeyDown)
   }
 
   /**
@@ -185,7 +205,6 @@ class Channel extends React.Component<Props, State> {
     this.props.setHeaderRightComponent(null)
 
     window.removeEventListener('focus', this.onFocusWindow)
-    window.removeEventListener('keydown', this.onKeyDown)
 
     if (this.props.showViewerCount) {
       this.stopMonitoringViewerCount()
@@ -289,6 +308,14 @@ class Channel extends React.Component<Props, State> {
         />
       </FlexLayout>
     )
+  }
+
+  /**
+   * Renders the shortcuts.
+   * @return Element to render.
+   */
+  public renderHotkeys() {
+    return renderShorcuts(this.props.shortcuts, this.shortcuts)
   }
 
   /**
@@ -492,26 +519,6 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a key is pressed down.
-   * @param event - The associated event.
-   */
-  private onKeyDown = (event: KeyboardEvent) => {
-    if (event.code === 'KeyF' && event.altKey) {
-      event.preventDefault()
-
-      this.toggleSearch()
-    } else if (event.code === 'KeyP' && event.altKey) {
-      event.preventDefault()
-
-      this.toggleFollowOmnibar()
-    } else if ((event.code === Key.Semicolon || event.code === 'KeyM') && event.altKey) {
-      event.preventDefault()
-
-      this.props.addMarker()
-    }
-  }
-
-  /**
    * Triggered when input value is modified.
    */
   private onChangeInputValue = (value: string) => {
@@ -697,7 +704,7 @@ class Channel extends React.Component<Props, State> {
   /**
    * Focus the chat input.
    */
-  private focusChatInput() {
+  private focusChatInput = () => {
     if (!_.isNil(this.input.current)) {
       this.input.current.focus()
     }
@@ -1241,6 +1248,7 @@ const enhance = compose<Props, {}>(
       loginDetails: getLoginDetails(state),
       prioritizeUsernames: getPrioritizeUsernames(state),
       roomState: getRoomState(state),
+      shortcuts: getShortcuts(state),
       showContextMenu: getShowContextMenu(state),
       showViewerCount: getShowViewerCount(state),
       status: getStatus(state),
@@ -1256,7 +1264,8 @@ const enhance = compose<Props, {}>(
       updateHistoryIndex,
     }
   ),
-  withHeader
+  withHeader,
+  HotkeysTarget
 )
 
 export default enhance(Channel)
@@ -1271,6 +1280,7 @@ interface StateProps {
   chatters: ReturnType<typeof getChatters>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   emotes: ReturnType<typeof getEmotes>
+  shortcuts: ReturnType<typeof getShortcuts>
   history: ReturnType<typeof getHistory>
   historyIndex: ReturnType<typeof getHistoryIndex>
   isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>

@@ -60,15 +60,6 @@ const Error = styled.span`
 `
 
 /**
- * Shortcut component.
- */
-const Shortcut = styled.div`
-  color: ${Colors.GRAY3};
-  font-size: 12px;
-  padding-top: 4px;
-`
-
-/**
  * Controls component.
  */
 const Controls = styled.div`
@@ -222,7 +213,6 @@ export default class PollEditor extends React.Component<Props, State> {
           </FlexLayout>
         </div>
         <Controls className={Classes.DIALOG_FOOTER}>
-          {!isDone && <Shortcut>Alt + ⏎</Shortcut>}
           <Button text="Close" disabled={isProcessing} onClick={this.toggle} />
           <Button
             text={isDone ? 'Copy URL & Close' : 'Create'}

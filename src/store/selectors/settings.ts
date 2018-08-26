@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
+import { Shortcut, ShortcutDefinitions, ShortcutGroup, ShortcutType } from 'Constants/shortcut'
 import { ApplicationState } from 'Store/reducers'
 
 /**
@@ -184,3 +185,41 @@ export const getFollowsSortOrder = createSelector([getSettingsState], (settings)
  * @return The 'Hide offline follows' setting.
  */
 export const getHideOfflineFollows = createSelector([getSettingsState], (settings) => settings.hideOfflineFollows)
+
+/**
+ * Returns all shortcuts.
+ * @param  state - The Redux state.
+ * @return The shortcuts.
+ */
+export const getShortcuts = createSelector([getSettingsState], (settings) => {
+  return _.reduce(
+    ShortcutType,
+    (shortcuts, shortcut) => {
+      shortcuts[shortcut] = { ...ShortcutDefinitions[shortcut], combo: settings.shortcuts[shortcut] }
+
+      return shortcuts
+    },
+    {} as Record<ShortcutType, Shortcut>
+  )
+})
+
+/**
+ * Returns all shortcuts grouped.
+ * @param  state - The Redux state.
+ * @return The grouped shortcuts.
+ */
+export const getGroupedShortcuts = createSelector([getShortcuts], (shortcuts) => {
+  return _.reduce(
+    ShortcutGroup,
+    (groupedShortcuts, group) => {
+      const groupShortcuts = _.filter(shortcuts, ['group', group])
+
+      if (groupShortcuts.length > 0) {
+        groupedShortcuts[group] = groupShortcuts
+      }
+
+      return groupedShortcuts
+    },
+    {} as Record<ShortcutGroup, Shortcut[]>
+  )
+})

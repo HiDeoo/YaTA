@@ -1,10 +1,11 @@
-import { Classes, Colors } from '@blueprintjs/core'
+import { Classes, Colors, HotkeysTarget } from '@blueprintjs/core'
 import bowser from 'bowser'
 import { History } from 'history'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { compose } from 'recompose'
 import * as semCompare from 'semver-compare'
 
 import FlexContent from 'Components/FlexContent'
@@ -13,6 +14,7 @@ import Header, { defaultHeaderConfiguration, HeaderProvider } from 'Components/H
 import Login from 'Components/Login'
 import Settings, { SettingsViewName } from 'Components/Settings'
 import Page from 'Constants/page'
+import { ShortcutImplementations, ShortcutType } from 'Constants/shortcut'
 import Theme from 'Constants/theme'
 import { ToggleableUI } from 'Constants/toggleable'
 import Auth from 'Containers/Auth'
@@ -24,11 +26,12 @@ import { setVersion } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getShouldReadChangelog, getStatus } from 'Store/selectors/app'
-import { getLastKnownVersion, getTheme } from 'Store/selectors/settings'
+import { getLastKnownVersion, getShortcuts, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import { ThemeProvider } from 'Styled'
 import dark from 'Styled/dark'
 import light from 'Styled/light'
+import { renderShorcuts } from 'Utils/shortcuts'
 
 /**
  * React State.
@@ -45,6 +48,7 @@ type State = Readonly<typeof initialState>
  */
 class App extends React.Component<Props, State> {
   public state: State = initialState
+  private shortcuts: ShortcutImplementations
 
   /**
    * Creates a new instance of the component.
@@ -69,6 +73,11 @@ class App extends React.Component<Props, State> {
         },
       },
     }
+
+    this.shortcuts = [
+      { type: ShortcutType.OpenSettings, action: this.toggleSettings },
+      { type: ShortcutType.NavigateHome, action: this.goHome },
+    ]
 
     this.installTheme()
     this.setUpTwitchApi()
@@ -149,6 +158,14 @@ class App extends React.Component<Props, State> {
   }
 
   /**
+   * Renders the shortcuts.
+   * @return Element to render.
+   */
+  public renderHotkeys() {
+    return renderShorcuts(this.props.shortcuts, this.shortcuts, true, this.state[ToggleableUI.Settings])
+  }
+
+  /**
    * Installs the proper theme.
    */
   private installTheme() {
@@ -198,8 +215,8 @@ class App extends React.Component<Props, State> {
    * Navigates to the homepage.
    * @param event - The associated event.
    */
-  private goHome = (event: React.MouseEvent<HTMLElement>) => {
-    if (event.ctrlKey || event.metaKey || event.button === 1) {
+  private goHome = (event?: React.MouseEvent<HTMLElement>) => {
+    if (!_.isNil(event) && (event.ctrlKey || event.metaKey || event.button === 1)) {
       window.open('/')
     } else {
       this.props.history.push(Page.Home)
@@ -253,17 +270,26 @@ If applicable, add screenshots to help explain your problem.
   }
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => ({
-    isLoggedIn: getIsLoggedIn(state),
-    lastKnownVersion: getLastKnownVersion(state),
-    loginDetails: getLoginDetails(state),
-    shouldReadChangelog: getShouldReadChangelog(state),
-    status: getStatus(state),
-    theme: getTheme(state),
-  }),
-  { resetUser, setVersion, setShouldReadChangelog }
-)(App)
+/**
+ * Component enhancer.
+ */
+const enhance = compose<Props, {}>(
+  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
+    (state) => ({
+      isLoggedIn: getIsLoggedIn(state),
+      lastKnownVersion: getLastKnownVersion(state),
+      loginDetails: getLoginDetails(state),
+      shortcuts: getShortcuts(state),
+      shouldReadChangelog: getShouldReadChangelog(state),
+      status: getStatus(state),
+      theme: getTheme(state),
+    }),
+    { resetUser, setVersion, setShouldReadChangelog }
+  ),
+  HotkeysTarget
+)
+
+export default enhance(App)
 
 /**
  * React Props.
@@ -272,6 +298,7 @@ interface StateProps {
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: ReturnType<typeof getLastKnownVersion>
   loginDetails: ReturnType<typeof getLoginDetails>
+  shortcuts: ReturnType<typeof getShortcuts>
   shouldReadChangelog: ReturnType<typeof getShouldReadChangelog>
   status: ReturnType<typeof getStatus>
   theme: ReturnType<typeof getTheme>

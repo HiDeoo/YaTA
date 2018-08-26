@@ -8,7 +8,6 @@ enum Key {
   Enter = 'Enter',
   Up = 'ArrowUp',
   Down = 'ArrowDown',
-  Semicolon = 'Semicolon',
 }
 
 export default Key

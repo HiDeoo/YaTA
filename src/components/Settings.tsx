@@ -15,6 +15,7 @@ import SettingsChangelog from 'Containers/SettingsChangelog'
 import SettingsGeneral from 'Containers/SettingsGeneral'
 import SettingsHighlights from 'Containers/SettingsHighlights'
 import SettingsNotifications from 'Containers/SettingsNotifications'
+import SettingsShortcuts from 'Containers/SettingsShortcuts'
 import SettingsStreamer from 'Containers/SettingsStreamer'
 
 /**
@@ -75,6 +76,7 @@ export enum SettingsViewName {
   General = 'General',
   Highlights = 'Highlights',
   Actions = 'Actions',
+  Shortcuts = 'Shortcuts',
   Notifications = 'Notifications',
   Streamer = 'Streamer',
   Backup = 'Backup',
@@ -89,6 +91,7 @@ export const SettingsViews: SettingsView[] = [
   { name: SettingsViewName.General, icon: 'application', component: SettingsGeneral },
   { name: SettingsViewName.Highlights, icon: 'highlight', component: SettingsHighlights },
   { name: SettingsViewName.Actions, icon: 'pulse', component: SettingsActions },
+  { name: SettingsViewName.Shortcuts, icon: 'key-command', component: SettingsShortcuts },
   { name: SettingsViewName.Notifications, icon: 'notifications', component: SettingsNotifications },
   { name: SettingsViewName.Streamer, icon: 'shield', component: SettingsStreamer },
   { name: SettingsViewName.Backup, icon: 'floppy-disk', component: SettingsBackup },

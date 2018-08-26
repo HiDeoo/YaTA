@@ -25,6 +25,10 @@ const Content = styled.div`
   color: ${theme('settings.viewButton.text')};
   padding: 10px;
   text-align: center;
+  transition-property: color;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
+  transition-delay: 0;
 
   ${Wrapper}:hover & {
     color: ${theme('settings.viewButton.hover.text')};
@@ -37,6 +41,10 @@ const Content = styled.div`
 const ButtonIcon = styled(Icon)`
   color: ${theme('settings.viewButton.icon')};
   opacity: 0.6;
+  transition-property: color, opacity;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
+  transition-delay: 0;
 
   ${Wrapper}:hover & {
     color: ${theme('settings.viewButton.hover.icon')};

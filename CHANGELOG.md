@@ -1,8 +1,12 @@
-# Unreleased
+# 1.5.0
 
 ### 🚀 New Feature
 
 - Rework settings UI.
+- Shortcuts have landed! 🛬
+  - Find all the available shortcuts in the settings.
+  - Shortcuts are customizable.
+  - You can also use the `?` key as expected to peek at the shortcuts.
 
 # 1.4.0
 
