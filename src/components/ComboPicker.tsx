@@ -50,9 +50,9 @@ const RemoveButton = styled(Button)`
 `
 
 /**
- * NoShortcut component.
+ * Tooltip component.
  */
-const NoShortcut = styled.div`
+const Tooltip = styled.div`
   opacity: 0.8;
   font-size: 0.8rem;
   line-height: 1.94rem;
@@ -93,7 +93,7 @@ export default class ComboPicker extends React.Component<Props, State> {
           onBlur={this.onBlur}
         >
           {this.state.isEditing ? (
-            <NoShortcut>Type new shortcut</NoShortcut>
+            <Tooltip>Type new shortcut</Tooltip>
           ) : !_.isNil(shortcut.combo) ? (
             <>
               <KeyCombo combo={shortcut.combo} />
@@ -106,7 +106,7 @@ export default class ComboPicker extends React.Component<Props, State> {
               />
             </>
           ) : (
-            <NoShortcut>Click to record shortcut</NoShortcut>
+            <Tooltip>Click to record shortcut</Tooltip>
           )}
         </Combo>
       </>
