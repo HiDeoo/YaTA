@@ -208,7 +208,7 @@ export class ChatClient extends React.Component<Props, State> {
       }
 
       this.client.removeAllListeners()
-    } catch (error) {
+    } catch {
       //
     }
   }
@@ -393,7 +393,7 @@ export class ChatClient extends React.Component<Props, State> {
 
               try {
                 serializedMessage.previews[previewId] = await provider.resolve(preview)
-              } catch (error) {
+              } catch {
                 //
               }
             }
@@ -792,7 +792,7 @@ export class ChatClient extends React.Component<Props, State> {
 
         this.didFetchExternalResources = true
       }
-    } catch (error) {
+    } catch {
       //
     }
   }

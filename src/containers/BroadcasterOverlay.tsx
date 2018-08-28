@@ -116,7 +116,7 @@ class BroadcasterOverlay extends React.Component<Props, State> {
           const channel = await Twitch.fetchChannel(channelId)
 
           this.setState(() => ({ channel, didFail: false, isReady: true }))
-        } catch (error) {
+        } catch {
           this.setState(() => ({ didFail: true, isReady: true }))
         }
       }

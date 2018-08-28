@@ -77,7 +77,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
       } else {
         this.setState(() => ({ didFail: true }))
       }
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true }))
     }
   }

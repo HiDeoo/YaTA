@@ -117,7 +117,7 @@ class SettingsBackup extends React.Component<Props, State> {
       this.props.restoreNotes(notes)
 
       location.reload()
-    } catch (error) {
+    } catch {
       Toaster.show({
         icon: 'error',
         intent: Intent.DANGER,

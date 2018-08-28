@@ -80,7 +80,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
       const panels = await Twitch.fetchPanels(name)
 
       this.setState(() => ({ didFail: false, panels }))
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true }))
     }
   }

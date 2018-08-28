@@ -31,7 +31,7 @@ class Auth extends React.Component<Props, State> {
       const idToken = await Twitch.verifyIdToken(tokens.id)
 
       this.props.setTokens(tokens.access, idToken)
-    } catch (error) {
+    } catch {
       this.setState(() => ({ authDidFail: true }))
     }
   }

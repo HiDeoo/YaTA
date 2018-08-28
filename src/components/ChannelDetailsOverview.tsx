@@ -143,7 +143,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
       const [{ stream }, relationship] = response
 
       this.setState(() => ({ didFail: false, stream, relationship }))
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true }))
     }
   }
@@ -265,7 +265,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
       }
 
       this.setState(() => ({ isFollowingOrUnfollowing: false, relationship }))
-    } catch (error) {
+    } catch {
       this.setState(() => ({ isFollowingOrUnfollowing: false }))
     }
   }

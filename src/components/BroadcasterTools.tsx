@@ -68,7 +68,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
       }
 
       this.setState(() => ({ host: currentHost, status }))
-    } catch (error) {
+    } catch {
       //
     }
   }
@@ -166,7 +166,7 @@ export default class BroadcasterTools extends React.Component<Props, State> {
         intent: Intent.SUCCESS,
         message: 'Commercial started!',
       })
-    } catch (error) {
+    } catch {
       Toaster.show({
         icon: 'error',
         intent: Intent.DANGER,

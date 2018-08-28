@@ -178,7 +178,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         [Input.Notification]: liveNotification.message || '',
         [Input.Title]: channel.status || '',
       }))
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true, isReady: true }))
     }
   }
@@ -372,7 +372,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         this.lastGameSearchController = null
 
         this.setState(() => ({ games }))
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -408,7 +408,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         [Input.Game]: channel.game || '',
         [Input.Title]: channel.status || '',
       }))
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true, isUpdating: false }))
     }
   }

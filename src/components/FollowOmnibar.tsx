@@ -36,7 +36,7 @@ class FollowOmnibar extends React.Component<Props, State> {
         const follows = !_.isNil(own) ? [own, ...online, ...offline] : [...online, ...offline]
 
         this.setState(() => ({ follows, isReady: true }))
-      } catch (error) {
+      } catch {
         this.props.toggle()
       }
     }

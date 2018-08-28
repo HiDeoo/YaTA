@@ -259,7 +259,7 @@ export default class PollEditor extends React.Component<Props, State> {
           intent: Intent.SUCCESS,
           message: 'Poll created!',
         })
-      } catch (error) {
+      } catch {
         this.setState(() => ({ formState: FormState.Valid }))
 
         Toaster.show({

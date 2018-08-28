@@ -147,7 +147,7 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
           statistics: newStatistics,
         }
       })
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true, isReady: true }))
     }
   }

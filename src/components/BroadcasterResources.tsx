@@ -96,7 +96,7 @@ export default class BroadcasterResources extends React.Component<BroadcasterSec
         [BroadcasterResourceType.Clips]: clipResources,
         [BroadcasterResourceType.Hosts]: hostResources,
       }))
-    } catch (error) {
+    } catch {
       this.setState(() => ({ didFail: true, isReady: true }))
     }
   }

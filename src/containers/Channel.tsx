@@ -692,7 +692,7 @@ class Channel extends React.Component<Props, State> {
       } else if (action.type === ActionType.Open) {
         window.open(text)
       }
-    } catch (error) {
+    } catch {
       Toaster.show({
         icon: 'error',
         intent: Intent.DANGER,
@@ -912,7 +912,7 @@ class Channel extends React.Component<Props, State> {
         } else {
           await this.say(message)
         }
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -962,7 +962,7 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         await client.timeout(channel, username, duration)
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -980,7 +980,7 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         await client.ban(channel, username, reason)
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -997,7 +997,7 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         await client.unban(channel, username)
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1012,7 +1012,7 @@ class Channel extends React.Component<Props, State> {
       const blockedUser = await Twitch.blockUser(targetId)
 
       this.props.markChatterAsBlocked(blockedUser.user._id)
-    } catch (error) {
+    } catch {
       //
     }
   }
@@ -1026,7 +1026,7 @@ class Channel extends React.Component<Props, State> {
       await Twitch.unblockUser(targetId)
 
       this.props.markChatterAsUnblocked(targetId)
-    } catch (error) {
+    } catch {
       //
     }
   }
@@ -1038,7 +1038,7 @@ class Channel extends React.Component<Props, State> {
   private follow = (targetId: string) => {
     try {
       Twitch.followChannel(targetId)
-    } catch (error) {
+    } catch {
       //
     }
   }
@@ -1050,7 +1050,7 @@ class Channel extends React.Component<Props, State> {
   private unfollow = (targetId: string) => {
     try {
       Twitch.unfollowChannel(targetId)
-    } catch (error) {
+    } catch {
       //
     }
   }
@@ -1075,7 +1075,7 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         await client.clear(channel)
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1095,7 +1095,7 @@ class Channel extends React.Component<Props, State> {
         } else {
           await client.r9kbeta(channel)
         }
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1116,7 +1116,7 @@ class Channel extends React.Component<Props, State> {
           // Don't use the default twitch-js value, use the default from Twitch.
           await client.slow(channel, 120)
         }
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1136,7 +1136,7 @@ class Channel extends React.Component<Props, State> {
         } else {
           await client.followersonly(channel)
         }
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1156,7 +1156,7 @@ class Channel extends React.Component<Props, State> {
         } else {
           await client.subscribers(channel)
         }
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1176,7 +1176,7 @@ class Channel extends React.Component<Props, State> {
         } else {
           await client.emoteonly(channel)
         }
-      } catch (error) {
+      } catch {
         //
       }
     }
@@ -1192,7 +1192,7 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         await client.unhost(channel)
-      } catch (error) {
+      } catch {
         //
       }
     }

@@ -90,7 +90,7 @@ class Chatters extends React.Component<Props, State> {
           const chatters = this.parseChatters(response.chatters)
 
           this.setState(() => ({ didFail: false, count: response.chatter_count, chatters }))
-        } catch (error) {
+        } catch {
           this.setState(() => ({ didFail: true }))
         }
       } else {
