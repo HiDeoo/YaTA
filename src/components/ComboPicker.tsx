@@ -117,6 +117,10 @@ export default class ComboPicker extends React.Component<Props, State> {
    * Focus the picker.
    */
   private focus = () => {
+    if (this.props.shortcut.readonly) {
+      return
+    }
+
     this.setState(() => ({ isEditing: true }))
 
     if (!_.isNil(this.picker.current)) {

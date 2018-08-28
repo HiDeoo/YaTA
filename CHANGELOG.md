@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix a UI only issue when trying to edit a locked shortcut.
+
 # 1.5.0
 
 ### 🚀 New Feature
