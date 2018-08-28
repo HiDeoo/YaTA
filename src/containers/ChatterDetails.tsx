@@ -169,9 +169,9 @@ const ButtonRow = styled.div`
 `
 
 /**
- * Hr component.
+ * Divider component.
  */
-const Hr = styled.div`
+const Divider = styled.div`
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.15);
   box-sizing: content-box;
   height: 0;
@@ -364,7 +364,7 @@ class ChatterDetails extends React.Component<Props, State> {
 
     return (
       <>
-        <Hr />
+        <Divider />
         <Tools>
           <ButtonRow>
             <Button icon="trash" onClick={this.onClickPurge} text="Purge" />
