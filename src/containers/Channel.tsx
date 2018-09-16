@@ -824,6 +824,19 @@ class Channel extends React.Component<Props, State> {
       emoteCompletions = _.filter(emotes, (emote) => {
         return emote.code.toLowerCase().startsWith(sanitizedWord)
       }).map((emote) => emote.code)
+
+      // order emotes matching the case first, then typical ordering
+      emoteCompletions.sort((a: string, b: string) => {
+        if (a.startsWith(word)) {
+          if (b.startsWith(word)) {
+            return a.localeCompare(b)
+          }
+          return -1
+        } else if (b.startsWith(word)) {
+          return 1
+        }
+        return a.localeCompare(b)
+      })
     }
 
     if (prioritizeUsernames) {
