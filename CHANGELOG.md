@@ -1,3 +1,9 @@
+# 1.5.2
+
+### 🚀 New Feature
+
+- Emotes auto-completion now tries to respect case first ([#6](https://github.com/HiDeoo/YaTA/issues/6) - [tollus](https://github.com/tollus)).
+
 # 1.5.1
 
 ### 🐛 Bug Fix
