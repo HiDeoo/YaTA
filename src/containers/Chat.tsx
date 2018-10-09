@@ -102,7 +102,7 @@ export class ChatClient extends React.Component<Props, State> {
       return
     }
 
-    const { channel } = this.props
+    const { channel, loginDetails } = this.props
 
     if (_.isNil(channel)) {
       this.setState(() => ({ error: new Error('No channel provided.') }))
@@ -145,6 +145,10 @@ export class ChatClient extends React.Component<Props, State> {
     try {
       await this.client.connect()
       await this.client.join(channel)
+
+      if (!_.isNil(loginDetails) && loginDetails.username === channel) {
+        this.props.setModerator(true)
+      }
     } catch (error) {
       let theError: Error
 
