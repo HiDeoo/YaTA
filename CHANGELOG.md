@@ -1,3 +1,9 @@
+# 1.5.3
+
+### 🐛 Bug Fix
+
+- When entering your own channel, moderation tools now appear immediately.
+
 # 1.5.2
 
 ### 🚀 New Feature
@@ -8,7 +14,7 @@
 
 ### 🐛 Bug Fix
 
-- FIx an issue with Github issue previews linking to the repo instead of the issues.
+- Fix an issue with Github issue previews linking to the repo instead of the issues.
 - Fix a UI only issue when trying to edit a locked shortcut.
 
 # 1.5.0
