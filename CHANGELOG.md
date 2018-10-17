@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- The "You're about to send a whisper." warning can now be temporarily hidden by holding the `Alt` key when writing a whisper.
+
 # 1.5.3
 
 ### 🐛 Bug Fix

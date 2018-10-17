@@ -27,6 +27,31 @@ const Wrapper = styled.div`
 const InputToast = styled(Toast)`
   &.${Classes.TOAST} {
     margin-bottom: 60px;
+    max-height: 40px;
+
+    &,
+    & > .${Classes.ICON}, & > .${Classes.TOAST_MESSAGE} {
+      transition-duration: 75ms;
+      transition-property: border-bottom-left-radius, border-bottom-right-radius, max-height, opacity, transform;
+      transition-timing-function: ease-in-out;
+    }
+
+    & > .${Classes.ICON}, & > .${Classes.TOAST_MESSAGE} {
+      transition-delay: 10ms;
+      transition-duration: 50ms;
+    }
+
+    &.hiddenToast {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: none;
+      max-height: 4px;
+      transform: translateY(9px);
+
+      & > .${Classes.ICON}, & > .${Classes.TOAST_MESSAGE} {
+        opacity: 0;
+      }
+    }
   }
 
   .${Classes.BUTTON_GROUP} {
@@ -69,9 +94,10 @@ const UploadProgressBar = styled(ProgressBar)`
  * React State.
  */
 const initialState = {
+  hideToasts: false,
   intent: '',
   lastKnownCursor: undefined as Optional<CursorPosition>,
-  toasts: [] as IToastOptions[],
+  toasts: [] as HideableToastOptions[],
 }
 type State = Readonly<typeof initialState>
 
@@ -85,7 +111,7 @@ export default class Input extends React.Component<Props, State> {
    * @return An object to update the state or `null` to update nothing.
    */
   public static getDerivedStateFromProps(nextProps: Props) {
-    const toasts: IToastOptions[] = []
+    const toasts: HideableToastOptions[] = []
     let intent = ''
 
     const { value } = nextProps
@@ -102,6 +128,7 @@ export default class Input extends React.Component<Props, State> {
         intent = Classes.INTENT_DANGER
       } else {
         toasts.push({
+          hideable: true,
           icon: 'inbox',
           intent: Intent.SUCCESS,
           message: "You're about to send a whisper.",
@@ -173,16 +200,22 @@ export default class Input extends React.Component<Props, State> {
    */
   public render() {
     const { disabled, isUploadingFile, value } = this.props
-    const { intent, toasts } = this.state
+    const { hideToasts, intent, toasts } = this.state
 
     const classes = classnames(Classes.INPUT, Classes.FILL, Classes.LARGE, intent)
 
     return (
       <Wrapper>
-        <Toaster position={Position.BOTTOM}>
-          {_.map(toasts, (toast, index) => (
-            <InputToast key={index} {...toast} />
-          ))}
+        <Toaster position={Position.BOTTOM} usePortal={false}>
+          {_.map(toasts, (toast, index) => {
+            const { hideable, ...toastProps } = toast
+
+            const toastClasses = classnames({
+              hiddenToast: hideable && hideToasts,
+            })
+
+            return <InputToast key={index} {...toastProps} className={toastClasses} />
+          })}
         </Toaster>
         {isUploadingFile && <UploadProgressBar intent={Intent.PRIMARY} />}
         <TextArea
@@ -192,6 +225,7 @@ export default class Input extends React.Component<Props, State> {
           className={classes}
           innerRef={this.input}
           onBlur={this.onBlurInput}
+          onKeyUp={this.onKeyUpInputValue}
           onChange={this.onChangeInputValue}
           onKeyDown={this.onKeyDownInputValue}
         />
@@ -264,6 +298,16 @@ export default class Input extends React.Component<Props, State> {
       const { selectionStart, selectionEnd } = this.input.current
 
       this.setState(() => ({ lastKnownCursor: { selectionStart, selectionEnd } }))
+    }
+  }
+
+  /**
+   * Triggered when a key is released in the input.
+   * @param event - The associated event.
+   */
+  private onKeyUpInputValue = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === Key.Alt) {
+      this.setState(() => ({ hideToasts: false }))
     }
   }
 
@@ -361,6 +405,8 @@ export default class Input extends React.Component<Props, State> {
           this.draft = null
         }
       }
+    } else if (event.key === Key.Alt) {
+      this.setState(() => ({ hideToasts: true }))
     }
   }
 
@@ -403,3 +449,8 @@ type CursorPosition = {
   selectionEnd: number
   selectionStart: number
 }
+
+/**
+ * Hideable toast options.
+ */
+type HideableToastOptions = IToastOptions & { hideable?: boolean }
