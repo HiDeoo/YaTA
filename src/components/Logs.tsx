@@ -244,7 +244,6 @@ interface Props extends ThemeProps {
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
   focusChatter: (chatter: SerializedChatter) => void
-  innerRef?: React.RefObject<Logs>
   logs: Log[]
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number

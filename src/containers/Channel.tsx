@@ -271,7 +271,7 @@ class Channel extends React.Component<Props, State> {
           quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
-          innerRef={this.logsComponent}
+          ref={this.logsComponent}
           timeout={this.timeout}
           logs={allLogs.logs}
           chatters={chatters}
