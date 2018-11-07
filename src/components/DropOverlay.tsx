@@ -37,7 +37,7 @@ const Tooltip = styled(Callout)`
       margin-left: 44px;
     }
 
-    & > svg {
+    & svg {
       height: 36px;
       width: 36px;
 

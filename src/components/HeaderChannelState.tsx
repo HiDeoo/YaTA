@@ -45,7 +45,8 @@ const Tooltip = styled(HeaderTooltip)`
  * PauseButton component.
  */
 const PauseButton = styled(Button)`
-  &.${Classes.BUTTON} svg.${Classes.ICON}, .${Classes.DARK} &.${Classes.BUTTON} svg.${Classes.ICON} {
+  &.${Classes.BUTTON} .${Classes.ICON} svg,
+  .${Classes.DARK} &.${Classes.BUTTON} .${Classes.ICON} svg {
     color: ${Colors.RED4};
   }
 `
@@ -60,7 +61,7 @@ const ViewerCount = styled.div`
   justify-content: center;
   margin-right: 10px;
 
-  & > svg {
+  & svg {
     height: 11px;
     margin-left: 6px;
     width: 11px;

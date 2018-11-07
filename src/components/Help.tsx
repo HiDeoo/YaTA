@@ -13,7 +13,7 @@ const HelpButton = styled(Button)`
     min-width: 18px;
     padding: 0;
 
-    & > svg {
+    & svg {
       color: ${Colors.GRAY2};
     }
 
@@ -22,7 +22,7 @@ const HelpButton = styled(Button)`
     &.${Classes.ACTIVE} {
       background: initial;
 
-      & > svg {
+      & svg {
         color: ${Colors.LIGHT_GRAY1};
       }
     }

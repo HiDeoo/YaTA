@@ -56,14 +56,14 @@ const Refresh = styled(Button)`
   margin-right: 8px;
 
   &.${Classes.BUTTON}.${Classes.MINIMAL}, .${Classes.DARK} &.${Classes.BUTTON}.${Classes.MINIMAL} {
-    & > svg {
+    & svg {
       color: ${Colors.LIGHT_GRAY1};
     }
 
     &:hover {
       background: inherit;
 
-      & > svg {
+      & svg {
         color: ${Colors.GRAY4};
       }
     }

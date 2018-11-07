@@ -67,7 +67,7 @@ const IconWrapper = styled.div`
   margin-left: 5px;
   margin-right: 10px;
 
-  & > svg {
+  & svg {
     color: ${theme('previews.meta')};
     height: 25px;
     width: 25px;

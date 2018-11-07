@@ -101,11 +101,13 @@ const Avatar = styled.div`
     width: ${size('chatter.avatar.size')};
   }
 
-  & > svg.${Classes.ICON}, .${Classes.DARK} & > svg.${Classes.ICON} {
+  & .${Classes.ICON} svg,
+  .${Classes.DARK} & .${Classes.ICON} svg {
     color: ${Colors.DARK_GRAY5};
     display: block;
     height: ${size('chatter.avatar.size', -15)};
     margin: 0;
+    margin-left: 9px;
     width: ${size('chatter.avatar.size', -15)};
   }
 `
