@@ -223,7 +223,7 @@ export default class Input extends React.Component<Props, State> {
           value={value}
           disabled={disabled || isUploadingFile}
           className={classes}
-          innerRef={this.input}
+          ref={this.input as any}
           onBlur={this.onBlurInput}
           onKeyUp={this.onKeyUpInputValue}
           onChange={this.onChangeInputValue}

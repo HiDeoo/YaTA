@@ -22,14 +22,14 @@ const Combo = styled.div<ReadOnlyProps>`
   cursor: ${ifProp('readonly', 'not-allowed', 'pointer')};
 
   &.${Classes.INPUT}, .${Classes.DARK} &.${Classes.INPUT} {
+    display: inline-flex;
     height: 36px;
-
     line-height: 23px;
     padding: 3px 7px;
     text-align: right;
 
     ${(props) =>
-      props.readonly &&
+      props.readOnly &&
       `&:focus {
       box-shadow: unset;
     }`};
@@ -84,13 +84,13 @@ export default class ComboPicker extends React.Component<Props, State> {
       <>
         <Name>{shortcut.name}</Name>
         <Combo
-          readonly={shortcut.readonly || false}
+          readOnly={shortcut.readonly || false}
           tabIndex={shortcut.readonly ? -1 : 0}
           onKeyDown={this.onKeyDown}
           className={Classes.INPUT}
-          innerRef={this.picker}
           onClick={this.focus}
           onBlur={this.onBlur}
+          ref={this.picker as any}
         >
           {this.state.isEditing ? (
             <Tooltip>Type new shortcut</Tooltip>
@@ -194,5 +194,5 @@ interface Props {
  * React Props.
  */
 interface ReadOnlyProps {
-  readonly: boolean
+  readOnly: boolean
 }

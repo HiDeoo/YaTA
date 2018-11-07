@@ -49,7 +49,7 @@ const Thumbnail = styled.img`
   transition: transform 0.2s cubic-bezier(0.4, 1, 0.75, 0.9);
   width: 120px;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     transform: scale(1.15);
   }
 `
@@ -104,7 +104,7 @@ const Details = styled(FlexContent)`
   font-size: 0.8rem;
   padding: 8px;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('follows.hover.details')};
   }
 
@@ -128,7 +128,7 @@ const Title = styled(Text).attrs({
   font-weight: bold;
   position: relative;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('follows.hover.title')};
   }
 `
@@ -142,7 +142,7 @@ const Meta = styled(Text).attrs({
   color: ${theme('follows.meta')};
   font-size: 0.76rem;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('follows.hover.meta')};
   }
 `

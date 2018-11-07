@@ -5,7 +5,7 @@ declare module 'react-flip-toolkit' {
     overshootClamping?: boolean
   }
 
-  export type SpringConfig = 'noWobble' | 'gentle' | 'wobbly' | 'stiff' | Spring
+  export type SpringConfig = 'noWobble' | 'veryGentle' | 'gentle' | 'wobbly' | 'stiff' | Spring
 
   export type FlippedComponentIdFilter = string | any[]
 

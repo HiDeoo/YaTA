@@ -29,7 +29,7 @@ const Content = styled(FlexContent)`
   font-weight: bold;
   justify-content: center;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('resource.hover.color')};
   }
 `
@@ -45,7 +45,7 @@ const Meta = styled(Text).attrs({
   font-weight: normal;
   margin-top: 5px;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('resource.hover.meta')};
   }
 `

@@ -128,12 +128,7 @@ export default class Settings extends React.Component<Props, State> {
         title={this.renderTitle(initialView)}
         isOpen={visible}
       >
-        <SettingsStack
-          initialView={initialView}
-          innerRef={this.viewStack}
-          onPush={this.onViewPush}
-          onPop={this.onViewPop}
-        />
+        <SettingsStack initialView={initialView} ref={this.viewStack} onPush={this.onViewPush} onPop={this.onViewPop} />
       </SettingsDialog>
     )
   }

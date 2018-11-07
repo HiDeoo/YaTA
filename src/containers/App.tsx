@@ -10,6 +10,7 @@ import * as semCompare from 'semver-compare'
 
 import FlexContent from 'Components/FlexContent'
 import FlexLayout from 'Components/FlexLayout'
+import GlobalStyle from 'Components/GlobalStyle'
 import Header, { defaultHeaderConfiguration, HeaderProvider } from 'Components/Header'
 import Login from 'Components/Login'
 import Settings, { SettingsViewName } from 'Components/Settings'
@@ -130,6 +131,7 @@ class App extends React.Component<Props, State> {
     return (
       <ThemeProvider theme={theme === Theme.Dark ? dark : light}>
         <HeaderProvider value={this.state.headerConfiguration}>
+          <GlobalStyle />
           <FlexLayout vertical>
             <Header
               goHome={this.goHome}

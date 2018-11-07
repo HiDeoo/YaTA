@@ -1,8 +1,12 @@
-# Unreleased
+# 1.6.0
 
 ### 🐛 Bug Fix
 
 - Fix a tooltip position issue.
+
+### ⚙️ Internal
+
+- Various performance improvements.
 
 # 1.5.4
 

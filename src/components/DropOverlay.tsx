@@ -121,7 +121,7 @@ export default class DropOverlay extends React.Component<Props, State> {
    * @return `true` if the event is a file(s) data transfer.
    */
   private static isFilesDataTransfer(event: DragEvent) {
-    return _.includes(event.dataTransfer.types, 'Files')
+    return !_.isNil(event.dataTransfer) && _.includes(event.dataTransfer.types, 'Files')
   }
 
   /**
@@ -130,7 +130,11 @@ export default class DropOverlay extends React.Component<Props, State> {
    * @return `true` if the event is an image data transfer.
    */
   private static isImageDataTransfer(event: DragEvent) {
-    if (!_.isEmpty(event.dataTransfer.files) && DropOverlay.isFilesDataTransfer(event)) {
+    if (
+      !_.isNil(event.dataTransfer) &&
+      !_.isEmpty(event.dataTransfer.files) &&
+      DropOverlay.isFilesDataTransfer(event)
+    ) {
       const { type } = _.head(event.dataTransfer.files) as File
 
       if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif') {
@@ -268,7 +272,7 @@ export default class DropOverlay extends React.Component<Props, State> {
 
     this.setState(() => ({ isDragging: false, isDraggingOver: false }))
 
-    if (DropOverlay.isImageDataTransfer(event)) {
+    if (DropOverlay.isImageDataTransfer(event) && !_.isNil(event.dataTransfer)) {
       const file = _.head(event.dataTransfer.files)
 
       if (_.isNil(file)) {

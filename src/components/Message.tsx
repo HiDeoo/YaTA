@@ -43,10 +43,10 @@ const MenuButton = styled(Button)`
     vertical-align: top;
     width: 24px;
 
-    & > svg {
+    & svg {
       color: ${Colors.GRAY2};
       position: absolute;
-      left: 7px;
+      left: 0;
       top: 3px;
     }
 
@@ -55,7 +55,7 @@ const MenuButton = styled(Button)`
     &.${Classes.ACTIVE} {
       background: initial;
 
-      & > svg {
+      & svg {
         color: ${Colors.LIGHT_GRAY1};
       }
     }

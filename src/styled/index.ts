@@ -8,8 +8,8 @@ import ITheme from 'Styled/theme'
  */
 const {
   default: styled,
+  createGlobalStyle,
   css,
-  injectGlobal,
   keyframes,
   ThemeProvider,
   withTheme,
@@ -25,7 +25,7 @@ interface ThemeProps {
 /**
  * Re-exports styled-components with our theme interface.
  */
-export { css, injectGlobal, keyframes, ThemeProps, ThemeProvider, withTheme }
+export { createGlobalStyle, css, keyframes, ThemeProps, ThemeProvider, withTheme }
 export default styled
 
 /**

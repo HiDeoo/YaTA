@@ -232,7 +232,7 @@ class Channel extends React.Component<Props, State> {
     }
 
     return (
-      <FlexLayout vertical innerRef={this.logsWrapper}>
+      <FlexLayout vertical ref={this.logsWrapper as any}>
         <Helmet>
           <title>{channel} - YaTA</title>
         </Helmet>

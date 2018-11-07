@@ -20,6 +20,7 @@ const TwitchState = styled.div<TwitchStateProps>`
   & > span {
     height: ${size('twitchState.size')};
     margin-right: 0;
+    margin-top: -4px;
     width: ${size('twitchState.size')};
 
     & svg {

@@ -271,7 +271,7 @@ class Follows extends React.Component<Props, State> {
         </Toolbar>
         <Wrapper>
           {followsToRender.length > 0 ? (
-            <Flipper flipKey={`${filter}-${followsSortOrder}-${hideOfflineFollows}`}>
+            <Flipper flipKey={`${filter}-${followsSortOrder}-${hideOfflineFollows}`} spring="veryGentle">
               <Grid>
                 {_.map(followsToRender, (follow) => (
                   <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />

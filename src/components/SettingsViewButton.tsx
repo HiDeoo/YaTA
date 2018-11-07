@@ -30,7 +30,7 @@ const Content = styled.div`
   transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
   transition-delay: 0;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('settings.viewButton.hover.text')};
   }
 `
@@ -46,7 +46,7 @@ const ButtonIcon = styled(Icon)`
   transition-timing-function: cubic-bezier(0.4, 1, 0.75, 0.9);
   transition-delay: 0;
 
-  ${Wrapper}:hover & {
+  ${/* sc-selector */ Wrapper}:hover & {
     color: ${theme('settings.viewButton.hover.icon')};
     opacity: 1;
   }
