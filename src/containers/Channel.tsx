@@ -349,7 +349,7 @@ class Channel extends React.Component<Props, State> {
           viewerCount={this.state.viewerCount}
           roomState={roomState}
         />
-        <Popover position={Position.BOTTOM}>
+        <Popover position={Position.BOTTOM} usePortal={false}>
           <HeaderTooltip content="Tools">
             <Button icon="wrench" minimal />
           </HeaderTooltip>

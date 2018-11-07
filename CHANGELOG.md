@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix a tooltip position issue.
+
 # 1.5.4
 
 ### 🚀 New Feature
