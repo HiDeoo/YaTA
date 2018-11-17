@@ -11,6 +11,7 @@ import {
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
   toggleDisableDialogAnimations,
+  toggleHideVIPBadges,
   toggleHighlightAllMentions,
   togglePrioritizeUsernames,
   toggleShowContextMenu,
@@ -21,6 +22,7 @@ import {
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
+  getHideVIPBadges,
   getHighlightAllMentions,
   getPrioritizeUsernames,
   getShowContextMenu,
@@ -65,6 +67,7 @@ class SettingsGeneral extends React.Component<Props, State> {
       autoFocusInput,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
+      hideVIPBadges,
       highlightAllMentions,
       prioritizeUsernames,
       showContextMenu,
@@ -103,6 +106,12 @@ class SettingsGeneral extends React.Component<Props, State> {
             label="Prioritize usernames when auto-completing"
             onChange={this.props.togglePrioritizeUsernames}
             checked={prioritizeUsernames}
+          />
+          <Switch
+            description="When enabled, VIP badges are hidden except in your own channel."
+            onChange={this.props.toggleHideVIPBadges}
+            checked={hideVIPBadges}
+            label="Hide VIP badges"
           />
         </SettingsViewSection>
         <SettingsViewSection title="UI">
@@ -179,6 +188,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     autoFocusInput: getAutoFocusInput(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     disableDialogAnimations: getDisableDialogAnimations(state),
+    hideVIPBadges: getHideVIPBadges(state),
     highlightAllMentions: getHighlightAllMentions(state),
     prioritizeUsernames: getPrioritizeUsernames(state),
     showContextMenu: getShowContextMenu(state),
@@ -188,6 +198,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleAutoFocusInput,
     toggleCopyMessageOnDoubleClick,
     toggleDisableDialogAnimations,
+    toggleHideVIPBadges,
     toggleHighlightAllMentions,
     togglePrioritizeUsernames,
     toggleShowContextMenu,
@@ -202,6 +213,7 @@ interface StateProps {
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
+  hideVIPBadges: ReturnType<typeof getHideVIPBadges>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   showContextMenu: ReturnType<typeof getShowContextMenu>
@@ -215,6 +227,7 @@ interface DispatchProps {
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
+  toggleHideVIPBadges: typeof toggleHideVIPBadges
   toggleHighlightAllMentions: typeof toggleHighlightAllMentions
   togglePrioritizeUsernames: typeof togglePrioritizeUsernames
   toggleShowContextMenu: typeof toggleShowContextMenu

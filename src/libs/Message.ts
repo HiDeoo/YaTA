@@ -61,7 +61,7 @@ export default class Message implements Serializable<SerializedMessage> {
     const date = new Date(parseInt(this.date, 10))
     this.time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`
 
-    this.badges = this.parseBadges(userstate)
+    this.badges = this.parseBadges(userstate, parseOptions.hideVIPBadge)
     this.message = this.parseMessage(message, userstate, currentUsername)
   }
 
@@ -100,9 +100,10 @@ export default class Message implements Serializable<SerializedMessage> {
   /**
    * Parses badges.
    * @param  userstate - The userstate.
+   * @param  hideVIP - Defines if the VIP badge should be hidden or not.
    * @return Parsed badges.
    */
-  private parseBadges(userstate: UserState) {
+  private parseBadges(userstate: UserState, hideVIP: boolean) {
     const parsedBadges: string[] = []
 
     if (Resources.manager().isBot(userstate.username)) {
@@ -111,6 +112,10 @@ export default class Message implements Serializable<SerializedMessage> {
 
     if (_.size(userstate.badges) > 0) {
       _.forEach(userstate.badges, (version, name) => {
+        if (hideVIP && name === 'vip') {
+          return
+        }
+
         const set = _.get(Resources.manager().getBadges(), name)
 
         if (_.isNil(set)) {
@@ -418,5 +423,6 @@ export type SerializedMessage = {
  * Message parse options.
  */
 type MessageParseOptions = {
+  hideVIPBadge: boolean
   theme: Theme
 }

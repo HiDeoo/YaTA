@@ -204,4 +204,10 @@ export default {
       settings: { ...state.settings, shortcuts: SettingsInitialState.shortcuts },
     }
   },
+  28: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, hideVIPBadges: SettingsInitialState.hideVIPBadges },
+    }
+  },
 }

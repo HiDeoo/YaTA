@@ -46,6 +46,7 @@ import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
 import {
   getAutoHostThreshold,
+  getHideVIPBadges,
   getHideWhispers,
   getHighlightAllMentions,
   getHighlights,
@@ -851,9 +852,14 @@ export class ChatClient extends React.Component<Props, State> {
           }
         }
 
-        const { theme } = this.props
+        const { channel, hideVIPBadges, loginDetails, theme } = this.props
 
-        parsedMessage = new Message(message, userstate, self, this.props.loginDetails!.username, { theme })
+        const hideVIPBadge = hideVIPBadges && !_.isNil(loginDetails) && loginDetails.username !== channel
+
+        parsedMessage = new Message(message, userstate, self, this.props.loginDetails!.username, {
+          hideVIPBadge,
+          theme,
+        })
 
         if (_.isNil(parsedMessage.user.color)) {
           const user = _.get(this.props.chatters, parsedMessage.user.id)
@@ -881,6 +887,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
+    hideVIPBadges: getHideVIPBadges(state),
     hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
     highlights: getHighlights(state),
@@ -921,6 +928,7 @@ interface StateProps {
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   chattersMap: ReturnType<typeof getChattersMap>
+  hideVIPBadges: ReturnType<typeof getHideVIPBadges>
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
   highlights: ReturnType<typeof getHighlights>

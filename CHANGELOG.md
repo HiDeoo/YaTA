@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- VIP badges are now hidden by default except in your own channel (can be disabled in the settings).
+
 # 1.6.0
 
 ### 🐛 Bug Fix

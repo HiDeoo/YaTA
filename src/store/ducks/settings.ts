@@ -52,6 +52,7 @@ export enum Actions {
   SET_FOLLOWS_SORT_ORDER = 'settings/SET_FOLLOWS_SORT_ORDER',
   TOGGLE_HIDE_OFFLINE_FOLLOWS = 'settings/TOGGLE_HIDE_OFFLINE_FOLLOWS',
   SET_SHORTCUT = 'settings/SET_SHORTCUT',
+  TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
 }
 
 /**
@@ -68,6 +69,7 @@ export const initialState = {
   disableDialogAnimations: false,
   followsSortOrder: FollowsSortOrder.ViewersDesc,
   hideOfflineFollows: false,
+  hideVIPBadges: true,
   hideWhispers: false,
   highlightAllMentions: false,
   highlights: {},
@@ -341,6 +343,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         },
       }
     }
+    case Actions.TOGGLE_HIDE_VIP_BADGES: {
+      return {
+        ...state,
+        hideVIPBadges: !state.hideVIPBadges,
+      }
+    }
     default: {
       return state
     }
@@ -612,6 +620,12 @@ export const setShortcut = (type: ShortcutType, combo: ShortcutCombo) =>
   })
 
 /**
+ * Toggle the 'Hide VIP badges' setting.
+ * @return The action.
+ */
+export const toggleHideVIPBadges = () => createAction(Actions.TOGGLE_HIDE_VIP_BADGES)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -646,6 +660,7 @@ export type SettingsActions =
   | ReturnType<typeof setFollowsSortOrder>
   | ReturnType<typeof toggleHideOfflineFollows>
   | ReturnType<typeof setShortcut>
+  | ReturnType<typeof toggleHideVIPBadges>
 
 /**
  * Settings state.
@@ -700,6 +715,11 @@ export type SettingsState = {
      */
     allIds: string[]
   }
+
+  /**
+   * Hides VIPs badges except in your own channel.
+   */
+  hideVIPBadges: boolean
 
   /**
    * Hides whispers (received & sent).

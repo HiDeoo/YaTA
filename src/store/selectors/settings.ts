@@ -223,3 +223,10 @@ export const getGroupedShortcuts = createSelector([getShortcuts], (shortcuts) =>
     {} as Record<ShortcutGroup, Shortcut[]>
   )
 })
+
+/**
+ * Returns the 'Hide VIP badges' setting.
+ * @param  state - The Redux state.
+ * @return The 'Hide VIP badges' setting.
+ */
+export const getHideVIPBadges = createSelector([getSettingsState], (settings) => settings.hideVIPBadges)
