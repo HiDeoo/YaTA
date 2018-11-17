@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - VIP badges are now hidden by default except in your own channel (can be disabled in the settings).
+- Add a new setting (disabled by default) to include your whispers in your message history when using the `⬆` & `⬇` keys.
 
 # 1.6.0
 

@@ -230,3 +230,10 @@ export const getGroupedShortcuts = createSelector([getShortcuts], (shortcuts) =>
  * @return The 'Hide VIP badges' setting.
  */
 export const getHideVIPBadges = createSelector([getSettingsState], (settings) => settings.hideVIPBadges)
+
+/**
+ * Returns the 'Add whispers to history' setting.
+ * @param  state - The Redux state.
+ * @return The 'Add whispers to history' setting.
+ */
+export const getAddWhispersToHistory = createSelector([getSettingsState], (settings) => settings.addWhispersToHistory)

@@ -53,6 +53,7 @@ export enum Actions {
   TOGGLE_HIDE_OFFLINE_FOLLOWS = 'settings/TOGGLE_HIDE_OFFLINE_FOLLOWS',
   SET_SHORTCUT = 'settings/SET_SHORTCUT',
   TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
+  TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
 }
 
 /**
@@ -63,6 +64,7 @@ export const initialState = {
     allIds: [],
     byId: {},
   },
+  addWhispersToHistory: false,
   autoFocusInput: true,
   autoHostThreshold: 1,
   copyMessageOnDoubleClick: true,
@@ -349,6 +351,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         hideVIPBadges: !state.hideVIPBadges,
       }
     }
+    case Actions.TOGGLE_ADD_WHISPERS_TO_HISTORY: {
+      return {
+        ...state,
+        addWhispersToHistory: !state.addWhispersToHistory,
+      }
+    }
     default: {
       return state
     }
@@ -626,6 +634,12 @@ export const setShortcut = (type: ShortcutType, combo: ShortcutCombo) =>
 export const toggleHideVIPBadges = () => createAction(Actions.TOGGLE_HIDE_VIP_BADGES)
 
 /**
+ * Toggle the 'Add whispers to history' setting.
+ * @return The action.
+ */
+export const toggleAddWhispersToHistory = () => createAction(Actions.TOGGLE_ADD_WHISPERS_TO_HISTORY)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -661,6 +675,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleHideOfflineFollows>
   | ReturnType<typeof setShortcut>
   | ReturnType<typeof toggleHideVIPBadges>
+  | ReturnType<typeof toggleAddWhispersToHistory>
 
 /**
  * Settings state.
@@ -785,6 +800,11 @@ export type SettingsState = {
    * Shortcuts.
    */
   shortcuts: Record<ShortcutType, ShortcutCombo>
+
+  /**
+   * Adds whispers to the history when enabled.
+   */
+  addWhispersToHistory: boolean
 }
 
 /**

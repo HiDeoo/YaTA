@@ -51,6 +51,7 @@ import {
 import { getChatters } from 'Store/selectors/chatters'
 import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
 import {
+  getAddWhispersToHistory,
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getPrioritizeUsernames,
@@ -906,7 +907,7 @@ class Channel extends React.Component<Props, State> {
         this.setState(() => ({ inputValue: '' }))
 
         if (!_.isNil(whisper)) {
-          await this.whisper(whisper.username, whisper.message)
+          await this.whisper(whisper.username, whisper.message, whisper.command)
         } else if (FollowedRegExp.test(message)) {
           const channelId = _.get(this.props.roomState, 'roomId')
 
@@ -950,9 +951,10 @@ class Channel extends React.Component<Props, State> {
    * Sends a whisper.
    * @param username - The recipient.
    * @param whisper - The whisper to send.
+   * @param [command] - The command used to send the whisper.
    */
-  private async whisper(username: string, whisper: string) {
-    const { channel } = this.props
+  private async whisper(username: string, whisper: string, command?: string) {
+    const { addWhispersToHistory, channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
@@ -960,6 +962,10 @@ class Channel extends React.Component<Props, State> {
       chatClient.nextWhisperRecipient = username
 
       await client.whisper(username, whisper)
+
+      if (!_.isNil(command) && addWhispersToHistory) {
+        this.props.addToHistory(command)
+      }
     }
   }
 
@@ -1247,6 +1253,7 @@ class Channel extends React.Component<Props, State> {
 const enhance = compose<Props, {}>(
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     (state) => ({
+      addWhispersToHistory: getAddWhispersToHistory(state),
       allLogs: getLogs(state),
       autoFocusInput: getAutoFocusInput(state),
       channel: getChannel(state),
@@ -1287,6 +1294,7 @@ export default enhance(Channel)
  * React Props.
  */
 interface StateProps {
+  addWhispersToHistory: ReturnType<typeof getAddWhispersToHistory>
   allLogs: ReturnType<typeof getLogs>
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   channel: ReturnType<typeof getChannel>

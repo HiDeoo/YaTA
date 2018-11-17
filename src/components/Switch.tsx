@@ -1,4 +1,4 @@
-import { ISwitchProps, Switch as OriginalSwitch } from '@blueprintjs/core'
+import { Classes, ISwitchProps, Switch as OriginalSwitch } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
@@ -21,6 +21,10 @@ const Description = styled.div`
   margin-bottom: 10px;
   margin-left: 39px;
   margin-top: -6px;
+
+  & > code.${Classes.CODE} {
+    margin: 0 2px;
+  }
 `
 
 /**
@@ -63,6 +67,6 @@ export default class Switch extends React.Component<Props> {
  * React Props.
  */
 interface Props extends ISwitchProps {
-  description?: string
+  description?: string | React.ReactNode
   checkSound?: Sounds
 }

@@ -1,4 +1,4 @@
-import { Button, Classes, H5, Intent, Popover } from '@blueprintjs/core'
+import { Button, Classes, Code, H5, Intent, Popover } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -8,6 +8,7 @@ import SettingsViewSection from 'Components/SettingsViewSection'
 import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
 import {
+  toggleAddWhispersToHistory,
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
   toggleDisableDialogAnimations,
@@ -19,6 +20,7 @@ import {
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import {
+  getAddWhispersToHistory,
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
@@ -64,6 +66,7 @@ class SettingsGeneral extends React.Component<Props, State> {
    */
   public render() {
     const {
+      addWhispersToHistory,
       autoFocusInput,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
@@ -112,6 +115,16 @@ class SettingsGeneral extends React.Component<Props, State> {
             onChange={this.props.toggleHideVIPBadges}
             checked={hideVIPBadges}
             label="Hide VIP badges"
+          />
+          <Switch
+            description={
+              <>
+                The <Code>⬆</Code> & <Code>⬇</Code> history will include your manually sent whispers.
+              </>
+            }
+            onChange={this.props.toggleAddWhispersToHistory}
+            checked={addWhispersToHistory}
+            label="Add whispers to history"
           />
         </SettingsViewSection>
         <SettingsViewSection title="UI">
@@ -185,6 +198,7 @@ class SettingsGeneral extends React.Component<Props, State> {
 
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
+    addWhispersToHistory: getAddWhispersToHistory(state),
     autoFocusInput: getAutoFocusInput(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     disableDialogAnimations: getDisableDialogAnimations(state),
@@ -195,6 +209,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     theme: getTheme(state),
   }),
   {
+    toggleAddWhispersToHistory,
     toggleAutoFocusInput,
     toggleCopyMessageOnDoubleClick,
     toggleDisableDialogAnimations,
@@ -210,6 +225,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  * React Props.
  */
 interface StateProps {
+  addWhispersToHistory: ReturnType<typeof getAddWhispersToHistory>
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
@@ -224,6 +240,7 @@ interface StateProps {
  * React Props.
  */
 interface DispatchProps {
+  toggleAddWhispersToHistory: typeof toggleAddWhispersToHistory
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations

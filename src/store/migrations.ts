@@ -210,4 +210,10 @@ export default {
       settings: { ...state.settings, hideVIPBadges: SettingsInitialState.hideVIPBadges },
     }
   },
+  29: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, addWhispersToHistory: SettingsInitialState.addWhispersToHistory },
+    }
+  },
 }

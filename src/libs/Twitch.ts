@@ -160,7 +160,7 @@ export default class Twitch {
       const username = matches[1]
       const whisper = matches[2]
 
-      return { username, message: whisper }
+      return { username, message: whisper, command: message }
     }
 
     return null
