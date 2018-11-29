@@ -2,7 +2,7 @@
 
 ### 🚀 New Feature
 
-- Available logs can now be exported to a file or your clipboard. Pick what you want and click that button!
+- Available logs can now be exported to a file or your clipboard. Pick what you want to include and click that button!
 
 ### 🐛 Bug Fix
 
