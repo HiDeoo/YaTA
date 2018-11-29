@@ -18,6 +18,7 @@ import HeaderChannelState from 'Components/HeaderChannelState'
 import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs, { Logs as InnerLogs } from 'Components/Logs'
+import LogsExporter from 'Components/LogsExporter'
 import ModerationMenuItems from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
@@ -61,7 +62,8 @@ import {
 } from 'Store/selectors/settings'
 import { getIsMod, getLoginDetails } from 'Store/selectors/user'
 import styled from 'Styled'
-import { replaceImgTagByAlt, sanitizeUrlForPreview } from 'Utils/html'
+import { sanitizeUrlForPreview } from 'Utils/html'
+import { convertMessagesToString } from 'Utils/logs'
 import { renderShorcuts } from 'Utils/shortcuts'
 
 /**
@@ -111,6 +113,7 @@ const initialState = {
   [ToggleableUI.BroadcasterOverlay]: false,
   [ToggleableUI.Chatters]: false,
   [ToggleableUI.FollowOmnibar]: false,
+  [ToggleableUI.LogsExporter]: false,
   [ToggleableUI.PollEditor]: false,
   [ToggleableUI.Search]: false,
 }
@@ -223,6 +226,7 @@ class Channel extends React.Component<Props, State> {
       [ToggleableUI.BroadcasterOverlay]: showBroadcasterOverlay,
       [ToggleableUI.Chatters]: showChatters,
       [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
+      [ToggleableUI.LogsExporter]: showLogsExporter,
       [ToggleableUI.PollEditor]: showPollEditor,
       [ToggleableUI.Search]: showSearch,
     } = this.state
@@ -248,6 +252,7 @@ class Channel extends React.Component<Props, State> {
         />
         <Chatters toggle={this.toggleChatters} visible={showChatters} channel={channel} />
         <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
+        <LogsExporter toggle={this.toggleLogsExporter} visible={showLogsExporter} />
         <BroadcasterOverlay
           toggle={this.toggleBroadcasterOverlay}
           visible={showBroadcasterOverlay}
@@ -359,6 +364,7 @@ class Channel extends React.Component<Props, State> {
             {connected && <Menu.Item onClick={this.clip} icon="film" text="Create clip" />}
             <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
             {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
+            {connected && <Menu.Item onClick={this.toggleLogsExporter} icon="book" text="Export logs" />}
             <ModerationMenuItems
               toggleFollowersOnly={this.toggleFollowersOnly}
               toggleEmoteOnly={this.toggleEmoteOnly}
@@ -639,6 +645,13 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Toggles the logs exporter.
+   */
+  private toggleLogsExporter = () => {
+    this.toggleUI(ToggleableUI.LogsExporter)
+  }
+
+  /**
    * Toggles the broadcaster overlay.
    */
   private toggleBroadcasterOverlay = () => {
@@ -740,23 +753,7 @@ class Channel extends React.Component<Props, State> {
    * @param messages - The message(s) to copy.
    */
   private copyMessageToClipboard = (messages: SerializedMessage | SerializedMessage[]) => {
-    const messagesToCopy = _.isArray(messages) ? messages : [messages]
-
-    let sanitizedMessages = ''
-
-    _.forEach(messagesToCopy, (message, index) => {
-      const tmpDiv = document.createElement('div')
-      tmpDiv.innerHTML = replaceImgTagByAlt(message.message)
-
-      const sanitizedMessage = tmpDiv.textContent || tmpDiv.innerText || ''
-      const messageToCopy = `[${message.time}] ${message.user.displayName}: ${sanitizedMessage}${
-        index < messagesToCopy.length - 1 ? '\n' : ''
-      }`
-
-      sanitizedMessages = sanitizedMessages.concat(messageToCopy)
-    })
-
-    this.copyToClipboard(sanitizedMessages)
+    this.copyToClipboard(convertMessagesToString(messages))
 
     const selection = window.getSelection()
 

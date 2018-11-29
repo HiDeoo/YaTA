@@ -1,3 +1,13 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Available logs can now be exported to a file or your clipboard. Pick what you want and click that button!
+
+### 🐛 Bug Fix
+
+- Remove unnecessary horizontal scrollbars when the window is very small.
+
 # 1.7.0
 
 ### 🚀 New Feature
