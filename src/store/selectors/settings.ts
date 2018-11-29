@@ -237,3 +237,10 @@ export const getHideVIPBadges = createSelector([getSettingsState], (settings) =>
  * @return The 'Add whispers to history' setting.
  */
 export const getAddWhispersToHistory = createSelector([getSettingsState], (settings) => settings.addWhispersToHistory)
+
+/**
+ * Returns the 'Play sound on messages' setting.
+ * @param  state - The Redux state.
+ * @return The 'Play sound on messages' setting.
+ */
+export const getPlaySoundOnMessages = createSelector([getSettingsState], (settings) => settings.playSoundOnMessages)

@@ -28,7 +28,7 @@ const Logo = styled.div`
   display: flex;
   height: 128px;
   justify-content: center;
-  margin: 40px auto 40px auto;
+  margin: 35px auto 35px auto;
   width: 128px;
 `
 
@@ -47,7 +47,7 @@ const Description = styled.div`
   color: ${theme('about.description')};
   font-size: 0.8rem;
   line-height: 1.8rem;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 `
 
 /**
@@ -84,6 +84,10 @@ const SettingsAbout: React.SFC<ThemeProps> = (props) => (
       <p>
         Notification sound by{' '}
         <ExternalLink href="https://freesound.org/people/rhodesmas/sounds/342759/">rhodesmas</ExternalLink>
+      </p>
+      <p>
+        Message sound by{' '}
+        <ExternalLink href="https://freesound.org/people/kwahmah_02/sounds/268822/">kwahmah_02</ExternalLink>
       </p>
     </Content>
   </SettingsView>

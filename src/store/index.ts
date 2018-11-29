@@ -13,7 +13,7 @@ const persistedReducers = persistCombineReducers<ApplicationState>(
     key: 'YaTA:store',
     migrate: createMigrate(migrations as any, { debug: false }),
     storage,
-    version: 29,
+    version: 30,
     whitelist: ['settings', 'user', 'notes'],
   },
   reducers

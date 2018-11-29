@@ -54,6 +54,7 @@ import {
   getHighlightsPermanentUsers,
   getHostThreshold,
   getPlaySoundOnMentions,
+  getPlaySoundOnMessages,
   getPlaySoundOnWhispers,
   getTheme,
 } from 'Store/selectors/settings'
@@ -415,8 +416,19 @@ export class ChatClient extends React.Component<Props, State> {
       if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
         this.props.addChatter(serializedMessage.user, serializedMessage.id)
 
-        if (this.props.playSoundOnMentions && serializedMessage.mentionned) {
+        const shouldPlayMentionSound = this.props.playSoundOnMentions && serializedMessage.mentionned
+
+        if (shouldPlayMentionSound) {
           Sound.manager().playSound(Sounds.Notification)
+        }
+
+        if (
+          this.props.playSoundOnMessages &&
+          !shouldPlayMentionSound &&
+          !self &&
+          !Resources.manager().isBot(userstate.username)
+        ) {
+          Sound.manager().playSound(Sounds.Message)
         }
       }
 
@@ -897,6 +909,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
     playSoundOnMentions: getPlaySoundOnMentions(state),
+    playSoundOnMessages: getPlaySoundOnMessages(state),
     playSoundOnWhispers: getPlaySoundOnWhispers(state),
     theme: getTheme(state),
   }),
@@ -938,6 +951,7 @@ interface StateProps {
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
   playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
+  playSoundOnMessages: ReturnType<typeof getPlaySoundOnMessages>
   playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
   theme: ReturnType<typeof getTheme>
 }

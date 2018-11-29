@@ -54,6 +54,7 @@ export enum Actions {
   SET_SHORTCUT = 'settings/SET_SHORTCUT',
   TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
   TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
+  TOGGLE_PLAY_SOUND_ON_MESSAGES = 'settings/TOGGLE_PLAY_SOUND_ON_MESSAGES',
 }
 
 /**
@@ -80,6 +81,7 @@ export const initialState = {
   hostThreshold: 1,
   lastKnownVersion: null,
   playSoundOnMentions: false,
+  playSoundOnMessages: false,
   playSoundOnWhispers: false,
   prioritizeUsernames: false,
   shortcuts: {
@@ -355,6 +357,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         addWhispersToHistory: !state.addWhispersToHistory,
+      }
+    }
+    case Actions.TOGGLE_PLAY_SOUND_ON_MESSAGES: {
+      return {
+        ...state,
+        playSoundOnMessages: !state.playSoundOnMessages,
       }
     }
     default: {
@@ -640,6 +648,12 @@ export const toggleHideVIPBadges = () => createAction(Actions.TOGGLE_HIDE_VIP_BA
 export const toggleAddWhispersToHistory = () => createAction(Actions.TOGGLE_ADD_WHISPERS_TO_HISTORY)
 
 /**
+ * Toggle the 'Play sound on messages' setting.
+ * @return The action.
+ */
+export const togglePlaySoundOnMessages = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_MESSAGES)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -676,6 +690,7 @@ export type SettingsActions =
   | ReturnType<typeof setShortcut>
   | ReturnType<typeof toggleHideVIPBadges>
   | ReturnType<typeof toggleAddWhispersToHistory>
+  | ReturnType<typeof togglePlaySoundOnMessages>
 
 /**
  * Settings state.
@@ -785,6 +800,11 @@ export type SettingsState = {
    * Plays a sound on whispers.
    */
   playSoundOnWhispers: boolean
+
+  /**
+   * Plays a sound on messages.
+   */
+  playSoundOnMessages: boolean
 
   /**
    * Follows sort order.

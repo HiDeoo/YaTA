@@ -216,4 +216,10 @@ export default {
       settings: { ...state.settings, addWhispersToHistory: SettingsInitialState.addWhispersToHistory },
     }
   },
+  30: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, playSoundOnMessages: SettingsInitialState.playSoundOnMessages },
+    }
+  },
 }

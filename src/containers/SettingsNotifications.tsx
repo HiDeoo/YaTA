@@ -9,6 +9,7 @@ import Switch from 'Components/Switch'
 import { Sounds } from 'Libs/Sound'
 import {
   togglePlaySoundOnMentions,
+  togglePlaySoundOnMessages,
   togglePlaySoundOnWhispers,
   updateAutoHostThreshold,
   updateHostThreshold,
@@ -18,6 +19,7 @@ import {
   getAutoHostThreshold,
   getHostThreshold,
   getPlaySoundOnMentions,
+  getPlaySoundOnMessages,
   getPlaySoundOnWhispers,
 } from 'Store/selectors/settings'
 
@@ -33,7 +35,13 @@ class SettingsNotifications extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { autoHostThreshold, hostThreshold, playSoundOnMentions, playSoundOnWhispers } = this.props
+    const {
+      autoHostThreshold,
+      hostThreshold,
+      playSoundOnMentions,
+      playSoundOnMessages,
+      playSoundOnWhispers,
+    } = this.props
 
     return (
       <SettingsView>
@@ -49,6 +57,13 @@ class SettingsNotifications extends React.Component<Props> {
             checkSound={Sounds.Notification}
             label="Play sound on whispers"
             checked={playSoundOnWhispers}
+          />
+          <Switch
+            description="Your own messages and bots will not trigger any sound."
+            onChange={this.props.togglePlaySoundOnMessages}
+            checkSound={Sounds.Message}
+            label="Play sound on messages"
+            checked={playSoundOnMessages}
           />
         </SettingsViewSection>
         <SettingsViewSection title="Hosts">
@@ -121,10 +136,12 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     autoHostThreshold: getAutoHostThreshold(state),
     hostThreshold: getHostThreshold(state),
     playSoundOnMentions: getPlaySoundOnMentions(state),
+    playSoundOnMessages: getPlaySoundOnMessages(state),
     playSoundOnWhispers: getPlaySoundOnWhispers(state),
   }),
   {
     togglePlaySoundOnMentions,
+    togglePlaySoundOnMessages,
     togglePlaySoundOnWhispers,
     updateAutoHostThreshold,
     updateHostThreshold,
@@ -138,6 +155,7 @@ interface StateProps {
   autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   hostThreshold: ReturnType<typeof getHostThreshold>
   playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
+  playSoundOnMessages: ReturnType<typeof getPlaySoundOnMessages>
   playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
 }
 
@@ -146,6 +164,7 @@ interface StateProps {
  */
 interface DispatchProps {
   togglePlaySoundOnMentions: typeof togglePlaySoundOnMentions
+  togglePlaySoundOnMessages: typeof togglePlaySoundOnMessages
   togglePlaySoundOnWhispers: typeof togglePlaySoundOnWhispers
   updateAutoHostThreshold: typeof updateAutoHostThreshold
   updateHostThreshold: typeof updateHostThreshold

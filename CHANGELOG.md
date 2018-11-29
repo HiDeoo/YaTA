@@ -2,7 +2,8 @@
 
 ### 🚀 New Feature
 
-- Available logs can now be exported to a file or your clipboard. Pick what you want to include and click that button!
+- Available logs can now be exported to a file or your clipboard from the Tools menu. Pick what you want to include and click that button!
+- Add a new notification (disabled by default) to play a sound for each message.
 
 ### 🐛 Bug Fix
 
