@@ -39,6 +39,22 @@ const HeaderNavbarGroup = styled(NavbarGroup)`
 `
 
 /**
+ * TitleHeaderNavbarGroup component.
+ */
+const TitleHeaderNavbarGroup = styled(HeaderNavbarGroup)`
+  &.${Classes.NAVBAR_GROUP}.${Classes.ALIGN_LEFT} {
+    flex-shrink: 0.5;
+    min-width: 0;
+
+    & > div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+`
+
+/**
  * NavbarSpacer component.
  */
 const NavbarSpacer = styled.div`
@@ -124,7 +140,7 @@ export default class Header extends React.Component<Props> {
         <Helmet>
           <title>YaTA</title>
         </Helmet>
-        <HeaderNavbarGroup>
+        <TitleHeaderNavbarGroup>
           <NavbarHeading>
             <HeaderConsumer>
               {({ titleComponent }) => (!_.isNil(titleComponent) ? <span>{titleComponent} - </span> : null)}
@@ -132,7 +148,7 @@ export default class Header extends React.Component<Props> {
             YaTA
           </NavbarHeading>
           {this.renderStatus()}
-        </HeaderNavbarGroup>
+        </TitleHeaderNavbarGroup>
         <NavbarSpacer />
         <HeaderNavbarGroup>
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
