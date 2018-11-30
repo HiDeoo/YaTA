@@ -54,6 +54,7 @@ import {
   getHighlightsIgnoredUsers,
   getHighlightsPermanentUsers,
   getHostThreshold,
+  getPlayMessageSoundOnlyInOwnChannel,
   getSoundSettings,
   getTheme,
 } from 'Store/selectors/settings'
@@ -434,7 +435,14 @@ export class ChatClient extends React.Component<Props, State> {
           !self &&
           !Resources.manager().isBot(userstate.username)
         ) {
-          Sound.manager().playSoundNotification(SoundNotification.Message)
+          if (
+            !this.props.playMessageSoundOnlyInOwnChannel ||
+            (this.props.playMessageSoundOnlyInOwnChannel &&
+              !_.isNil(this.props.loginDetails) &&
+              this.props.loginDetails.username === this.props.channel)
+          ) {
+            Sound.manager().playSoundNotification(SoundNotification.Message)
+          }
         }
       }
 
@@ -921,6 +929,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     hostThreshold: getHostThreshold(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
+    playMessageSoundOnlyInOwnChannel: getPlayMessageSoundOnlyInOwnChannel(state),
     soundSettings: getSoundSettings(state),
     theme: getTheme(state),
   }),
@@ -961,6 +970,7 @@ interface StateProps {
   hostThreshold: ReturnType<typeof getHostThreshold>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
+  playMessageSoundOnlyInOwnChannel: ReturnType<typeof getPlayMessageSoundOnlyInOwnChannel>
   soundSettings: ReturnType<typeof getSoundSettings>
   theme: ReturnType<typeof getTheme>
 }

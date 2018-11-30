@@ -230,3 +230,13 @@ export const getAddWhispersToHistory = createSelector([getSettingsState], (setti
  * @return The sound settings.
  */
 export const getSoundSettings = createSelector([getSettingsState], (settings) => settings.sounds)
+
+/**
+ * Returns the 'Play sound on messages only in my channel' setting.
+ * @param  state - The Redux state.
+ * @return The 'Play sound on messages only in my channel' setting.
+ */
+export const getPlayMessageSoundOnlyInOwnChannel = createSelector(
+  [getSettingsState],
+  (settings) => settings.playMessageSoundOnlyInOwnChannel
+)

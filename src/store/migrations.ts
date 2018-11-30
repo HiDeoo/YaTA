@@ -257,4 +257,13 @@ export default {
       settings,
     }
   },
+  32: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        playMessageSoundOnlyInOwnChannel: SettingsInitialState.playMessageSoundOnlyInOwnChannel,
+      },
+    }
+  },
 }

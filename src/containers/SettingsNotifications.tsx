@@ -6,15 +6,22 @@ import NumericInput from 'Components/NumericInput'
 import SettingsNotificationSound from 'Components/SettingsNotificationSound'
 import SettingsView from 'Components/SettingsView'
 import SettingsViewSection from 'Components/SettingsViewSection'
+import Switch from 'Components/Switch'
 import SoundNotification from 'Constants/soundNotification'
 import {
+  togglePlayMessageSoundOnlyInOwnChannel,
   toggleSoundNotification,
   updateAutoHostThreshold,
   updateHostThreshold,
   updateSoundNotificationVolume,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import { getAutoHostThreshold, getHostThreshold, getSoundSettings } from 'Store/selectors/settings'
+import {
+  getAutoHostThreshold,
+  getHostThreshold,
+  getPlayMessageSoundOnlyInOwnChannel,
+  getSoundSettings,
+} from 'Store/selectors/settings'
 
 /**
  * SettingsNotifications Component.
@@ -28,11 +35,11 @@ class SettingsNotifications extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { autoHostThreshold, hostThreshold, soundSettings } = this.props
+    const { autoHostThreshold, hostThreshold, playMessageSoundOnlyInOwnChannel, soundSettings } = this.props
 
     return (
       <SettingsView>
-        <SettingsViewSection title="Sound">
+        <SettingsViewSection title="Alerts">
           <SettingsNotificationSound
             changeVolume={this.props.updateSoundNotificationVolume}
             settings={soundSettings[SoundNotification.Mention]}
@@ -54,6 +61,15 @@ class SettingsNotifications extends React.Component<Props> {
             toggle={this.props.toggleSoundNotification}
             notification={SoundNotification.Message}
             label="Play sound on messages"
+          />
+        </SettingsViewSection>
+        <SettingsViewSection title="Sounds">
+          <Switch
+            description="This setting does not affect mentions & whispers sounds."
+            onChange={this.props.togglePlayMessageSoundOnlyInOwnChannel}
+            disabled={!soundSettings[SoundNotification.Message].enabled}
+            label="Play sound on messages only in my channel"
+            checked={playMessageSoundOnlyInOwnChannel}
           />
         </SettingsViewSection>
         <SettingsViewSection title="Hosts">
@@ -125,9 +141,11 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     autoHostThreshold: getAutoHostThreshold(state),
     hostThreshold: getHostThreshold(state),
+    playMessageSoundOnlyInOwnChannel: getPlayMessageSoundOnlyInOwnChannel(state),
     soundSettings: getSoundSettings(state),
   }),
   {
+    togglePlayMessageSoundOnlyInOwnChannel,
     toggleSoundNotification,
     updateAutoHostThreshold,
     updateHostThreshold,
@@ -141,6 +159,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 interface StateProps {
   autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   hostThreshold: ReturnType<typeof getHostThreshold>
+  playMessageSoundOnlyInOwnChannel: ReturnType<typeof getPlayMessageSoundOnlyInOwnChannel>
   soundSettings: ReturnType<typeof getSoundSettings>
 }
 
@@ -148,6 +167,7 @@ interface StateProps {
  * React Props.
  */
 interface DispatchProps {
+  togglePlayMessageSoundOnlyInOwnChannel: typeof togglePlayMessageSoundOnlyInOwnChannel
   toggleSoundNotification: typeof toggleSoundNotification
   updateAutoHostThreshold: typeof updateAutoHostThreshold
   updateHostThreshold: typeof updateHostThreshold

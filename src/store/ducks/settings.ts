@@ -55,6 +55,7 @@ export enum Actions {
   TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
   TOGGLE_SOUND_NOTIFICATION = 'TOGGLE_SOUND_NOTIFICATION',
   UPDATE_SOUND_NOTIFICATION_VOLUME = 'UPDATE_SOUND_NOTIFICATION_VOLUME',
+  TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL = 'TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL',
 }
 
 /**
@@ -80,6 +81,7 @@ export const initialState = {
   highlightsPermanentUsers: [],
   hostThreshold: 1,
   lastKnownVersion: null,
+  playMessageSoundOnlyInOwnChannel: true,
   prioritizeUsernames: false,
   shortcuts: {
     [ShortcutType.OpenSettings]: 'alt + ,',
@@ -386,6 +388,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         },
       }
     }
+    case Actions.TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL: {
+      return {
+        ...state,
+        playMessageSoundOnlyInOwnChannel: !state.playMessageSoundOnlyInOwnChannel,
+      }
+    }
     default: {
       return state
     }
@@ -679,6 +687,13 @@ export const updateSoundNotificationVolume = (notification: SoundNotification, v
   })
 
 /**
+ * Toggles the 'Play sound on messages only in my channel' setting.
+ * @return The action.
+ */
+export const togglePlayMessageSoundOnlyInOwnChannel = () =>
+  createAction(Actions.TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -715,6 +730,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleAddWhispersToHistory>
   | ReturnType<typeof toggleSoundNotification>
   | ReturnType<typeof updateSoundNotificationVolume>
+  | ReturnType<typeof togglePlayMessageSoundOnlyInOwnChannel>
 
 /**
  * Settings state.
@@ -839,6 +855,11 @@ export type SettingsState = {
    * Sounds.
    */
   sounds: Record<SoundNotification, SoundNotificationSettings>
+
+  /**
+   * When enabled, only plays message sound notifications in your own channel.
+   */
+  playMessageSoundOnlyInOwnChannel: boolean
 }
 
 /**
