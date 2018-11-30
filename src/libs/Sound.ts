@@ -28,6 +28,8 @@ export default class Sound {
   private static instance: Sound
   private sounds: Record<string, HTMLAudioElement> = {}
   private volumes: Partial<Record<SoundNotification, number>> = {}
+  private delayBetweenThrottledSoundsInMs = 2000
+  private lastThrottledSound = Date.now()
 
   /**
    * Creates a new instance of the class.
@@ -50,6 +52,15 @@ export default class Sound {
   }
 
   /**
+   * Updates the delay between throttled sounds.
+   * @param delay - The new delay in seconds.
+   */
+  public updateDelayBetweenThrottledSounds(delay: number) {
+    this.delayBetweenThrottledSoundsInMs = delay * 1000
+    this.lastThrottledSound = Date.now()
+  }
+
+  /**
    * Gets a specific sound for a notification.
    * @param  notification - The notification.
    * @return The sound audio & volume.
@@ -66,8 +77,27 @@ export default class Sound {
   /**
    * Plays a specific sound notification.
    * @param notification - The sound notification.
+   * @param [throttled] - Defines if the sound should be throttled or not.
    */
-  public async playSoundNotification(notification: SoundNotification) {
+  public playSoundNotification(notification: SoundNotification, throttled: boolean = false) {
+    if (!throttled) {
+      this._playSoundNotification(notification)
+    } else {
+      const now = Date.now()
+
+      if (now - this.lastThrottledSound > this.delayBetweenThrottledSoundsInMs) {
+        this._playSoundNotification(notification)
+
+        this.lastThrottledSound = now
+      }
+    }
+  }
+
+  /**
+   * Plays a specific sound notification.
+   * @param notification - The sound notification.
+   */
+  private async _playSoundNotification(notification: SoundNotification) {
     const { audio, volume } = this.getSoundForNotification(notification)
 
     if (!_.isNil(audio)) {

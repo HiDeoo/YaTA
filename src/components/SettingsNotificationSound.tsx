@@ -69,7 +69,7 @@ export default class SettingsNotificationSound extends React.Component<Props> {
   }
 
   /**
-   * Renders the volume lable in percent.
+   * Renders the volume label in percent.
    * @param value - The value to format.
    */
   private volumeLabelRenderer(value: number) {

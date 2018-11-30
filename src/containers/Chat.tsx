@@ -47,6 +47,7 @@ import { getChannel } from 'Store/selectors/app'
 import { getChatters, getChattersMap } from 'Store/selectors/chatters'
 import {
   getAutoHostThreshold,
+  getDelayBetweenThrottledSounds,
   getHideVIPBadges,
   getHideWhispers,
   getHighlightAllMentions,
@@ -114,6 +115,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     this.updateHighlights()
     this.updateSoundVolumes()
+    this.updateDelayBetweenThrottledSounds()
 
     this.client.on(Event.Connecting, this.onConnecting)
     this.client.on(Event.Connected, this.onConnected)
@@ -180,6 +182,7 @@ export class ChatClient extends React.Component<Props, State> {
       this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length ||
       this.props.highlightsPermanentUsers.length !== nextProps.highlightsPermanentUsers.length ||
       this.props.highlightAllMentions !== nextProps.highlightAllMentions ||
+      this.props.delayBetweenThrottledSounds !== nextProps.delayBetweenThrottledSounds ||
       !_.isEqual(this.props.soundSettings, nextProps.soundSettings)
     )
   }
@@ -200,6 +203,10 @@ export class ChatClient extends React.Component<Props, State> {
 
     if (!_.isEqual(prevProps.soundSettings, this.props.soundSettings)) {
       this.updateSoundVolumes()
+    }
+
+    if (prevProps.delayBetweenThrottledSounds !== this.props.delayBetweenThrottledSounds) {
+      this.updateDelayBetweenThrottledSounds()
     }
   }
 
@@ -441,7 +448,7 @@ export class ChatClient extends React.Component<Props, State> {
               !_.isNil(this.props.loginDetails) &&
               this.props.loginDetails.username === this.props.channel)
           ) {
-            Sound.manager().playSoundNotification(SoundNotification.Message)
+            Sound.manager().playSoundNotification(SoundNotification.Message, true)
           }
         }
       }
@@ -836,6 +843,13 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
+   * Updates the delay between throttled sounds.
+   */
+  private updateDelayBetweenThrottledSounds() {
+    Sound.manager().updateDelayBetweenThrottledSounds(this.props.delayBetweenThrottledSounds)
+  }
+
+  /**
    * Updates highlights, highlights ignored users and highlights permanent users used when parsing messages.
    */
   private updateHighlights() {
@@ -920,6 +934,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
+    delayBetweenThrottledSounds: getDelayBetweenThrottledSounds(state),
     hideVIPBadges: getHideVIPBadges(state),
     hideWhispers: getHideWhispers(state),
     highlightAllMentions: getHighlightAllMentions(state),
@@ -961,6 +976,7 @@ interface StateProps {
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   chattersMap: ReturnType<typeof getChattersMap>
+  delayBetweenThrottledSounds: ReturnType<typeof getDelayBetweenThrottledSounds>
   hideVIPBadges: ReturnType<typeof getHideVIPBadges>
   hideWhispers: ReturnType<typeof getHideWhispers>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>

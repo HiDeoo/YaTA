@@ -240,3 +240,13 @@ export const getPlayMessageSoundOnlyInOwnChannel = createSelector(
   [getSettingsState],
   (settings) => settings.playMessageSoundOnlyInOwnChannel
 )
+
+/**
+ * Returns the 'Delay between throttled sounds' setting.
+ * @param  state - The Redux state.
+ * @return The 'Delay between throttled sounds' setting.
+ */
+export const getDelayBetweenThrottledSounds = createSelector(
+  [getSettingsState],
+  (settings) => settings.delayBetweenThrottledSounds
+)

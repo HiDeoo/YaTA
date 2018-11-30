@@ -266,4 +266,13 @@ export default {
       },
     }
   },
+  33: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        delayBetweenThrottledSounds: SettingsInitialState.delayBetweenThrottledSounds,
+      },
+    }
+  },
 }

@@ -1,3 +1,4 @@
+import { Classes, Colors, Slider } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -12,16 +13,50 @@ import {
   togglePlayMessageSoundOnlyInOwnChannel,
   toggleSoundNotification,
   updateAutoHostThreshold,
+  updateDelayBetweenThrottledSounds,
   updateHostThreshold,
   updateSoundNotificationVolume,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import {
   getAutoHostThreshold,
+  getDelayBetweenThrottledSounds,
   getHostThreshold,
   getPlayMessageSoundOnlyInOwnChannel,
   getSoundSettings,
 } from 'Store/selectors/settings'
+import styled, { ifProp } from 'Styled'
+
+/**
+ * SoundDelayWrapper component.
+ */
+const SoundDelayWrapper = styled.div`
+  padding: 0 20px 10px 20px;
+`
+
+/**
+ * SoundDelayLabel component.
+ */
+const SoundDelayLabel = styled.div<SoundDelayLabelProps>`
+  color: ${ifProp('disabled', 'rgba(92, 112, 128, 0.5)', Colors.DARK_GRAY1)};
+  margin-bottom: 13px;
+  margin-left: -15px;
+
+  .${Classes.DARK} & {
+    color: ${ifProp('disabled', 'rgba(191, 204, 214, 0.5)', Colors.WHITE)};
+  }
+
+  & > small {
+    color: ${Colors.GRAY1};
+    display: block;
+    font-size: 12px;
+    margin-top: 5px;
+
+    .${Classes.DARK} & {
+      color: ${Colors.GRAY3};
+    }
+  }
+`
 
 /**
  * SettingsNotifications Component.
@@ -35,7 +70,13 @@ class SettingsNotifications extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { autoHostThreshold, hostThreshold, playMessageSoundOnlyInOwnChannel, soundSettings } = this.props
+    const {
+      autoHostThreshold,
+      delayBetweenThrottledSounds,
+      hostThreshold,
+      playMessageSoundOnlyInOwnChannel,
+      soundSettings,
+    } = this.props
 
     return (
       <SettingsView>
@@ -71,6 +112,22 @@ class SettingsNotifications extends React.Component<Props> {
             label="Play sound on messages only in my channel"
             checked={playMessageSoundOnlyInOwnChannel}
           />
+          <SoundDelayWrapper>
+            <SoundDelayLabel disabled={!soundSettings[SoundNotification.Message].enabled}>
+              Delay between message sounds
+              <small>This setting does not affect mentions & whispers sounds.</small>
+            </SoundDelayLabel>
+            <Slider
+              disabled={!soundSettings[SoundNotification.Message].enabled}
+              onChange={this.props.updateDelayBetweenThrottledSounds}
+              labelRenderer={this.soundDelayLabelRenderer}
+              value={delayBetweenThrottledSounds}
+              labelStepSize={58}
+              stepSize={1}
+              max={60}
+              min={2}
+            />
+          </SoundDelayWrapper>
         </SettingsViewSection>
         <SettingsViewSection title="Hosts">
           <NumericInput
@@ -96,6 +153,19 @@ class SettingsNotifications extends React.Component<Props> {
         </SettingsViewSection>
       </SettingsView>
     )
+  }
+
+  /**
+   * Renders the sound delay label.
+   * @param value - The value to format.
+   */
+  private soundDelayLabelRenderer(value: number) {
+    const isOneMinute = value === 60
+
+    const hRValue = isOneMinute ? 1 : value
+    const hRUnit = isOneMinute ? 'min' : 's'
+
+    return `${hRValue}${hRUnit}`
   }
 
   /**
@@ -140,6 +210,7 @@ class SettingsNotifications extends React.Component<Props> {
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     autoHostThreshold: getAutoHostThreshold(state),
+    delayBetweenThrottledSounds: getDelayBetweenThrottledSounds(state),
     hostThreshold: getHostThreshold(state),
     playMessageSoundOnlyInOwnChannel: getPlayMessageSoundOnlyInOwnChannel(state),
     soundSettings: getSoundSettings(state),
@@ -148,6 +219,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     togglePlayMessageSoundOnlyInOwnChannel,
     toggleSoundNotification,
     updateAutoHostThreshold,
+    updateDelayBetweenThrottledSounds,
     updateHostThreshold,
     updateSoundNotificationVolume,
   }
@@ -158,6 +230,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 interface StateProps {
   autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
+  delayBetweenThrottledSounds: ReturnType<typeof getDelayBetweenThrottledSounds>
   hostThreshold: ReturnType<typeof getHostThreshold>
   playMessageSoundOnlyInOwnChannel: ReturnType<typeof getPlayMessageSoundOnlyInOwnChannel>
   soundSettings: ReturnType<typeof getSoundSettings>
@@ -170,6 +243,7 @@ interface DispatchProps {
   togglePlayMessageSoundOnlyInOwnChannel: typeof togglePlayMessageSoundOnlyInOwnChannel
   toggleSoundNotification: typeof toggleSoundNotification
   updateAutoHostThreshold: typeof updateAutoHostThreshold
+  updateDelayBetweenThrottledSounds: typeof updateDelayBetweenThrottledSounds
   updateHostThreshold: typeof updateHostThreshold
   updateSoundNotificationVolume: typeof updateSoundNotificationVolume
 }
@@ -178,3 +252,10 @@ interface DispatchProps {
  * React Props.
  */
 type Props = StateProps & DispatchProps
+
+/**
+ * React Props.
+ */
+interface SoundDelayLabelProps {
+  disabled: boolean
+}

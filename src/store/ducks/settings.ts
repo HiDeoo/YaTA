@@ -56,6 +56,7 @@ export enum Actions {
   TOGGLE_SOUND_NOTIFICATION = 'TOGGLE_SOUND_NOTIFICATION',
   UPDATE_SOUND_NOTIFICATION_VOLUME = 'UPDATE_SOUND_NOTIFICATION_VOLUME',
   TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL = 'TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL',
+  UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS = 'UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS',
 }
 
 /**
@@ -70,6 +71,7 @@ export const initialState = {
   autoFocusInput: true,
   autoHostThreshold: 1,
   copyMessageOnDoubleClick: true,
+  delayBetweenThrottledSounds: 10,
   disableDialogAnimations: false,
   followsSortOrder: FollowsSortOrder.ViewersDesc,
   hideOfflineFollows: false,
@@ -394,6 +396,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         playMessageSoundOnlyInOwnChannel: !state.playMessageSoundOnlyInOwnChannel,
       }
     }
+    case Actions.UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS: {
+      return {
+        ...state,
+        delayBetweenThrottledSounds: action.payload.delay,
+      }
+    }
     default: {
       return state
     }
@@ -694,6 +702,16 @@ export const togglePlayMessageSoundOnlyInOwnChannel = () =>
   createAction(Actions.TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL)
 
 /**
+ * Updates the delay in seconds between throttled sounds.
+ * @param  delay - The new delay.
+ * @return The action.
+ */
+export const updateDelayBetweenThrottledSounds = (delay: number) =>
+  createAction(Actions.UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS, {
+    delay,
+  })
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -731,6 +749,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleSoundNotification>
   | ReturnType<typeof updateSoundNotificationVolume>
   | ReturnType<typeof togglePlayMessageSoundOnlyInOwnChannel>
+  | ReturnType<typeof updateDelayBetweenThrottledSounds>
 
 /**
  * Settings state.
@@ -860,6 +879,11 @@ export type SettingsState = {
    * When enabled, only plays message sound notifications in your own channel.
    */
   playMessageSoundOnlyInOwnChannel: boolean
+
+  /**
+   * Minimum delay (in seconds) between two throttled sounds like message sound notifications.
+   */
+  delayBetweenThrottledSounds: number
 }
 
 /**
