@@ -250,3 +250,10 @@ export const getDelayBetweenThrottledSounds = createSelector(
   [getSettingsState],
   (settings) => settings.delayBetweenThrottledSounds
 )
+
+/**
+ * Returns the 'Hide header' setting.
+ * @param  state - The Redux state.
+ * @return The 'Hide header' setting.
+ */
+export const getHideHeader = createSelector([getSettingsState], (settings) => settings.hideHeader)

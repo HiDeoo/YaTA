@@ -11,6 +11,7 @@ export enum ShortcutType {
   FocusChatInput = 'focus_chat_input',
   AddMarker = 'add_marker',
   CreatePoll = 'create_poll',
+  HiDeHeader = 'hide_header',
 }
 
 /**
@@ -35,6 +36,11 @@ export const ShortcutDefinitions: Record<ShortcutType, ShortcutDefinition> = {
     group: ShortcutGroup.Global,
     name: 'Navigate to the homepage',
     type: ShortcutType.NavigateHome,
+  },
+  [ShortcutType.HiDeHeader]: {
+    group: ShortcutGroup.Global,
+    name: 'Toggle header',
+    type: ShortcutType.HiDeHeader,
   },
   [ShortcutType.CreateClip]: { group: ShortcutGroup.Chat, name: 'Create clip', type: ShortcutType.CreateClip },
   [ShortcutType.ToggleSearch]: { group: ShortcutGroup.Chat, name: 'Toggle search', type: ShortcutType.ToggleSearch },

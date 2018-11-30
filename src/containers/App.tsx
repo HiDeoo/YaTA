@@ -23,11 +23,11 @@ import Channel from 'Containers/Channel'
 import Follows from 'Containers/Follows'
 import Twitch from 'Libs/Twitch'
 import { setShouldReadChangelog } from 'Store/ducks/app'
-import { setVersion } from 'Store/ducks/settings'
+import { setVersion, toggleHideHeader } from 'Store/ducks/settings'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getShouldReadChangelog, getStatus } from 'Store/selectors/app'
-import { getLastKnownVersion, getShortcuts, getTheme } from 'Store/selectors/settings'
+import { getHideHeader, getLastKnownVersion, getShortcuts, getTheme } from 'Store/selectors/settings'
 import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import { ThemeProvider } from 'Styled'
 import dark from 'Styled/dark'
@@ -78,6 +78,7 @@ class App extends React.Component<Props, State> {
     this.shortcuts = [
       { type: ShortcutType.OpenSettings, action: this.toggleSettings },
       { type: ShortcutType.NavigateHome, action: this.goHome },
+      { type: ShortcutType.HiDeHeader, action: this.toggleHeader },
     ]
 
     this.installTheme()
@@ -116,7 +117,7 @@ class App extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
+    const { hideHeader, isLoggedIn, location, shouldReadChangelog, status, theme } = this.props
     const { settingDefaultView, [ToggleableUI.Settings]: showSettings } = this.state
     const { pathname } = location
 
@@ -143,6 +144,7 @@ class App extends React.Component<Props, State> {
               status={status}
               toggleChangelog={this.toggleChangelog}
               toggleSettings={this.toggleSettings}
+              hidden={hideHeader}
             />
             <Settings visible={showSettings} toggle={this.toggleSettings} defaultView={settingDefaultView} />
             <FlexContent>
@@ -201,6 +203,13 @@ class App extends React.Component<Props, State> {
       settingDefaultView: undefined,
       [ToggleableUI.Settings]: !showSettings,
     }))
+  }
+
+  /**
+   * Toggles the header.
+   */
+  private toggleHeader = () => {
+    this.props.toggleHideHeader()
   }
 
   /**
@@ -278,6 +287,7 @@ If applicable, add screenshots to help explain your problem.
 const enhance = compose<Props, {}>(
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     (state) => ({
+      hideHeader: getHideHeader(state),
       isLoggedIn: getIsLoggedIn(state),
       lastKnownVersion: getLastKnownVersion(state),
       loginDetails: getLoginDetails(state),
@@ -286,7 +296,7 @@ const enhance = compose<Props, {}>(
       status: getStatus(state),
       theme: getTheme(state),
     }),
-    { resetUser, setVersion, setShouldReadChangelog }
+    { resetUser, setVersion, setShouldReadChangelog, toggleHideHeader }
   ),
   HotkeysTarget
 )
@@ -297,6 +307,7 @@ export default enhance(App)
  * React Props.
  */
 interface StateProps {
+  hideHeader: ReturnType<typeof getHideHeader>
   isLoggedIn: ReturnType<typeof getIsLoggedIn>
   lastKnownVersion: ReturnType<typeof getLastKnownVersion>
   loginDetails: ReturnType<typeof getLoginDetails>
@@ -313,6 +324,7 @@ interface DispatchProps {
   resetUser: typeof resetUser
   setShouldReadChangelog: typeof setShouldReadChangelog
   setVersion: typeof setVersion
+  toggleHideHeader: typeof toggleHideHeader
 }
 
 /**

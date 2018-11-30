@@ -133,10 +133,19 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { highlightChangelog, isLoggedIn, logout, page, reportBug, toggleChangelog, toggleSettings } = this.props
+    const {
+      hidden,
+      highlightChangelog,
+      isLoggedIn,
+      logout,
+      page,
+      reportBug,
+      toggleChangelog,
+      toggleSettings,
+    } = this.props
 
     return (
-      <HeaderNavbar>
+      <HeaderNavbar hidden={hidden}>
         <Helmet>
           <title>YaTA</title>
         </Helmet>
@@ -237,6 +246,7 @@ export default class Header extends React.Component<Props> {
  */
 interface Props {
   goHome: (event: React.MouseEvent<HTMLElement>) => void
+  hidden: boolean
   highlightChangelog: boolean
   isLoggedIn: boolean
   logout: () => void

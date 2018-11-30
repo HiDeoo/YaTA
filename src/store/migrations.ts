@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 
+import { ShortcutType } from 'Constants/shortcut'
 import SoundNotification from 'Constants/soundNotification'
 import { HighlightColors } from 'Libs/Highlight'
 import { initialState as SettingsInitialState, SerializedActions, SettingsState } from 'Store/ducks/settings'
@@ -272,6 +273,27 @@ export default {
       settings: {
         ...state.settings,
         delayBetweenThrottledSounds: SettingsInitialState.delayBetweenThrottledSounds,
+      },
+    }
+  },
+  34: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        hideHeader: SettingsInitialState.hideHeader,
+      },
+    }
+  },
+  35: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        shortcuts: {
+          ...state.settings.shortcuts,
+          [ShortcutType.HiDeHeader]: SettingsInitialState.shortcuts[ShortcutType.HiDeHeader],
+        },
       },
     }
   },

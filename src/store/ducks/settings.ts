@@ -57,6 +57,7 @@ export enum Actions {
   UPDATE_SOUND_NOTIFICATION_VOLUME = 'UPDATE_SOUND_NOTIFICATION_VOLUME',
   TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL = 'TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL',
   UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS = 'UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS',
+  TOGGLE_HIDE_HEADER = 'TOGGLE_HIDE_HEADER',
 }
 
 /**
@@ -74,6 +75,7 @@ export const initialState = {
   delayBetweenThrottledSounds: 10,
   disableDialogAnimations: false,
   followsSortOrder: FollowsSortOrder.ViewersDesc,
+  hideHeader: false,
   hideOfflineFollows: false,
   hideVIPBadges: true,
   hideWhispers: false,
@@ -95,6 +97,7 @@ export const initialState = {
     [ShortcutType.FocusChatInput]: 'alt + a',
     [ShortcutType.AddMarker]: 'alt + m',
     [ShortcutType.CreatePoll]: 'alt + enter',
+    [ShortcutType.HiDeHeader]: 'alt + t',
   },
   showContextMenu: true,
   showViewerCount: false,
@@ -400,6 +403,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         delayBetweenThrottledSounds: action.payload.delay,
+      }
+    }
+    case Actions.TOGGLE_HIDE_HEADER: {
+      return {
+        ...state,
+        hideHeader: !state.hideHeader,
       }
     }
     default: {
@@ -712,6 +721,12 @@ export const updateDelayBetweenThrottledSounds = (delay: number) =>
   })
 
 /**
+ * Toggles the 'Hides header' setting.
+ * @return The action.
+ */
+export const toggleHideHeader = () => createAction(Actions.TOGGLE_HIDE_HEADER)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -750,6 +765,7 @@ export type SettingsActions =
   | ReturnType<typeof updateSoundNotificationVolume>
   | ReturnType<typeof togglePlayMessageSoundOnlyInOwnChannel>
   | ReturnType<typeof updateDelayBetweenThrottledSounds>
+  | ReturnType<typeof toggleHideHeader>
 
 /**
  * Settings state.
@@ -884,6 +900,11 @@ export type SettingsState = {
    * Minimum delay (in seconds) between two throttled sounds like message sound notifications.
    */
   delayBetweenThrottledSounds: number
+
+  /**
+   * Hides the header.
+   */
+  hideHeader: boolean
 }
 
 /**

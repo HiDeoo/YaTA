@@ -3,11 +3,12 @@
 ### 🚀 New Feature
 
 - Available logs can now be exported to a file or your clipboard from the Tools menu. Pick what you want to include and click that button!
-- Notifications:
+- Notifications 🔊
   - Add a new notification (disabled by default) to play a sound for each message.
   - The volume of each sound can now be controlled independently.
   - The sound notification for each messages can be restricted to your own channel.
   - A minimum delay between each sound notification for messages can be configured.
+- The header visibility can now be toggled using the `Alt + t` shortcut by default.
 
 ### 🐛 Bug Fix
 
