@@ -7,8 +7,12 @@ import SettingsNotificationSound from 'Components/SettingsNotificationSound'
 import SettingsView from 'Components/SettingsView'
 import SettingsViewSection from 'Components/SettingsViewSection'
 import SoundNotification from 'Constants/soundNotification'
-import { Sounds } from 'Libs/Sound'
-import { toggleSoundNotification, updateAutoHostThreshold, updateHostThreshold } from 'Store/ducks/settings'
+import {
+  toggleSoundNotification,
+  updateAutoHostThreshold,
+  updateHostThreshold,
+  updateSoundNotificationVolume,
+} from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import { getAutoHostThreshold, getHostThreshold, getSoundSettings } from 'Store/selectors/settings'
 
@@ -30,26 +34,26 @@ class SettingsNotifications extends React.Component<Props> {
       <SettingsView>
         <SettingsViewSection title="Sound">
           <SettingsNotificationSound
+            changeVolume={this.props.updateSoundNotificationVolume}
             settings={soundSettings[SoundNotification.Mention]}
             toggle={this.props.toggleSoundNotification}
             notification={SoundNotification.Mention}
             label="Play sound on mentions"
-            sound={Sounds.Notification}
           />
           <SettingsNotificationSound
+            changeVolume={this.props.updateSoundNotificationVolume}
             settings={soundSettings[SoundNotification.Whisper]}
             toggle={this.props.toggleSoundNotification}
             notification={SoundNotification.Whisper}
             label="Play sound on whispers"
-            sound={Sounds.Notification}
           />
           <SettingsNotificationSound
+            changeVolume={this.props.updateSoundNotificationVolume}
             description="Your own messages and bots will not trigger any sound."
             settings={soundSettings[SoundNotification.Message]}
             toggle={this.props.toggleSoundNotification}
             notification={SoundNotification.Message}
             label="Play sound on messages"
-            sound={Sounds.Message}
           />
         </SettingsViewSection>
         <SettingsViewSection title="Hosts">
@@ -127,6 +131,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleSoundNotification,
     updateAutoHostThreshold,
     updateHostThreshold,
+    updateSoundNotificationVolume,
   }
 )(SettingsNotifications)
 
@@ -146,6 +151,7 @@ interface DispatchProps {
   toggleSoundNotification: typeof toggleSoundNotification
   updateAutoHostThreshold: typeof updateAutoHostThreshold
   updateHostThreshold: typeof updateHostThreshold
+  updateSoundNotificationVolume: typeof updateSoundNotificationVolume
 }
 
 /**

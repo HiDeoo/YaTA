@@ -54,6 +54,7 @@ export enum Actions {
   TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
   TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
   TOGGLE_SOUND_NOTIFICATION = 'TOGGLE_SOUND_NOTIFICATION',
+  UPDATE_SOUND_NOTIFICATION_VOLUME = 'UPDATE_SOUND_NOTIFICATION_VOLUME',
 }
 
 /**
@@ -371,6 +372,20 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         },
       }
     }
+    case Actions.UPDATE_SOUND_NOTIFICATION_VOLUME: {
+      const { notification, volume } = action.payload
+
+      return {
+        ...state,
+        sounds: {
+          ...state.sounds,
+          [notification]: {
+            ...state.sounds[notification],
+            volume,
+          },
+        },
+      }
+    }
     default: {
       return state
     }
@@ -630,25 +645,37 @@ export const setShortcut = (type: ShortcutType, combo: ShortcutCombo) =>
   })
 
 /**
- * Toggle the 'Hide VIP badges' setting.
+ * Toggles the 'Hide VIP badges' setting.
  * @return The action.
  */
 export const toggleHideVIPBadges = () => createAction(Actions.TOGGLE_HIDE_VIP_BADGES)
 
 /**
- * Toggle the 'Add whispers to history' setting.
+ * Toggles the 'Add whispers to history' setting.
  * @return The action.
  */
 export const toggleAddWhispersToHistory = () => createAction(Actions.TOGGLE_ADD_WHISPERS_TO_HISTORY)
 
 /**
- * Toggle a sound notification setting.
+ * Toggles a sound notification setting.
  * @param  notification - The notification to toggle.
  * @return The action.
  */
 export const toggleSoundNotification = (notification: SoundNotification) =>
   createAction(Actions.TOGGLE_SOUND_NOTIFICATION, {
     notification,
+  })
+
+/**
+ * Updates a sound notification volume.
+ * @param  notification - The notification to update.
+ * @param  volume - The new volume.
+ * @return The action.
+ */
+export const updateSoundNotificationVolume = (notification: SoundNotification, volume: number) =>
+  createAction(Actions.UPDATE_SOUND_NOTIFICATION_VOLUME, {
+    notification,
+    volume,
   })
 
 /**
@@ -687,6 +714,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleHideVIPBadges>
   | ReturnType<typeof toggleAddWhispersToHistory>
   | ReturnType<typeof toggleSoundNotification>
+  | ReturnType<typeof updateSoundNotificationVolume>
 
 /**
  * Settings state.
@@ -810,7 +838,7 @@ export type SettingsState = {
   /**
    * Sounds.
    */
-  sounds: { [key in SoundNotification]: SoundNotificationSettings }
+  sounds: Record<SoundNotification, SoundNotificationSettings>
 }
 
 /**

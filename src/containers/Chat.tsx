@@ -30,7 +30,7 @@ import Notice from 'Libs/Notice'
 import Notification, { NotificationEvent } from 'Libs/Notification'
 import Resources from 'Libs/Resources'
 import RoomState from 'Libs/RoomState'
-import Sound, { Sounds } from 'Libs/Sound'
+import Sound from 'Libs/Sound'
 import Twitch from 'Libs/Twitch'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
 import {
@@ -112,6 +112,7 @@ export class ChatClient extends React.Component<Props, State> {
     }
 
     this.updateHighlights()
+    this.updateSoundVolumes()
 
     this.client.on(Event.Connecting, this.onConnecting)
     this.client.on(Event.Connected, this.onConnected)
@@ -177,7 +178,8 @@ export class ChatClient extends React.Component<Props, State> {
       this.props.highlights !== nextProps.highlights ||
       this.props.highlightsIgnoredUsers.length !== nextProps.highlightsIgnoredUsers.length ||
       this.props.highlightsPermanentUsers.length !== nextProps.highlightsPermanentUsers.length ||
-      this.props.highlightAllMentions !== nextProps.highlightAllMentions
+      this.props.highlightAllMentions !== nextProps.highlightAllMentions ||
+      !_.isEqual(this.props.soundSettings, nextProps.soundSettings)
     )
   }
 
@@ -193,6 +195,10 @@ export class ChatClient extends React.Component<Props, State> {
       prevProps.highlightAllMentions !== this.props.highlightAllMentions
     ) {
       this.updateHighlights()
+    }
+
+    if (!_.isEqual(prevProps.soundSettings, this.props.soundSettings)) {
+      this.updateSoundVolumes()
     }
   }
 
@@ -419,7 +425,7 @@ export class ChatClient extends React.Component<Props, State> {
           this.props.soundSettings[SoundNotification.Mention].enabled && serializedMessage.mentionned
 
         if (shouldPlayMentionSound) {
-          Sound.manager().playSound(Sounds.Notification)
+          Sound.manager().playSoundNotification(SoundNotification.Mention)
         }
 
         if (
@@ -428,7 +434,7 @@ export class ChatClient extends React.Component<Props, State> {
           !self &&
           !Resources.manager().isBot(userstate.username)
         ) {
-          Sound.manager().playSound(Sounds.Message)
+          Sound.manager().playSoundNotification(SoundNotification.Message)
         }
       }
 
@@ -436,7 +442,7 @@ export class ChatClient extends React.Component<Props, State> {
         this.props.setLastWhisperSender(serializedMessage.user.userName)
 
         if (this.props.soundSettings[SoundNotification.Whisper].enabled) {
-          Sound.manager().playSound(Sounds.Notification)
+          Sound.manager().playSoundNotification(SoundNotification.Whisper)
         }
       }
     }
@@ -812,6 +818,13 @@ export class ChatClient extends React.Component<Props, State> {
     } catch {
       //
     }
+  }
+
+  /**
+   * Updates sound volumes.
+   */
+  private updateSoundVolumes() {
+    Sound.manager().udpateVolumes(this.props.soundSettings)
   }
 
   /**

@@ -1,6 +1,8 @@
 import * as _ from 'lodash'
 
 import { Data, Sounds } from 'Constants/sound'
+import SoundNotification, { SoundNotificationAudioMap } from 'Constants/soundNotification'
+import { SettingsState } from 'Store/ducks/settings'
 
 /**
  * Re-exports sounds list.
@@ -25,36 +27,53 @@ export default class Sound {
 
   private static instance: Sound
   private sounds: Record<string, HTMLAudioElement> = {}
+  private volumes: Partial<Record<SoundNotification, number>> = {}
 
   /**
    * Creates a new instance of the class.
    * @class
    */
   private constructor() {
-    _.forEach(Sounds, (event) => {
-      this.sounds[event] = new Audio(Data[event])
+    _.forEach(Sounds, (id) => {
+      this.sounds[id] = new Audio(Data[id])
     })
   }
 
   /**
-   * Gets a specific sound.
-   * @param  id - The sound id.
-   * @return The sound.
+   * Updates the sound volumes.
+   * @param settings - The new settings.
    */
-  public getSound(id: Sounds) {
-    return _.get(this.sounds, id)
+  public udpateVolumes(settings: SettingsState['sounds']) {
+    _.forEach(settings, ({ volume }, notification) => {
+      this.volumes[notification] = volume
+    })
   }
 
   /**
-   * Plays a specific sound.
-   * @param id - The sound id.
+   * Gets a specific sound for a notification.
+   * @param  notification - The notification.
+   * @return The sound audio & volume.
    */
-  public async playSound(id: Sounds) {
-    const sound = this.getSound(id)
+  public getSoundForNotification(notification: SoundNotification) {
+    const soundId = SoundNotificationAudioMap[notification]
 
-    if (!_.isNil(sound)) {
+    return {
+      audio: _.get(this.sounds, soundId),
+      volume: _.get(this.volumes, notification) || 0,
+    }
+  }
+
+  /**
+   * Plays a specific sound notification.
+   * @param notification - The sound notification.
+   */
+  public async playSoundNotification(notification: SoundNotification) {
+    const { audio, volume } = this.getSoundForNotification(notification)
+
+    if (!_.isNil(audio)) {
       try {
-        await sound.play()
+        audio.volume = volume
+        await audio.play()
       } catch (error) {
         //
       }
