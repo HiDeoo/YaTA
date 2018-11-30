@@ -6,22 +6,11 @@ import NumericInput from 'Components/NumericInput'
 import SettingsView from 'Components/SettingsView'
 import SettingsViewSection from 'Components/SettingsViewSection'
 import Switch from 'Components/Switch'
+import SoundNotification from 'Constants/soundNotification'
 import { Sounds } from 'Libs/Sound'
-import {
-  togglePlaySoundOnMentions,
-  togglePlaySoundOnMessages,
-  togglePlaySoundOnWhispers,
-  updateAutoHostThreshold,
-  updateHostThreshold,
-} from 'Store/ducks/settings'
+import { toggleSoundNotification, updateAutoHostThreshold, updateHostThreshold } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
-import {
-  getAutoHostThreshold,
-  getHostThreshold,
-  getPlaySoundOnMentions,
-  getPlaySoundOnMessages,
-  getPlaySoundOnWhispers,
-} from 'Store/selectors/settings'
+import { getAutoHostThreshold, getHostThreshold, getSoundSettings } from 'Store/selectors/settings'
 
 /**
  * SettingsNotifications Component.
@@ -35,35 +24,29 @@ class SettingsNotifications extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const {
-      autoHostThreshold,
-      hostThreshold,
-      playSoundOnMentions,
-      playSoundOnMessages,
-      playSoundOnWhispers,
-    } = this.props
+    const { autoHostThreshold, hostThreshold, soundSettings } = this.props
 
     return (
       <SettingsView>
         <SettingsViewSection title="Sound">
           <Switch
-            onChange={this.props.togglePlaySoundOnMentions}
+            checked={soundSettings[SoundNotification.Mention].enabled}
+            onChange={this.onToggleMentionSoundNotification}
             checkSound={Sounds.Notification}
             label="Play sound on mentions"
-            checked={playSoundOnMentions}
           />
           <Switch
-            onChange={this.props.togglePlaySoundOnWhispers}
+            checked={soundSettings[SoundNotification.Whisper].enabled}
+            onChange={this.onToggleWhisperSoundNotification}
             checkSound={Sounds.Notification}
             label="Play sound on whispers"
-            checked={playSoundOnWhispers}
           />
           <Switch
             description="Your own messages and bots will not trigger any sound."
-            onChange={this.props.togglePlaySoundOnMessages}
+            checked={soundSettings[SoundNotification.Message].enabled}
+            onChange={this.onToggleMessageSoundNotification}
             checkSound={Sounds.Message}
             label="Play sound on messages"
-            checked={playSoundOnMessages}
           />
         </SettingsViewSection>
         <SettingsViewSection title="Hosts">
@@ -90,6 +73,27 @@ class SettingsNotifications extends React.Component<Props> {
         </SettingsViewSection>
       </SettingsView>
     )
+  }
+
+  /**
+   * Triggered when the mention sound switch is toggled.
+   */
+  private onToggleMentionSoundNotification = () => {
+    this.props.toggleSoundNotification(SoundNotification.Mention)
+  }
+
+  /**
+   * Triggered when the whisper sound switch is toggled.
+   */
+  private onToggleWhisperSoundNotification = () => {
+    this.props.toggleSoundNotification(SoundNotification.Whisper)
+  }
+
+  /**
+   * Triggered when the message sound switch is toggled.
+   */
+  private onToggleMessageSoundNotification = () => {
+    this.props.toggleSoundNotification(SoundNotification.Message)
   }
 
   /**
@@ -135,14 +139,10 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     autoHostThreshold: getAutoHostThreshold(state),
     hostThreshold: getHostThreshold(state),
-    playSoundOnMentions: getPlaySoundOnMentions(state),
-    playSoundOnMessages: getPlaySoundOnMessages(state),
-    playSoundOnWhispers: getPlaySoundOnWhispers(state),
+    soundSettings: getSoundSettings(state),
   }),
   {
-    togglePlaySoundOnMentions,
-    togglePlaySoundOnMessages,
-    togglePlaySoundOnWhispers,
+    toggleSoundNotification,
     updateAutoHostThreshold,
     updateHostThreshold,
   }
@@ -154,18 +154,14 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
 interface StateProps {
   autoHostThreshold: ReturnType<typeof getAutoHostThreshold>
   hostThreshold: ReturnType<typeof getHostThreshold>
-  playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
-  playSoundOnMessages: ReturnType<typeof getPlaySoundOnMessages>
-  playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
+  soundSettings: ReturnType<typeof getSoundSettings>
 }
 
 /**
  * React Props.
  */
 interface DispatchProps {
-  togglePlaySoundOnMentions: typeof togglePlaySoundOnMentions
-  togglePlaySoundOnMessages: typeof togglePlaySoundOnMessages
-  togglePlaySoundOnWhispers: typeof togglePlaySoundOnWhispers
+  toggleSoundNotification: typeof toggleSoundNotification
   updateAutoHostThreshold: typeof updateAutoHostThreshold
   updateHostThreshold: typeof updateHostThreshold
 }

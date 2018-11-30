@@ -159,20 +159,6 @@ export const getHostThreshold = createSelector([getSettingsState], (settings) =>
 export const getAutoHostThreshold = createSelector([getSettingsState], (settings) => settings.autoHostThreshold)
 
 /**
- * Returns the 'Play sound on mentions' setting.
- * @param  state - The Redux state.
- * @return The 'Play sound on mentions' setting.
- */
-export const getPlaySoundOnMentions = createSelector([getSettingsState], (settings) => settings.playSoundOnMentions)
-
-/**
- * Returns the 'Play sound on whispers' setting.
- * @param  state - The Redux state.
- * @return The 'Play sound on whispers' setting.
- */
-export const getPlaySoundOnWhispers = createSelector([getSettingsState], (settings) => settings.playSoundOnWhispers)
-
-/**
  * Returns the 'Follows sort order' setting.
  * @param  state - The Redux state.
  * @return The 'Follows sort order' setting.
@@ -239,8 +225,8 @@ export const getHideVIPBadges = createSelector([getSettingsState], (settings) =>
 export const getAddWhispersToHistory = createSelector([getSettingsState], (settings) => settings.addWhispersToHistory)
 
 /**
- * Returns the 'Play sound on messages' setting.
+ * Returns the sound settings.
  * @param  state - The Redux state.
- * @return The 'Play sound on messages' setting.
+ * @return The sound settings.
  */
-export const getPlaySoundOnMessages = createSelector([getSettingsState], (settings) => settings.playSoundOnMessages)
+export const getSoundSettings = createSelector([getSettingsState], (settings) => settings.sounds)

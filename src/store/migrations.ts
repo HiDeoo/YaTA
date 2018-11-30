@@ -1,7 +1,8 @@
 import * as _ from 'lodash'
 
+import SoundNotification from 'Constants/soundNotification'
 import { HighlightColors } from 'Libs/Highlight'
-import { initialState as SettingsInitialState, SerializedActions } from 'Store/ducks/settings'
+import { initialState as SettingsInitialState, SerializedActions, SettingsState } from 'Store/ducks/settings'
 import { initialState as UserInitialState } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 
@@ -153,13 +154,15 @@ export default {
   19: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, playSoundOnMentions: SettingsInitialState.playSoundOnMentions },
+      // @ts-ignore
+      settings: { ...state.settings, playSoundOnMentions: _.get(SettingsInitialState, 'playSoundOnMentions', false) },
     }
   },
   20: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, playSoundOnWhispers: SettingsInitialState.playSoundOnWhispers },
+      // @ts-ignore
+      settings: { ...state.settings, playSoundOnWhispers: _.get(SettingsInitialState, 'playSoundOnWhispers', false) },
     }
   },
   21: (state: ApplicationState): ApplicationState => {
@@ -219,7 +222,39 @@ export default {
   30: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, playSoundOnMessages: SettingsInitialState.playSoundOnMessages },
+      // @ts-ignore
+      settings: { ...state.settings, playSoundOnMessages: _.get(SettingsInitialState, 'playSoundOnMessages', false) },
+    }
+  },
+  31: (state: ApplicationState): ApplicationState => {
+    const oldPlaySoundOnMentions = _.get(state.settings, 'playSoundOnMentions', false) as boolean
+    const oldPlaySoundOnMessages = _.get(state.settings, 'playSoundOnMessages', false) as boolean
+    const oldPlaySoundOnWhispers = _.get(state.settings, 'playSoundOnWhispers', false) as boolean
+
+    const newSettingsState: SettingsState = {
+      ...state.settings,
+      sounds: {
+        [SoundNotification.Mention]: {
+          enabled: oldPlaySoundOnMentions,
+          volume: SettingsInitialState.sounds[SoundNotification.Mention].volume,
+        },
+        [SoundNotification.Message]: {
+          enabled: oldPlaySoundOnMessages,
+          volume: SettingsInitialState.sounds[SoundNotification.Message].volume,
+        },
+        [SoundNotification.Whisper]: {
+          enabled: oldPlaySoundOnWhispers,
+          volume: SettingsInitialState.sounds[SoundNotification.Whisper].volume,
+        },
+      },
+    }
+
+    // @ts-ignore
+    const { playSoundOnMentions, playSoundOnMessages, playSoundOnWhispers, ...settings } = newSettingsState
+
+    return {
+      ...state,
+      settings,
     }
   },
 }

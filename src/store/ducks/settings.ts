@@ -3,6 +3,7 @@ import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
 import { ShortcutCombo, ShortcutType } from 'Constants/shortcut'
+import SoundNotification from 'Constants/soundNotification'
 import Theme from 'Constants/theme'
 import { SerializedAction } from 'Libs/Action'
 import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
@@ -47,14 +48,12 @@ export enum Actions {
   TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
   UPDATE_HOST_THRESHOLD = 'settings/UPDATE_HOST_THRESHOLD',
   UPDATE_AUTO_HOST_THRESHOLD = 'settings/UPDATE_AUTO_HOST_THRESHOLD',
-  TOGGLE_PLAY_SOUND_ON_MENTIONS = 'settings/TOGGLE_PLAY_SOUND_ON_MENTIONS',
-  TOGGLE_PLAY_SOUND_ON_WHISPERS = 'settings/TOGGLE_PLAY_SOUND_ON_WHISPERS',
   SET_FOLLOWS_SORT_ORDER = 'settings/SET_FOLLOWS_SORT_ORDER',
   TOGGLE_HIDE_OFFLINE_FOLLOWS = 'settings/TOGGLE_HIDE_OFFLINE_FOLLOWS',
   SET_SHORTCUT = 'settings/SET_SHORTCUT',
   TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
   TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
-  TOGGLE_PLAY_SOUND_ON_MESSAGES = 'settings/TOGGLE_PLAY_SOUND_ON_MESSAGES',
+  TOGGLE_SOUND_NOTIFICATION = 'TOGGLE_SOUND_NOTIFICATION',
 }
 
 /**
@@ -80,9 +79,6 @@ export const initialState = {
   highlightsPermanentUsers: [],
   hostThreshold: 1,
   lastKnownVersion: null,
-  playSoundOnMentions: false,
-  playSoundOnMessages: false,
-  playSoundOnWhispers: false,
   prioritizeUsernames: false,
   shortcuts: {
     [ShortcutType.OpenSettings]: 'alt + ,',
@@ -97,6 +93,20 @@ export const initialState = {
   },
   showContextMenu: true,
   showViewerCount: false,
+  sounds: {
+    [SoundNotification.Mention]: {
+      enabled: false,
+      volume: 0.5,
+    },
+    [SoundNotification.Message]: {
+      enabled: false,
+      volume: 0.5,
+    },
+    [SoundNotification.Whisper]: {
+      enabled: false,
+      volume: 0.5,
+    },
+  },
   theme: Theme.Dark as SettingsState['theme'],
 }
 
@@ -312,18 +322,6 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         autoHostThreshold: action.payload.threshold,
       }
     }
-    case Actions.TOGGLE_PLAY_SOUND_ON_MENTIONS: {
-      return {
-        ...state,
-        playSoundOnMentions: !state.playSoundOnMentions,
-      }
-    }
-    case Actions.TOGGLE_PLAY_SOUND_ON_WHISPERS: {
-      return {
-        ...state,
-        playSoundOnWhispers: !state.playSoundOnWhispers,
-      }
-    }
     case Actions.SET_FOLLOWS_SORT_ORDER: {
       return {
         ...state,
@@ -359,10 +357,18 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         addWhispersToHistory: !state.addWhispersToHistory,
       }
     }
-    case Actions.TOGGLE_PLAY_SOUND_ON_MESSAGES: {
+    case Actions.TOGGLE_SOUND_NOTIFICATION: {
+      const { notification } = action.payload
+
       return {
         ...state,
-        playSoundOnMessages: !state.playSoundOnMessages,
+        sounds: {
+          ...state.sounds,
+          [notification]: {
+            ...state.sounds[notification],
+            enabled: !state.sounds[notification].enabled,
+          },
+        },
       }
     }
     default: {
@@ -596,18 +602,6 @@ export const updateAutoHostThreshold = (threshold: number) =>
   })
 
 /**
- * Toggle the 'Play sound on mentions' setting.
- * @return The action.
- */
-export const togglePlaySoundOnMentions = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_MENTIONS)
-
-/**
- * Toggle the 'Play sound on whispers' setting.
- * @return The action.
- */
-export const togglePlaySoundOnWhispers = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_WHISPERS)
-
-/**
  * Sets the follows sort order.
  * @param  order - The new sort order.
  * @return The action.
@@ -648,10 +642,14 @@ export const toggleHideVIPBadges = () => createAction(Actions.TOGGLE_HIDE_VIP_BA
 export const toggleAddWhispersToHistory = () => createAction(Actions.TOGGLE_ADD_WHISPERS_TO_HISTORY)
 
 /**
- * Toggle the 'Play sound on messages' setting.
+ * Toggle a sound notification setting.
+ * @param  notification - The notification to toggle.
  * @return The action.
  */
-export const togglePlaySoundOnMessages = () => createAction(Actions.TOGGLE_PLAY_SOUND_ON_MESSAGES)
+export const toggleSoundNotification = (notification: SoundNotification) =>
+  createAction(Actions.TOGGLE_SOUND_NOTIFICATION, {
+    notification,
+  })
 
 /**
  * Settings actions.
@@ -683,14 +681,12 @@ export type SettingsActions =
   | ReturnType<typeof moveAction>
   | ReturnType<typeof updateHostThreshold>
   | ReturnType<typeof updateAutoHostThreshold>
-  | ReturnType<typeof togglePlaySoundOnMentions>
-  | ReturnType<typeof togglePlaySoundOnWhispers>
   | ReturnType<typeof setFollowsSortOrder>
   | ReturnType<typeof toggleHideOfflineFollows>
   | ReturnType<typeof setShortcut>
   | ReturnType<typeof toggleHideVIPBadges>
   | ReturnType<typeof toggleAddWhispersToHistory>
-  | ReturnType<typeof togglePlaySoundOnMessages>
+  | ReturnType<typeof toggleSoundNotification>
 
 /**
  * Settings state.
@@ -792,21 +788,6 @@ export type SettingsState = {
   autoHostThreshold: number
 
   /**
-   * Plays a sound on mentions.
-   */
-  playSoundOnMentions: boolean
-
-  /**
-   * Plays a sound on whispers.
-   */
-  playSoundOnWhispers: boolean
-
-  /**
-   * Plays a sound on messages.
-   */
-  playSoundOnMessages: boolean
-
-  /**
    * Follows sort order.
    */
   followsSortOrder: FollowsSortOrder
@@ -825,6 +806,11 @@ export type SettingsState = {
    * Adds whispers to the history when enabled.
    */
   addWhispersToHistory: boolean
+
+  /**
+   * Sounds.
+   */
+  sounds: { [key in SoundNotification]: SoundNotificationSettings }
 }
 
 /**
@@ -836,3 +822,11 @@ export type SerializedHighlights = Record<SerializedHighlight['id'], SerializedH
  * Actions.
  */
 export type SerializedActions = Record<SerializedAction['id'], SerializedAction>
+
+/**
+ * Individual sound notification settings.
+ */
+type SoundNotificationSettings = {
+  enabled: boolean
+  volume: number
+}

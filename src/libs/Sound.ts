@@ -38,22 +38,26 @@ export default class Sound {
 
   /**
    * Gets a specific sound.
-   * @param  event - The sound event.
+   * @param  id - The sound id.
    * @return The sound.
    */
-  public getSound(event: Sounds) {
-    return _.get(this.sounds, event)
+  public getSound(id: Sounds) {
+    return _.get(this.sounds, id)
   }
 
   /**
    * Plays a specific sound.
-   * @param event - The sound event.
+   * @param id - The sound id.
    */
-  public playSound(event: Sounds) {
-    const sound = this.getSound(event)
+  public async playSound(id: Sounds) {
+    const sound = this.getSound(id)
 
     if (!_.isNil(sound)) {
-      sound.play()
+      try {
+        await sound.play()
+      } catch (error) {
+        //
+      }
     }
   }
 }

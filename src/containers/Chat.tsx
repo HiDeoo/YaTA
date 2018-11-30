@@ -20,6 +20,7 @@ import Notices from 'Constants/notices'
 import Page from 'Constants/page'
 import ReadyState from 'Constants/readyState'
 import RitualType from 'Constants/ritualType'
+import SoundNotification from 'Constants/soundNotification'
 import Status from 'Constants/status'
 import Bttv from 'Libs/Bttv'
 import Chatter from 'Libs/Chatter'
@@ -53,9 +54,7 @@ import {
   getHighlightsIgnoredUsers,
   getHighlightsPermanentUsers,
   getHostThreshold,
-  getPlaySoundOnMentions,
-  getPlaySoundOnMessages,
-  getPlaySoundOnWhispers,
+  getSoundSettings,
   getTheme,
 } from 'Store/selectors/settings'
 import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
@@ -416,14 +415,15 @@ export class ChatClient extends React.Component<Props, State> {
       if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
         this.props.addChatter(serializedMessage.user, serializedMessage.id)
 
-        const shouldPlayMentionSound = this.props.playSoundOnMentions && serializedMessage.mentionned
+        const shouldPlayMentionSound =
+          this.props.soundSettings[SoundNotification.Mention].enabled && serializedMessage.mentionned
 
         if (shouldPlayMentionSound) {
           Sound.manager().playSound(Sounds.Notification)
         }
 
         if (
-          this.props.playSoundOnMessages &&
+          this.props.soundSettings[SoundNotification.Message].enabled &&
           !shouldPlayMentionSound &&
           !self &&
           !Resources.manager().isBot(userstate.username)
@@ -435,7 +435,7 @@ export class ChatClient extends React.Component<Props, State> {
       if (serializedMessage.type === LogType.Whisper && !self) {
         this.props.setLastWhisperSender(serializedMessage.user.userName)
 
-        if (this.props.playSoundOnWhispers) {
+        if (this.props.soundSettings[SoundNotification.Whisper].enabled) {
           Sound.manager().playSound(Sounds.Notification)
         }
       }
@@ -908,9 +908,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     hostThreshold: getHostThreshold(state),
     isMod: getIsMod(state),
     loginDetails: getChatLoginDetails(state),
-    playSoundOnMentions: getPlaySoundOnMentions(state),
-    playSoundOnMessages: getPlaySoundOnMessages(state),
-    playSoundOnWhispers: getPlaySoundOnWhispers(state),
+    soundSettings: getSoundSettings(state),
     theme: getTheme(state),
   }),
   {
@@ -950,9 +948,7 @@ interface StateProps {
   hostThreshold: ReturnType<typeof getHostThreshold>
   isMod: ReturnType<typeof getIsMod>
   loginDetails: ReturnType<typeof getChatLoginDetails>
-  playSoundOnMentions: ReturnType<typeof getPlaySoundOnMentions>
-  playSoundOnMessages: ReturnType<typeof getPlaySoundOnMessages>
-  playSoundOnWhispers: ReturnType<typeof getPlaySoundOnWhispers>
+  soundSettings: ReturnType<typeof getSoundSettings>
   theme: ReturnType<typeof getTheme>
 }
 
