@@ -826,7 +826,7 @@ export type SerializedActions = Record<SerializedAction['id'], SerializedAction>
 /**
  * Individual sound notification settings.
  */
-type SoundNotificationSettings = {
+export type SoundNotificationSettings = {
   enabled: boolean
   volume: number
 }

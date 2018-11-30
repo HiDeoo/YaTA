@@ -3,9 +3,9 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import NumericInput from 'Components/NumericInput'
+import SettingsNotificationSound from 'Components/SettingsNotificationSound'
 import SettingsView from 'Components/SettingsView'
 import SettingsViewSection from 'Components/SettingsViewSection'
-import Switch from 'Components/Switch'
 import SoundNotification from 'Constants/soundNotification'
 import { Sounds } from 'Libs/Sound'
 import { toggleSoundNotification, updateAutoHostThreshold, updateHostThreshold } from 'Store/ducks/settings'
@@ -29,24 +29,27 @@ class SettingsNotifications extends React.Component<Props> {
     return (
       <SettingsView>
         <SettingsViewSection title="Sound">
-          <Switch
-            checked={soundSettings[SoundNotification.Mention].enabled}
-            onChange={this.onToggleMentionSoundNotification}
-            checkSound={Sounds.Notification}
+          <SettingsNotificationSound
+            settings={soundSettings[SoundNotification.Mention]}
+            toggle={this.props.toggleSoundNotification}
+            notification={SoundNotification.Mention}
             label="Play sound on mentions"
+            sound={Sounds.Notification}
           />
-          <Switch
-            checked={soundSettings[SoundNotification.Whisper].enabled}
-            onChange={this.onToggleWhisperSoundNotification}
-            checkSound={Sounds.Notification}
+          <SettingsNotificationSound
+            settings={soundSettings[SoundNotification.Whisper]}
+            toggle={this.props.toggleSoundNotification}
+            notification={SoundNotification.Whisper}
             label="Play sound on whispers"
+            sound={Sounds.Notification}
           />
-          <Switch
+          <SettingsNotificationSound
             description="Your own messages and bots will not trigger any sound."
-            checked={soundSettings[SoundNotification.Message].enabled}
-            onChange={this.onToggleMessageSoundNotification}
-            checkSound={Sounds.Message}
+            settings={soundSettings[SoundNotification.Message]}
+            toggle={this.props.toggleSoundNotification}
+            notification={SoundNotification.Message}
             label="Play sound on messages"
+            sound={Sounds.Message}
           />
         </SettingsViewSection>
         <SettingsViewSection title="Hosts">
@@ -73,27 +76,6 @@ class SettingsNotifications extends React.Component<Props> {
         </SettingsViewSection>
       </SettingsView>
     )
-  }
-
-  /**
-   * Triggered when the mention sound switch is toggled.
-   */
-  private onToggleMentionSoundNotification = () => {
-    this.props.toggleSoundNotification(SoundNotification.Mention)
-  }
-
-  /**
-   * Triggered when the whisper sound switch is toggled.
-   */
-  private onToggleWhisperSoundNotification = () => {
-    this.props.toggleSoundNotification(SoundNotification.Whisper)
-  }
-
-  /**
-   * Triggered when the message sound switch is toggled.
-   */
-  private onToggleMessageSoundNotification = () => {
-    this.props.toggleSoundNotification(SoundNotification.Message)
   }
 
   /**
