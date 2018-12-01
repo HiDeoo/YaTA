@@ -1,8 +1,8 @@
 import * as _ from 'lodash'
 
 import { ShortcutType } from 'Constants/shortcut'
-import SoundNotification from 'Constants/soundNotification'
 import { HighlightColors } from 'Libs/Highlight'
+import { SoundId } from 'Libs/Sound'
 import { initialState as SettingsInitialState, SerializedActions, SettingsState } from 'Store/ducks/settings'
 import { initialState as UserInitialState } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
@@ -235,17 +235,17 @@ export default {
     const newSettingsState: SettingsState = {
       ...state.settings,
       sounds: {
-        [SoundNotification.Mention]: {
+        [SoundId.Mention]: {
           enabled: oldPlaySoundOnMentions,
-          volume: SettingsInitialState.sounds[SoundNotification.Mention].volume,
+          volume: SettingsInitialState.sounds[SoundId.Mention].volume,
         },
-        [SoundNotification.Message]: {
+        [SoundId.Message]: {
           enabled: oldPlaySoundOnMessages,
-          volume: SettingsInitialState.sounds[SoundNotification.Message].volume,
+          volume: SettingsInitialState.sounds[SoundId.Message].volume,
         },
-        [SoundNotification.Whisper]: {
+        [SoundId.Whisper]: {
           enabled: oldPlaySoundOnWhispers,
-          volume: SettingsInitialState.sounds[SoundNotification.Whisper].volume,
+          volume: SettingsInitialState.sounds[SoundId.Whisper].volume,
         },
       },
     }

@@ -3,10 +3,10 @@ import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
 import { ShortcutCombo, ShortcutType } from 'Constants/shortcut'
-import SoundNotification from 'Constants/soundNotification'
 import Theme from 'Constants/theme'
 import { SerializedAction } from 'Libs/Action'
 import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
+import { SoundId } from 'Libs/Sound'
 import { createAction, RehydrateAction } from 'Utils/redux'
 
 /**
@@ -53,8 +53,8 @@ export enum Actions {
   SET_SHORTCUT = 'settings/SET_SHORTCUT',
   TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
   TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
-  TOGGLE_SOUND_NOTIFICATION = 'TOGGLE_SOUND_NOTIFICATION',
-  UPDATE_SOUND_NOTIFICATION_VOLUME = 'UPDATE_SOUND_NOTIFICATION_VOLUME',
+  TOGGLE_SOUND = 'TOGGLE_SOUND',
+  UPDATE_SOUND_VOLUME = 'UPDATE_SOUND_VOLUME',
   TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL = 'TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL',
   UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS = 'UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS',
   TOGGLE_HIDE_HEADER = 'TOGGLE_HIDE_HEADER',
@@ -102,15 +102,15 @@ export const initialState = {
   showContextMenu: true,
   showViewerCount: false,
   sounds: {
-    [SoundNotification.Mention]: {
+    [SoundId.Mention]: {
       enabled: false,
       volume: 0.5,
     },
-    [SoundNotification.Message]: {
+    [SoundId.Message]: {
       enabled: false,
       volume: 0.5,
     },
-    [SoundNotification.Whisper]: {
+    [SoundId.Whisper]: {
       enabled: false,
       volume: 0.5,
     },
@@ -365,29 +365,29 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         addWhispersToHistory: !state.addWhispersToHistory,
       }
     }
-    case Actions.TOGGLE_SOUND_NOTIFICATION: {
-      const { notification } = action.payload
+    case Actions.TOGGLE_SOUND: {
+      const { soundId } = action.payload
 
       return {
         ...state,
         sounds: {
           ...state.sounds,
-          [notification]: {
-            ...state.sounds[notification],
-            enabled: !state.sounds[notification].enabled,
+          [soundId]: {
+            ...state.sounds[soundId],
+            enabled: !state.sounds[soundId].enabled,
           },
         },
       }
     }
-    case Actions.UPDATE_SOUND_NOTIFICATION_VOLUME: {
-      const { notification, volume } = action.payload
+    case Actions.UPDATE_SOUND_VOLUME: {
+      const { soundId, volume } = action.payload
 
       return {
         ...state,
         sounds: {
           ...state.sounds,
-          [notification]: {
-            ...state.sounds[notification],
+          [soundId]: {
+            ...state.sounds[soundId],
             volume,
           },
         },
@@ -682,24 +682,24 @@ export const toggleHideVIPBadges = () => createAction(Actions.TOGGLE_HIDE_VIP_BA
 export const toggleAddWhispersToHistory = () => createAction(Actions.TOGGLE_ADD_WHISPERS_TO_HISTORY)
 
 /**
- * Toggles a sound notification setting.
- * @param  notification - The notification to toggle.
+ * Toggles a sound enabled or not.
+ * @param  soundId - The id of the sound to toggle.
  * @return The action.
  */
-export const toggleSoundNotification = (notification: SoundNotification) =>
-  createAction(Actions.TOGGLE_SOUND_NOTIFICATION, {
-    notification,
+export const toggleSound = (soundId: SoundId) =>
+  createAction(Actions.TOGGLE_SOUND, {
+    soundId,
   })
 
 /**
- * Updates a sound notification volume.
- * @param  notification - The notification to update.
+ * Updates a sound volume.
+ * @param  soundId - The id of the sound to update.
  * @param  volume - The new volume.
  * @return The action.
  */
-export const updateSoundNotificationVolume = (notification: SoundNotification, volume: number) =>
-  createAction(Actions.UPDATE_SOUND_NOTIFICATION_VOLUME, {
-    notification,
+export const updateSoundVolume = (soundId: SoundId, volume: number) =>
+  createAction(Actions.UPDATE_SOUND_VOLUME, {
+    soundId,
     volume,
   })
 
@@ -761,8 +761,8 @@ export type SettingsActions =
   | ReturnType<typeof setShortcut>
   | ReturnType<typeof toggleHideVIPBadges>
   | ReturnType<typeof toggleAddWhispersToHistory>
-  | ReturnType<typeof toggleSoundNotification>
-  | ReturnType<typeof updateSoundNotificationVolume>
+  | ReturnType<typeof toggleSound>
+  | ReturnType<typeof updateSoundVolume>
   | ReturnType<typeof togglePlayMessageSoundOnlyInOwnChannel>
   | ReturnType<typeof updateDelayBetweenThrottledSounds>
   | ReturnType<typeof toggleHideHeader>
@@ -889,15 +889,15 @@ export type SettingsState = {
   /**
    * Sounds.
    */
-  sounds: Record<SoundNotification, SoundNotificationSettings>
+  sounds: Record<SoundId, SoundSettings>
 
   /**
-   * When enabled, only plays message sound notifications in your own channel.
+   * When enabled, only plays message sounds in your own channel.
    */
   playMessageSoundOnlyInOwnChannel: boolean
 
   /**
-   * Minimum delay (in seconds) between two throttled sounds like message sound notifications.
+   * Minimum delay (in seconds) between two throttled sounds like message sounds.
    */
   delayBetweenThrottledSounds: number
 
@@ -918,9 +918,9 @@ export type SerializedHighlights = Record<SerializedHighlight['id'], SerializedH
 export type SerializedActions = Record<SerializedAction['id'], SerializedAction>
 
 /**
- * Individual sound notification settings.
+ * Sound settings.
  */
-export type SoundNotificationSettings = {
+export type SoundSettings = {
   enabled: boolean
   volume: number
 }

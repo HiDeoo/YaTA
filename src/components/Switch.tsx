@@ -2,8 +2,7 @@ import { Classes, ISwitchProps, Switch as OriginalSwitch } from '@blueprintjs/co
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import SoundNotification from 'Constants/soundNotification'
-import Sound from 'Libs/Sound'
+import Sound, { SoundId } from 'Libs/Sound'
 import styled, { theme } from 'Styled'
 
 /**
@@ -37,7 +36,7 @@ export default class Switch extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { checkSoundNotification, description, onChange, ...restProps } = this.props
+    const { checkSound, description, onChange, ...restProps } = this.props
 
     return (
       <Wrapper>
@@ -52,10 +51,10 @@ export default class Switch extends React.Component<Props> {
    * @param event - The associated event.
    */
   private onChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { checked, checkSoundNotification, onChange } = this.props
+    const { checked, checkSound, onChange } = this.props
 
-    if (!_.isNil(checkSoundNotification) && !checked) {
-      Sound.manager().playSoundNotification(checkSoundNotification)
+    if (!_.isNil(checkSound) && !checked) {
+      Sound.manager().play(checkSound)
     }
 
     if (!_.isNil(onChange)) {
@@ -69,5 +68,5 @@ export default class Switch extends React.Component<Props> {
  */
 interface Props extends ISwitchProps {
   description?: string | React.ReactNode
-  checkSoundNotification?: SoundNotification
+  checkSound?: SoundId
 }

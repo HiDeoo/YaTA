@@ -4,18 +4,18 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import NumericInput from 'Components/NumericInput'
-import SettingsNotificationSound from 'Components/SettingsNotificationSound'
+import SettingsSoundControl from 'Components/SettingsSoundControl'
 import SettingsView from 'Components/SettingsView'
 import SettingsViewSection from 'Components/SettingsViewSection'
 import Switch from 'Components/Switch'
-import SoundNotification from 'Constants/soundNotification'
+import { SoundId } from 'Libs/Sound'
 import {
   togglePlayMessageSoundOnlyInOwnChannel,
-  toggleSoundNotification,
+  toggleSound,
   updateAutoHostThreshold,
   updateDelayBetweenThrottledSounds,
   updateHostThreshold,
-  updateSoundNotificationVolume,
+  updateSoundVolume,
 } from 'Store/ducks/settings'
 import { ApplicationState } from 'Store/reducers'
 import {
@@ -80,46 +80,46 @@ class SettingsNotifications extends React.Component<Props> {
 
     return (
       <SettingsView>
-        <SettingsViewSection title="Alerts">
-          <SettingsNotificationSound
-            changeVolume={this.props.updateSoundNotificationVolume}
-            settings={soundSettings[SoundNotification.Mention]}
-            toggle={this.props.toggleSoundNotification}
-            notification={SoundNotification.Mention}
+        <SettingsViewSection title="Sounds">
+          <SettingsSoundControl
+            changeVolume={this.props.updateSoundVolume}
+            settings={soundSettings[SoundId.Mention]}
+            toggle={this.props.toggleSound}
             label="Play sound on mentions"
+            soundId={SoundId.Mention}
           />
-          <SettingsNotificationSound
-            changeVolume={this.props.updateSoundNotificationVolume}
-            settings={soundSettings[SoundNotification.Whisper]}
-            toggle={this.props.toggleSoundNotification}
-            notification={SoundNotification.Whisper}
+          <SettingsSoundControl
+            changeVolume={this.props.updateSoundVolume}
+            settings={soundSettings[SoundId.Whisper]}
+            toggle={this.props.toggleSound}
             label="Play sound on whispers"
+            soundId={SoundId.Whisper}
           />
-          <SettingsNotificationSound
-            changeVolume={this.props.updateSoundNotificationVolume}
+          <SettingsSoundControl
+            changeVolume={this.props.updateSoundVolume}
             description="Your own messages and bots will not trigger any sound."
-            settings={soundSettings[SoundNotification.Message]}
-            toggle={this.props.toggleSoundNotification}
-            notification={SoundNotification.Message}
+            settings={soundSettings[SoundId.Message]}
+            toggle={this.props.toggleSound}
             label="Play sound on messages"
+            soundId={SoundId.Message}
           />
         </SettingsViewSection>
-        <SettingsViewSection title="Sounds">
+        <SettingsViewSection title="Sound options">
           <Switch
             description="This setting does not affect mentions & whispers sounds."
             onChange={this.props.togglePlayMessageSoundOnlyInOwnChannel}
-            disabled={!soundSettings[SoundNotification.Message].enabled}
+            disabled={!soundSettings[SoundId.Message].enabled}
             label="Play sound on messages only in my channel"
             checked={playMessageSoundOnlyInOwnChannel}
           />
           <SoundDelayWrapper>
-            <SoundDelayLabel disabled={!soundSettings[SoundNotification.Message].enabled}>
+            <SoundDelayLabel disabled={!soundSettings[SoundId.Message].enabled}>
               Delay between message sounds
               <small>This setting does not affect mentions & whispers sounds.</small>
             </SoundDelayLabel>
             <Slider
-              disabled={!soundSettings[SoundNotification.Message].enabled}
               onChange={this.props.updateDelayBetweenThrottledSounds}
+              disabled={!soundSettings[SoundId.Message].enabled}
               labelRenderer={this.soundDelayLabelRenderer}
               value={delayBetweenThrottledSounds}
               labelStepSize={58}
@@ -217,11 +217,11 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   }),
   {
     togglePlayMessageSoundOnlyInOwnChannel,
-    toggleSoundNotification,
+    toggleSound,
     updateAutoHostThreshold,
     updateDelayBetweenThrottledSounds,
     updateHostThreshold,
-    updateSoundNotificationVolume,
+    updateSoundVolume,
   }
 )(SettingsNotifications)
 
@@ -241,11 +241,11 @@ interface StateProps {
  */
 interface DispatchProps {
   togglePlayMessageSoundOnlyInOwnChannel: typeof togglePlayMessageSoundOnlyInOwnChannel
-  toggleSoundNotification: typeof toggleSoundNotification
+  toggleSound: typeof toggleSound
   updateAutoHostThreshold: typeof updateAutoHostThreshold
   updateDelayBetweenThrottledSounds: typeof updateDelayBetweenThrottledSounds
   updateHostThreshold: typeof updateHostThreshold
-  updateSoundNotificationVolume: typeof updateSoundNotificationVolume
+  updateSoundVolume: typeof updateSoundVolume
 }
 
 /**

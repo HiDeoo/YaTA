@@ -3,9 +3,8 @@ import * as React from 'react'
 import styled from 'Styled'
 
 import Switch from 'Components/Switch'
-import SoundNotification from 'Constants/soundNotification'
-import Sound from 'Libs/Sound'
-import { SoundNotificationSettings } from 'Store/ducks/settings'
+import Sound, { SoundId } from 'Libs/Sound'
+import { SoundSettings } from 'Store/ducks/settings'
 
 /**
  * VolumeWrapper component.
@@ -15,23 +14,23 @@ const VolumeWrapper = styled.div`
 `
 
 /**
- * SettingsNotificationSound Component.
+ * SettingsSoundControl Component.
  */
-export default class SettingsNotificationSound extends React.Component<Props> {
+export default class SettingsSoundControl extends React.Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { description, label, notification, settings } = this.props
+    const { description, label, settings, soundId } = this.props
 
     return (
       <div>
         <Switch
-          checkSoundNotification={notification}
           checked={settings.enabled}
           description={description}
           onChange={this.toggle}
+          checkSound={soundId}
           label={label}
         />
         <VolumeWrapper>
@@ -55,7 +54,7 @@ export default class SettingsNotificationSound extends React.Component<Props> {
    * Triggered when a volume slider handle is released.
    */
   private onReleaseVolumeHandle = () => {
-    Sound.manager().playSoundNotification(this.props.notification)
+    Sound.manager().play(this.props.soundId)
   }
 
   /**
@@ -63,9 +62,9 @@ export default class SettingsNotificationSound extends React.Component<Props> {
    * @param value - The new volume.
    */
   private onChangeVolume = (value: number) => {
-    const { changeVolume, notification } = this.props
+    const { changeVolume, soundId } = this.props
 
-    changeVolume(notification, value)
+    changeVolume(soundId, value)
   }
 
   /**
@@ -80,9 +79,9 @@ export default class SettingsNotificationSound extends React.Component<Props> {
    * Triggered when the sound is toggled.
    */
   private toggle = () => {
-    const { notification, toggle } = this.props
+    const { soundId, toggle } = this.props
 
-    toggle(notification)
+    toggle(soundId)
   }
 }
 
@@ -90,10 +89,10 @@ export default class SettingsNotificationSound extends React.Component<Props> {
  * React Props.
  */
 interface Props {
-  changeVolume: (notification: SoundNotification, volume: number) => void
+  changeVolume: (soundId: SoundId, volume: number) => void
   description?: string
   label: string
-  notification: SoundNotification
-  settings: SoundNotificationSettings
-  toggle: (notification: SoundNotification) => void
+  soundId: SoundId
+  settings: SoundSettings
+  toggle: (soundId: SoundId) => void
 }

@@ -1,13 +1,12 @@
 import * as _ from 'lodash'
 
-import { Data, Sounds } from 'Constants/sound'
-import SoundNotification, { SoundNotificationAudioMap } from 'Constants/soundNotification'
+import { SoundData, SoundId, SoundIdToNameMap, SoundName } from 'Constants/sound'
 import { SettingsState } from 'Store/ducks/settings'
 
 /**
- * Re-exports sounds list.
+ * Re-exports sound list.
  */
-export { Sounds }
+export { SoundId }
 
 /**
  * Sound manager.
@@ -26,18 +25,18 @@ export default class Sound {
   }
 
   private static instance: Sound
-  private sounds: Record<string, HTMLAudioElement> = {}
-  private volumes: Partial<Record<SoundNotification, number>> = {}
+  private audios: Partial<Record<SoundName, HTMLAudioElement>> = {}
+  private volumes: Partial<Record<SoundId, number>> = {}
   private delayBetweenThrottledSoundsInMs = 2000
-  private lastThrottledSound = Date.now()
+  private lastThrottledSoundTimestamp = Date.now()
 
   /**
    * Creates a new instance of the class.
    * @class
    */
   private constructor() {
-    _.forEach(Sounds, (id) => {
-      this.sounds[id] = new Audio(Data[id])
+    _.forEach(SoundName, (name) => {
+      this.audios[name] = new Audio(SoundData[name])
     })
   }
 
@@ -46,8 +45,8 @@ export default class Sound {
    * @param settings - The new settings.
    */
   public udpateVolumes(settings: SettingsState['sounds']) {
-    _.forEach(settings, ({ volume }, notification) => {
-      this.volumes[notification] = volume
+    _.forEach(settings, ({ volume }, soundId) => {
+      this.volumes[soundId] = volume
     })
   }
 
@@ -57,48 +56,49 @@ export default class Sound {
    */
   public updateDelayBetweenThrottledSounds(delay: number) {
     this.delayBetweenThrottledSoundsInMs = delay * 1000
-    this.lastThrottledSound = Date.now()
+    this.lastThrottledSoundTimestamp = Date.now()
   }
 
   /**
-   * Gets a specific sound for a notification.
-   * @param  notification - The notification.
+   * Gets a specific sound details.
+   * @param  sound - The id of the sound.
    * @return The sound audio & volume.
    */
-  public getSoundForNotification(notification: SoundNotification) {
-    const soundId = SoundNotificationAudioMap[notification]
+  public getSoundDetails(soundId: SoundId) {
+    const soundName = SoundIdToNameMap[soundId]
 
     return {
-      audio: _.get(this.sounds, soundId),
-      volume: _.get(this.volumes, notification) || 0,
+      audio: _.get(this.audios, soundName),
+      volume: _.get(this.volumes, soundId) || 0,
     }
   }
 
   /**
-   * Plays a specific sound notification.
-   * @param notification - The sound notification.
+   * Plays a specific sound.
+   * @param soundId - The sound id.
    * @param [throttled] - Defines if the sound should be throttled or not.
    */
-  public playSoundNotification(notification: SoundNotification, throttled: boolean = false) {
+  public play(soundId: SoundId, throttled: boolean = false) {
     if (!throttled) {
-      this._playSoundNotification(notification)
+      this.playSound(soundId)
     } else {
       const now = Date.now()
 
-      if (now - this.lastThrottledSound > this.delayBetweenThrottledSoundsInMs) {
-        this._playSoundNotification(notification)
+      if (now - this.lastThrottledSoundTimestamp > this.delayBetweenThrottledSoundsInMs) {
+        this.playSound(soundId)
 
-        this.lastThrottledSound = now
+        this.lastThrottledSoundTimestamp = now
       }
     }
   }
 
   /**
-   * Plays a specific sound notification.
-   * @param notification - The sound notification.
+   * Plays a specific sound.
+   * @param soundId - The sound id.
+   * @see `play`
    */
-  private async _playSoundNotification(notification: SoundNotification) {
-    const { audio, volume } = this.getSoundForNotification(notification)
+  private async playSound(soundId: SoundId) {
+    const { audio, volume } = this.getSoundDetails(soundId)
 
     if (!_.isNil(audio)) {
       try {
