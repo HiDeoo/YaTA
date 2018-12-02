@@ -297,4 +297,16 @@ export default {
       },
     }
   },
+  36: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        shortcuts: {
+          ...state.settings.shortcuts,
+          [ShortcutType.NavigateOwnChannel]: SettingsInitialState.shortcuts[ShortcutType.NavigateOwnChannel],
+        },
+      },
+    }
+  },
 }

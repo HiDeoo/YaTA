@@ -78,6 +78,7 @@ class App extends React.Component<Props, State> {
     this.shortcuts = [
       { type: ShortcutType.OpenSettings, action: this.toggleSettings },
       { type: ShortcutType.NavigateHome, action: this.goHome },
+      { type: ShortcutType.NavigateOwnChannel, action: this.goOwnChannel },
       { type: ShortcutType.HiDeHeader, action: this.toggleHeader },
     ]
 
@@ -231,6 +232,21 @@ class App extends React.Component<Props, State> {
       window.open('/')
     } else {
       this.props.history.push(Page.Home)
+    }
+  }
+
+  /**
+   * Navigates to your own channel.
+   */
+  private goOwnChannel = () => {
+    const { history, loginDetails } = this.props
+
+    if (!_.isNil(loginDetails)) {
+      const path = `/${loginDetails.username}`
+
+      if (history.location.pathname !== path) {
+        history.push(`/${loginDetails.username}`)
+      }
     }
   }
 

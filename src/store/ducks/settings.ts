@@ -90,6 +90,7 @@ export const initialState = {
   shortcuts: {
     [ShortcutType.OpenSettings]: 'alt + ,',
     [ShortcutType.NavigateHome]: 'alt + h',
+    [ShortcutType.NavigateOwnChannel]: 'alt + o',
     [ShortcutType.CreateClip]: 'alt + x',
     [ShortcutType.ToggleSearch]: 'alt + f',
     [ShortcutType.ToggleOmnibar]: 'alt + p',

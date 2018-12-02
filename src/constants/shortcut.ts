@@ -4,6 +4,7 @@
 export enum ShortcutType {
   OpenSettings = 'open_settings',
   NavigateHome = 'navigate_home',
+  NavigateOwnChannel = 'navigate_own_channel',
   CreateClip = 'create_clip',
   ToggleSearch = 'toggle_search',
   ToggleOmnibar = 'toggle_omnibar',
@@ -36,6 +37,11 @@ export const ShortcutDefinitions: Record<ShortcutType, ShortcutDefinition> = {
     group: ShortcutGroup.Global,
     name: 'Navigate to the homepage',
     type: ShortcutType.NavigateHome,
+  },
+  [ShortcutType.NavigateOwnChannel]: {
+    group: ShortcutGroup.Global,
+    name: 'Navigate to your channel',
+    type: ShortcutType.NavigateOwnChannel,
   },
   [ShortcutType.HiDeHeader]: {
     group: ShortcutGroup.Global,

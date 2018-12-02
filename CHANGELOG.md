@@ -8,7 +8,9 @@
   - The volume of each sound can now be controlled independently.
   - The sound notification for each messages can be restricted to your own channel.
   - A minimum delay between each sound notification for messages can be configured.
-- The header visibility can now be toggled using the `Alt + t` shortcut by default.
+- Shortcuts ⌨️
+  - The header visibility can now be toggled using the `Alt + t` shortcut by default.
+  - A new shortcut to navigate to your own channel has been added (`Alt + o` by default).
 
 ### 🐛 Bug Fix
 
