@@ -628,7 +628,7 @@ export class ChatClient extends React.Component<Props, State> {
    */
   private onSubscription = (_channel: string, username: string, method: Payment, message: string | null) => {
     const notification = new Notification(
-      `${username} just subscribed${method.prime ? ' with Twitch Prime' : ''}!`,
+      `${username} just subscribed${this.getPaymentString(method)}!`,
       NotificationEvent.Subscription,
       !_.isNil(message) ? message : undefined
     )
@@ -657,7 +657,7 @@ export class ChatClient extends React.Component<Props, State> {
     method: Payment
   ) => {
     const notification = new Notification(
-      `${username} just re-subscribed for ${months} months in a row${method.prime ? ' with Twitch Prime' : ''}!`,
+      `${username} just re-subscribed for ${months} months in a row${this.getPaymentString(method)}!`,
       NotificationEvent.ReSub,
       !_.isNil(message) ? message : undefined
     )
@@ -784,6 +784,23 @@ export class ChatClient extends React.Component<Props, State> {
     )
 
     this.addEmotesProvider(provider)
+  }
+
+  /**
+   * Returns the string representation of a payment.
+   * @param  payment - The payment method.
+   * @return The string representation.
+   */
+  private getPaymentString(payment: Payment) {
+    if (payment.prime) {
+      return ' with Twitch Prime'
+    } else if (payment.plan === '2000') {
+      return ' with a tier 2 sub'
+    } else if (payment.plan === '3000') {
+      return ' with a tier 3 sub'
+    }
+
+    return ''
   }
 
   /**
