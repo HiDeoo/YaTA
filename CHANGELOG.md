@@ -1,4 +1,4 @@
-# Unreleased
+# 1.8.0
 
 ### 🚀 New Feature
 
@@ -17,6 +17,7 @@
 
 ### 🐛 Bug Fix
 
+- Fix an issue where loading the application could take longer than usual.
 - Remove unnecessary horizontal scrollbars when the window is very small.
 - VIPs are no longer ignored in the chatters list.
 
