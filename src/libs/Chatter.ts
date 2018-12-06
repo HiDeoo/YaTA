@@ -66,11 +66,16 @@ export default class Chatter implements Serializable<SerializedChatter> {
   }
 
   /**
-   * Generates a random color for the chatter.
-   * @return The new random color.
+   * Generates a color for the chatter.
+   * @return The new generated color.
    */
-  public generateRandomColor() {
-    const color = _.sample(base.chatters) || null
+  public generateColor() {
+    const firstLetterCharCode = this.userName.charCodeAt(0)
+    const lastLetterCharCode = this.userName.charCodeAt(this.userName.length - 1)
+
+    const colorIndex = (firstLetterCharCode + lastLetterCharCode) % base.chatters.length
+
+    const color = _.get(base.chatters, colorIndex, _.sample(base.chatters)) || null
 
     this.color = color
 

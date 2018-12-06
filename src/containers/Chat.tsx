@@ -927,7 +927,7 @@ export class ChatClient extends React.Component<Props, State> {
           const user = _.get(this.props.chatters, parsedMessage.user.id)
 
           parsedMessage.updateColor(
-            _.isNil(user) || _.isNil(user.color) ? parsedMessage.user.generateRandomColor() : user.color
+            _.isNil(user) || _.isNil(user.color) ? parsedMessage.user.generateColor() : user.color
           )
         }
 

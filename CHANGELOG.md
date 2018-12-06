@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Tiers 2 & 3 are now properly indicated for subs & resubs.
+- Generated username colors when the user didn't choose one are now deterministic so you can remember them across sessions.
 - Available logs can now be exported to a file or your clipboard from the Tools menu. Pick what you want to include and click that button!
 - Notifications 🔊
   - Add a new notification (disabled by default) to play a sound for each message.
