@@ -39,7 +39,7 @@ import {
   markChatterAsBanned,
   markChatterAsUnbanned,
 } from 'Store/ducks/chatters'
-import { addLog, clearLogs, purgeLogs } from 'Store/ducks/logs'
+import { addLog, clearLogs, purgeLog, purgeLogs } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
@@ -116,6 +116,7 @@ export class ChatClient extends React.Component<Props, State> {
     this.updateSoundVolumes()
     this.updateDelayBetweenThrottledSounds()
 
+    this.client.on(Event.Notices, this.onNotices)
     this.client.on(Event.Connecting, this.onConnecting)
     this.client.on(Event.Connected, this.onConnected)
     this.client.on(Event.Logon, this.onLogon)
@@ -145,6 +146,7 @@ export class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.Raid, this.onRaid)
     this.client.on(Event.Cheer, this.onCheer)
     this.client.on(Event.EmoteSets, this.onEmoteSets)
+    this.client.on(Event.MessageDeleted, this.onMessageDeleted)
 
     try {
       await this.client.connect()
@@ -247,6 +249,20 @@ export class ChatClient extends React.Component<Props, State> {
     }
 
     return null
+  }
+
+  /**
+   * Triggered when any notice is received even unhandled ones.
+   * @param channel - The channel.
+   * @param id - The notice id.
+   * @param message - The notice associated message.
+   */
+  private onNotices = (_channel: string, id: string, message: string) => {
+    if (_.includes(Notices.Extra, id)) {
+      const notice = new Notice(message, Event.Notice)
+
+      this.props.addLog(notice.serialize())
+    }
   }
 
   /**
@@ -555,6 +571,26 @@ export class ChatClient extends React.Component<Props, State> {
 
     if (!_.isNil(loginDetails) && loginDetails.username !== channel && username === loginDetails.username) {
       this.props.setModerator(false)
+    }
+  }
+
+  /**
+   * Triggered when a single message is deleted.
+   * @param channel - The channel.
+   * @param id - The id.
+   * @param username - The username.
+   * @param message - The message.
+   */
+  private onMessageDeleted = (_channel: string, id: string, username: string, message: string) => {
+    this.props.purgeLog(id)
+
+    if (this.props.isMod) {
+      const notice = new Notice(
+        `A message from ${username} has been deleted. Message: ${message}`,
+        Event.MessageDeleted
+      )
+
+      this.props.addLog(notice.serialize())
     }
   }
 
@@ -971,6 +1007,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     clearLogs,
     markChatterAsBanned,
     markChatterAsUnbanned,
+    purgeLog,
     purgeLogs,
     resetAppState,
     setLastWhisperSender,
@@ -1017,6 +1054,7 @@ interface DispatchProps {
   clearLogs: typeof clearLogs
   markChatterAsBanned: typeof markChatterAsBanned
   markChatterAsUnbanned: typeof markChatterAsUnbanned
+  purgeLog: typeof purgeLog
   purgeLogs: typeof purgeLogs
   resetAppState: typeof resetAppState
   setLastWhisperSender: typeof setLastWhisperSender

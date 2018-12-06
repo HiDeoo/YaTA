@@ -20,4 +20,9 @@ export default {
      */
     Additions: ' /followed',
   },
+
+  /**
+   * Extra notices not handled natively which will be outputted as is.
+   */
+  Extra: ['bad_delete_message_broadcaster', 'bad_delete_message_mod'],
 }

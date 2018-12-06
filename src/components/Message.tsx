@@ -228,6 +228,7 @@ export default class Message extends React.Component<Props, State> {
         {canModerate(message.user) && (
           <>
             <Menu.Divider />
+            <Menu.Item icon="remove" text="Delete message" onClick={this.onClickDelete} />
             <Menu.Item icon="trash" text="Purge" onClick={this.onClickPurge} />
             <Menu.Item icon="time" text="Timeout">
               <Menu.Item text="10m" onClick={this.onClickTimeout10M} />
@@ -330,6 +331,15 @@ export default class Message extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the delete message menu item is clicked.
+   */
+  private onClickDelete = () => {
+    const { deleteMessage, message } = this.props
+
+    deleteMessage(message.id)
+  }
+
+  /**
    * Triggered when purge menu item is clicked.
    */
   private onClickPurge = () => {
@@ -412,6 +422,7 @@ interface Props {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
+  deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   message: SerializedMessage
   onToggleContextMenu: (open: boolean) => void

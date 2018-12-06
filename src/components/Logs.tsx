@@ -169,6 +169,7 @@ export class Logs extends React.Component<Props> {
       copyMessageOnDoubleClick,
       copyMessageToClipboard,
       copyToClipboard,
+      deleteMessage,
       focusChatter,
       quoteMessage,
       showContextMenu,
@@ -190,6 +191,7 @@ export class Logs extends React.Component<Props> {
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
           actionHandler={actionHandler}
+          deleteMessage={deleteMessage}
           focusChatter={focusChatter}
           quoteMessage={quoteMessage}
           canModerate={canModerate}
@@ -243,6 +245,7 @@ interface Props extends ThemeProps {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
+  deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   logs: Log[]
   pauseAutoScroll: (pause: boolean) => void

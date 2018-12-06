@@ -52,6 +52,7 @@ function rotateLogs(state: LogsState) {
 export enum Actions {
   ADD = 'logs/ADD',
   PURGE = 'logs/PURGE',
+  PURGE_LOG = 'logs/PURGE_LOG',
   CLEAR = 'logs/CLEAR',
   PAUSE_AUTO_SCROLL = 'logs/PAUSE_AUTO_SCROLL',
   ADD_MARKER = 'logs/ADD_MARKER',
@@ -102,6 +103,16 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
 
       return { ...state, byId: { ...state.byId, ...updatedMessages } }
     }
+    case Actions.PURGE_LOG: {
+      const id = action.payload.log
+      const message = _.get(state.byId, id)
+
+      if (_.isNil(message)) {
+        return state
+      }
+
+      return { ...state, byId: { ...state.byId, [id]: { ...message, purged: true } } }
+    }
     case Actions.ADD_MARKER: {
       const id = shortid.generate()
       const date = new Date()
@@ -151,6 +162,16 @@ export const purgeLogs = (logs: string[]) =>
   })
 
 /**
+ * Purges a log entry.
+ * @param  log - The log id to purge.
+ * @return The action.
+ */
+export const purgeLog = (log: string) =>
+  createAction(Actions.PURGE_LOG, {
+    log,
+  })
+
+/**
  * Clears all the logs.
  * @return The action.
  */
@@ -181,6 +202,7 @@ export type LogsActions =
   | ReturnType<typeof clearLogs>
   | ReturnType<typeof pauseAutoScroll>
   | ReturnType<typeof addMarker>
+  | ReturnType<typeof purgeLog>
 
 /**
  * Logs state.

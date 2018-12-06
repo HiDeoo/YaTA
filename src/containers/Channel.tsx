@@ -270,6 +270,7 @@ class Channel extends React.Component<Props, State> {
           pauseAutoScroll={this.props.pauseAutoScroll}
           scrollToNewestLog={this.scrollToNewestLog}
           copyToClipboard={this.copyToClipboard}
+          deleteMessage={this.deleteMessage}
           showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
           purgedCount={allLogs.purgedCount}
@@ -963,6 +964,22 @@ class Channel extends React.Component<Props, State> {
       if (!_.isNil(command) && addWhispersToHistory) {
         this.props.addToHistory(command)
       }
+    }
+  }
+
+  /**
+   * Deletes a single message.
+   * @param id - The message id.
+   */
+  private deleteMessage = async (id: string) => {
+    try {
+      await this.say(`/delete ${id}`)
+    } catch {
+      Toaster.show({
+        icon: 'error',
+        intent: Intent.DANGER,
+        message: 'Something went wrong! Please try again.',
+      })
     }
   }
 

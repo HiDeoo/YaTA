@@ -1,0 +1,27 @@
+patch-package
+--- a/node_modules/twitch-js/lib/client.js
++++ b/node_modules/twitch-js/lib/client.js
+@@ -209,6 +209,8 @@ client.prototype.handleMessage = function handleMessage(message) {
+ 
+         // https://github.com/justintv/Twitch-API/blob/master/chat/capabilities.md#notice
+         case 'NOTICE':
++          this.emit('notices', channel, msgid, msg);
++
+           switch (msgid) {
+             // This room is now in subscribers-only mode.
+             case 'subs_on':
+@@ -652,6 +654,14 @@ client.prototype.handleMessage = function handleMessage(message) {
+             break;
+           }
+ 
++        // Single message removal on a channel.
++        case 'CLEARMSG':
++          var id = message.tags['target-msg-id'];
++          var login = message.tags.login;
++
++          this.emit('messagedeleted', channel, id, login, msg);
++          break;
++
+         // Channel is now hosting another channel or exited host mode..
+         case 'HOSTTARGET':
+           // Stopped hosting..
