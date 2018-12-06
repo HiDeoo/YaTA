@@ -877,6 +877,7 @@ export type RawChatters = {
   moderators: string[]
   staff: string[]
   viewers: string[]
+  vips: string[]
 }
 
 /**

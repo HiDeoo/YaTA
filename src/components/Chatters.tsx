@@ -57,7 +57,7 @@ enum RowType {
 /**
  * Group order used when rendering chatters.
  */
-const GroupOrder: Array<keyof RawChatters> = ['staff', 'global_mods', 'admins', 'moderators', 'viewers']
+const GroupOrder: Array<keyof RawChatters> = ['staff', 'global_mods', 'admins', 'moderators', 'vips', 'viewers']
 
 /**
  * React State.
