@@ -6,10 +6,14 @@
 <p align="center">
   <a href="https://circleci.com/gh/HiDeoo/YaTA"><img alt="Build Status" src="https://circleci.com/gh/HiDeoo/YaTA.png?style=shield&circle-token=3e5f415ca17efc0c2ba4ad5de222eac5d90561f4"></a>
   <a href="https://github.com/HiDeoo/YaTA/blob/master/LICENSE"><img alt="License" src="https://badgen.now.sh/badge/license/MIT/blue"></a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2FHiDeoo%2FYaTA?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FHiDeoo%2FYaTA.svg?type=shield"/></a>
   <br /><br />
 </p>
 
 **YaTA is a very opinionated [Twitch](https://www.twitch.tv) chat client.**
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHiDeoo%2FYaTA.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FHiDeoo%2FYaTA?ref=badge_large)
 
 ## Features
 
