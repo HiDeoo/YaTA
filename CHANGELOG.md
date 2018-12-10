@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix a UI issue for host settings in some version of Chrome.
+
 # 1.8.0
 
 ### 🚀 New Feature

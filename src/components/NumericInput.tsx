@@ -10,6 +10,7 @@ import styled, { theme } from 'Styled'
  */
 const Wrapper = styled(FlexLayout)`
   margin-bottom: 15px;
+  min-height: 36px;
 `
 
 /**
