@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- You can now autocomplete the broadcaster name as soon as you join a channel instead of only after they've talked once.
+
 ### 🐛 Bug Fix
 
 - Fix a UI issue for host settings in some version of Chrome.

@@ -155,6 +155,8 @@ export class ChatClient extends React.Component<Props, State> {
       if (!_.isNil(loginDetails) && loginDetails.username === channel) {
         this.props.setModerator(true)
       }
+
+      this.props.addPotentialChatter(Chatter.createPotentialChatter(channel).serialize())
     } catch (error) {
       let theError: Error
 

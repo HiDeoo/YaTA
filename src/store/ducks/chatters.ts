@@ -68,20 +68,27 @@ const chattersReducer: Reducer<ChattersState, ChattersActions> = (state = initia
       const { chatter, logId } = action.payload
 
       const potentialUserId = _.get(state.byName, chatter.userName)
+      let logs: string[] = []
 
       if (!_.isNil(potentialUserId)) {
+        logs = _.isNil(logId) ? state.byId[potentialUserId].logs : [...state.byId[potentialUserId].logs, logId]
+
         return {
           ...state,
           byId: {
             ...state.byId,
-            [potentialUserId]: { ...state.byId[potentialUserId], logs: [...state.byId[potentialUserId].logs, logId] },
+            [potentialUserId]: { ...state.byId[potentialUserId], logs },
           },
         }
       }
 
+      if (!_.isNil(logId)) {
+        logs = [logId]
+      }
+
       return {
         ...state,
-        byId: { ...state.byId, [chatter.id]: { ...chatter, logs: [logId] } },
+        byId: { ...state.byId, [chatter.id]: { ...chatter, logs } },
         byName: { ...state.byName, [chatter.userName]: chatter.id },
       }
     }
@@ -219,10 +226,11 @@ export const clearChatters = () => createAction(Actions.CLEAR)
 /**
  * Adds a potential chatter with a sent log id.
  * @param  user - The potential chatter to add.
- * @param  logId - The id of the log which triggered the chatter to be added.
+ * @param  [logId] - The id of the log which triggered the chatter to be added
+ * if any.
  * @return The action.
  */
-export const addPotentialChatter = (chatter: SerializedChatter, logId: string) =>
+export const addPotentialChatter = (chatter: SerializedChatter, logId?: string) =>
   createAction(Actions.ADD_POTENTIAL, {
     chatter,
     logId,
