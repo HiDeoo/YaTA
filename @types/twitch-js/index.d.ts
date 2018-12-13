@@ -166,6 +166,10 @@ declare module 'twitch-js' {
       event: Event.MessageDeleted,
       listener: (channel: string, messageId: string, username: string, message: string) => void
     ): void
+    on(
+      event: Event.UserNotices,
+      listener: (channel: string, noticeId: string, message: string, tags: Record<string, string>) => void
+    ): void
 
     say(channel: string, message: string): void
     whisper(username: string, message: string): void

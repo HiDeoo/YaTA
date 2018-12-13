@@ -25,4 +25,11 @@ export default {
    * Extra notices not handled natively which will be outputted as is.
    */
   Extra: ['bad_delete_message_broadcaster', 'bad_delete_message_mod'],
+
+  Charity: {
+    /**
+     * Id of the charity user notice.
+     */
+    Id: 'charity',
+  },
 }

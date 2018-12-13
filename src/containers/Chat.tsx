@@ -117,6 +117,7 @@ export class ChatClient extends React.Component<Props, State> {
     this.updateDelayBetweenThrottledSounds()
 
     this.client.on(Event.Notices, this.onNotices)
+    this.client.on(Event.UserNotices, this.onUserNotices)
     this.client.on(Event.Connecting, this.onConnecting)
     this.client.on(Event.Connected, this.onConnected)
     this.client.on(Event.Logon, this.onLogon)
@@ -262,6 +263,21 @@ export class ChatClient extends React.Component<Props, State> {
   private onNotices = (_channel: string, id: string, message: string) => {
     if (_.includes(Notices.Extra, id)) {
       const notice = new Notice(message, Event.Notice)
+
+      this.props.addLog(notice.serialize())
+    }
+  }
+
+  /**
+   * Triggered when any user notice is received even unhandled ones.
+   * @param channel - The channel.
+   * @param id - The notice id.
+   * @param message - The notice associated message.
+   * @param tags - The notice tags.
+   */
+  private onUserNotices = (_channel: string, id: string, _message: string, tags: Record<string, string>) => {
+    if (id === Notices.Charity.Id) {
+      const notice = Notice.fromCharity(tags)
 
       this.props.addLog(notice.serialize())
     }

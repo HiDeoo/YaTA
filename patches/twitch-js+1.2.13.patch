@@ -10,7 +10,16 @@ patch-package
            switch (msgid) {
              // This room is now in subscribers-only mode.
              case 'subs_on':
-@@ -652,6 +654,14 @@ client.prototype.handleMessage = function handleMessage(message) {
+@@ -572,6 +574,8 @@ client.prototype.handleMessage = function handleMessage(message) {
+         // Handle subanniversary / resub..
+         case 'USERNOTICE':
+           {
++            this.emit('usernotices', channel, msgid, msg, message.tags);
++
+             if (msgid === 'resub') {
+               var username = message.tags['display-name'] || message.tags.login;
+               var plan = message.tags['msg-param-sub-plan'];
+@@ -652,6 +656,14 @@ client.prototype.handleMessage = function handleMessage(message) {
              break;
            }
  

@@ -33,6 +33,7 @@ enum Event {
   Timeout = 'timeout',
   Unhost = 'unhost',
   Unmod = 'unmod',
+  UserNotices = 'usernotices',
 }
 
 export default Event

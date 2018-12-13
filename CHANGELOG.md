@@ -1,3 +1,9 @@
+# 1.8.2
+
+### 🚀 New Feature
+
+- Add support for charity events like [Blizzard of Bits](https://blog.twitch.tv/blizzard-of-bits-b11dc7d50427).
+
 # 1.8.1
 
 ### 🚀 New Feature

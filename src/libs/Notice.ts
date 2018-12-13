@@ -9,6 +9,31 @@ import { escape } from 'Utils/html'
  * Notice class.
  */
 export default class Notice implements Serializable<SerializedNotice> {
+  /**
+   * Creates a new notice from a charity user notice.
+   * @param  tags - The notice tags.
+   * @return The new notice.
+   */
+  public static fromCharity(tags: Record<string, string>) {
+    const hashtag = tags['msg-param-charity-hashtag']
+    const link = tags['msg-param-charity-learn-more']
+    const total = parseInt(tags['msg-param-total'], 10)
+    const name = tags['msg-param-charity-name'].replace('\\s', ' ')
+
+    const totalFormatter = new Intl.NumberFormat('en-US', {
+      currency: 'USD',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+      style: 'currency',
+    })
+
+    const message = `${totalFormatter.format(
+      total
+    )} raised for ${name} so far! Cheer with the <strong>${hashtag}</strong> hashtag or <a href="${link}" target="_blank">get more details</a>.`
+
+    return new Notice(message, Event.UserNotices, true)
+  }
+
   private id: string
 
   /**
