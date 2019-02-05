@@ -1,3 +1,9 @@
+# 1.8.3
+
+### 🚀 New Feature
+
+- Add support for [cumulative subscription tenure](https://help.twitch.tv/customer/portal/articles/2967229-changes-to-subscription-badges-and-resub-messages).
+
 # 1.8.2
 
 ### 🚀 New Feature

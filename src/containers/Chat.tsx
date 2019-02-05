@@ -701,6 +701,7 @@ export class ChatClient extends React.Component<Props, State> {
    * @param message - Sub message.
    * @param userstate - The associated userstate.
    * @param method - The method used to sub.
+   * @param monthsStreak - Duration of the current streak if shared.
    */
   private onResub = (
     _channel: string,
@@ -708,10 +709,12 @@ export class ChatClient extends React.Component<Props, State> {
     months: number,
     message: string | null,
     _userstate: UserState,
-    method: Payment
+    method: Payment,
+    monthsStreak: number | null
   ) => {
+    const streakMessage = !_.isNil(monthsStreak) && monthsStreak > 0 ? ` (${monthsStreak} months streak)` : ''
     const notification = new Notification(
-      `${username} just re-subscribed for ${months} months in a row${this.getPaymentString(method)}!`,
+      `${username} just re-subscribed for ${months} months${streakMessage}${this.getPaymentString(method)}!`,
       NotificationEvent.ReSub,
       !_.isNil(message) ? message : undefined
     )

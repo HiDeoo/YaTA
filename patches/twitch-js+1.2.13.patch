@@ -19,7 +19,29 @@ patch-package
              if (msgid === 'resub') {
                var username = message.tags['display-name'] || message.tags.login;
                var plan = message.tags['msg-param-sub-plan'];
-@@ -652,6 +656,14 @@ client.prototype.handleMessage = function handleMessage(message) {
+@@ -582,7 +586,11 @@ client.prototype.handleMessage = function handleMessage(message) {
+                 '\\r': '\r',
+                 '\\n': '\n'
+               });
+-              var months = _.get(~~message.tags['msg-param-months'], null);
++
++              var shouldShareStreak = message.tags['msg-param-should-share-streak'] == 1;
++              var months = _.get(~~message.tags['msg-param-cumulative-months'], null);
++              var monthsStreak = shouldShareStreak ? _.get(~~message.tags['msg-param-streak-months'], null) : null;
++
+               var prime = plan.includes('Prime');
+               var userstate = message.tags;
+ 
+@@ -590,7 +598,7 @@ client.prototype.handleMessage = function handleMessage(message) {
+                 userstate['message-type'] = 'resub';
+               }
+ 
+-              this.emits(['resub', 'subanniversary'], [[channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }], [channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }]]);
++              this.emits(['resub', 'subanniversary'], [[channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }, monthsStreak], [channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }, monthsStreak]]);
+             } else if (msgid === 'sub') {
+               // Handle sub
+               var _username = message.tags['display-name'] || message.tags.login;
+@@ -652,6 +660,14 @@ client.prototype.handleMessage = function handleMessage(message) {
              break;
            }
  

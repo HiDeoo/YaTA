@@ -150,7 +150,8 @@ declare module 'twitch-js' {
         months: number,
         message: string | null,
         userstate: UserState,
-        method: Payment
+        method: Payment,
+        monthsStreak: number | null
       ) => void
     ): void
     on(
