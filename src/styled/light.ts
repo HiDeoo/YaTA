@@ -139,6 +139,9 @@ const light = {
       text: Colors.GRAY2,
     },
   },
+  twitchState: {
+    color: 'rgba(92, 112, 128, 0.8)',
+  },
   whisper: {
     background: Colors.LIGHT_GRAY3,
     border: Colors.INDIGO5,

@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import HeaderTooltip from 'Components/HeaderTooltip'
 import { SerializedRoomState } from 'Libs/RoomState'
-import styled, { ifProp, size } from 'Styled'
+import styled, { ifProp, size, theme } from 'Styled'
 
 /**
  * TwitchState component.
@@ -24,6 +24,7 @@ const TwitchState = styled.div<TwitchStateProps>`
     width: ${size('twitchState.size')};
 
     & svg {
+      color: ${theme('twitchState.color')};
       height: ${size('twitchState.size')};
       width: ${size('twitchState.size')};
     }

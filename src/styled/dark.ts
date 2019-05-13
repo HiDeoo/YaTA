@@ -143,6 +143,9 @@ const dark = {
       text: Colors.GRAY5,
     },
   },
+  twitchState: {
+    color: 'rgba(191, 204, 214, 0.8)',
+  },
   whisper: {
     background: Colors.DARK_GRAY2,
     border: Colors.INDIGO5,
