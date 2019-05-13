@@ -133,16 +133,7 @@ export default class Header extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const {
-      hidden,
-      highlightChangelog,
-      isLoggedIn,
-      logout,
-      page,
-      reportBug,
-      toggleChangelog,
-      toggleSettings,
-    } = this.props
+    const { hidden, highlightChangelog, isLoggedIn, logout, page, toggleChangelog, toggleSettings } = this.props
 
     return (
       <HeaderNavbar hidden={hidden}>
@@ -161,9 +152,6 @@ export default class Header extends React.Component<Props> {
         <NavbarSpacer />
         <HeaderNavbarGroup>
           <HeaderConsumer>{({ rightComponent }) => (!_.isNil(rightComponent) ? rightComponent : null)}</HeaderConsumer>
-          <HeaderTooltip content="Report bug">
-            <Button onClick={reportBug} icon="issue" minimal />
-          </HeaderTooltip>
           {page !== Page.Home && (
             <HeaderTooltip content="Home">
               <Button onMouseUp={this.onMouseUpHome} icon="home" minimal />
@@ -251,7 +239,6 @@ interface Props {
   isLoggedIn: boolean
   logout: () => void
   page: string
-  reportBug: () => void
   status: AppState['status']
   toggleChangelog: () => void
   toggleSettings: () => void

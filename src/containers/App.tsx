@@ -141,13 +141,17 @@ class App extends React.Component<Props, State> {
               isLoggedIn={isLoggedIn}
               logout={this.props.resetUser}
               page={pathname}
-              reportBug={this.reportBug}
               status={status}
               toggleChangelog={this.toggleChangelog}
               toggleSettings={this.toggleSettings}
               hidden={hideHeader}
             />
-            <Settings visible={showSettings} toggle={this.toggleSettings} defaultView={settingDefaultView} />
+            <Settings
+              defaultView={settingDefaultView}
+              toggle={this.toggleSettings}
+              reportBug={this.reportBug}
+              visible={showSettings}
+            />
             <FlexContent>
               <Switch>
                 <Route exact path={Page.Home} component={Follows} />

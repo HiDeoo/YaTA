@@ -1,4 +1,4 @@
-import { Button, Classes, H4, IconName } from '@blueprintjs/core'
+import { Button, Classes, H4, IconName, Tooltip } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
 
@@ -26,6 +26,14 @@ const SettingsDialog = styled(Dialog)`
 
   &.${Classes.DIALOG} {
     padding-bottom: 0;
+  }
+
+  .${Classes.DIALOG_HEADER} .${Classes.HEADING}:last-child {
+    margin-right: 0;
+  }
+
+  .${Classes.DIALOG_HEADER} > .${Classes.ICON} {
+    opacity: 0.6;
   }
 `
 
@@ -123,9 +131,10 @@ export default class Settings extends React.Component<Props, State> {
 
     return (
       <SettingsDialog
-        onClose={this.onCloseDialog}
         icon={this.getDialogIcon(initialView)}
         title={this.renderTitle(initialView)}
+        onClose={this.onCloseDialog}
+        isCloseButtonShown={false}
         isOpen={visible}
       >
         <SettingsStack initialView={initialView} ref={this.viewStack} onPush={this.onViewPush} onPop={this.onViewPop} />
@@ -139,20 +148,20 @@ export default class Settings extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderTitle(initialView: IView<{}>) {
-    const { view } = this.state
-
-    if (!_.isNil(view)) {
-      return (
-        <TitleWrapper>
-          <BackButton icon="chevron-left" minimal onClick={this.popCurrentView} />
-          <Title>{view.title}</Title>
-        </TitleWrapper>
-      )
-    }
-
     return (
       <TitleWrapper>
+        {!_.isNil(this.state.view) && (
+          <Tooltip content="All settings">
+            <BackButton icon="chevron-left" minimal onClick={this.popCurrentView} />
+          </Tooltip>
+        )}
         <Title>{initialView.title}</Title>
+        <Tooltip content="Report bug">
+          <Button icon="issue" minimal onClick={this.props.reportBug} />
+        </Tooltip>
+        <Tooltip content="Close">
+          <Button icon="cross" minimal onClick={this.onCloseDialog} />
+        </Tooltip>
       </TitleWrapper>
     )
   }
@@ -243,6 +252,7 @@ export default class Settings extends React.Component<Props, State> {
  */
 interface Props extends ToggleableProps {
   defaultView?: SettingsViewName
+  reportBug: () => void
 }
 
 /**
