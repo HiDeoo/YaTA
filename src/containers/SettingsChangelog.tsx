@@ -17,6 +17,13 @@ const Changelog = styled.div`
   font-size: 0.8rem;
   line-height: 1.2rem;
 
+  & summary {
+    cursor: pointer;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-top: 30px;
+  }
+
   & h1,
   & h2,
   .${Classes.DARK} & h1,

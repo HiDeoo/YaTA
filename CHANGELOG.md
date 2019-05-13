@@ -205,6 +205,9 @@
   - Vods & clips can be clicked more easily.
   - The stream thumbnail can be clicked to get a Twitch player to quickly check status, sound & quality (muted by default & closing this view will stop the player).
 
+<details>
+<summary>0.X.Y</summary>
+
 # 0.9.0
 
 ### 🚀 New Feature
@@ -410,3 +413,5 @@
 # 0.1.0
 
 ### 🎉 Initial release
+
+</details>
