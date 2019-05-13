@@ -1,5 +1,5 @@
 import { Classes, Colors, HotkeysTarget } from '@blueprintjs/core'
-import bowser from 'bowser'
+import * as bowser from 'bowser'
 import { History } from 'history'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -255,9 +255,9 @@ class App extends React.Component<Props, State> {
    */
   private reportBug = () => {
     const { REACT_APP_BUGS_URL, REACT_APP_VERSION } = process.env
-    const {
-      parsedResult: { browser, os },
-    } = bowser.getParser(window.navigator.userAgent)
+    const parser = bowser.getParser(window.navigator.userAgent)
+    const browser = parser.getBrowser()
+    const os = parser.getOS()
 
     const body = `<!---
 Thanks for filing an issue 😄 !

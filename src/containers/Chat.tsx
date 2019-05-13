@@ -1038,7 +1038,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     updateStatus,
   },
   null,
-  { withRef: true }
+  { forwardRef: true }
 )(ChatClient)
 
 /**

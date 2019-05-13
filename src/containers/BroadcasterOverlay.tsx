@@ -163,11 +163,11 @@ class BroadcasterOverlay extends React.Component<Props, State> {
       const props = {
         channel,
         channelId,
-        unhost: undefined as Optional<UnhostAction>,
+        unhost,
       }
 
-      if (Section === BroadcasterTools) {
-        props.unhost = unhost
+      if (Section !== BroadcasterTools) {
+        delete props.unhost
       }
 
       return <Section key={index} {...props} />

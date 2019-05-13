@@ -1,5 +1,5 @@
 import { Colors, Icon, Text } from '@blueprintjs/core'
-import * as anime from 'animejs'
+import anime from 'animejs'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
@@ -159,7 +159,7 @@ class Follow extends React.Component<Props> {
     const { follow } = this.props
 
     return (
-      <Flipped flipId={follow._id.toString()} onDelayedAppear={this.onAppear} onExit={this.onExit}>
+      <Flipped flipId={follow._id.toString()} onAppear={this.onAppear} onExit={this.onExit}>
         <div>
           <Wrapper onClick={this.onClick}>
             {Twitch.isStream(follow) ? this.renderStream(follow) : this.renderChannel(follow)}

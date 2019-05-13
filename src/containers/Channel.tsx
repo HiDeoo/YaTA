@@ -758,7 +758,7 @@ class Channel extends React.Component<Props, State> {
 
     const selection = window.getSelection()
 
-    if (selection.toString().trim().length === 0) {
+    if (!_.isNil(selection) && selection.toString().trim().length === 0) {
       selection.empty()
     }
   }
@@ -877,7 +877,7 @@ class Channel extends React.Component<Props, State> {
    */
   private getTwitchClient() {
     if (!_.isNil(this.chatClient.current)) {
-      const chatClient = this.chatClient.current.getWrappedInstance() as ChatClient
+      const chatClient = this.chatClient.current as ChatClient
       const twitchClient = chatClient.client
 
       if (twitchClient.readyState() !== ReadyState.Open) {
@@ -956,7 +956,7 @@ class Channel extends React.Component<Props, State> {
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
-      const chatClient = this.chatClient.current.getWrappedInstance() as ChatClient
+      const chatClient = this.chatClient.current as ChatClient
       chatClient.nextWhisperRecipient = username
 
       await client.whisper(username, whisper)

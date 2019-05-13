@@ -30,14 +30,20 @@ const getActionsAllIds = (state: ApplicationState) => state.settings.actions.all
  * @param  state - The Redux state.
  * @return The theme.
  */
-export const getTheme = createSelector([getSettingsState], (settings) => settings.theme)
+export const getTheme = createSelector(
+  [getSettingsState],
+  (settings) => settings.theme
+)
 
 /**
  * Returns the last known version.
  * @param  state - The Redux state.
  * @return The version.
  */
-export const getLastKnownVersion = createSelector([getSettingsState], (settings) => settings.lastKnownVersion)
+export const getLastKnownVersion = createSelector(
+  [getSettingsState],
+  (settings) => settings.lastKnownVersion
+)
 
 /**
  * Returns the 'Copy message on double click' setting.
@@ -54,14 +60,20 @@ export const getCopyMessageOnDoubleClick = createSelector(
  * @param  state - The Redux state.
  * @return The 'Show context menu' setting.
  */
-export const getShowContextMenu = createSelector([getSettingsState], (settings) => settings.showContextMenu)
+export const getShowContextMenu = createSelector(
+  [getSettingsState],
+  (settings) => settings.showContextMenu
+)
 
 /**
  * Returns the highlights.
  * @param  state - The Redux state.
  * @return The highlights.
  */
-export const getHighlights = createSelector([getSettingsState], (settings) => settings.highlights)
+export const getHighlights = createSelector(
+  [getSettingsState],
+  (settings) => settings.highlights
+)
 
 /**
  * Returns the highlights ignored users.
@@ -88,16 +100,22 @@ export const getHighlightsPermanentUsers = createSelector(
  * @param  state - The Redux state.
  * @return The actions in order.
  */
-export const getActions = createSelector([getActionsAllIds, getActionsById], (allIds, byId) => {
-  return _.map(allIds, (id) => byId[id])
-})
+export const getActions = createSelector(
+  [getActionsAllIds, getActionsById],
+  (allIds, byId) => {
+    return _.map(allIds, (id) => byId[id])
+  }
+)
 
 /**
  * Returns the 'Hide whispers' setting.
  * @param  state - The Redux state.
  * @return The 'Hide whispers' setting.
  */
-export const getHideWhispers = createSelector([getSettingsState], (settings) => settings.hideWhispers)
+export const getHideWhispers = createSelector(
+  [getSettingsState],
+  (settings) => settings.hideWhispers
+)
 
 /**
  * Returns all settings available for a backup.
@@ -111,14 +129,20 @@ export const getSettingsBackup = (state: ApplicationState) => state.settings
  * @param  state - The Redux state.
  * @return The 'Automatically focus the input field' setting.
  */
-export const getAutoFocusInput = createSelector([getSettingsState], (settings) => settings.autoFocusInput)
+export const getAutoFocusInput = createSelector(
+  [getSettingsState],
+  (settings) => settings.autoFocusInput
+)
 
 /**
  * Returns the 'Show viewer count' setting.
  * @param  state - The Redux state.
  * @return The 'Show viewer count' setting.
  */
-export const getShowViewerCount = createSelector([getSettingsState], (settings) => settings.showViewerCount)
+export const getShowViewerCount = createSelector(
+  [getSettingsState],
+  (settings) => settings.showViewerCount
+)
 
 /**
  * Returns the 'Disable dialog animations' setting.
@@ -135,101 +159,134 @@ export const getDisableDialogAnimations = createSelector(
  * @param  state - The Redux state.
  * @return The 'Highlight all mentions' setting.
  */
-export const getHighlightAllMentions = createSelector([getSettingsState], (settings) => settings.highlightAllMentions)
+export const getHighlightAllMentions = createSelector(
+  [getSettingsState],
+  (settings) => settings.highlightAllMentions
+)
 
 /**
  * Returns the 'Prioritize usernames' setting.
  * @param  state - The Redux state.
  * @return The 'Prioritize usernames' setting.
  */
-export const getPrioritizeUsernames = createSelector([getSettingsState], (settings) => settings.prioritizeUsernames)
+export const getPrioritizeUsernames = createSelector(
+  [getSettingsState],
+  (settings) => settings.prioritizeUsernames
+)
 
 /**
  * Returns the 'Host threshold' setting.
  * @param  state - The Redux state.
  * @return The 'Host threshold' setting.
  */
-export const getHostThreshold = createSelector([getSettingsState], (settings) => settings.hostThreshold)
+export const getHostThreshold = createSelector(
+  [getSettingsState],
+  (settings) => settings.hostThreshold
+)
 
 /**
  * Returns the 'Auto-host threshold' setting.
  * @param  state - The Redux state.
  * @return The 'Auto-host threshold' setting.
  */
-export const getAutoHostThreshold = createSelector([getSettingsState], (settings) => settings.autoHostThreshold)
+export const getAutoHostThreshold = createSelector(
+  [getSettingsState],
+  (settings) => settings.autoHostThreshold
+)
 
 /**
  * Returns the 'Follows sort order' setting.
  * @param  state - The Redux state.
  * @return The 'Follows sort order' setting.
  */
-export const getFollowsSortOrder = createSelector([getSettingsState], (settings) => settings.followsSortOrder)
+export const getFollowsSortOrder = createSelector(
+  [getSettingsState],
+  (settings) => settings.followsSortOrder
+)
 
 /**
  * Returns the 'Hide offline follows' setting.
  * @param  state - The Redux state.
  * @return The 'Hide offline follows' setting.
  */
-export const getHideOfflineFollows = createSelector([getSettingsState], (settings) => settings.hideOfflineFollows)
+export const getHideOfflineFollows = createSelector(
+  [getSettingsState],
+  (settings) => settings.hideOfflineFollows
+)
 
 /**
  * Returns all shortcuts.
  * @param  state - The Redux state.
  * @return The shortcuts.
  */
-export const getShortcuts = createSelector([getSettingsState], (settings) => {
-  return _.reduce(
-    ShortcutType,
-    (shortcuts, shortcut) => {
-      shortcuts[shortcut] = { ...ShortcutDefinitions[shortcut], combo: settings.shortcuts[shortcut] }
+export const getShortcuts = createSelector(
+  [getSettingsState],
+  (settings) => {
+    return _.reduce(
+      ShortcutType,
+      (shortcuts, shortcut) => {
+        shortcuts[shortcut] = { ...ShortcutDefinitions[shortcut], combo: settings.shortcuts[shortcut] }
 
-      return shortcuts
-    },
-    {} as Record<ShortcutType, Shortcut>
-  )
-})
+        return shortcuts
+      },
+      {} as Record<ShortcutType, Shortcut>
+    )
+  }
+)
 
 /**
  * Returns all shortcuts grouped.
  * @param  state - The Redux state.
  * @return The grouped shortcuts.
  */
-export const getGroupedShortcuts = createSelector([getShortcuts], (shortcuts) => {
-  return _.reduce(
-    ShortcutGroup,
-    (groupedShortcuts, group) => {
-      const groupShortcuts = _.filter(shortcuts, ['group', group])
+export const getGroupedShortcuts = createSelector(
+  [getShortcuts],
+  (shortcuts) => {
+    return _.reduce(
+      ShortcutGroup,
+      (groupedShortcuts, group) => {
+        const groupShortcuts = _.filter(shortcuts, ['group', group])
 
-      if (groupShortcuts.length > 0) {
-        groupedShortcuts[group] = groupShortcuts
-      }
+        if (groupShortcuts.length > 0) {
+          groupedShortcuts[group] = groupShortcuts
+        }
 
-      return groupedShortcuts
-    },
-    {} as Record<ShortcutGroup, Shortcut[]>
-  )
-})
+        return groupedShortcuts
+      },
+      {} as Record<ShortcutGroup, Shortcut[]>
+    )
+  }
+)
 
 /**
  * Returns the 'Hide VIP badges' setting.
  * @param  state - The Redux state.
  * @return The 'Hide VIP badges' setting.
  */
-export const getHideVIPBadges = createSelector([getSettingsState], (settings) => settings.hideVIPBadges)
+export const getHideVIPBadges = createSelector(
+  [getSettingsState],
+  (settings) => settings.hideVIPBadges
+)
 
 /**
  * Returns the 'Add whispers to history' setting.
  * @param  state - The Redux state.
  * @return The 'Add whispers to history' setting.
  */
-export const getAddWhispersToHistory = createSelector([getSettingsState], (settings) => settings.addWhispersToHistory)
+export const getAddWhispersToHistory = createSelector(
+  [getSettingsState],
+  (settings) => settings.addWhispersToHistory
+)
 
 /**
  * Returns the sound settings.
  * @param  state - The Redux state.
  * @return The sound settings.
  */
-export const getSoundSettings = createSelector([getSettingsState], (settings) => settings.sounds)
+export const getSoundSettings = createSelector(
+  [getSettingsState],
+  (settings) => settings.sounds
+)
 
 /**
  * Returns the 'Play sound on messages only in my channel' setting.
@@ -256,4 +313,7 @@ export const getDelayBetweenThrottledSounds = createSelector(
  * @param  state - The Redux state.
  * @return The 'Hide header' setting.
  */
-export const getHideHeader = createSelector([getSettingsState], (settings) => settings.hideHeader)
+export const getHideHeader = createSelector(
+  [getSettingsState],
+  (settings) => settings.hideHeader
+)

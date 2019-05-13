@@ -1,3 +1,9 @@
+# Unreleased
+
+### ⚙️ Internal
+
+- Upgrade all the things from TypeScript to dependencies.
+
 # 1.8.3
 
 ### 🚀 New Feature

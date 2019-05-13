@@ -2,6 +2,8 @@ import { Checkbox, Classes, Colors } from '@blueprintjs/core'
 import * as React from 'react'
 import styled from 'Styled'
 
+import { IncludedLogId } from './LogsExporter'
+
 /**
  * LogsCheckbox component.
  */
@@ -52,7 +54,7 @@ export default class LogsExporterCheckbox extends React.Component<Props> {
 interface Props {
   checked: boolean
   disabled: boolean
-  id: string
+  id: IncludedLogId
   label: React.ReactNode
-  onChange: (id: string, checked: boolean) => void
+  onChange: (id: IncludedLogId, checked: boolean) => void
 }

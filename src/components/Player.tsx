@@ -73,15 +73,18 @@ type State = Readonly<typeof initialState>
  */
 export default class Player extends React.Component<{}, State> {
   /**
-   * Creates a new `Player` instance for the application.
+   * Creates and returns a new `Player` instance for the application.
    */
   public static create() {
     const containerElement = document.createElement('div')
     document.body.appendChild(containerElement)
 
-    return ReactDOM.render(<Player />, containerElement) as Player
+    ReactDOM.render(<Player ref={Player.instance} />, containerElement)
+
+    return Player.instance
   }
 
+  private static instance = React.createRef<Player>()
   public state: State = initialState
 
   /**

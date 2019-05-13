@@ -119,8 +119,8 @@ export default class ExternalResource extends React.Component<Props> {
     const { resource } = this.props
 
     if (!_.isNil(resource.url)) {
-      if (resource.type === ResourceType.Clip) {
-        Player.playTwitchClip(resource.id)
+      if (resource.type === ResourceType.Clip && !_.isNil(Player.current)) {
+        Player.current.playTwitchClip(resource.id)
       } else {
         window.open(resource.url)
       }

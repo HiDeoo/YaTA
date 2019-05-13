@@ -118,8 +118,12 @@ export default class Preview extends React.Component<Props> {
     const { preview } = this.props
 
     if (isResolved(preview) && !_.isNil(preview.url)) {
-      if (preview.provider === PreviewTwitch.getProviderId() && preview.type === TwitchPreviewType.Clip) {
-        Player.playTwitchClip(preview.id)
+      if (
+        preview.provider === PreviewTwitch.getProviderId() &&
+        preview.type === TwitchPreviewType.Clip &&
+        !_.isNil(Player.current)
+      ) {
+        Player.current.playTwitchClip(preview.id)
       } else {
         window.open(preview.url)
       }

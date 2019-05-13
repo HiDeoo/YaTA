@@ -23,17 +23,27 @@ const getChatterState = (state: ApplicationState, id: string) => state.chatters.
  * @param  state - The Redux state.
  * @return The chatters.
  */
-export const getChatters = createSelector([getChattersState], (chatters) => _.get(chatters, 'byId'))
+export const getChatters = createSelector(
+  [getChattersState],
+  (chatters) => _.get(chatters, 'byId')
+)
 
 /**
  * Returns all the chatters map from username to id.
  * @param  state - The Redux state.
  * @return The chatters map.
  */
-export const getChattersMap = createSelector([getChattersState], (chatters) => _.get(chatters, 'byName'))
+export const getChattersMap = createSelector(
+  [getChattersState],
+  (chatters) => _.get(chatters, 'byName')
+)
 
 /**
  * Creates the selector retuning a chatter logs ids.
  * @return The selector.
  */
-export const makeGetChatterLogs = () => createSelector([getChatterState], (chatter) => _.get(chatter, 'logs'))
+export const makeGetChatterLogs = () =>
+  createSelector(
+    [getChatterState],
+    (chatter) => _.get(chatter, 'logs')
+  )

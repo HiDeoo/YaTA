@@ -32,21 +32,24 @@ const getLogsAllIds = (state: ApplicationState) => state.logs.allIds
  * @param  state - The Redux state.
  * @return The logs in chronological order and the number of purged logs.
  */
-export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byId) => {
-  let purgedCount = 0
+export const getLogs = createSelector(
+  [getLogsAllIds, getLogsById],
+  (allIds, byId) => {
+    let purgedCount = 0
 
-  const logs = _.map(allIds, (id) => {
-    const log = byId[id]
+    const logs = _.map(allIds, (id) => {
+      const log = byId[id]
 
-    if (isMessage(log) && log.purged) {
-      purgedCount += 1
-    }
+      if (isMessage(log) && log.purged) {
+        purgedCount += 1
+      }
 
-    return log
-  })
+      return log
+    })
 
-  return { logs, purgedCount }
-})
+    return { logs, purgedCount }
+  }
+)
 
 /**
  * Returns all the logs matching specific ids.
@@ -72,4 +75,7 @@ export const getLogsByIds = (state: ApplicationState, ids: string[]) => {
  * @param  state - The Redux state.
  * @return `true` when disabled.
  */
-export const getIsAutoScrollPaused = createSelector([getLogsState], (logs) => logs.isAutoScrollPaused)
+export const getIsAutoScrollPaused = createSelector(
+  [getLogsState],
+  (logs) => logs.isAutoScrollPaused
+)

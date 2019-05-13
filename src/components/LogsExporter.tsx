@@ -203,7 +203,7 @@ class LogsExporter extends React.Component<Props, State> {
    * @param id - The include type.
    * @param checked - `true` when checked.
    */
-  private onChangeInclude = (id: string, checked: boolean) => {
+  private onChangeInclude = (id: IncludedLogId, checked: boolean) => {
     this.setState((prevState) => ({
       [id]: checked,
       ...this.getValidationState(id, checked, prevState),
@@ -340,7 +340,7 @@ class LogsExporter extends React.Component<Props, State> {
    * @param  state - The current state.
    * @return The validation state.
    */
-  private getValidationState(id: string, checked: boolean, state: State) {
+  private getValidationState(id: IncludedLogId, checked: boolean, state: State) {
     const { formState, [id]: modifiedProperty, ...otherProperties } = state
 
     const newFormState: FormState =
@@ -392,3 +392,14 @@ type Props = StateProps & OwnProps
 interface LabelProps {
   disabled: boolean
 }
+
+/**
+ * IDs of the possible included log types.
+ */
+export type IncludedLogId =
+  | 'includeMarker'
+  | 'includeMessage'
+  | 'includeNotice'
+  | 'includeNotification'
+  | 'includePurged'
+  | 'includeWhisper'

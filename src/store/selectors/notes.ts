@@ -16,9 +16,12 @@ const getChatterNote = (state: ApplicationState, id: string) => _.get(state.note
  * @return The selector.
  */
 export const makeGetChatterNote = () =>
-  createSelector([getChatterNote], (note) => {
-    return _.isNil(note) ? '' : note
-  })
+  createSelector(
+    [getChatterNote],
+    (note) => {
+      return _.isNil(note) ? '' : note
+    }
+  )
 
 /**
  * Returns all notes available for a backup.

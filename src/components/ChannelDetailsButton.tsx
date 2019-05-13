@@ -67,10 +67,19 @@ export default class ChannelDetailsButton extends React.Component<Props> {
 }
 
 /**
+ * Internal button props.
+ * This is just a workaround for `IButtonProps` not being spreadable anymore.
+ * @see https://github.com/palantir/blueprint/issues/3450
+ */
+interface ButtonProps extends IButtonProps {
+  type?: 'button' | 'submit' | 'reset'
+}
+
+/**
  * React Props.
  */
 interface Props {
-  buttonProps?: IButtonProps
+  buttonProps?: ButtonProps
   onClick?: () => void
   onClickPanel?: (type: ChannelDetailsType) => void
   panel?: ChannelDetailsPanel
