@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Fix an issue preventing a broadcaster to appear in the chatters list.
+- You can no longer try to follow yourself from the channel details menu.
 - Fix various minor UI issues.
 
 ### ⚙️ Internal

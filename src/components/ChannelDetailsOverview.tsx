@@ -1,6 +1,7 @@
 import { ButtonGroup, Classes, Colors, Icon, IconName, Intent, IPanel, IPanelProps, Text } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
+import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
 
 import { ChannelDetailsProps } from 'Components/ChannelDetails'
@@ -12,6 +13,9 @@ import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import Twitch, { RawRelationship, RawStream } from 'Libs/Twitch'
+import { ApplicationState } from 'Store/reducers'
+import { getChannel } from 'Store/selectors/app'
+import { getChatLoginDetails } from 'Store/selectors/user'
 import styled, { theme } from 'Styled'
 
 /**
@@ -133,7 +137,7 @@ type State = Readonly<typeof initialState>
 /**
  * ChannelDetailsOverview Component.
  */
-export default class ChannelDetailsOverview extends React.Component<IPanelProps & ChannelDetailsProps, State> {
+export class ChannelDetailsOverview extends React.Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -159,6 +163,7 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
    */
   public render() {
     const { didFail, isFollowingOrUnfollowing, relationship, stream } = this.state
+    const { channel, loginDetails } = this.props
 
     if (didFail) {
       return <NonIdealState small retry />
@@ -170,22 +175,25 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
 
     const followed = !_.isNil(relationship)
     const followedTooltip = `${followed ? 'Unfollow' : 'Follow'} ${this.props.name}`
+    const hideFollowButton = !_.isNil(loginDetails) && !_.isNil(channel) && loginDetails.username === channel
 
     return (
       <>
         <ChannelDetailsPanel>{this.renderStream()}</ChannelDetailsPanel>
         <PanelButtons>
           <ButtonGroup fill minimal large>
-            <ChannelDetailsButton
-              buttonProps={{
-                disabled: isFollowingOrUnfollowing,
-                icon: followed ? 'follower' : 'following',
-                intent: followed ? Intent.DANGER : Intent.PRIMARY,
-                loading: isFollowingOrUnfollowing,
-              }}
-              onClick={this.onClickFollowUnfollow}
-              tooltip={followedTooltip}
-            />
+            {!hideFollowButton && (
+              <ChannelDetailsButton
+                buttonProps={{
+                  disabled: isFollowingOrUnfollowing,
+                  icon: followed ? 'follower' : 'following',
+                  intent: followed ? Intent.DANGER : Intent.PRIMARY,
+                  loading: isFollowingOrUnfollowing,
+                }}
+                onClick={this.onClickFollowUnfollow}
+                tooltip={followedTooltip}
+              />
+            )}
             {_.map(ChannelDetailsType, (type) => (
               <ChannelDetailsButton
                 panel={ChannelDetailsPanels[type]}
@@ -286,6 +294,24 @@ export default class ChannelDetailsOverview extends React.Component<IPanelProps 
     )
   }
 }
+
+export default connect<StateProps, {}, {}, ApplicationState>((state) => ({
+  channel: getChannel(state),
+  loginDetails: getChatLoginDetails(state),
+}))(ChannelDetailsOverview)
+
+/**
+ * React Props.
+ */
+interface StateProps {
+  channel: ReturnType<typeof getChannel>
+  loginDetails: ReturnType<typeof getChatLoginDetails>
+}
+
+/**
+ * React Props.
+ */
+type Props = StateProps & IPanelProps & ChannelDetailsProps
 
 /**
  * Channel details panel.
