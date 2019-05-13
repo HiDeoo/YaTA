@@ -17,6 +17,14 @@ const Wrapper = styled.div`
 
   & > .${Classes.CARD} {
     padding: 6px;
+
+    &.${Classes.INTERACTIVE}:hover {
+      box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.2), 0 2px 4px rgba(16, 22, 26, 0.4), 0 3px 6px rgba(16, 22, 26, 0.4);
+    }
+
+    .${Classes.DARK} &.${Classes.INTERACTIVE}:hover {
+      box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 2px 4px rgba(16, 22, 26, 0.2), 0 3px 6px rgba(16, 22, 26, 0.2);
+    }
   }
 `
 

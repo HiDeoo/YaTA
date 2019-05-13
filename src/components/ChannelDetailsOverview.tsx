@@ -71,6 +71,11 @@ const PlayIcon = styled(Icon)`
   position: absolute;
   top: calc(50% - 50px);
   width: 100px;
+
+  & > svg {
+    height: 100px;
+    width: 100px;
+  }
 `
 
 /**

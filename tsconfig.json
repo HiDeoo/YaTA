@@ -26,7 +26,13 @@
       "Styled": ["src/styled/index.ts"],
       "Styled/*": ["src/styled/*"],
       "Utils/*": ["src/utils/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin",
+        "validate": false
+      }
+    ]
   },
   "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]
 }

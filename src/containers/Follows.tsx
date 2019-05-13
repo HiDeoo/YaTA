@@ -302,7 +302,7 @@ class Follows extends React.Component<Props, State> {
     const hideOfflineIcon = hideOfflineFollows ? 'eye-off' : 'eye-open'
 
     return (
-      <div>
+      <FlexLayout>
         <SortGroup>
           <Tooltip content="Sort by viewers" position={Position.BOTTOM}>
             <Button icon="people" rightIcon={byViewersIcon} active={byViewers} onClick={this.onClickSortByViewers} />
@@ -318,7 +318,7 @@ class Follows extends React.Component<Props, State> {
             icon={hideOfflineIcon}
           />
         </Tooltip>
-      </div>
+      </FlexLayout>
     )
   }
 

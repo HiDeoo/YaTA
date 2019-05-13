@@ -388,7 +388,7 @@ class Channel extends React.Component<Props, State> {
             <Button onClick={this.toggleSearch} icon="search" minimal />
           </HeaderTooltip>
         )}
-        <Popover>
+        <Popover usePortal={false}>
           <HeaderTooltip content="Channel Details">
             <Button icon="eye-open" minimal />
           </HeaderTooltip>
