@@ -148,14 +148,17 @@ export default class Settings extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderTitle(initialView: IView<{}>) {
+    const { view } = this.state
+    const title = _.isNil(view) ? initialView.title : view.title
+
     return (
       <TitleWrapper>
-        {!_.isNil(this.state.view) && (
+        {!_.isNil(view) && (
           <Tooltip content="All settings">
             <BackButton icon="chevron-left" minimal onClick={this.popCurrentView} />
           </Tooltip>
         )}
-        <Title>{initialView.title}</Title>
+        <Title>{title}</Title>
         <Tooltip content="Report bug">
           <Button icon="issue" minimal onClick={this.props.reportBug} />
         </Tooltip>
