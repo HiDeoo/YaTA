@@ -1,5 +1,5 @@
 import { Classes, IconName, IProps } from '@blueprintjs/core'
-import * as classnames from 'classnames'
+import clsx from 'clsx'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
@@ -37,11 +37,7 @@ export default class ViewStack extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const classes = classnames(
-      Classes.PANEL_STACK,
-      `${Classes.PANEL_STACK}-${this.state.direction}`,
-      this.props.className
-    )
+    const classes = clsx(Classes.PANEL_STACK, `${Classes.PANEL_STACK}-${this.state.direction}`, this.props.className)
 
     return (
       <TransitionGroup className={classes} component="div">

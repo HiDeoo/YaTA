@@ -30,7 +30,7 @@
     "@blueprintjs/select": "3.8.0",
     "animejs": "3.0.1",
     "bowser": "2.4.0",
-    "classnames": "2.2.6",
+    "clsx": "1.0.4",
     "copy-to-clipboard": "3.2.0",
     "file-saver": "2.0.1",
     "linkifyjs": "2.1.8",
@@ -64,7 +64,6 @@
   "devDependencies": {
     "@blueprintjs/tslint-config": "1.8.0",
     "@types/animejs": "2.0.2",
-    "@types/classnames": "2.2.7",
     "@types/file-saver": "2.0.0",
     "@types/jest": "24.0.12",
     "@types/lodash": "4.14.126",

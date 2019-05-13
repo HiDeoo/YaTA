@@ -1,5 +1,5 @@
 import { Classes, Intent, IToastOptions, Position, ProgressBar, Toast, Toaster } from '@blueprintjs/core'
-import * as classnames from 'classnames'
+import clsx from 'clsx'
 import * as _ from 'lodash'
 import * as React from 'react'
 
@@ -202,7 +202,7 @@ export default class Input extends React.Component<Props, State> {
     const { disabled, isUploadingFile, value } = this.props
     const { hideToasts, intent, toasts } = this.state
 
-    const classes = classnames(Classes.INPUT, Classes.FILL, Classes.LARGE, intent)
+    const classes = clsx(Classes.INPUT, Classes.FILL, Classes.LARGE, intent)
 
     return (
       <Wrapper>
@@ -210,7 +210,7 @@ export default class Input extends React.Component<Props, State> {
           {_.map(toasts, (toast, index) => {
             const { hideable, ...toastProps } = toast
 
-            const toastClasses = classnames({
+            const toastClasses = clsx({
               hiddenToast: hideable && hideToasts,
             })
 
