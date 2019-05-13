@@ -873,6 +873,7 @@ type RawChattersDetails = {
  */
 export type RawChatters = {
   admins: string[]
+  broadcaster: string[]
   global_mods: string[]
   moderators: string[]
   staff: string[]

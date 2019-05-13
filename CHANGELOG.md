@@ -1,5 +1,10 @@
 # Unreleased
 
+### 🐛 Bug Fix
+
+- Fix an issue preventing a broadcaster to appear in the chatters list.
+- Fix various minor UI issues.
+
 ### ⚙️ Internal
 
 - Upgrade all the things from TypeScript to dependencies.
