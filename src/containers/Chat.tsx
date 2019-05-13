@@ -39,7 +39,7 @@ import {
   markChatterAsBanned,
   markChatterAsUnbanned,
 } from 'Store/ducks/chatters'
-import { addLog, clearLogs, purgeLog, purgeLogs } from 'Store/ducks/logs'
+import { addLog, clearLogs, purgeLog, purgeLogs, unshiftLog } from 'Store/ducks/logs'
 import { setModerator } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
 import { getChannel } from 'Store/selectors/app'
@@ -885,7 +885,7 @@ export class ChatClient extends React.Component<Props, State> {
       if (!_.isNil(channel.status) && channel.status.length > 0) {
         const notice = new Notice(`Current title: ${channel.status}`, null, true)
 
-        this.props.addLog(notice.serialize())
+        this.props.unshiftLog(notice.serialize())
       }
 
       Resources.manager().setBadges(await Twitch.fetchBadges(channelId))
@@ -1033,6 +1033,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     resetAppState,
     setLastWhisperSender,
     setModerator,
+    unshiftLog,
     updateEmotes,
     updateRoomState,
     updateStatus,
@@ -1080,6 +1081,7 @@ interface DispatchProps {
   resetAppState: typeof resetAppState
   setLastWhisperSender: typeof setLastWhisperSender
   setModerator: typeof setModerator
+  unshiftLog: typeof unshiftLog
   updateRoomState: typeof updateRoomState
   updateEmotes: typeof updateEmotes
   updateStatus: typeof updateStatus

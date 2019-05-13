@@ -56,6 +56,7 @@ export enum Actions {
   CLEAR = 'logs/CLEAR',
   PAUSE_AUTO_SCROLL = 'logs/PAUSE_AUTO_SCROLL',
   ADD_MARKER = 'logs/ADD_MARKER',
+  UNSHIFT = 'logs/UNSHIFT',
 }
 
 /**
@@ -84,6 +85,15 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
         ...newState,
         allIds: [...newState.allIds, log.id],
         byId: { ...newState.byId, [log.id]: log },
+      }
+    }
+    case Actions.UNSHIFT: {
+      const { log } = action.payload
+
+      return {
+        ...state,
+        allIds: [log.id, ...state.allIds],
+        byId: { ...state.byId, [log.id]: log },
       }
     }
     case Actions.PURGE: {
@@ -152,6 +162,16 @@ export const addLog = (log: Log) =>
   })
 
 /**
+ * Adds a log entry at the beginning.
+ * @param  log - The log entry to add.
+ * @return The action.
+ */
+export const unshiftLog = (log: Log) =>
+  createAction(Actions.UNSHIFT, {
+    log,
+  })
+
+/**
  * Purges log entries.
  * @param  logs - The log ids to purge.
  * @return The action.
@@ -203,6 +223,7 @@ export type LogsActions =
   | ReturnType<typeof pauseAutoScroll>
   | ReturnType<typeof addMarker>
   | ReturnType<typeof purgeLog>
+  | ReturnType<typeof unshiftLog>
 
 /**
  * Logs state.
