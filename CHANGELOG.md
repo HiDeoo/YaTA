@@ -2,6 +2,7 @@
 
 ### 🚀 New Feature
 
+- Emotes in sub & resub messages are now properly displayed.
 - The Twitch moderation tools are now 1 click away when checking a user profile 🔨
   - For more advanced moderation tasks (and lack of APIs), you can open the all-time messages logs, bans logs, timeouts logs and read/add moderator comments for the current user.
   - If you want, you can even keep the new window opened and everytime you use the moderation tools, it'll update the already opened window for the new user.

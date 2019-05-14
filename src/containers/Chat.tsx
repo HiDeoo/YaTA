@@ -704,17 +704,52 @@ export class ChatClient extends React.Component<Props, State> {
    * @param method - The method used to sub.
    * @param message - Sub message.
    */
-  private onSubscription = (_channel: string, username: string, method: Payment, message: string | null) => {
+  private onSubscription = (
+    _channel: string,
+    username: string,
+    method: Payment,
+    message: string | null,
+    userstate: UserState
+  ) => {
     const notification = new Notification(
       `${username} just subscribed${this.getPaymentString(method)}!`,
       NotificationEvent.Subscription,
-      !_.isNil(message) ? message : undefined
+      this.parseSubMessage(message, userstate)
     )
 
     const serializedNotification = notification.serialize()
 
     this.props.addLog(serializedNotification)
     this.props.addPotentialChatter(Chatter.createPotentialChatter(username).serialize(), serializedNotification.id)
+  }
+
+  /**
+   * Parses a sub or resub message.
+   * @param message - The received message.
+   * @param userstate - The associated user state.
+   * @return The parsed message if any.
+   */
+  private parseSubMessage(message: string | null, userstate: UserState) {
+    let notificationMessage: Optional<string>
+
+    if (!_.isNil(message)) {
+      const { hideVIPBadges, loginDetails, theme } = this.props
+
+      userstate.username = userstate['display-name']
+
+      const parsedMessage = new Message(message, userstate, false, loginDetails!.username, {
+        hideVIPBadge: hideVIPBadges,
+        theme,
+      })
+
+      if (!_.isNil(parsedMessage)) {
+        const serializedMessage = parsedMessage.serialize()
+
+        notificationMessage = serializedMessage.message
+      }
+    }
+
+    return notificationMessage
   }
 
   /**
@@ -732,7 +767,7 @@ export class ChatClient extends React.Component<Props, State> {
     username: string,
     months: number,
     message: string | null,
-    _userstate: UserState,
+    userstate: UserState,
     method: Payment,
     monthsStreak: number | null
   ) => {
@@ -740,7 +775,7 @@ export class ChatClient extends React.Component<Props, State> {
     const notification = new Notification(
       `${username} just re-subscribed for ${months} months${streakMessage}${this.getPaymentString(method)}!`,
       NotificationEvent.ReSub,
-      !_.isNil(message) ? message : undefined
+      this.parseSubMessage(message, userstate)
     )
 
     const serializedNotification = notification.serialize()

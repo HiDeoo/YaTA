@@ -55,7 +55,9 @@ export default class Notification extends React.Component<Props> {
     return (
       <Wrapper style={style} highlight={this.shouldHighlightNotification()}>
         <div>{notification.title}</div>
-        {!_.isNil(notification.message) && <Message>“{notification.message}”</Message>}
+        {!_.isNil(notification.message) && (
+          <Message dangerouslySetInnerHTML={{ __html: `“${notification.message}”` }} />
+        )}
       </Wrapper>
     )
   }
