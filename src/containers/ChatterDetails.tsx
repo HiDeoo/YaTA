@@ -9,6 +9,7 @@ import {
   Menu,
   Popover,
   Spinner,
+  Tooltip,
 } from '@blueprintjs/core'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -30,6 +31,7 @@ import TwitchTools, { UsernameHistory } from 'Libs/TwitchTools'
 import { isMessage } from 'Store/ducks/logs'
 import { updateNote } from 'Store/ducks/notes'
 import { ApplicationState } from 'Store/reducers'
+import { getChannel } from 'Store/selectors/app'
 import { makeGetChatterLogs } from 'Store/selectors/chatters'
 import { getLogsByIds } from 'Store/selectors/logs'
 import { makeGetChatterNote } from 'Store/selectors/notes'
@@ -377,6 +379,9 @@ class ChatterDetails extends React.Component<Props, State> {
               </Popover>
             </ButtonGroup>
             {chatter.banned && <Button icon="unlock" intent={Intent.DANGER} onClick={this.onClickUnban} text="Unban" />}
+            <Tooltip content="Open the Twitch moderation tools for this user">
+              <Button icon="torch" onClick={this.onClickTwitchTools} text="Twitch Tools" />
+            </Tooltip>
           </ButtonRow>
           <ButtonRow>
             <ButtonGroup>
@@ -564,6 +569,23 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the Twitch moderation tools button is clicked.
+   */
+  private onClickTwitchTools = () => {
+    const { channel, chatter } = this.props
+
+    if (_.isNil(channel) || _.isNil(chatter)) {
+      return
+    }
+
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/viewercard/${chatter.userName}?popout=`,
+      'twitchToolsPopupWindow',
+      'height=600,width=500'
+    )
+  }
+
+  /**
    * Triggered when purge button is clicked.
    */
   private onClickPurge = () => {
@@ -705,6 +727,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     const getChatterNote = makeGetChatterNote()
 
     return {
+      channel: getChannel(state),
       logs: !_.isNil(ownProps.chatter) ? getLogsByIds(state, getChatterLogs(state, ownProps.chatter.id)) : null,
       note: !_.isNil(ownProps.chatter) ? getChatterNote(state, ownProps.chatter.id) : '',
     }
@@ -716,6 +739,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
  * React Props.
  */
 interface StateProps {
+  channel: ReturnType<typeof getChannel>
   logs: ReturnType<typeof getLogsByIds> | null
   note: string
 }

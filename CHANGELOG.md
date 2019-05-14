@@ -2,6 +2,9 @@
 
 ### 🚀 New Feature
 
+- The Twitch moderation tools are now 1 click away when checking a user profile 🔨
+  - For more advanced moderation tasks (and lack of APIs), you can open the all-time messages logs, bans logs, timeouts logs and read/add moderator comments for the current user.
+  - If you want, you can even keep the new window opened and everytime you use the moderation tools, it'll update the already opened window for the new user.
 - Add various missing chat notifications:
   - Mystery gift when a known user gift a sub to a specific user.
   - Anonymous sub gift when an unknown user gift a sub to a specific user.
