@@ -70,7 +70,13 @@ export default class Notification extends React.Component<Props> {
     return (
       event === NotificationEvent.Subscription ||
       event === NotificationEvent.ReSub ||
-      event === NotificationEvent.SubGift
+      event === NotificationEvent.SubGift ||
+      event === NotificationEvent.SubMysteryGift ||
+      event === NotificationEvent.AnonSubGift ||
+      event === NotificationEvent.AnonSubMysteryGift ||
+      event === NotificationEvent.GiftPaidUpgrade ||
+      event === NotificationEvent.AnonGiftPaidUpgrade ||
+      event === NotificationEvent.PrimePaidUpgrade
     )
   }
 }

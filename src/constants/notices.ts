@@ -26,10 +26,16 @@ export default {
    */
   Extra: ['bad_delete_message_broadcaster', 'bad_delete_message_mod'],
 
-  Charity: {
-    /**
-     * Id of the charity user notice.
-     */
-    Id: 'charity',
+  /**
+   * Extra user notices not handled natively.
+   */
+  ExtraUser: {
+    AnonGiftPaidUpgrade: 'anongiftpaidupgrade',
+    AnonSubGift: 'anonsubgift',
+    AnonSubMysteryGift: 'anonsubmysterygift',
+    Charity: 'charity',
+    GiftPaidUpgrade: 'giftpaidupgrade',
+    PrimePaidUpgrade: 'primepaidupgrade',
+    SubMysteryGift: 'submysterygift',
   },
 }

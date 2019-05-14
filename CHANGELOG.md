@@ -1,5 +1,15 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Add various missing chat notifications:
+  - Mystery gift when a known user gift a sub to a specific user.
+  - Anonymous sub gift when an unknown user gift a sub to a specific user.
+  - Anonymous mystery gift when an unknown user gift subs to random users.
+  - A user continues his sub gifted by a known user.
+  - A user continues his sub gifted by an unknown user.
+  - A user converts their Prime sub to a regular one.
+
 ### 🐛 Bug Fix
 
 - Fix an issue preventing a broadcaster to appear in the chatters list.

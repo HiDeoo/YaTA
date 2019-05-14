@@ -276,10 +276,34 @@ export class ChatClient extends React.Component<Props, State> {
    * @param tags - The notice tags.
    */
   private onUserNotices = (_channel: string, id: string, _message: string, tags: Record<string, string>) => {
-    if (id === Notices.Charity.Id) {
+    if (id === Notices.ExtraUser.Charity) {
       const notice = Notice.fromCharity(tags)
 
       this.props.addLog(notice.serialize())
+    } else if (id === Notices.ExtraUser.SubMysteryGift) {
+      const notification = Notification.fromSubMysteryGift(tags)
+
+      this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.AnonSubGift) {
+      const notification = Notification.fromAnonSubGift(tags)
+
+      this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.AnonSubMysteryGift) {
+      const notification = Notification.fromAnonSubMysteryGift(tags)
+
+      this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.GiftPaidUpgrade) {
+      const notification = Notification.fromGiftPaidUpgrade(tags)
+
+      this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.AnonGiftPaidUpgrade) {
+      const notification = Notification.fromAnonGiftPaidUpgrade(tags)
+
+      this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.PrimePaidUpgrade) {
+      const notification = Notification.fromPrimePaidUpgrade(tags)
+
+      this.props.addLog(notification.serialize())
     }
   }
 
