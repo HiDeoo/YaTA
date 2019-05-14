@@ -4,6 +4,7 @@
 
 - Fix an issue preventing a broadcaster to appear in the chatters list.
 - You can no longer try to follow yourself from the channel details menu.
+- Prevent highlights to appear inside URLs.
 - Fix a bug where the title of a stream was not always the first message when joining a fast moving chat.
 - Fix various minor UI issues.
 

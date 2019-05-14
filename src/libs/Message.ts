@@ -366,7 +366,27 @@ export default class Message implements Serializable<SerializedMessage> {
   private parseHighlights(words: Word[], parsedMessage: string[]) {
     if (!this.ignoreHighlight) {
       _.forEach(Resources.manager().getHighlights(), (highlight) => {
-        const wordsMatchingHighlight = _.filter(words, (word) => word.text.toLowerCase() === highlight.pattern)
+        const wordsMatchingHighlight = _.filter(words, (word, index) => {
+          const couldMatch = word.text.toLowerCase() === highlight.pattern
+
+          if (!couldMatch) {
+            return false
+          }
+
+          const previousWord = index > 0 ? words[index - 1] : null
+
+          if (!_.isNil(previousWord) && previousWord.text.trim().length > 0 && previousWord.text !== '') {
+            return false
+          }
+
+          const nextWord = index < words.length - 1 ? words[index + 1] : null
+
+          if (!_.isNil(nextWord) && nextWord.text.trim().length > 0) {
+            return false
+          }
+
+          return true
+        })
 
         _.forEach(wordsMatchingHighlight, (word) => {
           const highlightStr = word.text
