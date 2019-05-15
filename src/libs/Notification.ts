@@ -10,19 +10,13 @@ import LogType from 'Constants/logType'
  */
 export default class Notification implements Serializable<SerializedNotification> {
   /**
-   * Creates a new notification from a submysterygift user notice which corresponds to a known user gifting to a random
-   * user.
+   * Creates a new notification from a submysterygift user notice which corresponds to a known user gifting to some
+   * random users.
    * @param  tags - The notice tags.
    * @return The new notice.
    */
   public static fromSubMysteryGift(tags: Record<string, string>) {
-    const username = tags['display-name'] || tags.login
-    const total = parseInt(tags['msg-param-mass-gift-count'], 10)
-
-    return new Notification(
-      `${username} is giving out ${total} sub ${pluralize('gift', total)}!`,
-      NotificationEvent.SubMysteryGift
-    )
+    return new Notification(Notification.getMysteryGiftNotificationTitle(tags, false), NotificationEvent.SubMysteryGift)
   }
 
   /**
@@ -44,10 +38,8 @@ export default class Notification implements Serializable<SerializedNotification
    * @return The new notice.
    */
   public static fromAnonSubMysteryGift(tags: Record<string, string>) {
-    const total = parseInt(tags['msg-param-mass-gift-count'], 10)
-
     return new Notification(
-      `An anonymous gifter is giving out ${total} sub ${pluralize('gift', total)}!`,
+      Notification.getMysteryGiftNotificationTitle(tags, true),
       NotificationEvent.AnonSubMysteryGift
     )
   }
@@ -105,6 +97,21 @@ export default class Notification implements Serializable<SerializedNotification
       `${username} just converted their Twitch Prime sub to a tier ${tier} sub!`,
       NotificationEvent.PrimePaidUpgrade
     )
+  }
+
+  /**
+   * Returns the notification title for mystery gifts.
+   * @param  tags - The notice tags.
+   * @param  anonymous - `true` when the gift is anonymous.
+   * @return The notification title.
+   */
+  private static getMysteryGiftNotificationTitle(tags: Record<string, string>, anonymous: boolean) {
+    const username = anonymous ? 'An anonymous gifter' : tags['display-name'] || tags.login
+    const total = parseInt(tags['msg-param-mass-gift-count'], 10)
+
+    return !_.isNaN(total)
+      ? `${username} is giving out ${total} sub ${pluralize('gift', total)}!`
+      : `${username} is giving out a sub gift!`
   }
 
   private id: string

@@ -7,7 +7,7 @@
   - For more advanced moderation tasks (and lack of APIs), you can open the all-time messages logs, bans logs, timeouts logs and read/add moderator comments for the current user.
   - If you want, you can even keep the new window opened and everytime you use the moderation tools, it'll update the already opened window for the new user.
 - Add various missing chat notifications:
-  - Mystery gift when a known user gift a sub to a specific user.
+  - Mystery gift when a known user gift a sub to random users.
   - Anonymous sub gift when an unknown user gift a sub to a specific user.
   - Anonymous mystery gift when an unknown user gift subs to random users.
   - A user continues his sub gifted by a known user.
