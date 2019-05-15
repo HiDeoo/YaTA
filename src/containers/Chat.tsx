@@ -304,6 +304,14 @@ export class ChatClient extends React.Component<Props, State> {
       const notification = Notification.fromPrimePaidUpgrade(tags)
 
       this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.RewardGift) {
+      const notification = Notification.fromRewardGift(tags)
+
+      this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.BitsBadgeTier) {
+      const notification = Notification.fromBitsBadgeTier(tags)
+
+      this.props.addLog(notification.serialize())
     }
   }
 

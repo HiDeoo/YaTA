@@ -13,6 +13,8 @@
   - A user continues his sub gifted by a known user.
   - A user continues his sub gifted by an unknown user.
   - A user converts their Prime sub to a regular one.
+  - A user earns a new Bits badge.
+  - A cheer shared rewards to some others in chat.
 
 ### 🐛 Bug Fix
 

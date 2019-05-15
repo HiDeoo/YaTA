@@ -98,7 +98,9 @@ export default class Notification extends React.Component<Props> {
       event === NotificationEvent.AnonSubMysteryGift ||
       event === NotificationEvent.GiftPaidUpgrade ||
       event === NotificationEvent.AnonGiftPaidUpgrade ||
-      event === NotificationEvent.PrimePaidUpgrade
+      event === NotificationEvent.PrimePaidUpgrade ||
+      event === NotificationEvent.RewardGift ||
+      event === NotificationEvent.BitsBadgeTier
     )
   }
 }

@@ -100,6 +100,34 @@ export default class Notification implements Serializable<SerializedNotification
   }
 
   /**
+   * Creates a new notification from a rewardgift user notice.
+   * @param  tags - The notice tags.
+   * @return The new notice.
+   */
+  public static fromRewardGift(tags: Record<string, string>) {
+    const total = tags['msg-param-selected-count']
+
+    return new Notification(`A cheer shared rewards to ${total} others in chat!`, NotificationEvent.AnonGiftPaidUpgrade)
+  }
+
+  /**
+   * Creates a new notification from a bitsbadgetier user notice.
+   * @param  tags - The notice tags.
+   * @return The new notice.
+   */
+  public static fromBitsBadgeTier(tags: Record<string, string>) {
+    const username = tags['display-name'] || tags.login
+    const badge = parseInt(tags['msg-param-threshold'], 10)
+
+    return new Notification(
+      _.isNaN(badge)
+        ? `${username} just earned a new Bits badge!`
+        : `${username} just earned a new ${badge.toLocaleString()} Bits badge!`,
+      NotificationEvent.BitsBadgeTier
+    )
+  }
+
+  /**
    * Returns the notification title for mystery gifts.
    * @param  tags - The notice tags.
    * @param  anonymous - `true` when the gift is anonymous.
@@ -149,11 +177,13 @@ export enum NotificationEvent {
   AnonGiftPaidUpgrade,
   AnonSubGift,
   AnonSubMysteryGift,
+  BitsBadgeTier,
   GiftPaidUpgrade,
   Host,
   PrimePaidUpgrade,
   Raid,
   ReSub,
+  RewardGift,
   RitualNewChatter,
   SubGift,
   Subscription,

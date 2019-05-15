@@ -33,9 +33,11 @@ export default {
     AnonGiftPaidUpgrade: 'anongiftpaidupgrade',
     AnonSubGift: 'anonsubgift',
     AnonSubMysteryGift: 'anonsubmysterygift',
+    BitsBadgeTier: 'bitsbadgetier',
     Charity: 'charity',
     GiftPaidUpgrade: 'giftpaidupgrade',
     PrimePaidUpgrade: 'primepaidupgrade',
+    RewardGift: 'rewardgift',
     SubMysteryGift: 'submysterygift',
   },
 }
