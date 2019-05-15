@@ -391,10 +391,11 @@ export default class Twitch {
 
   /**
    * Fetches cheermotes.
+   * @param channelId - The id of the channel.
    * @return The cheermotes.
    */
-  public static async fetchCheermotes(): Promise<{ actions: RawCheermote[] }> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, '/bits/actions')
+  public static async fetchCheermotes(channelId: string): Promise<{ actions: RawCheermote[] }> {
+    const response = await Twitch.fetch(TwitchApi.Kraken, '/bits/actions', { channel_id: channelId })
 
     return response.json()
   }

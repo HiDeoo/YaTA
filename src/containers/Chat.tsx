@@ -956,7 +956,7 @@ export class ChatClient extends React.Component<Props, State> {
       }
 
       Resources.manager().setBadges(await Twitch.fetchBadges(channelId))
-      Resources.manager().setCheermotes((await Twitch.fetchCheermotes()).actions)
+      Resources.manager().setCheermotes((await Twitch.fetchCheermotes(channelId)).actions)
 
       if (!_.isNil(this.props.channel)) {
         const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
