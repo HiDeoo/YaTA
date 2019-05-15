@@ -27,6 +27,26 @@ const Message = styled.div`
   color: ${theme('notification.message')};
   font-style: italic;
   margin-top: 4px;
+
+  .emoteWrapper {
+    display: inline-block;
+    min-height: 28px;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .emote {
+    display: inline-block;
+    margin-top: -3px;
+    vertical-align: middle;
+  }
+
+  img:-moz-loading,
+  img:-moz-broken {
+    height: 28px;
+    width: 28px;
+    overflow-x: hidden;
+  }
 `
 
 /**
