@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Add setting to alternate message background colors.
+
 # 1.9.0
 
 ### 🚀 New Feature
