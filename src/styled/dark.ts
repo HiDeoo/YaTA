@@ -75,6 +75,7 @@ const dark = {
     border: Colors.DARK_GRAY1,
   },
   log: {
+    alternate: Colors.DARK_GRAY5,
     mention: {
       color: '#4d5a67',
       self: {

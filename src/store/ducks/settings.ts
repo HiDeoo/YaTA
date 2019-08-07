@@ -58,6 +58,7 @@ export enum Actions {
   TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL = 'TOGGLE_PLAY_MESSAGE_SOUND_ONLY_IN_OWN_CHANNEL',
   UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS = 'UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS',
   TOGGLE_HIDE_HEADER = 'TOGGLE_HIDE_HEADER',
+  TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS = 'settings/TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS',
 }
 
 /**
@@ -69,6 +70,7 @@ export const initialState = {
     byId: {},
   },
   addWhispersToHistory: false,
+  alternateMessageBackgrounds: false,
   autoFocusInput: true,
   autoHostThreshold: 1,
   copyMessageOnDoubleClick: true,
@@ -305,6 +307,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
       return {
         ...state,
         disableDialogAnimations: !state.disableDialogAnimations,
+      }
+    }
+    case Actions.TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS: {
+      return {
+        ...state,
+        alternateMessageBackgrounds: !state.alternateMessageBackgrounds,
       }
     }
     case Actions.TOGGLE_HIGHLIGHT_ALL_MENTIONS: {
@@ -611,6 +619,12 @@ export const toggleShowViewerCount = () => createAction(Actions.TOGGLE_SHOW_VIEW
 export const toggleDisableDialogAnimations = () => createAction(Actions.TOGGLE_DISABLE_DIALOG_ANIMATIONS)
 
 /**
+ * Toggle the 'Alternate message background colors' setting.
+ * @return The action.
+ */
+export const toggleAlternateMessageBackgrounds = () => createAction(Actions.TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS)
+
+/**
  * Toggle the 'Highlight all mentions' setting.
  * @return The action.
  */
@@ -752,6 +766,7 @@ export type SettingsActions =
   | ReturnType<typeof toggleAutoFocusInput>
   | ReturnType<typeof toggleShowViewerCount>
   | ReturnType<typeof toggleDisableDialogAnimations>
+  | ReturnType<typeof toggleAlternateMessageBackgrounds>
   | ReturnType<typeof toggleHighlightAllMentions>
   | ReturnType<typeof togglePrioritizeUsernames>
   | ReturnType<typeof moveAction>
@@ -906,6 +921,11 @@ export type SettingsState = {
    * Hides the header.
    */
   hideHeader: boolean
+
+  /**
+   * Alternate message background colors.
+   */
+  alternateMessageBackgrounds: boolean
 }
 
 /**

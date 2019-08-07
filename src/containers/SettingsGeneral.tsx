@@ -9,6 +9,7 @@ import Switch from 'Components/Switch'
 import Theme from 'Constants/theme'
 import {
   toggleAddWhispersToHistory,
+  toggleAlternateMessageBackgrounds,
   toggleAutoFocusInput,
   toggleCopyMessageOnDoubleClick,
   toggleDisableDialogAnimations,
@@ -21,6 +22,7 @@ import {
 import { ApplicationState } from 'Store/reducers'
 import {
   getAddWhispersToHistory,
+  getAlternateMessageBackgrounds,
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getDisableDialogAnimations,
@@ -67,6 +69,7 @@ class SettingsGeneral extends React.Component<Props, State> {
   public render() {
     const {
       addWhispersToHistory,
+      alternateMessageBackgrounds,
       autoFocusInput,
       copyMessageOnDoubleClick,
       disableDialogAnimations,
@@ -137,6 +140,11 @@ class SettingsGeneral extends React.Component<Props, State> {
             {this.renderThemeConfirmation()}
           </Popover>
           <Switch
+            onChange={this.props.toggleAlternateMessageBackgrounds}
+            label="Alternate message background colors"
+            checked={alternateMessageBackgrounds}
+          />
+          <Switch
             description="Dialogs include the chatter details & chatters list."
             onChange={this.props.toggleDisableDialogAnimations}
             checked={disableDialogAnimations}
@@ -199,6 +207,7 @@ class SettingsGeneral extends React.Component<Props, State> {
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     addWhispersToHistory: getAddWhispersToHistory(state),
+    alternateMessageBackgrounds: getAlternateMessageBackgrounds(state),
     autoFocusInput: getAutoFocusInput(state),
     copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
     disableDialogAnimations: getDisableDialogAnimations(state),
@@ -210,6 +219,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   }),
   {
     toggleAddWhispersToHistory,
+    toggleAlternateMessageBackgrounds,
     toggleAutoFocusInput,
     toggleCopyMessageOnDoubleClick,
     toggleDisableDialogAnimations,
@@ -226,6 +236,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 interface StateProps {
   addWhispersToHistory: ReturnType<typeof getAddWhispersToHistory>
+  alternateMessageBackgrounds: ReturnType<typeof getAlternateMessageBackgrounds>
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
@@ -241,6 +252,7 @@ interface StateProps {
  */
 interface DispatchProps {
   toggleAddWhispersToHistory: typeof toggleAddWhispersToHistory
+  toggleAlternateMessageBackgrounds: typeof toggleAlternateMessageBackgrounds
   toggleAutoFocusInput: typeof toggleAutoFocusInput
   toggleCopyMessageOnDoubleClick: typeof toggleCopyMessageOnDoubleClick
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations

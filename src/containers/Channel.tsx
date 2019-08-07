@@ -53,6 +53,7 @@ import { getChatters } from 'Store/selectors/chatters'
 import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
 import {
   getAddWhispersToHistory,
+  getAlternateMessageBackgrounds,
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
   getPrioritizeUsernames,
@@ -230,7 +231,15 @@ class Channel extends React.Component<Props, State> {
       [ToggleableUI.PollEditor]: showPollEditor,
       [ToggleableUI.Search]: showSearch,
     } = this.state
-    const { allLogs, channel, chatters, copyMessageOnDoubleClick, loginDetails, showContextMenu } = this.props
+    const {
+      allLogs,
+      alternateMessageBackgrounds,
+      channel,
+      chatters,
+      copyMessageOnDoubleClick,
+      loginDetails,
+      showContextMenu,
+    } = this.props
 
     if (_.isNil(channel)) {
       return <Spinner large />
@@ -265,6 +274,7 @@ class Channel extends React.Component<Props, State> {
           visible={showSearch}
         />
         <Logs
+          alternateMessageBackgrounds={alternateMessageBackgrounds}
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           pauseAutoScroll={this.props.pauseAutoScroll}
@@ -1269,6 +1279,7 @@ const enhance = compose<Props, {}>(
     (state) => ({
       addWhispersToHistory: getAddWhispersToHistory(state),
       allLogs: getLogs(state),
+      alternateMessageBackgrounds: getAlternateMessageBackgrounds(state),
       autoFocusInput: getAutoFocusInput(state),
       channel: getChannel(state),
       chatters: getChatters(state),
@@ -1310,6 +1321,7 @@ export default enhance(Channel)
 interface StateProps {
   addWhispersToHistory: ReturnType<typeof getAddWhispersToHistory>
   allLogs: ReturnType<typeof getLogs>
+  alternateMessageBackgrounds: ReturnType<typeof getAlternateMessageBackgrounds>
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>

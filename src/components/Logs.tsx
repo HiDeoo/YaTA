@@ -65,7 +65,7 @@ export class Logs extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { copyMessageOnDoubleClick, logs, purgedCount, showContextMenu } = this.props
+    const { alternateMessageBackgrounds, copyMessageOnDoubleClick, logs, purgedCount, showContextMenu } = this.props
     const { bottom, top } = this.props.theme.log.border
 
     const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
@@ -75,6 +75,7 @@ export class Logs extends React.Component<Props> {
         <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
+              alternateMessageBackgrounds={alternateMessageBackgrounds}
               copyMessageOnDoubleClick={copyMessageOnDoubleClick}
               deferredMeasurementCache={this.logMeasureCache}
               rowHeight={this.logMeasureCache.rowHeight}
@@ -163,6 +164,7 @@ export class Logs extends React.Component<Props> {
 
     const {
       actionHandler,
+      alternateMessageBackgrounds,
       ban,
       canModerate,
       chatters,
@@ -181,6 +183,7 @@ export class Logs extends React.Component<Props> {
     if (isMessage(log)) {
       const chatter = _.get(chatters, log.user.id)
       const isBanned = _.isNil(chatter) ? false : chatter.banned
+      const useAlternate = alternateMessageBackgrounds && index % 2 === 0
 
       LogComponent = (
         <Message
@@ -194,6 +197,7 @@ export class Logs extends React.Component<Props> {
           deleteMessage={deleteMessage}
           focusChatter={focusChatter}
           quoteMessage={quoteMessage}
+          useAlternate={useAlternate}
           canModerate={canModerate}
           timeout={timeout}
           whisper={whisper}
@@ -239,6 +243,7 @@ export default withTheme(Logs)
  */
 interface Props extends ThemeProps {
   actionHandler: ActionHandler
+  alternateMessageBackgrounds: boolean
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   chatters: ChattersState['byId']

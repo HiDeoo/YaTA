@@ -155,6 +155,16 @@ export const getDisableDialogAnimations = createSelector(
 )
 
 /**
+ * Returns the 'Alternate message background colors' setting.
+ * @param  state - The Redux state.
+ * @return The 'Alternate message background colors' setting.
+ */
+export const getAlternateMessageBackgrounds = createSelector(
+  [getSettingsState],
+  (settings) => settings.alternateMessageBackgrounds
+)
+
+/**
  * Returns the 'Highlight all mentions' setting.
  * @param  state - The Redux state.
  * @return The 'Highlight all mentions' setting.

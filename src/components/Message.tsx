@@ -17,7 +17,7 @@ const Wrapper = styled.div<WrapperProps>`
   background-color: ${ifProp(
     'highlighted',
     theme('log.permanent.background'),
-    ifProp('mentionned', theme('log.mention.self.background'), 'inherit')
+    ifProp('mentionned', theme('log.mention.self.background'), ifProp('alternate', theme('log.alternate'), 'inherit'))
   )};
   border-left: 3px solid
     ${ifProp(
@@ -156,7 +156,7 @@ export default class Message extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { message, style } = this.props
+    const { message, style, useAlternate } = this.props
 
     const usernameColor = message.user.color as string
 
@@ -165,6 +165,7 @@ export default class Message extends React.Component<Props, State> {
         onDoubleClick={this.onDoubleClick}
         highlighted={message.highlighted}
         mentionned={message.mentionned}
+        alternate={useAlternate}
         purged={message.purged}
         onClick={this.onClick}
         style={style}
@@ -432,6 +433,7 @@ interface Props {
   style: React.CSSProperties
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
+  useAlternate: boolean
   whisper: (username: string) => void
 }
 
@@ -439,6 +441,7 @@ interface Props {
  * React Props.
  */
 interface WrapperProps {
+  alternate: boolean
   highlighted: boolean
   mentionned: boolean
   purged: boolean

@@ -71,6 +71,7 @@ const light = {
     border: Colors.GRAY5,
   },
   log: {
+    alternate: Colors.LIGHT_GRAY3,
     mention: {
       color: Colors.LIGHT_GRAY2,
       self: {
