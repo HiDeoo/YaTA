@@ -305,17 +305,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches channel communities.
-   * @param  channelId - The id of the channel.
-   * @return The communities.
-   */
-  public static async fetchCommunities(channelId: string): Promise<RawCommunities> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}/communities`)
-
-    return response.json()
-  }
-
-  /**
    * Fetches description panels of a channel.
    * @param  channel - The channel.
    * @return The panels.
@@ -1139,32 +1128,6 @@ export type RawGame = {
   name: string
   popularity: number
   _id: number
-}
-
-/**
- * Twitch communities.
- */
-export type RawCommunities = {
-  communities: RawCommunity[] | null
-}
-
-/**
- * Twitch community.
- */
-export type RawCommunity = {
-  avatar_image_template: string
-  avatar_image_url: string
-  cover_image_template: string
-  cover_image_url: string
-  description: string
-  display_name: string
-  language: string
-  name: string
-  owner_id: string
-  rules: string
-  rules_html: string
-  summary: string
-  _id: string
 }
 
 /**

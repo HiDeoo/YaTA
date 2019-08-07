@@ -4,6 +4,10 @@
 
 - Add setting to alternate message background colors.
 
+### 🐛 Bug Fix
+
+- Fix issue when opening the broadcaster panel due to references to Twitch Communities, now defunct.
+
 # 1.9.0
 
 ### 🚀 New Feature

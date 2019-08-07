@@ -1,5 +1,5 @@
 import { Button, Classes, Colors, FormGroup, InputGroup, Intent, Menu } from '@blueprintjs/core'
-import { ItemRenderer, MultiSelect, Suggest } from '@blueprintjs/select'
+import { ItemRenderer, Suggest } from '@blueprintjs/select'
 import * as _ from 'lodash'
 import * as pluralize from 'pluralize'
 import * as React from 'react'
@@ -9,18 +9,13 @@ import ExternalLink from 'Components/ExternalLink'
 import NonIdealState from 'Components/NonIdealState'
 import Spinner from 'Components/Spinner'
 import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
-import Twitch, { RawCommunity, RawGame, RawNotification } from 'Libs/Twitch'
+import Twitch, { RawGame, RawNotification } from 'Libs/Twitch'
 import styled, { theme } from 'Styled'
 
 /**
  * Game suggest component.
  */
 const GameSuggest = Suggest.ofType<RawGame>()
-
-/**
- * Communities select component.
- */
-const CommunitiesMultiSelect = MultiSelect.ofType<RawCommunity>()
 
 /**
  * InfoInput component.
@@ -81,31 +76,6 @@ const GameMenuItem = styled(Menu.Item)`
 `
 
 /**
- * CommunitiesInput component.
- */
-const CommunitiesInput = styled(CommunitiesMultiSelect)`
-  width: 100%;
-
-  & > span {
-    width: 100%;
-  }
-
-  & .${Classes.INPUT_GHOST} .${Classes.INPUT_GHOST}::placeholder {
-    color: ${Colors.DARK_GRAY1};
-  }
-
-  .${Classes.DARK} & .${Classes.INPUT} {
-    &.${Classes.DISABLED}, &:disabled {
-      ${theme('broadcaster.input.disabled')};
-    }
-
-    & .${Classes.INPUT_GHOST}::placeholder {
-      color: ${Colors.LIGHT_GRAY5};
-    }
-  }
-`
-
-/**
  * UpdateButton component.
  */
 const UpdateButton = styled(Button)`
@@ -116,7 +86,6 @@ const UpdateButton = styled(Button)`
  * Various controlled inputs.
  */
 enum Input {
-  Communities = 'communities',
   Game = 'game',
   Notification = 'notification',
   Title = 'title',
@@ -140,7 +109,6 @@ const initialState = {
   isReady: false,
   isUpdating: false,
   liveNotification: undefined as Optional<RawNotification>,
-  [Input.Communities]: [] as RawCommunity[],
   [Input.Game]: '',
   [Input.Notification]: '',
   [Input.Title]: '',
@@ -162,18 +130,12 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
     try {
       const { channel, channelId } = this.props
 
-      const response = await Promise.all([
-        Twitch.fetchChannelLiveNotification(channelId),
-        Twitch.fetchCommunities(channelId),
-      ])
-
-      const [liveNotification, { communities }] = response
+      const liveNotification = await Twitch.fetchChannelLiveNotification(channelId)
 
       this.setState(() => ({
         didFail: false,
         isReady: true,
         liveNotification,
-        [Input.Communities]: communities || [],
         [Input.Game]: channel.game || '',
         [Input.Notification]: liveNotification.message || '',
         [Input.Title]: channel.status || '',
@@ -194,7 +156,6 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
       isModified,
       isUpdating,
       isReady,
-      [Input.Communities]: communities,
       [Input.Game]: game,
       [Input.Notification]: notification,
       [Input.Title]: title,
@@ -239,21 +200,6 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
             }
           />
         </GameFormGroup>
-        <FormGroup label="Communities" labelFor="communities" disabled helperText={this.renderHelperDashoardLink()}>
-          <CommunitiesInput
-            initialContent={<Menu.Item disabled text="Search for a community…" />}
-            tagInputProps={{ disabled: true, placeholder: 'No communities yet.' }}
-            noResults={<Menu.Item disabled text="No results." />}
-            tagRenderer={this.communityTagRenderer}
-            itemRenderer={this.communityRenderer}
-            popoverProps={{ minimal: true }}
-            selectedItems={communities}
-            onItemSelect={_.noop}
-            openOnKeyDown
-            resetOnSelect
-            items={[]}
-          />
-        </FormGroup>
         <FormGroup
           labelInfo={this.getInputLabelInfo(Input.Notification)}
           helperText={this.renderHelperDashoardLink()}
@@ -294,34 +240,6 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
    */
   private gameValueRenderer = (game: RawGame) => {
     return game.name
-  }
-
-  /**
-   * Render a community suggestion tag.
-   * @return Value to render.
-   */
-  private communityTagRenderer = (community: RawCommunity) => {
-    return community.display_name
-  }
-
-  /**
-   * Renders a community suggestion.
-   * @return Element to render.
-   */
-  private communityRenderer: ItemRenderer<RawCommunity> = (community, { handleClick, modifiers }) => {
-    if (!modifiers.matchesPredicate) {
-      return null
-    }
-
-    return (
-      <GameMenuItem
-        disabled={modifiers.disabled}
-        active={modifiers.active}
-        onClick={handleClick}
-        text={community.display_name}
-        key={community._id}
-      />
-    )
   }
 
   /**
