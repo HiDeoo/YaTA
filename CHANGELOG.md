@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add setting to alternate message background colors.
+- Following [Twitch changes](https://twitter.com/twitchsupport/status/1148653197688541184), the default duration for Slow Mode is now 30 seconds. You can also now pick other values from a new menu instead of always using the default value like before.
 
 ### 🐛 Bug Fix
 

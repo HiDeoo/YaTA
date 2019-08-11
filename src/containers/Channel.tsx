@@ -19,7 +19,7 @@ import HeaderTooltip from 'Components/HeaderTooltip'
 import Input from 'Components/Input'
 import Logs, { Logs as InnerLogs } from 'Components/Logs'
 import LogsExporter from 'Components/LogsExporter'
-import ModerationMenuItems from 'Components/ModerationMenuItems'
+import ModerationMenuItems, { SlowModeDuration } from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
 import ReadyState from 'Constants/readyState'
@@ -366,7 +366,7 @@ class Channel extends React.Component<Props, State> {
           viewerCount={this.state.viewerCount}
           roomState={roomState}
         />
-        <Popover position={Position.BOTTOM} usePortal={false}>
+        <Popover position={Position.BOTTOM} usePortal={false} autoFocus={false}>
           <HeaderTooltip content="Tools">
             <Button icon="wrench" minimal />
           </HeaderTooltip>
@@ -1146,18 +1146,20 @@ class Channel extends React.Component<Props, State> {
 
   /**
    * Toggles the slow mode.
+   * @param duration - The optional duration.
    */
-  private toggleSlowMode = async () => {
+  private toggleSlowMode = async (duration?: SlowModeDuration) => {
     const { channel, roomState } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
       try {
-        if (roomState.slow) {
+        if (roomState.slowDuration === duration || (_.isNil(duration) && roomState.slow)) {
           await client.slowoff(channel)
         } else {
           // Don't use the default twitch-js value, use the default from Twitch.
-          await client.slow(channel, 120)
+          const durationWithDefault = duration || 30
+          await client.slow(channel, durationWithDefault)
         }
       } catch {
         //
