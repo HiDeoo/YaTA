@@ -3,9 +3,7 @@ declare module 'linkifyjs/html' {
 
   function linkifyHtml(str: string, options?: Options): string
 
-  namespace linkifyHtml {
-
-  }
+  namespace linkifyHtml {}
 
   export default linkifyHtml
 }

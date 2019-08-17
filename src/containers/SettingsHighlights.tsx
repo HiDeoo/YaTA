@@ -131,7 +131,6 @@ class SettingsHighlights extends React.Component<Props, State> {
           onAdd={this.onAddIgnoredUsers}
           values={ignoredUsers}
           leftIcon="blocked-person"
-          inputValue=""
           separator=" "
           fill
         />
@@ -141,7 +140,6 @@ class SettingsHighlights extends React.Component<Props, State> {
           onAdd={this.onAddPermanentUsers}
           values={permanentUsers}
           leftIcon="new-person"
-          inputValue=""
           separator=" "
           fill
         />

@@ -191,9 +191,7 @@ declare module 'twitch-js' {
     unhost(channel: string): void
   }
 
-  namespace Client {
-
-  }
+  namespace Client {}
 
   const _default: {
     client: (options?: ClientOptions) => Client

@@ -8,6 +8,7 @@
 ### 🐛 Bug Fix
 
 - Fix issue when opening the broadcaster panel due to references to Twitch Communities, now defunct.
+- Fix a bug when editing highlights whitelist and blacklist not being automatically cleared.
 
 # 1.9.0
 

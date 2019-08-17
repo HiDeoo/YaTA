@@ -1,7 +1,6 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-
 ---
 
 <!---
@@ -32,8 +31,8 @@ If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information)**
 
-| Software         | Version
-| ---------------- | -------
-| YaTA             | [e.g. 62]
-| Browser          | [e.g. Chrome, Safari]
-| Operating System | [e.g. macOS]
+| Software         | Version               |
+| ---------------- | --------------------- |
+| YaTA             | [e.g. 62]             |
+| Browser          | [e.g. Chrome, Safari] |
+| Operating System | [e.g. macOS]          |

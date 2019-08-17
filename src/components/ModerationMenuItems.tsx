@@ -48,6 +48,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
               onClick={(event: React.MouseEvent) => this.toggleSlowMode(event, slowModeDuration)}
               text={`${slowModeDuration} ${pluralize('second', slowModeDuration)}`}
               icon={this.getSlowModeMenuIcon(slowModeDuration)}
+              key={slowModeDuration}
             />
           ))}
         </Menu.Item>

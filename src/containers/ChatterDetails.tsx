@@ -42,7 +42,7 @@ import styled, { ifProp, prop, size, theme } from 'Styled'
  */
 const DetailsRow = styled(FlexLayout)<DetailsRowProps>`
   align-items: center;
-  height: ${ifProp('loading', '127px', 'auto')};
+  height: ${ifProp('open', '127px', 'auto')};
   margin-bottom: 18px;
 
   .${Classes.SPINNER}.${Classes.SMALL} {
@@ -412,7 +412,7 @@ class ChatterDetails extends React.Component<Props, State> {
 
     if (_.isNil(details) || _.isUndefined(relationship)) {
       return (
-        <DetailsRow loading>
+        <DetailsRow open>
           <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} /> Fetching user details…
         </DetailsRow>
       )
@@ -781,5 +781,5 @@ type Props = OwnProps & DispatchProps & StateProps
  * React Props.
  */
 interface DetailsRowProps {
-  loading?: boolean
+  open?: boolean
 }
