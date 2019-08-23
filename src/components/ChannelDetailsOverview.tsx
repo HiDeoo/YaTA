@@ -235,7 +235,7 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
             : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`}
         </Meta>
         <PreviewWrapper>
-          <Preview src={stream.preview.medium} onClick={this.onClickPreview} />
+          <Preview className={Classes.POPOVER_DISMISS} src={stream.preview.medium} onClick={this.onClickPreview} />
           <PlayIcon icon="play" />
         </PreviewWrapper>
       </>

@@ -9,6 +9,7 @@
 
 - Fix issue when opening the broadcaster panel due to references to Twitch Communities, now defunct.
 - Fix a bug when editing highlights whitelist and blacklist not being automatically cleared.
+- Opening a stream from the channel details menu will now automatically closes this menu.
 
 # 1.9.0
 
