@@ -315,4 +315,10 @@ export default {
       settings: { ...state.settings, alternateMessageBackgrounds: SettingsInitialState.alternateMessageBackgrounds },
     }
   },
+  38: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      user: UserInitialState,
+    }
+  },
 }

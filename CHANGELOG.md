@@ -11,6 +11,10 @@
 - Fix a bug when editing highlights whitelist and blacklist not being automatically cleared.
 - Opening a stream from the channel details menu will now automatically closes this menu.
 
+### ⚙️ Internal
+
+- Update Twitch permissions requested by the application (requested permissions are the same, just more fine-grained - this requires login and accepting permissions again).
+
 # 1.9.0
 
 ### 🚀 New Feature
