@@ -25,7 +25,7 @@ export default {
   /**
    * Extra notices not handled natively which will be outputted as is.
    */
-  Extra: ['bad_delete_message_broadcaster', 'bad_delete_message_mod'],
+  Extra: ['bad_delete_message_broadcaster', 'bad_delete_message_mod', 'no_vips', 'vips_success'],
 
   /**
    * Extra user notices not handled natively.
