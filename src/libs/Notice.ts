@@ -3,6 +3,7 @@ import * as shortid from 'shortid'
 
 import Event from 'Constants/event'
 import LogType from 'Constants/logType'
+import Notices from 'Constants/notices'
 import { escape } from 'Utils/html'
 
 /**
@@ -32,6 +33,25 @@ export default class Notice implements Serializable<SerializedNotice> {
     )} raised for ${name} so far! Cheer with the <strong>${hashtag}</strong> hashtag or <a href="${link}" target="_blank">get more details</a>.`
 
     return new Notice(message, Event.UserNotices, true)
+  }
+
+  /**
+   * Creates a modified help notice.
+   * @param  message - The help message returned by Twitch.
+   * @return The new notice.
+   */
+  public static fromHelp(message: string) {
+    let formattedMessage = message
+
+    const morePosition = formattedMessage.indexOf('More help')
+
+    if (morePosition > 0) {
+      formattedMessage = `${formattedMessage.substring(0, morePosition)}${
+        Notices.Help.Additions
+      } ${formattedMessage.substring(morePosition)}`
+    }
+
+    return new Notice(formattedMessage, Event.Notice, true)
   }
 
   private id: string
