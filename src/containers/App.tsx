@@ -1,5 +1,4 @@
 import { Classes, Colors, HotkeysTarget } from '@blueprintjs/core'
-import * as bowser from 'bowser'
 import { History } from 'history'
 import * as _ from 'lodash'
 import * as React from 'react'
@@ -32,6 +31,7 @@ import { getIsLoggedIn, getLoginDetails } from 'Store/selectors/user'
 import { ThemeProvider } from 'Styled'
 import dark from 'Styled/dark'
 import light from 'Styled/light'
+import { reportBug } from 'Utils/bugs'
 import { renderShorcuts } from 'Utils/shortcuts'
 
 /**
@@ -149,8 +149,8 @@ class App extends React.Component<Props, State> {
             <Settings
               defaultView={settingDefaultView}
               toggle={this.toggleSettings}
-              reportBug={this.reportBug}
               visible={showSettings}
+              reportBug={reportBug}
             />
             <FlexContent>
               <Switch>
@@ -252,52 +252,6 @@ class App extends React.Component<Props, State> {
         history.push(`/${loginDetails.username}`)
       }
     }
-  }
-
-  /**
-   * Opens the report issue page on Github.
-   */
-  private reportBug = () => {
-    const { REACT_APP_BUGS_URL, REACT_APP_VERSION } = process.env
-    const parser = bowser.getParser(window.navigator.userAgent)
-    const browser = parser.getBrowser()
-    const os = parser.getOS()
-
-    const body = `<!---
-Thanks for filing an issue 😄 !
-Please provide as much details as possible, including screenshots if necessary.
--->
-
-**Describe the bug**
-
-A clear and concise description of what the bug is.
-
-**To Reproduce**
-
-Steps to reproduce the behavior:
-
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
-
-**Expected behavior**
-
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-
-If applicable, add screenshots to help explain your problem.
-
-**Environment**
-
-| Software         | Version
-| ---------------- | -------
-| YaTA             | ${REACT_APP_VERSION}
-| Browser          | ${browser.name} ${browser.version}
-| Operating System | ${os.name} ${os.version || ''}`
-
-    window.open(`${REACT_APP_BUGS_URL}/new?body=${encodeURIComponent(body)}`)
   }
 }
 

@@ -1,3 +1,5 @@
+import { Button, Intent } from '@blueprintjs/core'
+import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -5,6 +7,24 @@ import NonIdealState from 'Components/NonIdealState'
 import Page from 'Constants/page'
 import { resetUser } from 'Store/ducks/user'
 import { ApplicationState } from 'Store/reducers'
+import styled from 'Styled'
+import { reportError } from 'Utils/bugs'
+
+/**
+ * Extra component.
+ */
+const Extra = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 10px;
+
+  & > button {
+    display: block;
+    margin-bottom: 10px;
+  }
+`
 
 /**
  * React State.
@@ -49,10 +69,42 @@ class ErrorBoundary extends React.Component<Props, State> {
     const { hasError } = this.state
 
     if (hasError) {
-      return <NonIdealState details="Try reloading the application." />
+      return (
+        <>
+          <NonIdealState
+            details="Try reloading the application."
+            extra={
+              <Extra>
+                <Button icon="refresh" text="Reload & Report" intent={Intent.PRIMARY} onClick={this.reloadAndReport} />
+                <Button icon="refresh" text="Reload" onClick={this.reload} />
+              </Extra>
+            }
+          />
+        </>
+      )
     }
 
     return this.props.children
+  }
+
+  /**
+   * Reloads the application and prepare a bug report.
+   */
+  private reloadAndReport = () => {
+    const { error } = this.state
+
+    if (!_.isNil(error)) {
+      reportError(error)
+    }
+
+    this.reload()
+  }
+
+  /**
+   * Reloads the application.
+   */
+  private reload = () => {
+    window.location.reload(true)
   }
 }
 
