@@ -4,13 +4,14 @@ import * as React from 'react'
 import MessageContent from 'Components/MessageContent'
 import { WithNameColorProps } from 'Libs/Chatter'
 import { SerializedMessage } from 'Libs/Message'
-import styled, { prop, size, theme } from 'Styled'
+import styled, { ifProp, prop, size, theme } from 'Styled'
 
 /**
  * Wrapper component.
  */
-const Wrapper = styled.div`
+const Wrapper = styled.div<WrapperProps>`
   min-height: ${size('log.minHeight')};
+  opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px 8px;
   white-space: pre-wrap;
 `
@@ -63,7 +64,7 @@ export default class HeadlessMessage extends React.Component<Props> {
     const usernameColor = message.user.color as string
 
     return (
-      <Wrapper style={style} onDoubleClick={this.onDoubleClick}>
+      <Wrapper style={style} onDoubleClick={this.onDoubleClick} purged={message.purged}>
         <Time>{message.time}</Time>
         {showUsername && (
           <>
@@ -98,4 +99,11 @@ interface Props {
   onDoubleClick: (message: SerializedMessage) => void
   showUsername: boolean
   style: React.CSSProperties
+}
+
+/**
+ * React Props.
+ */
+interface WrapperProps {
+  purged: boolean
 }
