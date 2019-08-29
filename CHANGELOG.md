@@ -7,6 +7,7 @@
 
 ### 🐛 Bug Fix
 
+- Prevent a rare crash when opening the chatter details modal when clicking a username.
 - Fix issue when opening the broadcaster panel due to references to Twitch Communities, now defunct.
 - Fix a bug when editing highlights whitelist and blacklist not being automatically cleared.
 - Opening a stream player from the channel details menu will now automatically closes this menu.

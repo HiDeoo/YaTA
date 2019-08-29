@@ -42,6 +42,7 @@ import styled, { ifProp, prop, size, theme } from 'Styled'
  */
 const DetailsRow = styled(FlexLayout)<DetailsRowProps>`
   align-items: center;
+  color: ${ifProp('error', Colors.GRAY5, 'unset')};
   height: ${ifProp('open', '127px', 'auto')};
   margin-bottom: 18px;
 
@@ -200,6 +201,13 @@ const HistoryDate = styled(Menu.Item)`
 `
 
 /**
+ * ErrorIcon component.
+ */
+const ErrorIcon = styled(Icon)`
+  margin-right: 9px;
+`
+
+/**
  * React State.
  */
 const initialState = {
@@ -236,20 +244,23 @@ class ChatterDetails extends React.Component<Props, State> {
           id = chatter.id
         }
 
-        const response = await Promise.all([
-          Twitch.fetchChannel(id),
-          Twitch.fetchRelationship(id),
-          TwitchTools.fetchUsernameHistory(id),
-        ])
+        const response = await Promise.all([Twitch.fetchChannel(id), Twitch.fetchRelationship(id)])
 
-        const [details, relationship, usernameHistory] = response
+        const [details, relationship] = response
 
         this.setState(() => ({
           details,
           error: undefined,
           relationship,
-          usernameHistory,
         }))
+
+        try {
+          const usernameHistory = await TwitchTools.fetchUsernameHistory(id)
+
+          this.setState(() => ({ usernameHistory }))
+        } catch (error) {
+          // We don't care about errors while fetching a username history.
+        }
       } catch (error) {
         this.setState(() => ({ error }))
       }
@@ -407,7 +418,12 @@ class ChatterDetails extends React.Component<Props, State> {
     if (_.isNil(chatter)) {
       return null
     } else if (!_.isNil(error)) {
-      throw error
+      return (
+        <DetailsRow error>
+          <ErrorIcon icon="error" />
+          Something went wrong while fetching user details!
+        </DetailsRow>
+      )
     }
 
     if (_.isNil(details) || _.isUndefined(relationship)) {
@@ -781,5 +797,6 @@ type Props = OwnProps & DispatchProps & StateProps
  * React Props.
  */
 interface DetailsRowProps {
+  error?: boolean
   open?: boolean
 }
