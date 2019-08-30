@@ -19,6 +19,7 @@
 ### ⚙️ Internal
 
 - Update Twitch permissions requested by the application (requested permissions are the same, just more fine-grained - this requires login and accepting permissions again).
+- YaTA is now hosted using Now 2.0 instead of the legacy version and served through Zeit CDN.
 
 # 1.9.0
 

@@ -21,8 +21,7 @@
     "changelog": "cp CHANGELOG.md src",
     "eject": "react-scripts-ts eject",
     "precommit": "lint-staged",
-    "deploy": "now --public",
-    "now-start": "serve"
+    "deploy": "now"
   },
   "dependencies": {
     "@blueprintjs/core": "3.18.0",
@@ -84,11 +83,10 @@
     "@types/webpack-env": "1.14.0",
     "husky": "3.0.3",
     "lint-staged": "9.2.1",
-    "now": "11.5.2",
+    "now": "16.1.2",
     "patch-package": "6.1.2",
     "postinstall-prepare": "1.0.1",
     "prettier": "1.18.2",
-    "serve": "11.1.0",
     "source-map-explorer": "2.0.1",
     "stylelint": "10.1.0",
     "stylelint-config-standard": "18.3.0",
