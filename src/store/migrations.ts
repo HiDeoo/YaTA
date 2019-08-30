@@ -321,4 +321,10 @@ export default {
       user: UserInitialState,
     }
   },
+  39: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: { ...state.settings, markNewAsUnread: SettingsInitialState.markNewAsUnread },
+    }
+  },
 }

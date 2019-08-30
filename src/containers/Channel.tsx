@@ -38,7 +38,7 @@ import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
-import { addLog, addMarker, pauseAutoScroll } from 'Store/ducks/logs'
+import { addLog, addMarker, markAsRead, pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
   getChannel,
@@ -50,12 +50,13 @@ import {
   getStatus,
 } from 'Store/selectors/app'
 import { getChatters } from 'Store/selectors/chatters'
-import { getIsAutoScrollPaused, getLogs } from 'Store/selectors/logs'
+import { getIsAutoScrollPaused, getLastReadId, getLogs } from 'Store/selectors/logs'
 import {
   getAddWhispersToHistory,
   getAlternateMessageBackgrounds,
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
+  getMarkNewAsUnread,
   getPrioritizeUsernames,
   getShortcuts,
   getShowContextMenu,
@@ -237,7 +238,9 @@ class Channel extends React.Component<Props, State> {
       channel,
       chatters,
       copyMessageOnDoubleClick,
+      lastReadId,
       loginDetails,
+      markNewAsUnread,
       showContextMenu,
     } = this.props
 
@@ -281,6 +284,8 @@ class Channel extends React.Component<Props, State> {
           scrollToNewestLog={this.scrollToNewestLog}
           copyToClipboard={this.copyToClipboard}
           deleteMessage={this.deleteMessage}
+          markAsRead={this.props.markAsRead}
+          markNewAsUnread={markNewAsUnread}
           showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
           purgedCount={allLogs.purgedCount}
@@ -289,6 +294,7 @@ class Channel extends React.Component<Props, State> {
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
           ref={this.logsComponent}
+          lastReadId={lastReadId}
           timeout={this.timeout}
           logs={allLogs.logs}
           chatters={chatters}
@@ -1291,8 +1297,10 @@ const enhance = compose<Props, {}>(
       historyIndex: getHistoryIndex(state),
       isAutoScrollPaused: getIsAutoScrollPaused(state),
       isMod: getIsMod(state),
+      lastReadId: getLastReadId(state),
       lastWhisperSender: getLastWhisperSender(state),
       loginDetails: getLoginDetails(state),
+      markNewAsUnread: getMarkNewAsUnread(state),
       prioritizeUsernames: getPrioritizeUsernames(state),
       roomState: getRoomState(state),
       shortcuts: getShortcuts(state),
@@ -1304,6 +1312,7 @@ const enhance = compose<Props, {}>(
       addLog,
       addMarker,
       addToHistory,
+      markAsRead,
       markChatterAsBlocked,
       markChatterAsUnblocked,
       pauseAutoScroll,
@@ -1334,8 +1343,10 @@ interface StateProps {
   historyIndex: ReturnType<typeof getHistoryIndex>
   isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>
   isMod: ReturnType<typeof getIsMod>
+  lastReadId: ReturnType<typeof getLastReadId>
   lastWhisperSender: ReturnType<typeof getLastWhisperSender>
   loginDetails: ReturnType<typeof getLoginDetails>
+  markNewAsUnread: ReturnType<typeof getMarkNewAsUnread>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   roomState: ReturnType<typeof getRoomState>
   showContextMenu: ReturnType<typeof getShowContextMenu>
@@ -1350,6 +1361,7 @@ interface DispatchProps {
   addLog: typeof addLog
   addMarker: typeof addMarker
   addToHistory: typeof addToHistory
+  markAsRead: typeof markAsRead
   markChatterAsBlocked: typeof markChatterAsBlocked
   markChatterAsUnblocked: typeof markChatterAsUnblocked
   pauseAutoScroll: typeof pauseAutoScroll

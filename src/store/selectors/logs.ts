@@ -79,3 +79,13 @@ export const getIsAutoScrollPaused = createSelector(
   [getLogsState],
   (logs) => logs.isAutoScrollPaused
 )
+
+/**
+ * Returns the id of the last message marked as read.
+ * @param  state - The Redux state.
+ * @return The message id if any
+ */
+export const getLastReadId = createSelector(
+  [getLogsState],
+  (logs) => logs.lastReadId
+)

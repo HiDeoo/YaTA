@@ -327,3 +327,13 @@ export const getHideHeader = createSelector(
   [getSettingsState],
   (settings) => settings.hideHeader
 )
+
+/**
+ * Returns the 'Mark new messages as unread' setting.
+ * @param  state - The Redux state.
+ * @return The 'Mark new messages as unread' setting.
+ */
+export const getMarkNewAsUnread = createSelector(
+  [getSettingsState],
+  (settings) => settings.markNewAsUnread
+)

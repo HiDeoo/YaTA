@@ -57,6 +57,7 @@ export enum Actions {
   PAUSE_AUTO_SCROLL = 'logs/PAUSE_AUTO_SCROLL',
   ADD_MARKER = 'logs/ADD_MARKER',
   UNSHIFT = 'logs/UNSHIFT',
+  MARK_AS_READ = 'logs/MARK_AS_READ',
 }
 
 /**
@@ -66,6 +67,7 @@ export const initialState = {
   allIds: [],
   byId: {},
   isAutoScrollPaused: false,
+  lastReadId: null,
 }
 
 /**
@@ -143,6 +145,49 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
         isAutoScrollPaused: action.payload.pause,
       }
     }
+    case Actions.MARK_AS_READ: {
+      const { allIds, byId, lastReadId } = state
+      const { id } = action.payload
+
+      const clickedLog = byId[id]
+
+      if (!isMessage(clickedLog) || (clickedLog.read && !clickedLog.self)) {
+        return state
+      }
+
+      const startIndex = _.isNil(lastReadId) ? 0 : _.indexOf(allIds, lastReadId) + 1
+      const endIndex = _.indexOf(allIds, id)
+
+      if (endIndex < startIndex) {
+        return state
+      }
+
+      const ids = _.slice(allIds, startIndex, endIndex + 1)
+
+      if (ids.length === 0) {
+        return { ...state, lastReadId: id }
+      }
+
+      const newById = _.reduce(
+        allIds,
+        (acc, logId) => {
+          const log = byId[logId]
+
+          if (_.includes(ids, log.id) && isMessage(log)) {
+            return { ...acc, [logId]: { ...log, read: true } }
+          }
+
+          return acc
+        },
+        byId
+      )
+
+      return {
+        ...state,
+        byId: newById,
+        lastReadId: id,
+      }
+    }
     default: {
       return state
     }
@@ -214,6 +259,16 @@ export const pauseAutoScroll = (pause: boolean) =>
 export const addMarker = () => createAction(Actions.ADD_MARKER)
 
 /**
+ * Mark a message (and all previous unread) as read.
+ * @param  id - The id of the message.
+ * @return The action.
+ */
+export const markAsRead = (id: string) =>
+  createAction(Actions.MARK_AS_READ, {
+    id,
+  })
+
+/**
  * Logs actions.
  */
 export type LogsActions =
@@ -224,6 +279,7 @@ export type LogsActions =
   | ReturnType<typeof addMarker>
   | ReturnType<typeof purgeLog>
   | ReturnType<typeof unshiftLog>
+  | ReturnType<typeof markAsRead>
 
 /**
  * Logs state.
@@ -243,6 +299,11 @@ export type LogsState = {
    * Defines if auto-scroll is paused or not.
    */
   isAutoScrollPaused: boolean
+
+  /**
+   * The id of the last message marked as read.
+   */
+  lastReadId: string | null
 }
 
 /**

@@ -23,7 +23,7 @@ const Wrapper = styled.div<WrapperProps>`
     ${ifProp(
       'highlighted',
       theme('log.permanent.border'),
-      ifProp('mentionned', theme('log.mention.self.color'), 'transparent')
+      ifProp('mentionned', theme('log.mention.self.color'), ifProp('read', 'transparent', Colors.BLUE4))
     )};
   opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')} 1px 7px;
@@ -139,14 +139,21 @@ export default class Message extends React.Component<Props, State> {
     const { isContextMenuOpened } = this.state
     const { isContextMenuOpened: nextIsContextMenuOpened } = nextState
 
-    const { message, showUnbanContextMenuItem, style } = this.props
-    const { message: nextMessage, showUnbanContextMenuItem: prevShowUnbanContextMenuItem, style: nextStyle } = nextProps
+    const { markNewAsUnread, message, showUnbanContextMenuItem, style } = this.props
+    const {
+      markNewAsUnread: prevMarkNewAsUnread,
+      message: nextMessage,
+      showUnbanContextMenuItem: prevShowUnbanContextMenuItem,
+      style: nextStyle,
+    } = nextProps
 
     return (
       isContextMenuOpened !== nextIsContextMenuOpened ||
       message.id !== nextMessage.id ||
       message.purged !== nextMessage.purged ||
+      message.read !== nextMessage.read ||
       showUnbanContextMenuItem !== prevShowUnbanContextMenuItem ||
+      markNewAsUnread !== prevMarkNewAsUnread ||
       !_.isEqual(style, nextStyle)
     )
   }
@@ -156,12 +163,13 @@ export default class Message extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { message, style, useAlternate } = this.props
+    const { markNewAsUnread, message, style, useAlternate } = this.props
 
     const usernameColor = message.user.color as string
 
     return (
       <Wrapper
+        read={!markNewAsUnread || message.read}
         onDoubleClick={this.onDoubleClick}
         highlighted={message.highlighted}
         mentionned={message.mentionned}
@@ -286,9 +294,11 @@ export default class Message extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (event.altKey) {
-      const { message, quoteMessage } = this.props
+    const { message, onClick, quoteMessage } = this.props
 
+    onClick(message.id)
+
+    if (event.altKey) {
       quoteMessage(message)
     }
   }
@@ -425,7 +435,9 @@ interface Props {
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  markNewAsUnread: boolean
   message: SerializedMessage
+  onClick: (id: string) => void
   onToggleContextMenu: (open: boolean) => void
   quoteMessage: (message: SerializedMessage) => void
   showContextMenu: boolean
@@ -445,4 +457,5 @@ interface WrapperProps {
   highlighted: boolean
   mentionned: boolean
   purged: boolean
+  read: boolean
 }

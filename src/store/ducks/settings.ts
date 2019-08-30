@@ -59,6 +59,7 @@ export enum Actions {
   UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS = 'UPDATE_DELAY_BETWEEN_THROTTLED_SOUNDS',
   TOGGLE_HIDE_HEADER = 'TOGGLE_HIDE_HEADER',
   TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS = 'settings/TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS',
+  TOGGLE_MARK_NEW_AS_UNREAD = 'settings/TOGGLE_MARK_NEW_AS_UNREAD',
 }
 
 /**
@@ -87,6 +88,7 @@ export const initialState = {
   highlightsPermanentUsers: [],
   hostThreshold: 1,
   lastKnownVersion: null,
+  markNewAsUnread: false,
   playMessageSoundOnlyInOwnChannel: true,
   prioritizeUsernames: false,
   shortcuts: {
@@ -420,6 +422,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         hideHeader: !state.hideHeader,
       }
     }
+    case Actions.TOGGLE_MARK_NEW_AS_UNREAD: {
+      return {
+        ...state,
+        markNewAsUnread: !state.markNewAsUnread,
+      }
+    }
     default: {
       return state
     }
@@ -742,6 +750,12 @@ export const updateDelayBetweenThrottledSounds = (delay: number) =>
 export const toggleHideHeader = () => createAction(Actions.TOGGLE_HIDE_HEADER)
 
 /**
+ * Toggles the 'Mark new messages as unread' setting.
+ * @return The action.
+ */
+export const toggleMarkNewAsUnread = () => createAction(Actions.TOGGLE_MARK_NEW_AS_UNREAD)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -782,6 +796,7 @@ export type SettingsActions =
   | ReturnType<typeof togglePlayMessageSoundOnlyInOwnChannel>
   | ReturnType<typeof updateDelayBetweenThrottledSounds>
   | ReturnType<typeof toggleHideHeader>
+  | ReturnType<typeof toggleMarkNewAsUnread>
 
 /**
  * Settings state.
@@ -926,6 +941,11 @@ export type SettingsState = {
    * Alternate message background colors.
    */
   alternateMessageBackgrounds: boolean
+
+  /**
+   * Mark new messages as unread.
+   */
+  markNewAsUnread: boolean
 }
 
 /**

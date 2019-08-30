@@ -15,6 +15,7 @@ import {
   toggleDisableDialogAnimations,
   toggleHideVIPBadges,
   toggleHighlightAllMentions,
+  toggleMarkNewAsUnread,
   togglePrioritizeUsernames,
   toggleShowContextMenu,
   toggleTheme,
@@ -28,6 +29,7 @@ import {
   getDisableDialogAnimations,
   getHideVIPBadges,
   getHighlightAllMentions,
+  getMarkNewAsUnread,
   getPrioritizeUsernames,
   getShowContextMenu,
   getTheme,
@@ -75,6 +77,7 @@ class SettingsGeneral extends React.Component<Props, State> {
       disableDialogAnimations,
       hideVIPBadges,
       highlightAllMentions,
+      markNewAsUnread,
       prioritizeUsernames,
       showContextMenu,
       theme,
@@ -128,6 +131,12 @@ class SettingsGeneral extends React.Component<Props, State> {
             onChange={this.props.toggleAddWhispersToHistory}
             checked={addWhispersToHistory}
             label="Add whispers to history"
+          />
+          <Switch
+            description="Interacting or clicking on a message will mark it (and all previous unread messages) as read."
+            onChange={this.props.toggleMarkNewAsUnread}
+            checked={markNewAsUnread}
+            label="Mark new messages as unread"
           />
         </SettingsViewSection>
         <SettingsViewSection title="UI">
@@ -213,6 +222,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     disableDialogAnimations: getDisableDialogAnimations(state),
     hideVIPBadges: getHideVIPBadges(state),
     highlightAllMentions: getHighlightAllMentions(state),
+    markNewAsUnread: getMarkNewAsUnread(state),
     prioritizeUsernames: getPrioritizeUsernames(state),
     showContextMenu: getShowContextMenu(state),
     theme: getTheme(state),
@@ -225,6 +235,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
     toggleDisableDialogAnimations,
     toggleHideVIPBadges,
     toggleHighlightAllMentions,
+    toggleMarkNewAsUnread,
     togglePrioritizeUsernames,
     toggleShowContextMenu,
     toggleTheme,
@@ -242,6 +253,7 @@ interface StateProps {
   disableDialogAnimations: ReturnType<typeof getDisableDialogAnimations>
   hideVIPBadges: ReturnType<typeof getHideVIPBadges>
   highlightAllMentions: ReturnType<typeof getHighlightAllMentions>
+  markNewAsUnread: ReturnType<typeof getMarkNewAsUnread>
   prioritizeUsernames: ReturnType<typeof getPrioritizeUsernames>
   showContextMenu: ReturnType<typeof getShowContextMenu>
   theme: ReturnType<typeof getTheme>
@@ -258,6 +270,7 @@ interface DispatchProps {
   toggleDisableDialogAnimations: typeof toggleDisableDialogAnimations
   toggleHideVIPBadges: typeof toggleHideVIPBadges
   toggleHighlightAllMentions: typeof toggleHighlightAllMentions
+  toggleMarkNewAsUnread: typeof toggleMarkNewAsUnread
   togglePrioritizeUsernames: typeof togglePrioritizeUsernames
   toggleShowContextMenu: typeof toggleShowContextMenu
   toggleTheme: typeof toggleTheme

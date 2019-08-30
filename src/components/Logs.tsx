@@ -65,7 +65,15 @@ export class Logs extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { alternateMessageBackgrounds, copyMessageOnDoubleClick, logs, purgedCount, showContextMenu } = this.props
+    const {
+      alternateMessageBackgrounds,
+      copyMessageOnDoubleClick,
+      lastReadId,
+      logs,
+      markNewAsUnread,
+      purgedCount,
+      showContextMenu,
+    } = this.props
     const { bottom, top } = this.props.theme.log.border
 
     const scrollToIndex = this.pauseAutoScroll ? undefined : logs.length - 1
@@ -80,11 +88,13 @@ export class Logs extends React.Component<Props> {
               deferredMeasurementCache={this.logMeasureCache}
               rowHeight={this.logMeasureCache.rowHeight}
               showContextMenu={showContextMenu}
+              markNewAsUnread={markNewAsUnread}
               height={height - bottom - top}
               rowRenderer={this.logRenderer}
               scrollToIndex={scrollToIndex}
               purgedCount={purgedCount}
               onScroll={this.onScroll}
+              lastReadId={lastReadId}
               rowCount={logs.length}
               overscanRowCount={10}
               ref={this.list}
@@ -153,6 +163,18 @@ export class Logs extends React.Component<Props> {
   }
 
   /**
+   * Triggered when a message is clicked.
+   * @param id - The clicked message id.
+   */
+  private onClickMessage = (id: string) => {
+    const { markAsRead, markNewAsUnread } = this.props
+
+    if (markNewAsUnread) {
+      markAsRead(id)
+    }
+  }
+
+  /**
    * Render a log based on its type.
    * @param  listRowProps - The props to add to the row being rendered.
    * @return Element to render.
@@ -173,6 +195,7 @@ export class Logs extends React.Component<Props> {
       copyToClipboard,
       deleteMessage,
       focusChatter,
+      markNewAsUnread,
       quoteMessage,
       showContextMenu,
       timeout,
@@ -193,8 +216,10 @@ export class Logs extends React.Component<Props> {
           showUnbanContextMenuItem={isBanned}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
+          markNewAsUnread={markNewAsUnread}
           actionHandler={actionHandler}
           deleteMessage={deleteMessage}
+          onClick={this.onClickMessage}
           focusChatter={focusChatter}
           quoteMessage={quoteMessage}
           useAlternate={useAlternate}
@@ -252,7 +277,10 @@ interface Props extends ThemeProps {
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  lastReadId: string | null
   logs: Log[]
+  markAsRead: (id: string) => void
+  markNewAsUnread: boolean
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number
   quoteMessage: (message: SerializedMessage) => void
