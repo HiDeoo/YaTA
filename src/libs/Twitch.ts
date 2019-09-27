@@ -215,6 +215,23 @@ export default class Twitch {
   }
 
   /**
+   * Fetches details about a specific user using its name.
+   * @param  name - The user name.
+   * @return The user details.
+   */
+  public static async fetchUserByName(name: string): Promise<Optional<RawHelixUser>> {
+    const response = await Twitch.fetch(TwitchApi.Helix, '/users', { login: name }, true, RequestMethod.Get)
+
+    const { data: users }: { data: RawHelixUser[] } = await response.json()
+
+    if (users.length === 1) {
+      return _.first(users)
+    }
+
+    return
+  }
+
+  /**
    * Fetches details about a channel.
    * @param  channelId - The channel id.
    * @return The channel details.
@@ -801,6 +818,22 @@ export type RawUser = {
   type: string
   updated_at: string
   _id: string
+}
+
+/**
+ * Twitch user details returned by the Helix API.
+ */
+export type RawHelixUser = {
+  broadcaster_type: 'partner' | 'affiliate' | ''
+  description: string
+  display_name: string
+  email?: string
+  id: string
+  login: string
+  offline_image_url: string
+  profile_image_url: string
+  type: 'staff' | 'admin' | 'global_mod' | ''
+  view_count: number
 }
 
 /**

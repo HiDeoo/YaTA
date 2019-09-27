@@ -100,6 +100,11 @@ const WhisperReplyRegExp = /^[\/|\.]r /
 const FollowedRegExp = /^[\/|\.]followed(?:$| .*)/
 
 /**
+ * RegExp used to identify the block & unblock commands (/block & /unblock).
+ */
+const BlockUnblockRegExp = /^[\/|\.]((?:un)?block) ?(.*)/
+
+/**
  * RegExp used to identify a shrug command (/shrug).
  */
 const ShrugRegExp = /(^|.* )[\/|\.]shrug($| .*)/
@@ -937,6 +942,39 @@ class Channel extends React.Component<Props, State> {
 
             this.props.addLog(notice.serialize())
           }
+        } else if (BlockUnblockRegExp.test(message)) {
+          const matches = message.match(BlockUnblockRegExp)
+
+          if (_.isNil(matches)) {
+            return
+          }
+
+          const command = matches[1].toLowerCase()
+          const name = matches[2]
+
+          let noticeStr
+
+          if (_.isNil(name) || _.isEmpty(name)) {
+            noticeStr = `You need to specify a user to ${command}.`
+          } else {
+            try {
+              const user = await Twitch.fetchUserByName(name)
+
+              if (_.isNil(user)) {
+                throw new Error(`Invalid user name provided for the ${command} command.`)
+              }
+
+              const blockFn = command === 'block' ? Twitch.blockUser : Twitch.unblockUser
+              await blockFn(user.id)
+
+              noticeStr = `${name} is now ${command}ed.`
+            } catch (error) {
+              noticeStr = `Something went wrong while trying to ${command} ${name}.`
+            }
+          }
+
+          const notice = new Notice(noticeStr, null)
+          this.props.addLog(notice.serialize())
         } else {
           await this.say(message)
         }

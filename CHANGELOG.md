@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Add support for the `/block` & `/unblock` commands.
+
 # 1.10.0
 
 ### 🚀 New Feature
