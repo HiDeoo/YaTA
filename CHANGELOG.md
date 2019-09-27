@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add support for the `/block` & `/unblock` commands.
+- Add the `/purge` command which is an alias of the `/timeout user 1`.
 
 # 1.10.0
 

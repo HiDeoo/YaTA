@@ -105,6 +105,11 @@ const FollowedRegExp = /^[\/|\.]followed(?:$| .*)/
 const BlockUnblockRegExp = /^[\/|\.]((?:un)?block) ?(.*)/
 
 /**
+ * RegExp used to identify the purge command (/purge).
+ */
+const PurgeRegExp = /^[\/|\.]purge ?(.*)/
+
+/**
  * RegExp used to identify a shrug command (/shrug).
  */
 const ShrugRegExp = /(^|.* )[\/|\.]shrug($| .*)/
@@ -912,6 +917,86 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Handles the /followed command.
+   */
+  private async handleFollowedCommand() {
+    const channelId = _.get(this.props.roomState, 'roomId')
+
+    if (!_.isNil(channelId)) {
+      const relationship = await Twitch.fetchRelationship(channelId)
+
+      const notice = new Notice(
+        _.isNil(relationship)
+          ? 'Channel not followed.'
+          : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`,
+        null
+      )
+
+      this.props.addLog(notice.serialize())
+    }
+  }
+
+  /**
+   * Handles the /block & /unblock commands.
+   * @param message The message containing the command.
+   */
+  private async handleBlockUnblockCommands(message: string) {
+    const matches = message.match(BlockUnblockRegExp)
+
+    if (_.isNil(matches)) {
+      return
+    }
+
+    const command = matches[1].toLowerCase()
+    const username = matches[2]
+
+    let noticeStr
+
+    if (_.isNil(username) || _.isEmpty(username)) {
+      noticeStr = `You need to specify a user to ${command}.`
+    } else {
+      try {
+        const user = await Twitch.fetchUserByName(username)
+
+        if (_.isNil(user)) {
+          throw new Error(`Invalid user name provided for the ${command} command.`)
+        }
+
+        const blockFn = command === 'block' ? Twitch.blockUser : Twitch.unblockUser
+        await blockFn(user.id)
+
+        noticeStr = `${username} is now ${command}ed.`
+      } catch (error) {
+        noticeStr = `Something went wrong while trying to ${command} ${username}.`
+      }
+    }
+
+    const notice = new Notice(noticeStr, null)
+    this.props.addLog(notice.serialize())
+  }
+
+  /**
+   * Handles the /purge command.
+   * @param message The message containing the command.
+   */
+  private handlePurgeCommand(message: string) {
+    const matches = message.match(PurgeRegExp)
+
+    if (_.isNil(matches)) {
+      return
+    }
+
+    const username = matches[1]
+
+    if (_.isNil(username) || _.isEmpty(username)) {
+      const notice = new Notice('You need to specify a user to purge.', null)
+      this.props.addLog(notice.serialize())
+    } else {
+      this.timeout(username, 1)
+    }
+  }
+
+  /**
    * Sends a message or a whisper from the chat input.
    */
   private sendMessage = async () => {
@@ -928,53 +1013,11 @@ class Channel extends React.Component<Props, State> {
         if (!_.isNil(whisper)) {
           await this.whisper(whisper.username, whisper.message, whisper.command)
         } else if (FollowedRegExp.test(message)) {
-          const channelId = _.get(this.props.roomState, 'roomId')
-
-          if (!_.isNil(channelId)) {
-            const relationship = await Twitch.fetchRelationship(channelId)
-
-            const notice = new Notice(
-              _.isNil(relationship)
-                ? 'Channel not followed.'
-                : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`,
-              null
-            )
-
-            this.props.addLog(notice.serialize())
-          }
+          this.handleFollowedCommand()
         } else if (BlockUnblockRegExp.test(message)) {
-          const matches = message.match(BlockUnblockRegExp)
-
-          if (_.isNil(matches)) {
-            return
-          }
-
-          const command = matches[1].toLowerCase()
-          const name = matches[2]
-
-          let noticeStr
-
-          if (_.isNil(name) || _.isEmpty(name)) {
-            noticeStr = `You need to specify a user to ${command}.`
-          } else {
-            try {
-              const user = await Twitch.fetchUserByName(name)
-
-              if (_.isNil(user)) {
-                throw new Error(`Invalid user name provided for the ${command} command.`)
-              }
-
-              const blockFn = command === 'block' ? Twitch.blockUser : Twitch.unblockUser
-              await blockFn(user.id)
-
-              noticeStr = `${name} is now ${command}ed.`
-            } catch (error) {
-              noticeStr = `Something went wrong while trying to ${command} ${name}.`
-            }
-          }
-
-          const notice = new Notice(noticeStr, null)
-          this.props.addLog(notice.serialize())
+          this.handleBlockUnblockCommands(message)
+        } else if (PurgeRegExp.test(message)) {
+          this.handlePurgeCommand(message)
         } else {
           await this.say(message)
         }
