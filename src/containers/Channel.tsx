@@ -32,13 +32,14 @@ import ChatterDetails from 'Containers/ChatterDetails'
 import Search from 'Containers/Search'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
+import Command, { CommandDelegate } from 'Libs/Command'
 import { SerializedMessage } from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
-import { addLog, addMarker, markAsRead, pauseAutoScroll } from 'Store/ducks/logs'
+import { addLog, addMarker, Log, markAsRead, pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
   getChannel,
@@ -90,31 +91,6 @@ const ChannelLink = styled.a.attrs({
 const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
 
 /**
- * RegExp used to identify whisper reply command (/r).
- */
-const WhisperReplyRegExp = /^[\/|\.]r /
-
-/**
- * RegExp used to identify the followed command (/followed).
- */
-const FollowedRegExp = /^[\/|\.]followed(?:$| .*)/
-
-/**
- * RegExp used to identify the block & unblock commands (/block & /unblock).
- */
-const BlockUnblockRegExp = /^[\/|\.]((?:un)?block) ?(.*)/
-
-/**
- * RegExp used to identify the purge command (/purge).
- */
-const PurgeRegExp = /^[\/|\.]purge ?(.*)/
-
-/**
- * RegExp used to identify a shrug command (/shrug).
- */
-const ShrugRegExp = /(^|.* )[\/|\.]shrug($| .*)/
-
-/**
  * React State.
  */
 const initialState = {
@@ -134,7 +110,7 @@ type State = Readonly<typeof initialState>
 /**
  * Channel Component.
  */
-class Channel extends React.Component<Props, State> {
+class Channel extends React.Component<Props, State> implements CommandDelegate {
   public state: State = initialState
   public chatClient = React.createRef<any>()
   private logsWrapper = React.createRef<HTMLElement>()
@@ -352,6 +328,85 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Returns the channel ID if any.
+   * @return The channel ID.
+   */
+  public getChannelId() {
+    return _.get(this.props.roomState, 'roomId')
+  }
+
+  /**
+   * Adds a log entry.
+   * @param log - The log entry to add.
+   */
+  public addLog(log: Log) {
+    this.props.addLog(log)
+  }
+
+  /**
+   * Adds a message to the history.
+   * @param message - The message to add.
+   */
+  public addToHistory(message: string) {
+    this.props.addToHistory(message)
+  }
+
+  /**
+   * Sends a message.
+   * @param message - The message to send.
+   */
+  public async say(message: string) {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      await client.say(channel, message)
+
+      this.addToHistory(message)
+    }
+  }
+
+  /**
+   * Sends a whisper.
+   * @param username - The recipient.
+   * @param whisper - The whisper to send.
+   * @param [command] - The command used to send the whisper.
+   */
+  public async whisper(username: string, whisper: string, command?: string) {
+    const { addWhispersToHistory, channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      const chatClient = this.chatClient.current as ChatClient
+      chatClient.nextWhisperRecipient = username
+
+      await client.whisper(username, whisper)
+
+      if (!_.isNil(command) && addWhispersToHistory) {
+        this.addToHistory(command)
+      }
+    }
+  }
+
+  /**
+   * Timeouts a user.
+   * @param username - The name of the user to timeout.
+   * @param duration - The duration of the timeout in seconds.
+   */
+  public timeout = async (username: string, duration: number) => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.timeout(channel, username, duration)
+      } catch {
+        //
+      }
+    }
+  }
+
+  /**
    * Sets the current channel if necessary.
    */
   private setChannel() {
@@ -369,7 +424,7 @@ class Channel extends React.Component<Props, State> {
   private setHeaderComponents() {
     const { channel, isAutoScrollPaused, isMod, loginDetails, roomState } = this.props
 
-    const channelId = _.get(roomState, 'roomId')
+    const channelId = this.getChannelId()
 
     const connected = !_.isNil(roomState)
     const isBroadcaster = !_.isNil(loginDetails) && !_.isNil(channel) && isMod && loginDetails.username === channel
@@ -540,7 +595,7 @@ class Channel extends React.Component<Props, State> {
       true
     )
 
-    this.props.addLog(notice.serialize())
+    this.addLog(notice.serialize())
   }
 
   /**
@@ -556,27 +611,20 @@ class Channel extends React.Component<Props, State> {
    * Triggered when input value is modified.
    */
   private onChangeInputValue = (value: string) => {
-    if (WhisperReplyRegExp.test(value)) {
+    let inputValue = value
+
+    if (Command.isWhisperReplyCommand(value)) {
       const { lastWhisperSender } = this.props
-      const inputValue = `/w ${this.props.lastWhisperSender}${lastWhisperSender.length > 0 ? ' ' : ''}`
-
-      this.setState(() => ({ inputValue }))
-
-      return
-    } else if (ShrugRegExp.test(value)) {
-      const matches = value.match(ShrugRegExp)
-
-      if (!_.isNil(matches)) {
-        const before = matches[1]
-        const after = matches[2]
-
-        this.setState(() => ({ inputValue: `${before}¯\\_(ツ)_/¯ ${after}` }))
-
-        return
-      }
+      inputValue = `/w ${this.props.lastWhisperSender}${lastWhisperSender.length > 0 ? ' ' : ''}`
     }
 
-    this.setState(() => ({ inputValue: value }))
+    const shrug = Command.parseShrug(value)
+
+    if (shrug.isShrug) {
+      inputValue = shrug.message
+    }
+
+    this.setState(() => ({ inputValue }))
   }
 
   /**
@@ -611,7 +659,7 @@ class Channel extends React.Component<Props, State> {
     let viewers: number
 
     if (!_.isNil(roomState)) {
-      const channelId = _.get(roomState, 'roomId')
+      const channelId = this.getChannelId()
 
       if (!_.isNil(channelId)) {
         const { stream } = await Twitch.fetchStream(channelId)
@@ -917,86 +965,6 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
-   * Handles the /followed command.
-   */
-  private async handleFollowedCommand() {
-    const channelId = _.get(this.props.roomState, 'roomId')
-
-    if (!_.isNil(channelId)) {
-      const relationship = await Twitch.fetchRelationship(channelId)
-
-      const notice = new Notice(
-        _.isNil(relationship)
-          ? 'Channel not followed.'
-          : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`,
-        null
-      )
-
-      this.props.addLog(notice.serialize())
-    }
-  }
-
-  /**
-   * Handles the /block & /unblock commands.
-   * @param message The message containing the command.
-   */
-  private async handleBlockUnblockCommands(message: string) {
-    const matches = message.match(BlockUnblockRegExp)
-
-    if (_.isNil(matches)) {
-      return
-    }
-
-    const command = matches[1].toLowerCase()
-    const username = matches[2]
-
-    let noticeStr
-
-    if (_.isNil(username) || _.isEmpty(username)) {
-      noticeStr = `You need to specify a user to ${command}.`
-    } else {
-      try {
-        const user = await Twitch.fetchUserByName(username)
-
-        if (_.isNil(user)) {
-          throw new Error(`Invalid user name provided for the ${command} command.`)
-        }
-
-        const blockFn = command === 'block' ? Twitch.blockUser : Twitch.unblockUser
-        await blockFn(user.id)
-
-        noticeStr = `${username} is now ${command}ed.`
-      } catch (error) {
-        noticeStr = `Something went wrong while trying to ${command} ${username}.`
-      }
-    }
-
-    const notice = new Notice(noticeStr, null)
-    this.props.addLog(notice.serialize())
-  }
-
-  /**
-   * Handles the /purge command.
-   * @param message The message containing the command.
-   */
-  private handlePurgeCommand(message: string) {
-    const matches = message.match(PurgeRegExp)
-
-    if (_.isNil(matches)) {
-      return
-    }
-
-    const username = matches[1]
-
-    if (_.isNil(username) || _.isEmpty(username)) {
-      const notice = new Notice('You need to specify a user to purge.', null)
-      this.props.addLog(notice.serialize())
-    } else {
-      this.timeout(username, 1)
-    }
-  }
-
-  /**
    * Sends a message or a whisper from the chat input.
    */
   private sendMessage = async () => {
@@ -1006,60 +974,17 @@ class Channel extends React.Component<Props, State> {
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
         const message = this.state.inputValue.trim()
-        const whisper = Twitch.parseWhisperCommand(message)
 
         this.setState(() => ({ inputValue: '' }))
 
-        if (!_.isNil(whisper)) {
-          await this.whisper(whisper.username, whisper.message, whisper.command)
-        } else if (FollowedRegExp.test(message)) {
-          this.handleFollowedCommand()
-        } else if (BlockUnblockRegExp.test(message)) {
-          this.handleBlockUnblockCommands(message)
-        } else if (PurgeRegExp.test(message)) {
-          this.handlePurgeCommand(message)
+        if (Command.isCommand(message)) {
+          const command = new Command(message, this)
+          await command.handle()
         } else {
           await this.say(message)
         }
       } catch {
         //
-      }
-    }
-  }
-
-  /**
-   * Sends a message.
-   * @param message - The message to send.
-   */
-  private async say(message: string) {
-    const { channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      await client.say(channel, message)
-
-      this.props.addToHistory(message)
-    }
-  }
-
-  /**
-   * Sends a whisper.
-   * @param username - The recipient.
-   * @param whisper - The whisper to send.
-   * @param [command] - The command used to send the whisper.
-   */
-  private async whisper(username: string, whisper: string, command?: string) {
-    const { addWhispersToHistory, channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      const chatClient = this.chatClient.current as ChatClient
-      chatClient.nextWhisperRecipient = username
-
-      await client.whisper(username, whisper)
-
-      if (!_.isNil(command) && addWhispersToHistory) {
-        this.props.addToHistory(command)
       }
     }
   }
@@ -1077,24 +1002,6 @@ class Channel extends React.Component<Props, State> {
         intent: Intent.DANGER,
         message: 'Something went wrong! Please try again.',
       })
-    }
-  }
-
-  /**
-   * Timeouts a user.
-   * @param username - The name of the user to timeout.
-   * @param duration - The duration of the timeout in seconds.
-   */
-  private timeout = async (username: string, duration: number) => {
-    const { channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      try {
-        await client.timeout(channel, username, duration)
-      } catch {
-        //
-      }
     }
   }
 
@@ -1334,14 +1241,14 @@ class Channel extends React.Component<Props, State> {
    * Clips the current stream.
    */
   private clip = async () => {
-    const { roomState } = this.props
+    const channelId = this.getChannelId()
 
-    if (_.isNil(roomState)) {
+    if (_.isNil(channelId)) {
       return
     }
 
     try {
-      const response = await Twitch.createClip(roomState.roomId)
+      const response = await Twitch.createClip(channelId)
 
       if (response.data.length > 0) {
         window.open(response.data[0].edit_url)

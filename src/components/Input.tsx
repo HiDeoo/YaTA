@@ -6,8 +6,8 @@ import * as React from 'react'
 import Key from 'Constants/key'
 import Message from 'Constants/message'
 import EmotePicker from 'Containers//EmotePicker'
+import Command from 'Libs/Command'
 import { Emote } from 'Libs/EmotesProvider'
-import Twitch from 'Libs/Twitch'
 import styled, { theme } from 'Styled'
 import { endWithWhiteSpace, getWordAtPosition, startWithWhiteSpace } from 'Utils/string'
 
@@ -115,10 +115,10 @@ export default class Input extends React.Component<Props, State> {
     let intent = ''
 
     const { value } = nextProps
-    const whisper = Twitch.parseWhisperCommand(value)
+    const { username } = Command.parseWhisper(value)
 
-    if (!_.isNil(whisper)) {
-      if (!_.isNil(nextProps.username) && nextProps.username === whisper.username.toLowerCase()) {
+    if (!_.isNil(username)) {
+      if (!_.isNil(nextProps.username) && nextProps.username === username.toLowerCase()) {
         toasts.push({
           icon: 'inbox',
           intent: Intent.DANGER,
@@ -136,7 +136,7 @@ export default class Input extends React.Component<Props, State> {
 
         intent = Classes.INTENT_SUCCESS
       }
-    } else if (Twitch.isMarkerCommand(value)) {
+    } else if (Command.isMarkerCommand(value)) {
       toasts.push({
         icon: 'warning-sign',
         intent: Intent.DANGER,
@@ -424,7 +424,9 @@ export default class Input extends React.Component<Props, State> {
   private validateInputValue() {
     const { value } = this.props
 
-    return value.length > 0 && _.trim(value).length > 0 && value.length <= Message.Max && !Twitch.isMarkerCommand(value)
+    return (
+      value.length > 0 && _.trim(value).length > 0 && value.length <= Message.Max && !Command.isMarkerCommand(value)
+    )
   }
 }
 

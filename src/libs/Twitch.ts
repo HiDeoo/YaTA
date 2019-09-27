@@ -49,16 +49,6 @@ export enum Status {
 export type CommercialDuration = 30 | 60 | 90 | 120 | 150 | 180
 
 /**
- * RegExp used to identify whisper command (/w user message).
- */
-const WhisperRegExp = /^[\/|\.]w (\S+) (.+)/
-
-/**
- * RegExp used to identify marker command (/marker [message]).
- */
-const MarkerRegExp = /^[\/|.]marker(?:$|\s)/
-
-/**
  * CORS proxy URL.
  */
 const ProxyURL = 'https://cors-anywhere.herokuapp.com/'
@@ -147,32 +137,6 @@ export default class Twitch {
     }
 
     return channel
-  }
-
-  /**
-   * Parses a message as a whisper command (/w user message).
-   * @return The whisper details or `null` if the message is not a whisper.
-   */
-  public static parseWhisperCommand(message: string) {
-    const matches = message.match(WhisperRegExp)
-
-    if (!_.isNil(matches)) {
-      const username = matches[1]
-      const whisper = matches[2]
-
-      return { username, message: whisper, command: message }
-    }
-
-    return null
-  }
-
-  /**
-   * Checks if a message is a marker command.
-   * @param  message - The message.
-   * @return `true` if the message is a marker command.
-   */
-  public static isMarkerCommand(message: string) {
-    return MarkerRegExp.test(message)
   }
 
   /**
