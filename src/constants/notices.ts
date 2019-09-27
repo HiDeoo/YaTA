@@ -19,7 +19,7 @@ export default {
      * Additions to the help notice to concatenate at the end of the list of
      * commands and before the "More help" link.
      */
-    Additions: '/followed',
+    Additions: '/block /unblock /followed',
   },
 
   /**
