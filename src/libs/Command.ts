@@ -92,7 +92,11 @@ export default class Command {
    * @param message A message containing a command validated by
    * `Command.isCommand()`.
    */
-  constructor(private message: string, private delegate: CommandDelegate) {
+  constructor(
+    private message: string,
+    private delegate: CommandDelegate,
+    private delegateDataFetcher: CommandDelegateDataFetcher
+  ) {
     const [command, ...args] = message.slice(1).split(' ')
 
     this.command = command.toLowerCase()
@@ -104,21 +108,64 @@ export default class Command {
    */
   public async handle() {
     if (!_.includes(CommandName, this.command)) {
-      this.delegate.say(this.message)
+      this.say(this.message)
     } else {
       const descriptor = Command.getDescriptor(this.command)
       const handler = this.getHandler(descriptor)
 
       if (_.isNil(handler)) {
-        await this.delegate.say(this.message)
+        await this.say(this.message)
       } else {
         await handler()
 
         if (!descriptor.ignoreHistory) {
-          this.delegate.addToHistory(this.message)
+          this.addToHistory(this.message)
         }
       }
     }
+  }
+
+  /**
+   * Sends a message.
+   * @param message - The message to send.
+   */
+  private async say(message: string) {
+    this.delegate(CommandDelegateAction.Say, message)
+  }
+
+  /**
+   * Adds a message to the history.
+   * @param message - The message to add.
+   */
+  private async addToHistory(message: string) {
+    this.delegate(CommandDelegateAction.AddToHistory, message)
+  }
+
+  /**
+   * Adds a log entry.
+   * @param log - The log entry to add.
+   */
+  private addLog(log: Log) {
+    this.delegate(CommandDelegateAction.AddLog, log)
+  }
+
+  /**
+   * Sends a whisper.
+   * @param username - The recipient.
+   * @param whisper - The whisper to send.
+   * @param [command] - The command used to send the whisper.
+   */
+  private whisper(username: string, whisper: string, command?: string) {
+    this.delegate(CommandDelegateAction.Whisper, username, whisper, command)
+  }
+
+  /**
+   * Timeouts a user.
+   * @param username - The name of the user to timeout.
+   * @param duration - The duration of the timeout in seconds.
+   */
+  private timeout(username: string, duration: number) {
+    this.delegate(CommandDelegateAction.Timeout, username, duration)
   }
 
   /**
@@ -152,7 +199,7 @@ export default class Command {
    * Handles the /followed command.
    */
   private handleCommandFollowed = async () => {
-    const channelId = this.delegate.getChannelId()
+    const { channelId } = this.delegateDataFetcher()
 
     if (!_.isNil(channelId)) {
       const relationship = await Twitch.fetchRelationship(channelId)
@@ -164,7 +211,7 @@ export default class Command {
         null
       )
 
-      this.delegate.addLog(notice.serialize())
+      this.addLog(notice.serialize())
     }
   }
 
@@ -196,7 +243,7 @@ export default class Command {
     }
 
     const notice = new Notice(noticeStr, null)
-    this.delegate.addLog(notice.serialize())
+    this.addLog(notice.serialize())
   }
 
   /**
@@ -207,9 +254,9 @@ export default class Command {
 
     if (_.isEmpty(username)) {
       const notice = new Notice(this.getUsage(), null)
-      this.delegate.addLog(notice.serialize())
+      this.addLog(notice.serialize())
     } else {
-      this.delegate.timeout(username, 1)
+      this.timeout(username, 1)
     }
   }
 
@@ -221,10 +268,10 @@ export default class Command {
     const whisper = fragments.join(' ')
 
     if (!_.isEmpty(username) && !_.isEmpty(whisper)) {
-      this.delegate.whisper(username, whisper, this.message)
+      this.whisper(username, whisper, this.message)
     } else {
       const notice = new Notice(this.getUsage(), null)
-      this.delegate.addLog(notice.serialize())
+      this.addLog(notice.serialize())
     }
   }
 
@@ -242,18 +289,32 @@ export default class Command {
 }
 
 /**
+ * Actions that could arise when handling a command.
+ */
+export enum CommandDelegateAction {
+  AddLog,
+  AddToHistory,
+  Say,
+  Timeout,
+  Whisper,
+}
+
+/**
+ * Command delegate data fetcher.
+ */
+export type CommandDelegateDataFetcher = () => { channelId: SerializedRoomState['roomId'] | undefined }
+
+/**
+ * The commande delegate signature.
+ */
+export interface CommandDelegate {
+  (action: CommandDelegateAction.AddLog, log: Log): void
+  (action: CommandDelegateAction.AddToHistory | CommandDelegateAction.Say, message: string): void
+  (action: CommandDelegateAction.Timeout, username: string, duration: number): void
+  (action: CommandDelegateAction.Whisper, username: string, whisper: string, command?: string): void
+}
+
+/**
  * An enhanced command descriptor including the command name.
  */
 type EnhancedCommandDescriptor = CommandDescriptor & { name: CommandName }
-
-/**
- * The interface that a command delegate should implement.
- */
-export interface CommandDelegate {
-  addToHistory(message: string): void
-  addLog(log: Log): void
-  getChannelId(): SerializedRoomState['roomId'] | undefined
-  say(message: string): void
-  timeout(username: string, duration: number): void
-  whisper(username: string, whisper: string, command?: string): void
-}

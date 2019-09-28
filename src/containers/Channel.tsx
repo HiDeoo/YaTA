@@ -32,14 +32,14 @@ import ChatterDetails from 'Containers/ChatterDetails'
 import Search from 'Containers/Search'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
 import { SerializedChatter } from 'Libs/Chatter'
-import Command, { CommandDelegate } from 'Libs/Command'
+import Command, { CommandDelegate, CommandDelegateAction, CommandDelegateDataFetcher } from 'Libs/Command'
 import { SerializedMessage } from 'Libs/Message'
 import Notice from 'Libs/Notice'
 import Toaster from 'Libs/Toaster'
 import Twitch from 'Libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
-import { addLog, addMarker, Log, markAsRead, pauseAutoScroll } from 'Store/ducks/logs'
+import { addLog, addMarker, isLog, Log, markAsRead, pauseAutoScroll } from 'Store/ducks/logs'
 import { ApplicationState } from 'Store/reducers'
 import {
   getChannel,
@@ -110,7 +110,7 @@ type State = Readonly<typeof initialState>
 /**
  * Channel Component.
  */
-class Channel extends React.Component<Props, State> implements CommandDelegate {
+class Channel extends React.Component<Props, State> {
   public state: State = initialState
   public chatClient = React.createRef<any>()
   private logsWrapper = React.createRef<HTMLElement>()
@@ -328,85 +328,6 @@ class Channel extends React.Component<Props, State> implements CommandDelegate {
   }
 
   /**
-   * Returns the channel ID if any.
-   * @return The channel ID.
-   */
-  public getChannelId() {
-    return _.get(this.props.roomState, 'roomId')
-  }
-
-  /**
-   * Adds a log entry.
-   * @param log - The log entry to add.
-   */
-  public addLog(log: Log) {
-    this.props.addLog(log)
-  }
-
-  /**
-   * Adds a message to the history.
-   * @param message - The message to add.
-   */
-  public addToHistory(message: string) {
-    this.props.addToHistory(message)
-  }
-
-  /**
-   * Sends a message.
-   * @param message - The message to send.
-   */
-  public async say(message: string) {
-    const { channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      await client.say(channel, message)
-
-      this.addToHistory(message)
-    }
-  }
-
-  /**
-   * Sends a whisper.
-   * @param username - The recipient.
-   * @param whisper - The whisper to send.
-   * @param [command] - The command used to send the whisper.
-   */
-  public async whisper(username: string, whisper: string, command?: string) {
-    const { addWhispersToHistory, channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      const chatClient = this.chatClient.current as ChatClient
-      chatClient.nextWhisperRecipient = username
-
-      await client.whisper(username, whisper)
-
-      if (!_.isNil(command) && addWhispersToHistory) {
-        this.addToHistory(command)
-      }
-    }
-  }
-
-  /**
-   * Timeouts a user.
-   * @param username - The name of the user to timeout.
-   * @param duration - The duration of the timeout in seconds.
-   */
-  public timeout = async (username: string, duration: number) => {
-    const { channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      try {
-        await client.timeout(channel, username, duration)
-      } catch {
-        //
-      }
-    }
-  }
-
-  /**
    * Sets the current channel if necessary.
    */
   private setChannel() {
@@ -415,6 +336,14 @@ class Channel extends React.Component<Props, State> implements CommandDelegate {
     if (this.props.match.params.channel !== this.props.channel) {
       this.props.setChannel(channel)
     }
+  }
+
+  /**
+   * Returns the channel ID if any.
+   * @return The channel ID.
+   */
+  private getChannelId() {
+    return _.get(this.props.roomState, 'roomId')
   }
 
   /**
@@ -595,7 +524,7 @@ class Channel extends React.Component<Props, State> implements CommandDelegate {
       true
     )
 
-    this.addLog(notice.serialize())
+    this.props.addLog(notice.serialize())
   }
 
   /**
@@ -965,6 +894,37 @@ class Channel extends React.Component<Props, State> implements CommandDelegate {
   }
 
   /**
+   * Manages actions that could arise when handling a command.
+   * @see CommandDelegate
+   */
+  private onCommandHandlerAction: CommandDelegate = (
+    action: CommandDelegateAction,
+    arg1: Log | string,
+    arg2?: number | string,
+    arg3?: string
+  ) => {
+    if (action === CommandDelegateAction.AddLog && isLog(arg1)) {
+      this.props.addLog(arg1)
+    } else if (action === CommandDelegateAction.AddToHistory && _.isString(arg1)) {
+      this.props.addToHistory(arg1)
+    } else if (action === CommandDelegateAction.Say && _.isString(arg1)) {
+      this.say(arg1)
+    } else if (action === CommandDelegateAction.Timeout && _.isString(arg1) && _.isNumber(arg2)) {
+      this.timeout(arg1, arg2)
+    } else if (action === CommandDelegateAction.Whisper && _.isString(arg1) && _.isString(arg2)) {
+      this.whisper(arg1, arg2, arg3)
+    }
+  }
+
+  /**
+   * Retuns informations that can be used while handling a command.
+   * @see CommandDelegateDataFetcher
+   */
+  private onCommandHandlerDataRequest: CommandDelegateDataFetcher = () => {
+    return { channelId: this.getChannelId() }
+  }
+
+  /**
    * Sends a message or a whisper from the chat input.
    */
   private sendMessage = async () => {
@@ -978,13 +938,50 @@ class Channel extends React.Component<Props, State> implements CommandDelegate {
         this.setState(() => ({ inputValue: '' }))
 
         if (Command.isCommand(message)) {
-          const command = new Command(message, this)
+          const command = new Command(message, this.onCommandHandlerAction, this.onCommandHandlerDataRequest)
           await command.handle()
         } else {
           await this.say(message)
         }
       } catch {
         //
+      }
+    }
+  }
+
+  /**
+   * Sends a message.
+   * @param message - The message to send.
+   */
+  private async say(message: string) {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      await client.say(channel, message)
+
+      this.props.addToHistory(message)
+    }
+  }
+
+  /**
+   * Sends a whisper.
+   * @param username - The recipient.
+   * @param whisper - The whisper to send.
+   * @param [command] - The command used to send the whisper.
+   */
+  private async whisper(username: string, whisper: string, command?: string) {
+    const { addWhispersToHistory, channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      const chatClient = this.chatClient.current as ChatClient
+      chatClient.nextWhisperRecipient = username
+
+      await client.whisper(username, whisper)
+
+      if (!_.isNil(command) && addWhispersToHistory) {
+        this.props.addToHistory(command)
       }
     }
   }
@@ -1002,6 +999,24 @@ class Channel extends React.Component<Props, State> implements CommandDelegate {
         intent: Intent.DANGER,
         message: 'Something went wrong! Please try again.',
       })
+    }
+  }
+
+  /**
+   * Timeouts a user.
+   * @param username - The name of the user to timeout.
+   * @param duration - The duration of the timeout in seconds.
+   */
+  private timeout = async (username: string, duration: number) => {
+    const { channel } = this.props
+    const client = this.getTwitchClient()
+
+    if (!_.isNil(client) && !_.isNil(channel)) {
+      try {
+        await client.timeout(channel, username, duration)
+      } catch {
+        //
+      }
     }
   }
 

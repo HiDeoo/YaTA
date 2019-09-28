@@ -321,6 +321,15 @@ export type SerializedMarker = {
 }
 
 /**
+ * Determines if an item is a log.
+ * @param  item - The item to validate.
+ * @return `true` if the log is a log.
+ */
+export function isLog(item: any): item is Log {
+  return isMessage(item) || isNotice(item) || isNotification(item) || isWhisper(item) || isMarker(item)
+}
+
+/**
  * Determines if a log entry is a message.
  * @param  log - The log entry to validate.
  * @return `true` if the log is a message.
