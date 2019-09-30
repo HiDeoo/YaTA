@@ -30,7 +30,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
         <Menu.Divider title="Mode" />
         <Menu.Item
           icon={this.getStateMenuIcon('r9k')}
-          text="R9K"
+          text="Unique chat"
           labelElement={<Icon icon="multi-select" />}
           onClick={toggleR9k}
         />

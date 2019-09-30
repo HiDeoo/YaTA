@@ -147,7 +147,7 @@ export default class HeaderChannelState extends React.Component<Props> {
               </Tooltip>
             )}
             {r9k && (
-              <Tooltip content="R9K">
+              <Tooltip content="Unique chat">
                 <Icon icon="multi-select" />
               </Tooltip>
             )}

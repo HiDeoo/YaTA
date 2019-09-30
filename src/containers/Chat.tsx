@@ -534,7 +534,7 @@ export class ChatClient extends React.Component<Props, State> {
    */
   private onR9k = (_channel: string, enabled: boolean) => {
     const notice = new Notice(
-      enabled ? 'This room is now in R9K mode.' : 'This room is no longer in R9K mode.',
+      enabled ? 'This room is now in unique-chat mode.' : 'This room is no longer in unique-chat mode.',
       Event.R9k
     )
 
