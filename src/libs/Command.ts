@@ -310,6 +310,24 @@ export default class Command {
   }
 
   /**
+   * Handles the /user command.
+   */
+  private handleCommandUser = () => {
+    const [username] = this.arguments
+
+    if (_.isEmpty(username)) {
+      const notice = new Notice(this.getHelpUsage(), null)
+      this.addLog(notice.serialize())
+    } else {
+      const { channel } = this.delegateDataFetcher()
+
+      if (!_.isNil(channel)) {
+        Twitch.openViewerCard(channel, username)
+      }
+    }
+  }
+
+  /**
    * List of commands with special handlers.
    */
   // tslint:disable-next-line:member-ordering
@@ -320,6 +338,7 @@ export default class Command {
     [CommandName.Unblock]: this.handleCommandBlockUnblock,
     [CommandName.Uniquechat]: this.handleCommandUniqueChat,
     [CommandName.Uniquechatoff]: this.handleCommandUniqueChatOff,
+    [CommandName.User]: this.handleCommandUser,
     [CommandName.W]: this.handleCommandWhisper,
   }
 }
@@ -339,7 +358,10 @@ export enum CommandDelegateAction {
 /**
  * Command delegate data fetcher.
  */
-export type CommandDelegateDataFetcher = () => { channelId: SerializedRoomState['roomId'] | undefined }
+export type CommandDelegateDataFetcher = () => {
+  channel: string | null
+  channelId: SerializedRoomState['roomId'] | undefined
+}
 
 /**
  * The commande delegate signature.

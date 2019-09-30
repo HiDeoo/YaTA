@@ -934,7 +934,7 @@ class Channel extends React.Component<Props, State> {
    * @see CommandDelegateDataFetcher
    */
   private onCommandHandlerDataRequest: CommandDelegateDataFetcher = () => {
-    return { channelId: this.getChannelId() }
+    return { channel: this.props.channel, channelId: this.getChannelId() }
   }
 
   /**

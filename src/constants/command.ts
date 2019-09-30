@@ -35,6 +35,7 @@ export enum CommandName {
   Unraid = 'unraid',
   Untimeout = 'untimeout',
   Unvip = 'unvip',
+  User = 'user',
   Vip = 'vip',
   Vips = 'vips',
   W = 'w',
@@ -125,6 +126,11 @@ export const Commands: Record<CommandName, CommandDescriptor> = {
   [CommandName.Unvip]: {
     arguments: [{ name: 'username' }],
     description: 'Remove the VIP status from a user.',
+  },
+  [CommandName.User]: {
+    arguments: [{ name: 'username' }],
+    description:
+      'Open a user viewer card with all-time messages logs, bans logs, timeouts logs and moderator comments.',
   },
   [CommandName.Vip]: {
     arguments: [{ name: 'username' }],

@@ -390,8 +390,8 @@ class ChatterDetails extends React.Component<Props, State> {
               </Popover>
             </ButtonGroup>
             {chatter.banned && <Button icon="unlock" intent={Intent.DANGER} onClick={this.onClickUnban} text="Unban" />}
-            <Tooltip content="Open the Twitch moderation tools for this user">
-              <Button icon="torch" onClick={this.onClickTwitchTools} text="Twitch Tools" />
+            <Tooltip content="Open the Twitch viewer card for this user">
+              <Button icon="torch" onClick={this.onClickTwitchViewerCard} text="Twitch Viewer Card" />
             </Tooltip>
           </ButtonRow>
           <ButtonRow>
@@ -585,20 +585,16 @@ class ChatterDetails extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when the Twitch moderation tools button is clicked.
+   * Triggered when the Twitch viewer card button is clicked.
    */
-  private onClickTwitchTools = () => {
+  private onClickTwitchViewerCard = () => {
     const { channel, chatter } = this.props
 
     if (_.isNil(channel) || _.isNil(chatter)) {
       return
     }
 
-    window.open(
-      `https://www.twitch.tv/popout/${channel}/viewercard/${chatter.userName}?popout=`,
-      'twitchToolsPopupWindow',
-      'height=600,width=500'
-    )
+    Twitch.openViewerCard(channel, chatter.userName)
   }
 
   /**

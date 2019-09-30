@@ -152,6 +152,19 @@ export default class Twitch {
   }
 
   /**
+   * Opens the viewer card of a specific user.
+   * @param channel - The channel.
+   * @param username - The user.
+   */
+  public static async openViewerCard(channel: string, username: string) {
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/viewercard/${username}?popout=`,
+      'twitchToolsPopupWindow',
+      'height=600,width=500'
+    )
+  }
+
+  /**
    * Fetches Twitch badges.
    * @param channelId - The id of the channel.
    * @return The badges.
