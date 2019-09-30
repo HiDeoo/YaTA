@@ -197,22 +197,21 @@ export default class Command {
   }
 
   /**
+   * Sends a help notice about the command.
+   */
+  private sendHelpNotice() {
+    const descriptor = Command.getDescriptor(this.command)
+    const notice = new Notice(`Usage: "${Command.getUsage(descriptor)}" - ${descriptor.description}`, null)
+    this.addLog(notice.serialize())
+  }
+
+  /**
    * Returns the handler of a command.
    * @param  description - The command descriptor.
    * @return The handler.
    */
   private getHandler(descriptor: EnhancedCommandDescriptor) {
     return this.commandHandlers[descriptor.name]
-  }
-
-  /**
-   * Returns the help usage of the command.
-   * @return The usage string.
-   */
-  private getHelpUsage() {
-    const descriptor = Command.getDescriptor(this.command)
-
-    return `Usage: "${Command.getUsage(descriptor)}" - ${descriptor.description}`
   }
 
   /**
@@ -239,13 +238,13 @@ export default class Command {
    * Handles the /block & /unblock commands.
    */
   private handleCommandBlockUnblock = async () => {
-    let noticeStr
-
     const [username] = this.arguments
 
     if (_.isEmpty(username)) {
-      noticeStr = this.getHelpUsage()
+      this.sendHelpNotice()
     } else {
+      let noticeStr
+
       try {
         const user = await Twitch.fetchUserByName(username)
 
@@ -260,10 +259,10 @@ export default class Command {
       } catch (error) {
         noticeStr = `Something went wrong while trying to ${this.command} ${username}.`
       }
-    }
 
-    const notice = new Notice(noticeStr, null)
-    this.addLog(notice.serialize())
+      const notice = new Notice(noticeStr, null)
+      this.addLog(notice.serialize())
+    }
   }
 
   /**
@@ -273,8 +272,7 @@ export default class Command {
     const [username] = this.arguments
 
     if (_.isEmpty(username)) {
-      const notice = new Notice(this.getHelpUsage(), null)
-      this.addLog(notice.serialize())
+      this.sendHelpNotice()
     } else {
       this.timeout(username, 1)
     }
@@ -290,8 +288,7 @@ export default class Command {
     if (!_.isEmpty(username) && !_.isEmpty(whisper)) {
       this.whisper(username, whisper, this.message)
     } else {
-      const notice = new Notice(this.getHelpUsage(), null)
-      this.addLog(notice.serialize())
+      this.sendHelpNotice()
     }
   }
 
@@ -316,8 +313,7 @@ export default class Command {
     const [username] = this.arguments
 
     if (_.isEmpty(username)) {
-      const notice = new Notice(this.getHelpUsage(), null)
-      this.addLog(notice.serialize())
+      this.sendHelpNotice()
     } else {
       const { channel } = this.delegateDataFetcher()
 
