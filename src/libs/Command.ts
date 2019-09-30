@@ -12,7 +12,7 @@ import { Log } from 'Store/ducks/logs'
 export default class Command {
   /**
    * Checks if a message is a command (starting by a `/` or a `.`).
-   * @param message A message potentially containing a command.
+   * @param message - A message potentially containing a command.
    */
   public static isCommand(message: string) {
     const firstCharacter = message.charAt(0)
@@ -22,7 +22,7 @@ export default class Command {
 
   /**
    * Checks if a message is a whisper reply command (`/r`).
-   * @param message A message potentially containing a whisper reply command.
+   * @param message - A message potentially containing a whisper reply command.
    */
   public static isWhisperReplyCommand(message: string) {
     return /^[\/|\.]r /i.test(message)
@@ -30,10 +30,18 @@ export default class Command {
 
   /**
    * Checks if a message is a marker command (`/marker`).
-   * @param message A message potentially containing a marker command.
+   * @param message - A message potentially containing a marker command.
    */
   public static isMarkerCommand(message: string) {
     return /^[\/|.]marker(?:$|\s)/i.test(message)
+  }
+
+  /**
+   * Checks if a message is a help command (`/help`).
+   * @param message - A message potentially containing a help command.
+   */
+  public static isHelpCommand(message: string) {
+    return /^[\/|.]help(?:$|\s)/i.test(message)
   }
 
   /**
@@ -74,10 +82,27 @@ export default class Command {
   }
 
   /**
+   * Returns a command usage.
+   * @param  descriptor - The command descriptor.
+   * @return The command usage.
+   */
+  public static getUsage(descriptor: EnhancedCommandDescriptor) {
+    const args = _.map(descriptor.arguments, (argument) => {
+      if (argument.optional) {
+        return `[${argument.name}]`
+      }
+
+      return `<${argument.name}>`
+    })
+
+    return `/${descriptor.name} ${args.join(' ')}`
+  }
+
+  /**
    * Returns the descriptor of the command.
    * @return The descriptor.
    */
-  private static getDescriptor(commandName: string | CommandName): EnhancedCommandDescriptor {
+  public static getDescriptor(commandName: string | CommandName): EnhancedCommandDescriptor {
     const name: CommandName = CommandName[_.upperFirst(commandName)]
 
     return { ...Commands[name], name }
@@ -89,7 +114,7 @@ export default class Command {
   /**
    * Creates a new instance of the class.
    * @class
-   * @param message A message containing a command validated by
+   * @param message - A message containing a command validated by
    * `Command.isCommand()`.
    */
   constructor(
@@ -128,9 +153,12 @@ export default class Command {
   /**
    * Sends a message.
    * @param message - The message to send.
+   * @param ignoreHistory - Defines if the message should not be added to the
+   * history.
    */
-  private async say(message: string) {
-    this.delegate(CommandDelegateAction.Say, message)
+  private async say(message: string, ignoreHistory: boolean = false) {
+    const action = ignoreHistory ? CommandDelegateAction.SayWithoutHistory : CommandDelegateAction.Say
+    this.delegate(action, message)
   }
 
   /**
@@ -178,21 +206,13 @@ export default class Command {
   }
 
   /**
-   * Returns the usage of the command.
+   * Returns the help usage of the command.
    * @return The usage string.
    */
-  private getUsage() {
+  private getHelpUsage() {
     const descriptor = Command.getDescriptor(this.command)
 
-    const args = _.map(descriptor.arguments, (argument) => {
-      if (argument.optional) {
-        return `[${argument.name}]`
-      }
-
-      return `<${argument.name}>`
-    })
-
-    return `Usage: "/${this.command} ${args.join(' ')}" - ${descriptor.description}`
+    return `Usage: "${Command.getUsage(descriptor)}" - ${descriptor.description}`
   }
 
   /**
@@ -224,7 +244,7 @@ export default class Command {
     const [username] = this.arguments
 
     if (_.isEmpty(username)) {
-      noticeStr = this.getUsage()
+      noticeStr = this.getHelpUsage()
     } else {
       try {
         const user = await Twitch.fetchUserByName(username)
@@ -253,7 +273,7 @@ export default class Command {
     const [username] = this.arguments
 
     if (_.isEmpty(username)) {
-      const notice = new Notice(this.getUsage(), null)
+      const notice = new Notice(this.getHelpUsage(), null)
       this.addLog(notice.serialize())
     } else {
       this.timeout(username, 1)
@@ -270,9 +290,23 @@ export default class Command {
     if (!_.isEmpty(username) && !_.isEmpty(whisper)) {
       this.whisper(username, whisper, this.message)
     } else {
-      const notice = new Notice(this.getUsage(), null)
+      const notice = new Notice(this.getHelpUsage(), null)
       this.addLog(notice.serialize())
     }
+  }
+
+  /**
+   * Handles the /uniquechat command.
+   */
+  private handleCommandUniqueChat = () => {
+    this.say('/r9kbeta', true)
+  }
+
+  /**
+   * Handles the /uniquechatoff command.
+   */
+  private handleCommandUniqueChatOff = () => {
+    this.say('/r9kbetaoff', true)
   }
 
   /**
@@ -284,6 +318,8 @@ export default class Command {
     [CommandName.Followed]: this.handleCommandFollowed,
     [CommandName.Purge]: this.handleCommandPurge,
     [CommandName.Unblock]: this.handleCommandBlockUnblock,
+    [CommandName.Uniquechat]: this.handleCommandUniqueChat,
+    [CommandName.Uniquechatoff]: this.handleCommandUniqueChatOff,
     [CommandName.W]: this.handleCommandWhisper,
   }
 }
@@ -295,6 +331,7 @@ export enum CommandDelegateAction {
   AddLog,
   AddToHistory,
   Say,
+  SayWithoutHistory,
   Timeout,
   Whisper,
 }
@@ -309,9 +346,12 @@ export type CommandDelegateDataFetcher = () => { channelId: SerializedRoomState[
  */
 export interface CommandDelegate {
   (action: CommandDelegateAction.AddLog, log: Log): void
-  (action: CommandDelegateAction.AddToHistory | CommandDelegateAction.Say, message: string): void
   (action: CommandDelegateAction.Timeout, username: string, duration: number): void
   (action: CommandDelegateAction.Whisper, username: string, whisper: string, command?: string): void
+  (
+    action: CommandDelegateAction.AddToHistory | CommandDelegateAction.Say | CommandDelegateAction.SayWithoutHistory,
+    message: string
+  ): void
 }
 
 /**

@@ -70,6 +70,9 @@ export default {
     margin: 14,
     width: 350,
   },
+  help: {
+    minHeight: 57,
+  },
   history: {
     height: 200,
   },

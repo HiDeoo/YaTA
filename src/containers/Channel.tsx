@@ -10,6 +10,7 @@ import { compose } from 'recompose'
 
 import ChannelDetails from 'Components/ChannelDetails'
 import Chatters from 'Components/Chatters'
+import CommandsHelp from 'Components/CommandsHelp'
 import DropOverlay from 'Components/DropOverlay'
 import FlexLayout from 'Components/FlexLayout'
 import FollowOmnibar from 'Components/FollowOmnibar'
@@ -100,6 +101,7 @@ const initialState = {
   viewerCount: undefined as Optional<number>,
   [ToggleableUI.BroadcasterOverlay]: false,
   [ToggleableUI.Chatters]: false,
+  [ToggleableUI.CommandsHelp]: false,
   [ToggleableUI.FollowOmnibar]: false,
   [ToggleableUI.LogsExporter]: false,
   [ToggleableUI.PollEditor]: false,
@@ -213,6 +215,7 @@ class Channel extends React.Component<Props, State> {
       isUploadingFile,
       [ToggleableUI.BroadcasterOverlay]: showBroadcasterOverlay,
       [ToggleableUI.Chatters]: showChatters,
+      [ToggleableUI.CommandsHelp]: showCommandsHelp,
       [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
       [ToggleableUI.LogsExporter]: showLogsExporter,
       [ToggleableUI.PollEditor]: showPollEditor,
@@ -251,6 +254,7 @@ class Channel extends React.Component<Props, State> {
         <Chatters toggle={this.toggleChatters} visible={showChatters} channel={channel} />
         <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
         <LogsExporter toggle={this.toggleLogsExporter} visible={showLogsExporter} />
+        <CommandsHelp toggle={this.toggleCommandsHelp} visible={showCommandsHelp} />
         <BroadcasterOverlay
           toggle={this.toggleBroadcasterOverlay}
           visible={showBroadcasterOverlay}
@@ -541,16 +545,16 @@ class Channel extends React.Component<Props, State> {
    */
   private onChangeInputValue = (value: string) => {
     let inputValue = value
+    const shrug = Command.parseShrug(value)
 
     if (Command.isWhisperReplyCommand(value)) {
       const { lastWhisperSender } = this.props
       inputValue = `/w ${this.props.lastWhisperSender}${lastWhisperSender.length > 0 ? ' ' : ''}`
-    }
-
-    const shrug = Command.parseShrug(value)
-
-    if (shrug.isShrug) {
+    } else if (shrug.isShrug) {
       inputValue = shrug.message
+    } else if (Command.isHelpCommand(value)) {
+      inputValue = ''
+      this.toggleCommandsHelp()
     }
 
     this.setState(() => ({ inputValue }))
@@ -674,6 +678,13 @@ class Channel extends React.Component<Props, State> {
    */
   private toggleSearch = () => {
     this.toggleUI(ToggleableUI.Search)
+  }
+
+  /**
+   * Toggles the commands help.
+   */
+  private toggleCommandsHelp = () => {
+    this.toggleUI(ToggleableUI.CommandsHelp)
   }
 
   /**
@@ -909,6 +920,8 @@ class Channel extends React.Component<Props, State> {
       this.props.addToHistory(arg1)
     } else if (action === CommandDelegateAction.Say && _.isString(arg1)) {
       this.say(arg1)
+    } else if (action === CommandDelegateAction.SayWithoutHistory && _.isString(arg1)) {
+      this.say(arg1, true)
     } else if (action === CommandDelegateAction.Timeout && _.isString(arg1) && _.isNumber(arg2)) {
       this.timeout(arg1, arg2)
     } else if (action === CommandDelegateAction.Whisper && _.isString(arg1) && _.isString(arg2)) {
@@ -952,15 +965,19 @@ class Channel extends React.Component<Props, State> {
   /**
    * Sends a message.
    * @param message - The message to send.
+   * @param ignoreHistory - Defines if the message should not be added to the
+   * history.
    */
-  private async say(message: string) {
+  private async say(message: string, ignoreHistory: boolean = false) {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       await client.say(channel, message)
 
-      this.props.addToHistory(message)
+      if (!ignoreHistory) {
+        this.props.addToHistory(message)
+      }
     }
   }
 

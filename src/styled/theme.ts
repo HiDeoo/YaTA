@@ -97,6 +97,9 @@ export default interface ITheme {
     titleStream: string
     width: number
   }
+  help: {
+    minHeight: number
+  }
   history: {
     background: string
     border: string

@@ -9,19 +9,6 @@ export default {
    */
   UnbanNotices: ['bad_unban_no_ban', 'unban_success', 'untimeout_success'],
 
-  Help: {
-    /**
-     * Id of the help notice (/help).
-     */
-    Id: 'cmds_available',
-
-    /**
-     * Additions to the help notice to concatenate at the end of the list of
-     * commands and before the "More help" link.
-     */
-    Additions: '/purge /block /unblock /followed',
-  },
-
   /**
    * Extra notices not handled natively which will be outputted as is.
    */

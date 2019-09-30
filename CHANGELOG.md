@@ -2,8 +2,11 @@
 
 ### 🚀 New Feature
 
-- Add support for the `/block` & `/unblock` commands.
-- Add the `/purge` command which is an alias of the `/timeout user 1`.
+- Tons of commands:
+  - The internal system to handle commands has been redesigned.
+  - Using the `/help` command will trigger a new in-application help modal.
+  - Add support for the `/block` & `/unblock` commands.
+  - Add the `/purge` command which is an alias of the `/timeout user 1`.
 
 # 1.10.0
 

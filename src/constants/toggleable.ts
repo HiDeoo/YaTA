@@ -5,6 +5,7 @@
 export enum ToggleableUI {
   BroadcasterOverlay = 'showBroadcasterOverlay',
   Chatters = 'showChatters',
+  CommandsHelp = 'showCommandsHelp',
   FollowOmnibar = 'showFollowOmnibar',
   LogsExporter = 'showLogsExporter',
   PollEditor = 'showPollEditor',
