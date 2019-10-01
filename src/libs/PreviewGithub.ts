@@ -20,12 +20,12 @@ const BaseUrl = 'https://api.github.com'
 /**
  * RegExp used to identify a repository link.
  */
-const RepoRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)/g
+const RepoRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)(?:[^\s]+)?/g
 
 /**
  * RegExp used to identify an issue or PR link.
  */
-const IssueOrPRRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)\/(?:issues|pull)\/(\d+)/g
+const IssueOrPRRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)\/(?:issues|pull)\/(\d+)(?:[^\s]+)?/g
 
 /**
  * Github preview provider.
@@ -52,6 +52,7 @@ const PreviewGithub: PreviewProvider = class {
     // tslint:disable-next-line:no-conditional-assignment
     while ((match = RepoRegExp.exec(message)) != null) {
       previews[match[1]] = {
+        extra: { initialLink: match[0] },
         id: match[1],
         provider: PreviewGithub.getProviderId(),
         resolved: false,
@@ -62,7 +63,7 @@ const PreviewGithub: PreviewProvider = class {
     // tslint:disable-next-line:no-conditional-assignment
     while ((match = IssueOrPRRegExp.exec(message)) != null) {
       previews[match[1]] = {
-        extra: { issueId: match[2] },
+        extra: { initialLink: match[0], issueId: match[2] },
         id: match[1],
         provider: PreviewGithub.getProviderId(),
         resolved: false,

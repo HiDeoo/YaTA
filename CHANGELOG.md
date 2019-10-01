@@ -12,6 +12,11 @@
 - Alerts for long messages now include a live character counter.
 - When manually opening the video of the current Twitch live stream from YaTA, the player will have sound enabled by default.
 
+### 🐛 Bug Fix
+
+- Fix an issue with Youtube previews not linking to specific time if specified.
+- Fix an issue with Github previews not linking to specific comments, hashes, lines, etc. if specified.
+
 # 1.10.0
 
 ### 🚀 New Feature

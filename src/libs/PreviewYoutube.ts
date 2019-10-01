@@ -21,7 +21,7 @@ const BaseUrl = 'https://www.googleapis.com/youtube/v3'
 /**
  * RegExp used to identify a video link.
  */
-const VideoRegExp = /https:\/\/(?:www\.)?youtu(?:\.be\/|be\.com\/watch\?v=)([\w-]+)/g
+const VideoRegExp = /https:\/\/(?:www\.)?youtu(?:\.be\/|be\.com\/watch\?v=)([\w-]+)(?:[^\s]+)?/g
 
 /**
  * RegExp used to identify a channel link.
@@ -53,6 +53,7 @@ const PreviewYoutube: PreviewProvider = class {
     // tslint:disable-next-line:no-conditional-assignment
     while ((match = VideoRegExp.exec(message)) != null) {
       previews[match[1]] = {
+        extra: { initialLink: match[0] },
         id: match[1],
         provider: PreviewYoutube.getProviderId(),
         resolved: false,

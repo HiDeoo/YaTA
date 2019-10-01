@@ -133,7 +133,10 @@ export default class Preview extends React.Component<Props> {
       ) {
         Player.current.playTwitchClip(preview.id)
       } else {
-        window.open(preview.url)
+        const initialLink = _.get(preview.extra, 'initialLink')
+        const url = _.isString(initialLink) ? initialLink : preview.url
+
+        window.open(url)
       }
     }
   }
