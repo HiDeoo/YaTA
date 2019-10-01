@@ -12,7 +12,21 @@ export default {
   /**
    * Extra notices not handled natively which will be outputted as is.
    */
-  Extra: ['bad_delete_message_broadcaster', 'bad_delete_message_mod', 'no_vips', 'vips_success'],
+  Extra: [
+    'bad_delete_message_broadcaster',
+    'bad_delete_message_mod',
+    'no_vips',
+    'vips_success',
+    'usage_raid',
+    'raid_error_already_raiding',
+    'raid_error_forbidden',
+    'raid_error_self',
+    'raid_error_too_many_viewers',
+    'raid_error_unexpected',
+    'raid_notice_mature',
+    'unraid_error_unexpected',
+    'unraid_success',
+  ],
 
   /**
    * Extra user notices not handled natively.
