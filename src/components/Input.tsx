@@ -335,7 +335,11 @@ export default class Input extends React.Component<Props, State> {
 
           const previousCharacter = this.splittedValueBeforeCompletion[0].slice(-1)
 
-          this.completions = this.props.getCompletions(word, previousCharacter === '@')
+          this.completions = this.props.getCompletions(
+            word,
+            previousCharacter === '@',
+            start === 1 && Command.isCommand(previousCharacter)
+          )
         }
 
         // Only auto-complete if we have results.
@@ -435,7 +439,7 @@ export default class Input extends React.Component<Props, State> {
  */
 interface Props {
   disabled: boolean
-  getCompletions: (word: string, excludeEmotes: boolean) => string[]
+  getCompletions: (word: string, excludeEmotes: boolean, isCommand: boolean) => string[]
   getHistory: (previous?: boolean) => { entry: string | null; atStart: boolean }
   isUploadingFile: boolean
   onChange: (value: string) => void

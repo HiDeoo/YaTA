@@ -23,6 +23,7 @@ import LogsExporter from 'Components/LogsExporter'
 import ModerationMenuItems, { SlowModeDuration } from 'Components/ModerationMenuItems'
 import PollEditor from 'Components/PollEditor'
 import Spinner from 'Components/Spinner'
+import { CommandNames } from 'Constants/command'
 import ReadyState from 'Constants/readyState'
 import { ShortcutImplementations, ShortcutType } from 'Constants/shortcut'
 import Status from 'Constants/status'
@@ -810,10 +811,15 @@ class Channel extends React.Component<Props, State> {
    * Returns a list of completions for a specific word.
    * @param  word - The word to auto-complete.
    * @param  excludeEmotes - `true` to ignore emotes.
+   * @param  isCommand - Defines if a command should be auto-completed.
    * @return The list of completions.
    */
-  private getCompletions = (word: string, excludeEmotes: boolean = false) => {
+  private getCompletions = (word: string, excludeEmotes: boolean = false, isCommand: boolean) => {
     const sanitizedWord = word.toLowerCase()
+
+    if (isCommand) {
+      return _.filter(CommandNames, (commandName) => commandName.startsWith(sanitizedWord))
+    }
 
     const { chatters, emotes, prioritizeUsernames } = this.props
 

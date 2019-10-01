@@ -4,6 +4,7 @@
 
 - Tons of commands:
   - The internal system to handle commands has been redesigned.
+  - Commands can now be autocompleted just like emotes & usernames.
   - Using the `/help` command will trigger a new in-application help modal.
   - Add the `/user` command to open a user viewer card without any click or having to find a user message first.
   - Add support for the `/block` & `/unblock` commands.
