@@ -41,6 +41,16 @@ const InputToast = styled(Toast)`
       transition-duration: 50ms;
     }
 
+    &.messageLengthWarning {
+      max-width: unset;
+      width: 565px;
+    }
+
+    &.messageLengthError {
+      max-width: unset;
+      width: 435px;
+    }
+
     &.hiddenToast {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -146,17 +156,19 @@ export default class Input extends React.Component<Props, State> {
       intent = Classes.INTENT_DANGER
     } else if (value.length > Message.Max) {
       toasts.push({
+        className: 'messageLengthError',
         icon: 'warning-sign',
         intent: Intent.DANGER,
-        message: 'Your message exceeds the 500 characters limit.',
+        message: `Your message exceeds the 500 characters limit.  (${value.length}/${Message.Max})`,
       })
 
       intent = Classes.INTENT_DANGER
     } else if (value.length > Message.Warning) {
       toasts.push({
+        className: 'messageLengthWarning',
         icon: 'hand',
         intent: Intent.WARNING,
-        message: 'Your message exceeds 400 characters. Try to avoid long messages.',
+        message: `Your message exceeds 400 characters. Try to avoid long messages. (${value.length}/${Message.Max})`,
       })
 
       intent = Classes.INTENT_WARNING
@@ -208,11 +220,14 @@ export default class Input extends React.Component<Props, State> {
       <Wrapper>
         <Toaster position={Position.BOTTOM} usePortal={false}>
           {_.map(toasts, (toast, index) => {
-            const { hideable, ...toastProps } = toast
+            const { className, hideable, ...toastProps } = toast
 
-            const toastClasses = clsx({
-              hiddenToast: hideable && hideToasts,
-            })
+            const toastClasses = clsx(
+              {
+                hiddenToast: hideable && hideToasts,
+              },
+              className
+            )
 
             return <InputToast key={index} {...toastProps} className={toastClasses} />
           })}
@@ -459,4 +474,4 @@ type CursorPosition = {
 /**
  * Hideable toast options.
  */
-type HideableToastOptions = IToastOptions & { hideable?: boolean }
+type HideableToastOptions = IToastOptions & { hideable?: boolean; className?: string }
