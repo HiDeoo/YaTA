@@ -147,7 +147,14 @@ class Chatters extends React.Component<Props, State> {
 
     return (
       <>
-        <Search placeholder="Filter…" type="search" leftIcon="search" value={filter} onChange={this.onChangeFilter} />
+        <Search
+          onChange={this.onChangeFilter}
+          placeholder="Filter…"
+          leftIcon="search"
+          value={filter}
+          type="search"
+          autoFocus
+        />
         <AutoSizer>
           {({ height, width }) => (
             <List
