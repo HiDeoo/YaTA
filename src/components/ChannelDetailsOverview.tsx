@@ -288,7 +288,7 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
    */
   private onClickPreview = () => {
     window.open(
-      `https://player.twitch.tv/?muted&channel=${this.props.name}`,
+      `https://player.twitch.tv/?muted=false&channel=${this.props.name}`,
       'videoPopupWindow',
       'height=360,width=600'
     )
