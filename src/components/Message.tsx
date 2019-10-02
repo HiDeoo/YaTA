@@ -23,7 +23,11 @@ const Wrapper = styled.div<WrapperProps>`
     ${ifProp(
       'highlighted',
       theme('log.permanent.border'),
-      ifProp('mentionned', theme('log.mention.self.color'), ifProp('read', 'transparent', Colors.BLUE4))
+      ifProp(
+        'mentionned',
+        theme('log.mention.self.color'),
+        ifProp('read', ifProp('twitchHighlighted', theme('twitch.purple'), 'transparent'), Colors.BLUE4)
+      )
     )};
   opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')} 1px 7px;
@@ -169,6 +173,7 @@ export default class Message extends React.Component<Props, State> {
 
     return (
       <Wrapper
+        twitchHighlighted={message.twitchHighlighted}
         read={!markNewAsUnread || message.read}
         onDoubleClick={this.onDoubleClick}
         highlighted={message.highlighted}
@@ -458,4 +463,5 @@ interface WrapperProps {
   mentionned: boolean
   purged: boolean
   read: boolean
+  twitchHighlighted: boolean
 }

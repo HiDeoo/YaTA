@@ -56,6 +56,7 @@ declare module 'twitch-js' {
     'display-name': string
     emotes: Emotes | null
     id: string
+    'msg-id'?: string | null
     mod: boolean
     'room-id'?: string
     'thread-id'?: string
@@ -103,7 +104,7 @@ declare module 'twitch-js' {
 
     on(
       event: Event.Message,
-      listener: (channel: string, userstate: UserState, message: string, self: boolean) => void
+      listener: (channel: string, userstate: UserState, message: string, self: boolean, msgId: string | null) => void
     ): void
     on(event: Event.Notice, listener: (channel: string, msgid: string, message: string) => void): void
     on(event: Event.Connecting, listener: (adress: string, port: number) => void): void

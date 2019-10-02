@@ -9,6 +9,7 @@
   - Add the `/user` command to open a user viewer card without any click or having to find a user message first.
   - Add support for the `/block` & `/unblock` commands.
   - Add the `/purge` command which is an alias of the `/timeout user 1`.
+- Messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide) are now *slightly* highlighted.
 - Alerts for long messages now include a live character counter.
 - When manually opening the video of the current Twitch live stream from YaTA, the player will have sound enabled by default.
 

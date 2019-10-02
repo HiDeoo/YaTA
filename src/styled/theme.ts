@@ -188,6 +188,9 @@ export default interface ITheme {
   tooltip: {
     background: string
   }
+  twitch: {
+    purple: string
+  }
   twitchState: {
     gap: number
     size: number

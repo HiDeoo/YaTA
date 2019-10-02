@@ -450,9 +450,16 @@ export class ChatClient extends React.Component<Props, State> {
    * @param userstate - The associated userstate.
    * @param message - The received message.
    * @param self - `true` if the sender is the receiver.
+   * @param msgId - The message id associated to the message if any.
    */
-  private onMessage = async (_channel: string, userstate: UserState, message: string, self: boolean) => {
-    const parsedMessage = this.parseRawMessage(message, userstate, self)
+  private onMessage = async (
+    _channel: string,
+    userstate: UserState,
+    message: string,
+    self: boolean,
+    msgId: string | null
+  ) => {
+    const parsedMessage = this.parseRawMessage(message, { ...userstate, 'msg-id': msgId }, self)
 
     if (!_.isNil(parsedMessage)) {
       if (

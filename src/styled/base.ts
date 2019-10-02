@@ -119,6 +119,9 @@ export default {
   tooltip: {
     background: Colors.DARK_GRAY1,
   },
+  twitch: {
+    purple: '#9146FF',
+  },
   twitchState: {
     gap: 6,
     size: 12,

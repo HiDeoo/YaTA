@@ -2,7 +2,7 @@ patch-package
 --- a/node_modules/twitch-js/lib/client.js
 +++ b/node_modules/twitch-js/lib/client.js
 @@ -209,6 +209,8 @@ client.prototype.handleMessage = function handleMessage(message) {
- 
+
          // https://github.com/justintv/Twitch-API/blob/master/chat/capabilities.md#notice
          case 'NOTICE':
 +          this.emit('notices', channel, msgid, msg);
@@ -31,11 +31,11 @@ patch-package
 +
                var prime = plan.includes('Prime');
                var userstate = message.tags;
- 
+
 @@ -590,7 +598,7 @@ client.prototype.handleMessage = function handleMessage(message) {
                  userstate['message-type'] = 'resub';
                }
- 
+
 -              this.emits(['resub', 'subanniversary'], [[channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }], [channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }]]);
 +              this.emits(['resub', 'subanniversary'], [[channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }, monthsStreak], [channel, username, months, msg, userstate, { prime: prime, plan: plan, planName: planName }, monthsStreak]]);
              } else if (msgid === 'sub') {
@@ -44,7 +44,7 @@ patch-package
 @@ -652,6 +660,14 @@ client.prototype.handleMessage = function handleMessage(message) {
              break;
            }
- 
+
 +        // Single message removal on a channel.
 +        case 'CLEARMSG':
 +          var id = message.tags['target-msg-id'];
@@ -56,3 +56,12 @@ patch-package
          // Channel is now hosting another channel or exited host mode..
          case 'HOSTTARGET':
            // Stopped hosting..
+@@ -935,7 +951,7 @@ client.prototype.handleMessage = function handleMessage(message) {
+               message.tags['message-type'] = 'chat';
+               this.log.info('[' + channel + '] <' + message.tags.username + '>: ' + msg);
+
+-              this.emits(['chat', 'message'], [[channel, message.tags, msg, false], [channel, message.tags, msg, false]]);
++              this.emits(['chat', 'message'], [[channel, message.tags, msg, false, msgid], [channel, message.tags, msg, false, msgid]]);
+             }
+           }
+           break;
