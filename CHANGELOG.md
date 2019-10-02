@@ -1,4 +1,4 @@
-# Unreleased
+# 1.11.0
 
 ### 🚀 New Feature
 
