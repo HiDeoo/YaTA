@@ -118,6 +118,8 @@
   "bugs": {
     "url": "https://github.com/HiDeoo/YaTA/issues"
   },
-  "contributors": [],
+  "contributors": [
+    "nDoorn <ndoorn@outlook.com>"
+  ],
   "homepage": "https://yata.now.sh"
 }
