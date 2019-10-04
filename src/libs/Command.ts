@@ -45,6 +45,31 @@ export default class Command {
   }
 
   /**
+   * Checks if the message can currently be autocomplete with a user name
+   * @param message - A message which potentially could be autocompleted with
+   * a user name
+   */
+  public static isUserNameAutoCompletable(message: string) {
+    return _.map(Commands, (description, name) => {
+      return {
+        name,
+        requiresUserName: _.some(description.arguments, (arg) => arg.name === 'username'),
+      }
+    })
+      .filter((cmd) => {
+        return cmd.requiresUserName === true
+      })
+      .some((cmd) => {
+        const isFirstArgument: boolean = message.split(' ').length === 2
+
+        const regex: string = `^[\\/|.]${cmd.name}(?:$|\\s)`
+        const matches: boolean = RegExp(regex, 'i').test(message)
+
+        return isFirstArgument && matches
+      })
+  }
+
+  /**
    * Parses a message as a whisper command (/w user message).
    * @return The whisper details.
    */
