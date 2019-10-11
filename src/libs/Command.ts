@@ -45,7 +45,7 @@ export default class Command {
   }
 
   /**
-   * Checks if the message can currently be autocomplete with a user name
+   * Checks if the given message should be auto completed with a user name
    * @param message - A message which potentially could be autocompleted with
    * a user name
    */
