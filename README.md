@@ -39,7 +39,7 @@
 1.  Create a Twitch app [here](https://dev.twitch.tv/console/apps).
 2.  Set the OAuth Redirect URL to `http://localhost:3000/auth`.
 3.  Get your Twitch app Client-ID by managing your newly made app.
-4.  Create a file named `.env.development.local` and add the following:
+4.  Create a file named `.env.development.local` and add the following text:
 ```
 REACT_APP_TWITCH_CLIENT_ID="your-client-id-here"
 REACT_APP_TWITCH_REDIRECT_URI="http://localhost:3000/auth"
