@@ -161,7 +161,7 @@ export type CommandDescriptor = {
 /**
  * A command argument.
  */
-type CommandArgument = {
+export type CommandArgument = {
   name: string
   optional?: boolean
 }

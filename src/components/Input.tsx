@@ -352,7 +352,7 @@ export default class Input extends React.Component<Props, State> {
 
           this.completions = this.props.getCompletions(
             word,
-            previousCharacter === '@',
+            previousCharacter === '@' || Command.isUsernameCompletableCommandArgument(text, cursor),
             start === 1 && Command.isCommand(previousCharacter)
           )
         }

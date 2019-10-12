@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- When autocompleting a username argument of a command, only usernames will now be suggested ([#32](https://github.com/HiDeoo/YaTA/pull/32) - [nD00rn](https://github.com/nD00rn)).
+
 # 1.11.0
 
 ### 🚀 New Feature

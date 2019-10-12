@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-import { CommandDescriptor, CommandName, Commands } from 'Constants/command'
+import { CommandArgument, CommandDescriptor, CommandName, Commands } from 'Constants/command'
 import Notice from 'Libs/Notice'
 import { SerializedRoomState } from 'Libs/RoomState'
 import Twitch from 'Libs/Twitch'
@@ -42,6 +42,57 @@ export default class Command {
    */
   public static isHelpCommand(message: string) {
     return /^[\/|.]help(?:$|\s)/i.test(message)
+  }
+
+  /**
+   * Checks if the cursor in a message is associated to a command username auto-completable argument.
+   * Note: at the moment, it is assumed that all commands having a username completable argument have that argument at
+   * the first position.
+   * @param  message - The message.
+   * @param  cursor - The cursor position.
+   * @return `true` when the cursor is matching a username completable argument.
+   */
+  public static isUsernameCompletableCommandArgument(message: string, cursor: number) {
+    // Bail out if the message is not even a command.
+    if (!Command.isCommand(message)) {
+      return false
+    }
+
+    // Grab the command name and the first argument.
+    const words = message.split(' ')
+    const commandName = words[0].substr(1)
+    const firstArgument = words[1]
+
+    // If we don't have a first argument yet, bail out.
+    if (_.isNil(firstArgument)) {
+      return false
+    }
+
+    const firstArgumentStart = commandName.length + 2
+    const firstArgumentEnd = firstArgumentStart + firstArgument.length
+
+    // If we're not auto-completing the first agument, bail out.
+    if (cursor < firstArgumentStart || cursor > firstArgumentEnd) {
+      return false
+    }
+
+    // Get the descriptor for this command.
+    const descriptor = Command.getDescriptor(commandName)
+
+    // If we can't get a valid descriptor, this means the command is unknown.
+    if (_.isNil(descriptor.name)) {
+      return false
+    }
+
+    const firstArgumentDescriptor = _.get(descriptor, 'arguments[0]') as Optional<CommandArgument>
+
+    // If the command doesn't accept any argument or the first argument is not a
+    // username, bail out.
+    if (_.isNil(firstArgumentDescriptor) || firstArgumentDescriptor.name !== 'username') {
+      return false
+    }
+
+    return true
   }
 
   /**
