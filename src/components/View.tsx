@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core'
 import * as React from 'react'
 
-import { IView } from 'Components/ViewStack'
+import { IView } from 'components/ViewStack'
 
 /**
  * View Component.

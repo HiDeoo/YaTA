@@ -3,10 +3,10 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import SettingsView from 'Components/SettingsView'
-import SettingsViewSection from 'Components/SettingsViewSection'
-import Switch from 'Components/Switch'
-import Theme from 'Constants/theme'
+import SettingsView from 'components/SettingsView'
+import SettingsViewSection from 'components/SettingsViewSection'
+import Switch from 'components/Switch'
+import Theme from 'constants/theme'
 import {
   toggleAddWhispersToHistory,
   toggleAlternateMessageBackgrounds,
@@ -19,8 +19,8 @@ import {
   togglePrioritizeUsernames,
   toggleShowContextMenu,
   toggleTheme,
-} from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
+} from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
 import {
   getAddWhispersToHistory,
   getAlternateMessageBackgrounds,
@@ -33,8 +33,8 @@ import {
   getPrioritizeUsernames,
   getShowContextMenu,
   getTheme,
-} from 'Store/selectors/settings'
-import styled from 'Styled'
+} from 'store/selectors/settings'
+import styled from 'styled'
 
 /**
  * ConfirmationControls component.

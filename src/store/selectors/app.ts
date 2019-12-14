@@ -1,7 +1,8 @@
 import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { ApplicationState } from 'Store/reducers'
+import { ApplicationState } from 'store/reducers'
+import { Emote } from 'libs/EmotesProvider'
 
 /**
  * Returns the app state.
@@ -117,7 +118,7 @@ export const getEmotesSets = createSelector(
 
         return emotes
       },
-      {}
+      {} as typeof app.emotes
     )
   }
 )

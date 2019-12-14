@@ -2,8 +2,8 @@ import { Button, Classes, IButtonProps, Position, Tooltip } from '@blueprintjs/c
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import { ChannelDetailsPanel, ChannelDetailsType } from 'Components/ChannelDetailsOverview'
-import styled, { theme } from 'Styled'
+import { ChannelDetailsPanel, ChannelDetailsType } from 'components/ChannelDetailsOverview'
+import styled, { theme } from 'styled'
 
 /**
  * ButtonTooltip component.

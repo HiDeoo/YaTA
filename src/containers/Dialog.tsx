@@ -2,8 +2,8 @@ import { Dialog as OriginalDialog, IDialogProps } from '@blueprintjs/core'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { ApplicationState } from 'Store/reducers'
-import { getDisableDialogAnimations } from 'Store/selectors/settings'
+import { ApplicationState } from 'store/reducers'
+import { getDisableDialogAnimations } from 'store/selectors/settings'
 
 /**
  * Dialog Component.

@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import { Emotes } from 'twitch-js'
 import { Word } from 'unistring'
 
-import Resources from 'Libs/Resources'
+import Resources from 'libs/Resources'
 
 /**
  * Various emotes providers.
@@ -77,12 +77,30 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    */
   public static sanitizeTwitchEmotes(emotes: Emote[]): Emote[] {
     return _.map(emotes, (emote) => {
-      if (!_.has(TwitchRegExpEmotesMap, emote.code)) {
-        return emote
+      if (EmotesProvider.isTwitchRegExpEmote(emote.code)) {
+        return { ...emote, code: TwitchRegExpEmotesMap[emote.code] }
       }
 
-      return { ...emote, code: TwitchRegExpEmotesMap[emote.code] }
+      return emote
     })
+  }
+
+  /**
+   * Defines if an emote code matches a Twitch RegExp emote.
+   * @param code - The emote code.
+   * @return `true` when the code matches a Twitch RegExp emote.
+   */
+  private static isTwitchRegExpEmote(code: string): code is keyof typeof TwitchRegExpEmotesMap {
+    return code in TwitchRegExpEmotesMap
+  }
+
+  /**
+   * Defines if an emote id matches a fixed width emote.
+   * @param id - The emote id.
+   * @return `true` when the id matches a fixed width emote.
+   */
+  private static isFixedWidthEmote(id: string | number): id is keyof typeof EmotesWidthsMap {
+    return id in TwitchRegExpEmotesMap
   }
 
   private urlCompiledTemplate: _.TemplateExecutor
@@ -141,7 +159,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
 
         return emotes
       },
-      {}
+      {} as Emotes
     )
   }
 
@@ -205,7 +223,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return The minimum width or an empty string.
    */
   private getSpecificWidth(id: string) {
-    return _.has(EmotesWidthsMap, id) ? `  style="min-width: ${EmotesWidthsMap[id]}px;"` : ''
+    return EmotesProvider.isFixedWidthEmote(id) ? `  style="min-width: ${EmotesWidthsMap[id]}px;"` : ''
   }
 }
 

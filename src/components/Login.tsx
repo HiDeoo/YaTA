@@ -2,12 +2,12 @@ import { AnchorButton, Classes, Colors, H2, H3, Icon, IconName, Intent } from '@
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import loginBackground from 'Images/loginBackground.png'
-import PreviewImg from 'Images/preview.png'
-import Twitch from 'Libs/Twitch'
-import styled, { prop, size, theme } from 'Styled'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import loginBackground from 'images/loginBackground.png'
+import PreviewImg from 'images/preview.png'
+import Twitch from 'libs/Twitch'
+import styled, { prop, size, theme } from 'styled'
 
 /**
  * Wrapper component.

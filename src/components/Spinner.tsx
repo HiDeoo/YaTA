@@ -1,7 +1,7 @@
 import { Classes, Intent, ISpinnerProps, Spinner as OriginalSpinner } from '@blueprintjs/core'
 import * as React from 'react'
 
-import Center from 'Components/Center'
+import Center from 'components/Center'
 
 /**
  * Spinner Component.

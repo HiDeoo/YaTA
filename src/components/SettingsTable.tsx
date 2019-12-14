@@ -1,4 +1,4 @@
-import styled, { theme } from 'Styled'
+import styled, { theme } from 'styled'
 
 /**
  * SettingsTable component.

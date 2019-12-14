@@ -1,38 +1,27 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "build/dist",
-    "module": "esnext",
+    "baseUrl": "src",
     "target": "es5",
-    "lib": ["es6", "dom"],
-    "sourceMap": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "jsx": "react",
-    "moduleResolution": "node",
-    "rootDir": "src",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "paths": {
-      "Components/*": ["src/components/*"],
-      "Constants/*": ["src/constants/*"],
-      "Containers/*": ["src/containers/*"],
-      "Images/*": ["src/images/*"],
-      "Libs/*": ["src/libs/*"],
-      "Store": ["src/store/index.ts"],
-      "Store/*": ["src/store/*"],
-      "Styled": ["src/styled/index.ts"],
-      "Styled/*": ["src/styled/*"],
-      "Utils/*": ["src/utils/*"]
-    },
-    "plugins": [
-      {
-        "name": "typescript-styled-plugin",
-        "validate": false
-      }
-    ]
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "noImplicitReturns": true
   },
-  "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]
+  "include": [
+    "src"
+  ]
 }

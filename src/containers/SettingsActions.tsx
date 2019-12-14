@@ -3,20 +3,20 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import ActionTypeMenuItem from 'Components/ActionTypeMenuItem'
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import Help from 'Components/Help'
-import NonIdealState from 'Components/NonIdealState'
-import SettingsAction from 'Components/SettingsAction'
-import SettingsInput from 'Components/SettingsInput'
-import SettingsTable from 'Components/SettingsTable'
-import SettingsView from 'Components/SettingsView'
-import Action, { ActionPlaceholder, ActionType } from 'Libs/Action'
-import { addAction, moveAction, removeAction, updateAction } from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
-import { getActions } from 'Store/selectors/settings'
-import styled from 'Styled'
+import ActionTypeMenuItem from 'components/ActionTypeMenuItem'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import Help from 'components/Help'
+import NonIdealState from 'components/NonIdealState'
+import SettingsAction from 'components/SettingsAction'
+import SettingsInput from 'components/SettingsInput'
+import SettingsTable from 'components/SettingsTable'
+import SettingsView from 'components/SettingsView'
+import Action, { ActionPlaceholder, ActionType } from 'libs/Action'
+import { addAction, moveAction, removeAction, updateAction } from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
+import { getActions } from 'store/selectors/settings'
+import styled from 'styled'
 
 /**
  * Wrapper component.
@@ -234,7 +234,7 @@ class SettingsActions extends React.Component<Props, State> {
    * @param  key - The action key.
    * @return The intent.
    */
-  private getIntent(key: keyof ReturnType<typeof Action.validate>) {
+  private getIntent(key: Exclude<keyof ReturnType<typeof Action.validate>, 'valid'>) {
     const { editing, validation } = this.state
 
     const intent = validation[key] ? Intent.SUCCESS : Intent.DANGER

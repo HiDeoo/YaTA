@@ -1,9 +1,9 @@
 import { Reducer } from 'redux'
 
-import Status from 'Constants/status'
-import { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import { SerializedRoomState } from 'Libs/RoomState'
-import { createAction } from 'Utils/redux'
+import Status from 'constants/status'
+import { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
+import { SerializedRoomState } from 'libs/RoomState'
+import { createAction } from 'utils/redux'
 
 /**
  * Actions types.

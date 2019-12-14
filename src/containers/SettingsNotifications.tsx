@@ -3,12 +3,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import NumericInput from 'Components/NumericInput'
-import SettingsSoundControl from 'Components/SettingsSoundControl'
-import SettingsView from 'Components/SettingsView'
-import SettingsViewSection from 'Components/SettingsViewSection'
-import Switch from 'Components/Switch'
-import { SoundId } from 'Libs/Sound'
+import NumericInput from 'components/NumericInput'
+import SettingsSoundControl from 'components/SettingsSoundControl'
+import SettingsView from 'components/SettingsView'
+import SettingsViewSection from 'components/SettingsViewSection'
+import Switch from 'components/Switch'
+import { SoundId } from 'libs/Sound'
 import {
   togglePlayMessageSoundOnlyInOwnChannel,
   toggleSound,
@@ -16,16 +16,16 @@ import {
   updateDelayBetweenThrottledSounds,
   updateHostThreshold,
   updateSoundVolume,
-} from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
+} from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
 import {
   getAutoHostThreshold,
   getDelayBetweenThrottledSounds,
   getHostThreshold,
   getPlayMessageSoundOnlyInOwnChannel,
   getSoundSettings,
-} from 'Store/selectors/settings'
-import styled, { ifProp } from 'Styled'
+} from 'store/selectors/settings'
+import styled, { ifProp } from 'styled'
 
 /**
  * SoundDelayWrapper component.

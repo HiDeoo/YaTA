@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
-import StrawPoll from 'Libs/StrawPoll'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
+import StrawPoll from 'libs/StrawPoll'
 
 /**
  * RegExp used to identify a poll link.

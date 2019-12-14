@@ -1,8 +1,8 @@
 import { Checkbox, Classes, Colors } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'Styled'
+import styled from 'styled'
 
-import { IncludedLogId } from './LogsExporter'
+import { IncludedLogId } from 'components/LogsExporter'
 
 /**
  * LogsCheckbox component.

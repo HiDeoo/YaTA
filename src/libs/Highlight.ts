@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as shortid from 'shortid'
 
-import { SerializedHighlights } from 'Store/ducks/settings'
+import { SerializedHighlights } from 'store/ducks/settings'
 
 /**
  * RegExp used to identify a valid highlight pattern.

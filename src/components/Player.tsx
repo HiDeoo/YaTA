@@ -3,10 +3,10 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import Center from 'Components/Center'
-import Spinner from 'Components/Spinner'
-import styled from 'Styled'
-import base from 'Styled/base'
+import Center from 'components/Center'
+import Spinner from 'components/Spinner'
+import styled from 'styled'
+import base from 'styled/base'
 
 /**
  * Wrapper component.

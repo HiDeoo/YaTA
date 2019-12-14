@@ -4,15 +4,15 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import SettingsView from 'Components/SettingsView'
-import Toaster from 'Libs/Toaster'
-import { restoreNotes } from 'Store/ducks/notes'
-import { restoreSettings } from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
-import { getNotesBackup } from 'Store/selectors/notes'
-import { getSettingsBackup } from 'Store/selectors/settings'
-import styled from 'Styled'
-import { readTextFile } from 'Utils/html'
+import SettingsView from 'components/SettingsView'
+import Toaster from 'libs/Toaster'
+import { restoreNotes } from 'store/ducks/notes'
+import { restoreSettings } from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
+import { getNotesBackup } from 'store/selectors/notes'
+import { getSettingsBackup } from 'store/selectors/settings'
+import styled from 'styled'
+import { readTextFile } from 'utils/html'
 
 /**
  * Section component.
@@ -116,7 +116,7 @@ class SettingsBackup extends React.Component<Props, State> {
       this.props.restoreSettings(settings)
       this.props.restoreNotes(notes)
 
-      location.reload()
+      window.location.reload()
     } catch {
       Toaster.show({
         icon: 'error',

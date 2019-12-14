@@ -3,12 +3,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import SettingsView from 'Components/SettingsView'
-import Spinner from 'Components/Spinner'
-import { setShouldReadChangelog } from 'Store/ducks/app'
-import { setVersion } from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
-import styled, { theme } from 'Styled'
+import SettingsView from 'components/SettingsView'
+import Spinner from 'components/Spinner'
+import { setShouldReadChangelog } from 'store/ducks/app'
+import { setVersion } from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
+import styled, { theme } from 'styled'
 
 /**
  * Changelog component.
@@ -95,8 +95,8 @@ class SettingsChangelog extends React.Component<Props, State> {
   public async componentDidMount() {
     if (_.isNil(this.state.changelog)) {
       // @ts-ignore
-      const changelogUrl = await import('../CHANGELOG.md')
-      const marked = await import('marked')
+      const changelogUrl = (await import('../CHANGELOG.md')).default
+      const marked = (await import('marked')).default
 
       const response = await fetch(changelogUrl)
       let changelog = await response.text()

@@ -15,27 +15,27 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import ExternalButton from 'Components/ExternalButton'
-import FlexLayout from 'Components/FlexLayout'
-import History from 'Components/History'
-import NameHistoryMenuItem from 'Components/NameHistoryMenuItem'
-import ReasonDialog from 'Components/ReasonDialog'
-import { ToggleableUI } from 'Constants/toggleable'
-import ActionMenuItems from 'Containers/ActionMenuItems'
-import Dialog from 'Containers/Dialog'
-import { ActionHandler, SerializedAction } from 'Libs/Action'
-import { SerializedChatter, WithNameColorProps } from 'Libs/Chatter'
-import { SerializedMessage } from 'Libs/Message'
-import Twitch, { RawChannel, RawRelationship } from 'Libs/Twitch'
-import TwitchTools, { UsernameHistory } from 'Libs/TwitchTools'
-import { isMessage } from 'Store/ducks/logs'
-import { updateNote } from 'Store/ducks/notes'
-import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
-import { makeGetChatterLogs } from 'Store/selectors/chatters'
-import { getLogsByIds } from 'Store/selectors/logs'
-import { makeGetChatterNote } from 'Store/selectors/notes'
-import styled, { ifProp, prop, size, theme } from 'Styled'
+import ExternalButton from 'components/ExternalButton'
+import FlexLayout from 'components/FlexLayout'
+import History from 'components/History'
+import NameHistoryMenuItem from 'components/NameHistoryMenuItem'
+import ReasonDialog from 'components/ReasonDialog'
+import { ToggleableUI } from 'constants/toggleable'
+import ActionMenuItems from 'containers/ActionMenuItems'
+import Dialog from 'containers/Dialog'
+import { ActionHandler, SerializedAction } from 'libs/Action'
+import { SerializedChatter, WithNameColorProps } from 'libs/Chatter'
+import { SerializedMessage } from 'libs/Message'
+import Twitch, { RawChannel, RawRelationship } from 'libs/Twitch'
+import TwitchTools, { UsernameHistory } from 'libs/TwitchTools'
+import { isMessage } from 'store/ducks/logs'
+import { updateNote } from 'store/ducks/notes'
+import { ApplicationState } from 'store/reducers'
+import { getChannel } from 'store/selectors/app'
+import { makeGetChatterLogs } from 'store/selectors/chatters'
+import { getLogsByIds } from 'store/selectors/logs'
+import { makeGetChatterNote } from 'store/selectors/notes'
+import styled, { ifProp, prop, size, theme } from 'styled'
 
 /**
  * DetailsRow component.
@@ -249,7 +249,7 @@ class ChatterDetails extends React.Component<Props, State> {
         const [details, relationship] = response
 
         this.setState(() => ({
-          details,
+          details: details || undefined,
           error: undefined,
           relationship,
         }))

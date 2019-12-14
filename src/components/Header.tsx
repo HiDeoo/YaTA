@@ -13,12 +13,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 
-import HeaderTooltip from 'Components/HeaderTooltip'
-import Page from 'Constants/page'
-import Status from 'Constants/status'
-import { AppState } from 'Store/ducks/app'
-import styled from 'Styled'
-import { enumIncludes } from 'Utils/typescript'
+import HeaderTooltip from 'components/HeaderTooltip'
+import Page from 'constants/page'
+import Status from 'constants/status'
+import { AppState } from 'store/ducks/app'
+import styled from 'styled'
+import { enumIncludes } from 'utils/typescript'
 
 /**
  * NavBar component.

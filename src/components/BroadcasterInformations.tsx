@@ -1,16 +1,16 @@
 import { Button, Classes, Colors, FormGroup, InputGroup, Intent, Menu } from '@blueprintjs/core'
 import { ItemRenderer, Suggest } from '@blueprintjs/select'
 import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 import * as React from 'react'
 
-import BroadcasterSection from 'Components/BroadcasterSection'
-import ExternalLink from 'Components/ExternalLink'
-import NonIdealState from 'Components/NonIdealState'
-import Spinner from 'Components/Spinner'
-import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
-import Twitch, { RawGame, RawNotification } from 'Libs/Twitch'
-import styled, { theme } from 'Styled'
+import BroadcasterSection from 'components/BroadcasterSection'
+import ExternalLink from 'components/ExternalLink'
+import NonIdealState from 'components/NonIdealState'
+import Spinner from 'components/Spinner'
+import { BroadcasterSectionProps } from 'containers/BroadcasterOverlay'
+import Twitch, { RawGame, RawNotification } from 'libs/Twitch'
+import styled, { theme } from 'styled'
 
 /**
  * Game suggest component.
@@ -344,7 +344,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   /**
    * Returns the label info for a specific input.
    */
-  private getInputLabelInfo(input: Input) {
+  private getInputLabelInfo(input: keyof typeof InputMaxLengths) {
     const value = this.state[input] || ''
     const characters = InputMaxLengths[input] - value.length
 

@@ -1,10 +1,10 @@
 import * as _ from 'lodash'
 
-import { CommandArgument, CommandDescriptor, CommandName, Commands } from 'Constants/command'
-import Notice from 'Libs/Notice'
-import { SerializedRoomState } from 'Libs/RoomState'
-import Twitch from 'Libs/Twitch'
-import { Log } from 'Store/ducks/logs'
+import { CommandArgument, CommandDescriptor, CommandName, Commands } from 'constants/command'
+import Notice from 'libs/Notice'
+import { SerializedRoomState } from 'libs/RoomState'
+import Twitch from 'libs/Twitch'
+import { Log } from 'store/ducks/logs'
 
 /**
  * Command class.
@@ -154,9 +154,24 @@ export default class Command {
    * @return The descriptor.
    */
   public static getDescriptor(commandName: string | CommandName): EnhancedCommandDescriptor {
-    const name: CommandName = CommandName[_.upperFirst(commandName)]
+    const formattedCommandName = _.upperFirst(commandName)
+
+    if (!Command.isKnownCommand(formattedCommandName)) {
+      throw new Error('Unknown command name.')
+    }
+
+    const name: CommandName = CommandName[formattedCommandName]
 
     return { ...Commands[name], name }
+  }
+
+  /**
+   * Defines if an emote code matches a Twitch RegExp emote.
+   * @param code - The emote code.
+   * @return `true` when the code matches a Twitch RegExp emote.
+   */
+  private static isKnownCommand(code: string): code is keyof typeof CommandName {
+    return code in CommandName
   }
 
   private command: string

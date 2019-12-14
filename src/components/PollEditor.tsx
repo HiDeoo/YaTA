@@ -9,17 +9,17 @@ import {
   Intent,
   TextArea,
 } from '@blueprintjs/core'
-import * as copy from 'copy-to-clipboard'
+import copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import FlexLayout from 'Components/FlexLayout'
-import Key from 'Constants/key'
-import { ToggleableProps } from 'Constants/toggleable'
-import Dialog from 'Containers/Dialog'
-import StrawPoll, { StrawPollDuplicationStrategy } from 'Libs/StrawPoll'
-import Toaster from 'Libs/Toaster'
-import styled from 'Styled'
+import FlexLayout from 'components/FlexLayout'
+import Key from 'constants/key'
+import { ToggleableProps } from 'constants/toggleable'
+import Dialog from 'containers/Dialog'
+import StrawPoll, { StrawPollDuplicationStrategy } from 'libs/StrawPoll'
+import Toaster from 'libs/Toaster'
+import styled from 'styled'
 
 /**
  * Options component.
@@ -206,7 +206,10 @@ export default class PollEditor extends React.Component<Props, State> {
               onChange={this.onChangeDuplication}
               disabled={inputDisabled}
               value={_.head(
-                _.filter(_.keys(DuplicationStrategyMap), (key) => DuplicationStrategyMap[key] === duplication)
+                _.filter(
+                  _.keys(DuplicationStrategyMap) as (keyof typeof DuplicationStrategyMap)[],
+                  (key) => DuplicationStrategyMap[key] === duplication
+                )
               )}
               fill
             />
@@ -349,7 +352,7 @@ export default class PollEditor extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onChangeDuplication = (event: React.FormEvent<HTMLSelectElement>) => {
-    const duplication = event.currentTarget.value
+    const duplication = event.currentTarget.value as keyof typeof DuplicationStrategyMap
 
     this.setState(() => ({ duplication: DuplicationStrategyMap[duplication] }))
   }

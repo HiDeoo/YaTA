@@ -1,8 +1,8 @@
 import { Menu } from '@blueprintjs/core'
 import * as React from 'react'
 
-import { HighlightColors } from 'Libs/Highlight'
-import styled, { theme } from 'Styled'
+import { HighlightColors } from 'libs/Highlight'
+import styled, { theme } from 'styled'
 
 /**
  * ColorPreview component.

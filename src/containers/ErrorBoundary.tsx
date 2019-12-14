@@ -3,12 +3,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import NonIdealState from 'Components/NonIdealState'
-import Page from 'Constants/page'
-import { resetUser } from 'Store/ducks/user'
-import { ApplicationState } from 'Store/reducers'
-import styled from 'Styled'
-import { reportError } from 'Utils/bugs'
+import NonIdealState from 'components/NonIdealState'
+import Page from 'constants/page'
+import { resetUser } from 'store/ducks/user'
+import { ApplicationState } from 'store/reducers'
+import styled from 'styled'
+import { reportError } from 'utils/bugs'
 
 /**
  * Extra component.

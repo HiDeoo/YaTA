@@ -1,8 +1,8 @@
 import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 import * as shortid from 'shortid'
 
-import LogType from 'Constants/logType'
+import LogType from 'constants/logType'
 
 /**
  * Notification class.

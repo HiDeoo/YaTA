@@ -1,9 +1,9 @@
 import { Icon, Menu } from '@blueprintjs/core'
 import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 import * as React from 'react'
 
-import { SerializedRoomState } from 'Libs/RoomState'
+import { SerializedRoomState } from 'libs/RoomState'
 
 /**
  * Supported slow mode durations.

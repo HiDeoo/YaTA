@@ -5,12 +5,12 @@ import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized/dist/es/CellMeasurer'
 import { List, ListRowRenderer } from 'react-virtualized/dist/es/List'
 
-import NonIdealState from 'Components/NonIdealState'
-import { CommandName, CommandNames } from 'Constants/command'
-import { ToggleableProps } from 'Constants/toggleable'
-import Dialog from 'Containers/Dialog'
-import Command from 'Libs/Command'
-import styled, { ThemeProps, withTheme } from 'Styled'
+import NonIdealState from 'components/NonIdealState'
+import { CommandName, CommandNames } from 'constants/command'
+import { ToggleableProps } from 'constants/toggleable'
+import Dialog from 'containers/Dialog'
+import Command from 'libs/Command'
+import styled, { ThemeProps, withTheme } from 'styled'
 
 /**
  * Content component.

@@ -3,13 +3,13 @@ import clsx from 'clsx'
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import Key from 'Constants/key'
-import Message from 'Constants/message'
-import EmotePicker from 'Containers//EmotePicker'
-import Command from 'Libs/Command'
-import { Emote } from 'Libs/EmotesProvider'
-import styled, { theme } from 'Styled'
-import { endWithWhiteSpace, getWordAtPosition, startWithWhiteSpace } from 'Utils/string'
+import Key from 'constants/key'
+import Message from 'constants/message'
+import EmotePicker from 'containers//EmotePicker'
+import Command from 'libs/Command'
+import { Emote } from 'libs/EmotesProvider'
+import styled, { theme } from 'styled'
+import { endWithWhiteSpace, getWordAtPosition, startWithWhiteSpace } from 'utils/string'
 
 /**
  * Wrapper component.

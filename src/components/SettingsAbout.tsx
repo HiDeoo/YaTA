@@ -1,9 +1,9 @@
 import { Colors, Icon } from '@blueprintjs/core'
 import * as React from 'react'
 
-import ExternalLink from 'Components/ExternalLink'
-import SettingsView from 'Components/SettingsView'
-import styled, { theme, ThemeProps, withTheme } from 'Styled'
+import ExternalLink from 'components/ExternalLink'
+import SettingsView from 'components/SettingsView'
+import styled, { theme, ThemeProps, withTheme } from 'styled'
 
 /**
  * Content component.

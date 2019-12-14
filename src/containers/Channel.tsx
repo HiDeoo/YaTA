@@ -1,48 +1,49 @@
-import { Button, Classes, HotkeysTarget, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
-import * as copy from 'copy-to-clipboard'
+import { Button, Classes, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
+import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget'
+import copy from 'copy-to-clipboard'
 import * as _ from 'lodash'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 import { compose } from 'recompose'
 
-import ChannelDetails from 'Components/ChannelDetails'
-import Chatters from 'Components/Chatters'
-import CommandsHelp from 'Components/CommandsHelp'
-import DropOverlay from 'Components/DropOverlay'
-import FlexLayout from 'Components/FlexLayout'
-import FollowOmnibar from 'Components/FollowOmnibar'
-import { withHeader, WithHeaderProps } from 'Components/Header'
-import HeaderChannelState from 'Components/HeaderChannelState'
-import HeaderTooltip from 'Components/HeaderTooltip'
-import Input from 'Components/Input'
-import Logs, { Logs as InnerLogs } from 'Components/Logs'
-import LogsExporter from 'Components/LogsExporter'
-import ModerationMenuItems, { SlowModeDuration } from 'Components/ModerationMenuItems'
-import PollEditor from 'Components/PollEditor'
-import Spinner from 'Components/Spinner'
-import { CommandNames } from 'Constants/command'
-import ReadyState from 'Constants/readyState'
-import { ShortcutImplementations, ShortcutType } from 'Constants/shortcut'
-import Status from 'Constants/status'
-import { ToggleableUI } from 'Constants/toggleable'
-import BroadcasterOverlay from 'Containers/BroadcasterOverlay'
-import Chat, { ChatClient } from 'Containers/Chat'
-import ChatterDetails from 'Containers/ChatterDetails'
-import Search from 'Containers/Search'
-import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'Libs/Action'
-import { SerializedChatter } from 'Libs/Chatter'
-import Command, { CommandDelegate, CommandDelegateAction, CommandDelegateDataFetcher } from 'Libs/Command'
-import { SerializedMessage } from 'Libs/Message'
-import Notice from 'Libs/Notice'
-import Toaster from 'Libs/Toaster'
-import Twitch from 'Libs/Twitch'
-import { addToHistory, setChannel, updateHistoryIndex } from 'Store/ducks/app'
-import { markChatterAsBlocked, markChatterAsUnblocked } from 'Store/ducks/chatters'
-import { addLog, addMarker, isLog, Log, markAsRead, pauseAutoScroll } from 'Store/ducks/logs'
-import { ApplicationState } from 'Store/reducers'
+import ChannelDetails from 'components/ChannelDetails'
+import Chatters from 'components/Chatters'
+import CommandsHelp from 'components/CommandsHelp'
+import DropOverlay from 'components/DropOverlay'
+import FlexLayout from 'components/FlexLayout'
+import FollowOmnibar from 'components/FollowOmnibar'
+import { withHeader, WithHeaderProps } from 'components/Header'
+import HeaderChannelState from 'components/HeaderChannelState'
+import HeaderTooltip from 'components/HeaderTooltip'
+import Input from 'components/Input'
+import Logs, { Logs as InnerLogs } from 'components/Logs'
+import LogsExporter from 'components/LogsExporter'
+import ModerationMenuItems, { SlowModeDuration } from 'components/ModerationMenuItems'
+import PollEditor from 'components/PollEditor'
+import Spinner from 'components/Spinner'
+import { CommandNames } from 'constants/command'
+import ReadyState from 'constants/readyState'
+import { ShortcutImplementations, ShortcutType } from 'constants/shortcut'
+import Status from 'constants/status'
+import { ToggleableUI } from 'constants/toggleable'
+import BroadcasterOverlay from 'containers/BroadcasterOverlay'
+import Chat, { ChatClient } from 'containers/Chat'
+import ChatterDetails from 'containers/ChatterDetails'
+import Search from 'containers/Search'
+import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'libs/Action'
+import { SerializedChatter } from 'libs/Chatter'
+import Command, { CommandDelegate, CommandDelegateAction, CommandDelegateDataFetcher } from 'libs/Command'
+import { SerializedMessage } from 'libs/Message'
+import Notice from 'libs/Notice'
+import Toaster from 'libs/Toaster'
+import Twitch from 'libs/Twitch'
+import { addToHistory, setChannel, updateHistoryIndex } from 'store/ducks/app'
+import { markChatterAsBlocked, markChatterAsUnblocked } from 'store/ducks/chatters'
+import { addLog, addMarker, isLog, Log, markAsRead, pauseAutoScroll } from 'store/ducks/logs'
+import { ApplicationState } from 'store/reducers'
 import {
   getChannel,
   getEmotes,
@@ -51,9 +52,9 @@ import {
   getLastWhisperSender,
   getRoomState,
   getStatus,
-} from 'Store/selectors/app'
-import { getChatters } from 'Store/selectors/chatters'
-import { getIsAutoScrollPaused, getLastReadId, getLogs } from 'Store/selectors/logs'
+} from 'store/selectors/app'
+import { getChatters } from 'store/selectors/chatters'
+import { getIsAutoScrollPaused, getLastReadId, getLogs } from 'store/selectors/logs'
 import {
   getAddWhispersToHistory,
   getAlternateMessageBackgrounds,
@@ -64,12 +65,12 @@ import {
   getShortcuts,
   getShowContextMenu,
   getShowViewerCount,
-} from 'Store/selectors/settings'
-import { getIsMod, getLoginDetails } from 'Store/selectors/user'
-import styled from 'Styled'
-import { sanitizeUrlForPreview } from 'Utils/html'
-import { convertMessagesToString } from 'Utils/logs'
-import { renderShorcuts } from 'Utils/shortcuts'
+} from 'store/selectors/settings'
+import { getIsMod, getLoginDetails } from 'store/selectors/user'
+import styled from 'styled'
+import { sanitizeUrlForPreview } from 'utils/html'
+import { convertMessagesToString } from 'utils/logs'
+import { renderShorcuts } from 'utils/shortcuts'
 
 /**
  * ChannelLink component.
@@ -629,7 +630,7 @@ class Channel extends React.Component<Props, State> {
    * Toggles a UI and focus the chat input if closing it.
    * @param ui - The UI to toggle.
    */
-  private toggleUI(ui: ToggleableUI) {
+  private toggleUI(ui: ChannelToggleableUI) {
     const closing = this.state[ui]
 
     this.setState((prevState) => ({ ...prevState, [ui]: !prevState[ui] }))
@@ -1408,3 +1409,8 @@ interface OwnProps extends WithHeaderProps {
  * React Props.
  */
 type Props = StateProps & DispatchProps & OwnProps
+
+/**
+ * Channel toggleable UIs.
+ */
+type ChannelToggleableUI = Exclude<ToggleableUI, ToggleableUI.Reason | ToggleableUI.Settings>

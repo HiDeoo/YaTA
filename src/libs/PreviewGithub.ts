@@ -1,8 +1,8 @@
 import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 
-import RequestMethod from 'Constants/requestMethod'
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
+import RequestMethod from 'constants/requestMethod'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
 
 /**
  * Preview types.

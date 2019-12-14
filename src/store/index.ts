@@ -2,8 +2,8 @@ import * as storage from 'localforage'
 import { applyMiddleware, compose, createStore, Middleware, Store } from 'redux'
 import { createMigrate, persistCombineReducers, Persistor, persistStore } from 'redux-persist'
 
-import migrations from 'Store/migrations'
-import reducers, { ApplicationState } from 'Store/reducers'
+import migrations from 'store/migrations'
+import reducers, { ApplicationState } from 'store/reducers'
 
 /**
  * Combined & persisted reducers.

@@ -3,16 +3,16 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import NonIdealState from 'Components/NonIdealState'
-import SettingsHighlight from 'Components/SettingsHighlight'
-import SettingsHighlightColorMenu from 'Components/SettingsHighlightColorMenu'
-import SettingsInput from 'Components/SettingsInput'
-import SettingsTable from 'Components/SettingsTable'
-import SettingsView from 'Components/SettingsView'
-import Key from 'Constants/key'
-import Highlight, { HighlightColors } from 'Libs/Highlight'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import NonIdealState from 'components/NonIdealState'
+import SettingsHighlight from 'components/SettingsHighlight'
+import SettingsHighlightColorMenu from 'components/SettingsHighlightColorMenu'
+import SettingsInput from 'components/SettingsInput'
+import SettingsTable from 'components/SettingsTable'
+import SettingsView from 'components/SettingsView'
+import Key from 'constants/key'
+import Highlight, { HighlightColors } from 'libs/Highlight'
 import {
   addHighlight,
   addHighlightsIgnoredUsers,
@@ -22,10 +22,10 @@ import {
   removeHighlightsPermanentUser,
   updateHighlightColor,
   updateHighlightPattern,
-} from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
-import { getHighlights, getHighlightsIgnoredUsers, getHighlightsPermanentUsers } from 'Store/selectors/settings'
-import styled from 'Styled'
+} from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
+import { getHighlights, getHighlightsIgnoredUsers, getHighlightsPermanentUsers } from 'store/selectors/settings'
+import styled from 'styled'
 
 /**
  * Wrapper component.

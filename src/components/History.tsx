@@ -5,12 +5,12 @@ import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized/dist/es/CellMeasurer'
 import { List, ListRowRenderer } from 'react-virtualized/dist/es/List'
 
-import HeadlessMessage from 'Components/HeadlessMessage'
-import Notification from 'Components/Notification'
-import { SerializedMessage } from 'Libs/Message'
-import { SerializedNotification } from 'Libs/Notification'
-import { isMessage, isNotification } from 'Store/ducks/logs'
-import styled, { size, theme, ThemeProps, withTheme } from 'Styled'
+import HeadlessMessage from 'components/HeadlessMessage'
+import Notification from 'components/Notification'
+import { SerializedMessage } from 'libs/Message'
+import { SerializedNotification } from 'libs/Notification'
+import { isMessage, isNotification } from 'store/ducks/logs'
+import styled, { size, theme, ThemeProps, withTheme } from 'styled'
 
 /**
  * Wrapper component.

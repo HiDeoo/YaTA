@@ -1,7 +1,12 @@
 import * as _ from 'lodash'
 import * as styledComponents from 'styled-components'
 
-import ITheme from 'Styled/theme'
+import ITheme from 'styled/theme'
+
+declare module 'styled-components' {
+  interface DefaultTheme extends ITheme {}
+}
+
 
 /**
  * Themed styled-components.
@@ -18,14 +23,14 @@ const {
 /**
  * withTheme HOC props interface.
  */
-interface ThemeProps {
+export interface ThemeProps {
   theme: ITheme
 }
 
 /**
  * Re-exports styled-components with our theme interface.
  */
-export { createGlobalStyle, css, keyframes, ThemeProps, ThemeProvider, withTheme }
+export { createGlobalStyle, css, keyframes, ThemeProvider, withTheme }
 export default styled
 
 /**

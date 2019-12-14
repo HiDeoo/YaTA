@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import View from 'Components/View'
+import View from 'components/View'
 
 /**
  * React State.

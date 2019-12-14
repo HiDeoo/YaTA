@@ -4,8 +4,8 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { RouteComponentProps, withRouter } from 'react-router'
 
-import { ToggleableProps } from 'Constants/toggleable'
-import Twitch, { Follower } from 'Libs/Twitch'
+import { ToggleableProps } from 'constants/toggleable'
+import Twitch, { Follower } from 'libs/Twitch'
 
 /**
  * Omnibar for either online streams or offline follows.

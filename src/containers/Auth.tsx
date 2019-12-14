@@ -2,12 +2,12 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
-import Spinner from 'Components/Spinner'
-import Page from 'Constants/page'
-import Twitch from 'Libs/Twitch'
-import { setTokens } from 'Store/ducks/user'
-import { ApplicationState } from 'Store/reducers'
-import { getIsLoggedIn } from 'Store/selectors/user'
+import Spinner from 'components/Spinner'
+import Page from 'constants/page'
+import Twitch from 'libs/Twitch'
+import { setTokens } from 'store/ducks/user'
+import { ApplicationState } from 'store/reducers'
+import { getIsLoggedIn } from 'store/selectors/user'
 
 /**
  * React State.

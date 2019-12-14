@@ -2,11 +2,11 @@ import * as _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import SettingsView from 'Components/SettingsView'
-import Switch from 'Components/Switch'
-import { toggleHideWhispers, toggleShowViewerCount } from 'Store/ducks/settings'
-import { ApplicationState } from 'Store/reducers'
-import { getHideWhispers, getShowViewerCount } from 'Store/selectors/settings'
+import SettingsView from 'components/SettingsView'
+import Switch from 'components/Switch'
+import { toggleHideWhispers, toggleShowViewerCount } from 'store/ducks/settings'
+import { ApplicationState } from 'store/reducers'
+import { getHideWhispers, getShowViewerCount } from 'store/selectors/settings'
 
 /**
  * SettingsStreamer Component.

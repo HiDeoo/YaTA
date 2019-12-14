@@ -1,8 +1,8 @@
 import { Alert, Button, Classes, Colors } from '@blueprintjs/core'
 import * as React from 'react'
 
-import Key from 'Constants/key'
-import styled from 'Styled'
+import Key from 'constants/key'
+import styled from 'styled'
 
 /**
  * HelpButton component.

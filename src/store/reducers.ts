@@ -1,11 +1,11 @@
 import { ReducersMapObject } from 'redux'
 
-import app, { AppActions } from 'Store/ducks/app'
-import chatters, { ChattersActions } from 'Store/ducks/chatters'
-import logs, { LogsActions } from 'Store/ducks/logs'
-import notes, { NotesActions } from 'Store/ducks/notes'
-import settings, { SettingsActions } from 'Store/ducks/settings'
-import user, { UserActions } from 'Store/ducks/user'
+import app, { AppActions } from 'store/ducks/app'
+import chatters, { ChattersActions } from 'store/ducks/chatters'
+import logs, { LogsActions } from 'store/ducks/logs'
+import notes, { NotesActions } from 'store/ducks/notes'
+import settings, { SettingsActions } from 'store/ducks/settings'
+import user, { UserActions } from 'store/ducks/user'
 
 /**
  * Reducers.

@@ -1,13 +1,13 @@
 import * as React from 'react'
 
-import FlexLayout from 'Components/FlexLayout'
-import { Emote, EmoteTagUrls } from 'Libs/EmotesProvider'
-import styled, { size } from 'Styled'
+import FlexLayout from 'components/FlexLayout'
+import { Emote, EmoteTagUrls } from 'libs/EmotesProvider'
+import styled, { size } from 'styled'
 
 /**
- * Emote component.
+ * EmoteWrapper component.
  */
-const Emote = styled(FlexLayout)`
+const EmoteWrapper = styled(FlexLayout)`
   align-items: center;
   cursor: pointer;
   height: ${size('emotePicker.cellSize')};
@@ -36,9 +36,9 @@ export default class EmotePickerEmote extends React.Component<Props> {
 
     return (
       <div style={style}>
-        <Emote onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onClick={this.onClick}>
+        <EmoteWrapper onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} onClick={this.onClick}>
           <Image src={urls.src} srcSet={urls.srcset} />
-        </Emote>
+        </EmoteWrapper>
       </div>
     )
   }

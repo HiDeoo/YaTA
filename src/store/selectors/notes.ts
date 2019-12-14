@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { ApplicationState } from 'Store/reducers'
+import { ApplicationState } from 'store/reducers'
 
 /**
  * Returns the note of a specific chatter based in its id.

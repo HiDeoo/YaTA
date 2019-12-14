@@ -1,10 +1,10 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import MessageContent from 'Components/MessageContent'
-import { WithNameColorProps } from 'Libs/Chatter'
-import { SerializedMessage } from 'Libs/Message'
-import styled, { ifProp, prop, size, theme } from 'Styled'
+import MessageContent from 'components/MessageContent'
+import { WithNameColorProps } from 'libs/Chatter'
+import { SerializedMessage } from 'libs/Message'
+import styled, { ifProp, prop, size, theme } from 'styled'
 
 /**
  * Wrapper component.

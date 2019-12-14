@@ -2,12 +2,12 @@ import { Button, Classes, Colors, Icon, Intent, Menu, Popover, Position } from '
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import BroadcasterSection from 'Components/BroadcasterSection'
-import ExternalButton from 'Components/ExternalButton'
-import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
-import Toaster from 'Libs/Toaster'
-import Twitch, { CommercialDuration, RawHost, Status } from 'Libs/Twitch'
-import styled from 'Styled'
+import BroadcasterSection from 'components/BroadcasterSection'
+import ExternalButton from 'components/ExternalButton'
+import { BroadcasterSectionProps } from 'containers/BroadcasterOverlay'
+import Toaster from 'libs/Toaster'
+import Twitch, { CommercialDuration, RawHost, Status } from 'libs/Twitch'
+import styled from 'styled'
 
 /**
  * Wrapper component.

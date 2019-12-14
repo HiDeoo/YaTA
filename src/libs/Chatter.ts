@@ -2,10 +2,10 @@ import * as _ from 'lodash'
 import * as shortid from 'shortid'
 import { UserState } from 'twitch-js'
 
-import LogType from 'Constants/logType'
-import Theme from 'Constants/theme'
-import ChatterColor from 'Libs/ChatterColor'
-import base, { TwitchUserColorMap } from 'Styled/base'
+import LogType from 'constants/logType'
+import Theme from 'constants/theme'
+import ChatterColor from 'libs/ChatterColor'
+import base, { TwitchUserColorMap } from 'styled/base'
 
 /**
  * Chatter class.

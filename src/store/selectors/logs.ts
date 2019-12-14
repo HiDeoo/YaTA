@@ -1,10 +1,10 @@
 import * as _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { SerializedMessage } from 'Libs/Message'
-import { SerializedNotification } from 'Libs/Notification'
-import { isMessage, isNotification } from 'Store/ducks/logs'
-import { ApplicationState } from 'Store/reducers'
+import { SerializedMessage } from 'libs/Message'
+import { SerializedNotification } from 'libs/Notification'
+import { isMessage, isNotification } from 'store/ducks/logs'
+import { ApplicationState } from 'store/reducers'
 
 /**
  * Returns the logs state.

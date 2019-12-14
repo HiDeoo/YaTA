@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import notificationBorder from 'Images/notificationBorder.png'
-import { NotificationEvent, SerializedNotification } from 'Libs/Notification'
-import styled, { ifProp, size, theme } from 'Styled'
+import notificationBorder from 'images/notificationBorder.png'
+import { NotificationEvent, SerializedNotification } from 'libs/Notification'
+import styled, { ifProp, size, theme } from 'styled'
 
 /**
  * Wrapper component.

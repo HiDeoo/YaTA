@@ -3,9 +3,9 @@ import { Provider } from 'react-redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 
-import App from 'Containers/App'
-import ErrorBoundary from 'Containers/ErrorBoundary'
-import { StoreConfiguration } from 'Store'
+import App from 'containers/App'
+import ErrorBoundary from 'containers/ErrorBoundary'
+import { StoreConfiguration } from 'store'
 
 /**
  * Wrapper Container.

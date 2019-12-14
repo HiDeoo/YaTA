@@ -1,8 +1,8 @@
 import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
-import Twitch from 'Libs/Twitch'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
+import Twitch from 'libs/Twitch'
 
 /**
  * Preview types.

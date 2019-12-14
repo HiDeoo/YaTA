@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 
-import RequestMethod from 'Constants/requestMethod'
+import RequestMethod from 'constants/requestMethod'
 
 /**
  * Twitch various APIs.

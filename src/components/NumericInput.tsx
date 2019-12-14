@@ -1,9 +1,9 @@
 import { INumericInputProps, NumericInput as OriginalNumericInput } from '@blueprintjs/core'
 import * as React from 'react'
 
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import styled, { theme } from 'Styled'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import styled, { theme } from 'styled'
 
 /**
  * Wrapper component.

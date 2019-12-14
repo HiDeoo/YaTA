@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as shortid from 'shortid'
 
-import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedChatter } from 'libs/Chatter'
 
 /**
  * RegExp used to identify a valid action text.

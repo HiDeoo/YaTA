@@ -1,4 +1,4 @@
-import styled from 'Styled'
+import styled from 'styled'
 
 /**
  * Center component.
