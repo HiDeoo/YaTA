@@ -299,17 +299,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches description panels of a channel.
-   * @param  channel - The channel.
-   * @return The panels.
-   */
-  public static async fetchPanels(channel: string): Promise<RawPanels> {
-    const response = await Twitch.fetch(TwitchApi.Base, `/channels/${channel}/panels`)
-
-    return response.json()
-  }
-
-  /**
    * Returns the top clips for a specific channel.
    * @param  channel - The channel.
    * @param  period - The period to include.
@@ -1056,29 +1045,6 @@ type RawPreview = {
  */
 type RawNewClips = {
   data: Array<{ edit_url: string; id: string }>
-}
-
-/**
- * Twitch channel panels.
- */
-export type RawPanels = RawPanel[]
-
-/**
- * Twitch channel panel.
- */
-type RawPanel = {
-  channel: string
-  data: {
-    description?: string
-    image?: string
-    link?: string
-    title?: string
-  }
-  display_order: number
-  html_description: string
-  kind: 'default' | string
-  user_id: number
-  _id: number
 }
 
 /**

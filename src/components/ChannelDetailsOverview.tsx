@@ -6,7 +6,6 @@ import TimeAgo from 'react-timeago'
 
 import { ChannelDetailsProps } from 'components/ChannelDetails'
 import ChannelDetailsButton from 'components/ChannelDetailsButton'
-import ChannelDetailsDescription from 'components/ChannelDetailsDescription'
 import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
 import ChannelDetailsVideos from 'components/ChannelDetailsVideos'
 import ExternalLink from 'components/ExternalLink'
@@ -107,7 +106,6 @@ const PanelButtons = styled.div`
  * The various panel types.
  */
 export enum ChannelDetailsType {
-  Description = 'Description',
   LastVods = 'Last Vods',
   RecentClips = 'Recent Clips',
   TopClips = 'Top Clips',
@@ -117,7 +115,6 @@ export enum ChannelDetailsType {
  * A map between panel types & their associated components.
  */
 const ChannelDetailsPanels = {
-  [ChannelDetailsType.Description]: { component: ChannelDetailsDescription, icon: 'info-sign' },
   [ChannelDetailsType.LastVods]: { component: ChannelDetailsVideos, icon: 'video' },
   [ChannelDetailsType.RecentClips]: { component: ChannelDetailsVideos, icon: 'film' },
   [ChannelDetailsType.TopClips]: { component: ChannelDetailsVideos, icon: 'crown' },

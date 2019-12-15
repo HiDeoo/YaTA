@@ -4,6 +4,10 @@
 
 - When autocompleting a username argument of a command, only usernames will now be suggested ([#32](https://github.com/HiDeoo/YaTA/pull/32) - [nD00rn](https://github.com/nD00rn)).
 
+### 🐛 Bug Fix
+
+- Remove the channel details description tab as the mandatory API endpoint was blocked by Twitch. This tab was only containing panels usually visible on a Twitch channel page below the player.
+
 ### ⚙️ Internal
 
 - Upgrade build tools.
