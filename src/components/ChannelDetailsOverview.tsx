@@ -1,5 +1,5 @@
 import { ButtonGroup, Classes, Colors, Icon, IconName, Intent, IPanel, IPanelProps, Text } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'

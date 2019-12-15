@@ -1,5 +1,5 @@
 import { Card, Classes, Icon, Text } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import FlexContent from 'components/FlexContent'

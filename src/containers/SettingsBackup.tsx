@@ -1,6 +1,6 @@
 import { Button, FileInput, Intent } from '@blueprintjs/core'
 import * as FileSaver from 'file-saver'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 

@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import pluralize from 'pluralize'
 
 import RequestMethod from 'constants/requestMethod'

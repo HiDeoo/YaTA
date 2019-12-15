@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { ThemedStyledComponentsModule } from 'styled-components'
 import styledComponents, {
   createGlobalStyle as styledCreateGlobalStyle,

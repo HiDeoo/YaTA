@@ -1,6 +1,6 @@
 import { Colors, Icon, Text } from '@blueprintjs/core'
 import anime from 'animejs'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import pluralize from 'pluralize'
 import * as React from 'react'
 import { Flipped } from 'react-flip-toolkit'

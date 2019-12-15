@@ -1,6 +1,6 @@
 import { Classes, Intent, IToastOptions, Position, ProgressBar, Toast, Toaster } from '@blueprintjs/core'
 import clsx from 'clsx'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import Key from 'constants/key'

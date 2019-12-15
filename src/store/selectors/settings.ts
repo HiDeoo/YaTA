@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { createSelector } from 'reselect'
 
 import { Shortcut, ShortcutDefinitions, ShortcutGroup, ShortcutType } from 'constants/shortcut'

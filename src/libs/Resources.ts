@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import Emoticons from 'constants/emoticons'
 import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'libs/EmotesProvider'

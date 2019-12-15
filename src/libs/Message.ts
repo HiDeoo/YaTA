@@ -1,5 +1,5 @@
 import linkifyHtml from 'linkifyjs/html'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Emotes, UserState } from 'twitch-js'
 import Unistring, { Word } from 'unistring'
 

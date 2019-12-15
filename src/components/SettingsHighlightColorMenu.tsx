@@ -1,5 +1,5 @@
 import { Button, Classes, Menu, Popover, Position } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import HighlightColorMenuItem from 'components/HighlightColorMenuItem'

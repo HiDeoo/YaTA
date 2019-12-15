@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
 import StrawPoll from 'libs/StrawPoll'

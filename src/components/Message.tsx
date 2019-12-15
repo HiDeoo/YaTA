@@ -1,5 +1,5 @@
 import { Button, Classes, Colors, Intent, Menu, Popover } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import MessageContent from 'components/MessageContent'

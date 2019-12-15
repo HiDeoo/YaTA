@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import { CommandArgument, CommandDescriptor, CommandName, Commands } from 'constants/command'
 import Notice from 'libs/Notice'

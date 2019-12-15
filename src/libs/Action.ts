@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as shortid from 'shortid'
 
 import { SerializedChatter } from 'libs/Chatter'

@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Reducer } from 'redux'
 
 import { SerializedChatter } from 'libs/Chatter'

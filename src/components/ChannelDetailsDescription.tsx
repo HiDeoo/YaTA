@@ -1,5 +1,5 @@
 import { Colors, IPanelProps } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import { ChannelDetailsProps } from 'components/ChannelDetails'

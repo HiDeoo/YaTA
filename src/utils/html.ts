@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 /**
  * Escapes HTML entities from a string array.

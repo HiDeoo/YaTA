@@ -1,6 +1,6 @@
 import { Button, Classes, Colors, FormGroup, InputGroup, Intent, Menu } from '@blueprintjs/core'
 import { ItemRenderer, Suggest } from '@blueprintjs/select'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import pluralize from 'pluralize'
 import * as React from 'react'
 

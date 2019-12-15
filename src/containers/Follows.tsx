@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Classes, InputGroup, Position, Tooltip } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { Flipper } from 'react-flip-toolkit'
 import { connect } from 'react-redux'

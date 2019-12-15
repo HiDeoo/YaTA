@@ -1,7 +1,7 @@
 import { Button, Classes, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
 import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget'
 import copy from 'copy-to-clipboard'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { Helmet } from 'react-helmet'
 import { connect } from 'react-redux'

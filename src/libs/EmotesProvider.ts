@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Emotes } from 'twitch-js'
 import { Word } from 'unistring'
 

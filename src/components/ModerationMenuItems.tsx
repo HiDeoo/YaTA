@@ -1,5 +1,5 @@
 import { Icon, Menu } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import pluralize from 'pluralize'
 import * as React from 'react'
 

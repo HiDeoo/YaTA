@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import * as ReactTooltip from 'react-tooltip'
 import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'

@@ -1,5 +1,5 @@
 import { Callout, Classes, Intent, Overlay } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import Center from 'components/Center'

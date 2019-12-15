@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import pluralize from 'pluralize'
 
 import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'

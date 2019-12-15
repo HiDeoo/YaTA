@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import { ShortcutType } from 'constants/shortcut'
 import { HighlightColors } from 'libs/Highlight'

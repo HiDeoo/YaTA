@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import { SoundData, SoundId, SoundIdToNameMap, SoundName } from 'constants/sound'
 import { SettingsState } from 'store/ducks/settings'

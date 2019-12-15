@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import EmotesProvider, { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
 

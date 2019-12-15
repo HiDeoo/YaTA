@@ -1,6 +1,6 @@
 import { Classes, IconName, IProps } from '@blueprintjs/core'
 import clsx from 'clsx'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 

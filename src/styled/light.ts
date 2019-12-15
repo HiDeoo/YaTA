@@ -1,5 +1,5 @@
 import { Colors } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 import base from 'styled/base'
 import ITheme from 'styled/theme'

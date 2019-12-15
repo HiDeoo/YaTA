@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
 /**
  * RegExp used to identify an ISO 8601 duration.

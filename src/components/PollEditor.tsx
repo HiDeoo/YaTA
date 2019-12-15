@@ -10,7 +10,7 @@ import {
   TextArea,
 } from '@blueprintjs/core'
 import copy from 'copy-to-clipboard'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
 import FlexLayout from 'components/FlexLayout'
