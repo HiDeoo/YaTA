@@ -102,6 +102,7 @@ export default class Player extends React.Component<{}, State> {
               <iframe
                 height={base.player.height}
                 width={base.player.width}
+                title="Twitch Player"
                 frameBorder="no"
                 allowFullScreen
                 scrolling="no"

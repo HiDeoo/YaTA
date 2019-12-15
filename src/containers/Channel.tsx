@@ -91,7 +91,7 @@ const ChannelLink = styled.a.attrs({
 /**
  * RegExp used to identify links to preview.
  */
-const PreviewRegExp = /https?:\/\/.[\w\-\/\:\.\%\+]*\.(jpg|jpeg|png|gif|gifv)/
+const PreviewRegExp = /https?:\/\/.[\w\-/:.%+]*\.(jpg|jpeg|png|gif|gifv)/
 
 /**
  * React State.

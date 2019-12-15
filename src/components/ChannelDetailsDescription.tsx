@@ -112,7 +112,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
           const hasLink = !_.isNil(panel.data.link)
           const hasDescription = !_.isNil(panel.html_description) && panel.html_description.length > 0
 
-          let image = hasImage ? <img src={panel.data.image} /> : null
+          let image = hasImage ? <img alt="" src={panel.data.image} /> : null
 
           if (hasLink) {
             image = <ExternalLink href={panel.data.link}>{image}</ExternalLink>

@@ -253,7 +253,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
 
     return (
       <GameMenuItem
-        labelElement={<img src={game.box.small} />}
+        labelElement={<img src={game.box.small} alt={`${game.name} cover`} />}
         disabled={modifiers.disabled}
         active={modifiers.active}
         onClick={handleClick}

@@ -164,7 +164,7 @@ class EmotePicker extends React.Component<Props, State> {
         minimal
       >
         <EmotePickerButton title="Emote Picker" isOpen={visible} onMouseEnter={this.onMouseEnterButton}>
-          <img src={buttonIcon} />
+          <img src={buttonIcon} alt="Emote Picker" />
         </EmotePickerButton>
       </Popover>
     )
@@ -259,7 +259,7 @@ class EmotePicker extends React.Component<Props, State> {
     return (
       <Preview>
         <PreviewImage>
-          <img src={urls['2x']} />
+          <img src={urls['2x']} alt={hovered.code} />
         </PreviewImage>
         {hovered.code}
       </Preview>

@@ -73,7 +73,12 @@ const SettingsAbout: React.SFC<ThemeProps> = (props) => (
       </Name>
       <Description>Yet another Twitch App</Description>
       <p>
-        Brewed using lots of <Coffee>☕</Coffee>
+        Brewed using lots of{' '}
+        <Coffee>
+          <span role="img" aria-label="Coffee">
+            ☕
+          </span>
+        </Coffee>
       </p>
       <p>
         Source code available on <ExternalLink href="https://github.com/HiDeoo/yata">Github</ExternalLink>

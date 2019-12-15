@@ -5,6 +5,26 @@ import * as shortid from 'shortid'
 import LogType from 'constants/logType'
 
 /**
+ * Notification associated events.
+ */
+export enum NotificationEvent {
+  AnonGiftPaidUpgrade,
+  AnonSubGift,
+  AnonSubMysteryGift,
+  BitsBadgeTier,
+  GiftPaidUpgrade,
+  Host,
+  PrimePaidUpgrade,
+  Raid,
+  ReSub,
+  RewardGift,
+  RitualNewChatter,
+  SubGift,
+  Subscription,
+  SubMysteryGift,
+}
+
+/**
  * Notification class.
  * A notification can be a cheer, a raid, a ritual, a resub, a sub, a subgift, etc.
  */
@@ -168,26 +188,6 @@ export default class Notification implements Serializable<SerializedNotification
       type: LogType.Notification,
     }
   }
-}
-
-/**
- * Notification associated events.
- */
-export enum NotificationEvent {
-  AnonGiftPaidUpgrade,
-  AnonSubGift,
-  AnonSubMysteryGift,
-  BitsBadgeTier,
-  GiftPaidUpgrade,
-  Host,
-  PrimePaidUpgrade,
-  Raid,
-  ReSub,
-  RewardGift,
-  RitualNewChatter,
-  SubGift,
-  Subscription,
-  SubMysteryGift,
 }
 
 /**

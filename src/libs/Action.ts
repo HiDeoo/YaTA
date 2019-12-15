@@ -19,6 +19,16 @@ const NameRegExp = /^[\w\- ]+$/
 const RecipientRegExp = /^[\w]{3,}$/
 
 /**
+ * Types of action available.
+ */
+export enum ActionType {
+  Say = 'Say',
+  Whisper = 'Whisper',
+  Prepare = 'Prepare',
+  Open = 'Open URL',
+}
+
+/**
  * Action class.
  */
 export default class Action implements Serializable<SerializedAction> {
@@ -122,16 +132,6 @@ export enum ActionPlaceholder {
  * Action placeholders replacement values..
  */
 type ActionReplacement = Record<ActionPlaceholder, string>
-
-/**
- * Types of action available.
- */
-export enum ActionType {
-  Say = 'Say',
-  Whisper = 'Whisper',
-  Prepare = 'Prepare',
-  Open = 'Open URL',
-}
 
 /**
  * Serialized action.

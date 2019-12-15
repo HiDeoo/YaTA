@@ -7,6 +7,18 @@ import Twitch from 'libs/Twitch'
 import { Log } from 'store/ducks/logs'
 
 /**
+ * Actions that could arise when handling a command.
+ */
+export enum CommandDelegateAction {
+  AddLog,
+  AddToHistory,
+  Say,
+  SayWithoutHistory,
+  Timeout,
+  Whisper,
+}
+
+/**
  * Command class.
  */
 export default class Command {
@@ -25,7 +37,7 @@ export default class Command {
    * @param message - A message potentially containing a whisper reply command.
    */
   public static isWhisperReplyCommand(message: string) {
-    return /^[\/|\.]r /i.test(message)
+    return /^[/|.]r /i.test(message)
   }
 
   /**
@@ -33,7 +45,7 @@ export default class Command {
    * @param message - A message potentially containing a marker command.
    */
   public static isMarkerCommand(message: string) {
-    return /^[\/|.]marker(?:$|\s)/i.test(message)
+    return /^[/|.]marker(?:$|\s)/i.test(message)
   }
 
   /**
@@ -41,7 +53,7 @@ export default class Command {
    * @param message - A message potentially containing a help command.
    */
   public static isHelpCommand(message: string) {
-    return /^[\/|.]help(?:$|\s)/i.test(message)
+    return /^[/|.]help(?:$|\s)/i.test(message)
   }
 
   /**
@@ -100,7 +112,7 @@ export default class Command {
    * @return The whisper details.
    */
   public static parseWhisper(message: string) {
-    const matches = message.match(/^[\/|\.]w (\S+) (.+)/i)
+    const matches = message.match(/^[/|.]w (\S+) (.+)/i)
 
     const details = { username: undefined as Optional<string>, whisper: undefined as Optional<string> }
 
@@ -117,7 +129,7 @@ export default class Command {
    * @return The new message with the inserted shrug if the message contained a shrug command..
    */
   public static parseShrug(message: string) {
-    const matches = message.match(/(^|.* )[\/|\.]shrug($| .*)/i)
+    const matches = message.match(/(^|.* )[/|.]shrug($| .*)/i)
 
     const result = { isShrug: false, message }
 
@@ -402,18 +414,6 @@ export default class Command {
     [CommandName.User]: this.handleCommandUser,
     [CommandName.W]: this.handleCommandWhisper,
   }
-}
-
-/**
- * Actions that could arise when handling a command.
- */
-export enum CommandDelegateAction {
-  AddLog,
-  AddToHistory,
-  Say,
-  SayWithoutHistory,
-  Timeout,
-  Whisper,
 }
 
 /**

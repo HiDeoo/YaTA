@@ -6,7 +6,7 @@ import { SerializedHighlights } from 'store/ducks/settings'
 /**
  * RegExp used to identify a valid highlight pattern.
  */
-const PatternRegExp = /^[\w\-]+$/
+const PatternRegExp = /^[\w-]+$/
 
 /**
  * Highlight class.

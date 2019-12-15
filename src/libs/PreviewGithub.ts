@@ -20,12 +20,12 @@ const BaseUrl = 'https://api.github.com'
 /**
  * RegExp used to identify a repository link.
  */
-const RepoRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)(?:[^\s]+)?/g
+const RepoRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w.-]+)(?:[^\s]+)?/g
 
 /**
  * RegExp used to identify an issue or PR link.
  */
-const IssueOrPRRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)\/(?:issues|pull)\/(\d+)(?:[^\s]+)?/g
+const IssueOrPRRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w.-]+)\/(?:issues|pull)\/(\d+)(?:[^\s]+)?/g
 
 /**
  * Github preview provider.

@@ -1,4 +1,3 @@
-import * as _ from 'lodash'
 import { Reducer } from 'redux'
 
 import { createAction } from 'utils/redux'

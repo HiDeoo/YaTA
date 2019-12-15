@@ -8,7 +8,7 @@ import * as _ from 'lodash'
 export function escapeArray(html: string[]) {
   return _.map(html, (character) => {
     if (character.length === 1) {
-      return character.replace(/[\u00A0-\u9999<>\&]/g, (substring) => {
+      return character.replace(/[\u00A0-\u9999<>&]/g, (substring) => {
         return '&#' + substring.charCodeAt(0) + ';'
       })
     }
@@ -38,7 +38,7 @@ export function escape(html: string | string[]) {
  * @return The sanitized string.
  */
 export function replaceImgTagByAlt(str: string) {
-  return str.replace(/<img.*?alt="(.*?)"[^\>]?>/g, '$1')
+  return str.replace(/<img.*?alt="(.*?)"[^>]?>/g, '$1')
 }
 
 /**

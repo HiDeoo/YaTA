@@ -289,7 +289,9 @@ class ChatterDetails extends React.Component<Props, State> {
 
     const header = (
       <Header>
-        <Avatar>{_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} />}</Avatar>
+        <Avatar>
+          {_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} alt={`${chatter.displayName} avatar`} />}
+        </Avatar>
         <Name color={usernameColor}>{`${chatter.displayName}${showUsername ? ` (${chatter.userName})` : ''}`}</Name>
         {!_.isNil(badges) && <Badges dangerouslySetInnerHTML={{ __html: badges }} />}
       </Header>
