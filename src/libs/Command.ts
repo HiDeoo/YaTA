@@ -392,7 +392,6 @@ export default class Command {
   /**
    * List of commands with special handlers.
    */
-  // tslint:disable-next-line:member-ordering
   private commandHandlers: { [key in CommandName]?: () => void } = {
     [CommandName.Block]: this.handleCommandBlockUnblock,
     [CommandName.Followed]: this.handleCommandFollowed,

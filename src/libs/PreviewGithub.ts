@@ -49,7 +49,6 @@ const PreviewGithub: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = RepoRegExp.exec(message)) != null) {
       previews[match[1]] = {
         extra: { initialLink: match[0] },
@@ -60,7 +59,6 @@ const PreviewGithub: PreviewProvider = class {
       }
     }
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = IssueOrPRRegExp.exec(message)) != null) {
       previews[match[1]] = {
         extra: { initialLink: match[0], issueId: match[2] },

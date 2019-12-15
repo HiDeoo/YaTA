@@ -50,7 +50,6 @@ const PreviewYoutube: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = VideoRegExp.exec(message)) != null) {
       previews[match[1]] = {
         extra: { initialLink: match[0] },
@@ -61,7 +60,6 @@ const PreviewYoutube: PreviewProvider = class {
       }
     }
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = ChannelRegExp.exec(message)) != null) {
       previews[match[1]] = {
         id: match[1],

@@ -30,7 +30,6 @@ const PreviewStrawPoll: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = PollRegExp.exec(message)) != null) {
       previews[match[1]] = { id: match[1], provider: PreviewStrawPoll.getProviderId(), resolved: false }
     }

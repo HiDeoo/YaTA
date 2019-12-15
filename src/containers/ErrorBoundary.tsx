@@ -56,7 +56,6 @@ class ErrorBoundary extends React.Component<Props, State> {
     } else {
       this.setState(() => ({ hasError: true, error }))
 
-      // tslint:disable-next-line:no-console
       console.error(error)
     }
   }

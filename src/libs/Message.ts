@@ -224,7 +224,6 @@ export default class Message implements Serializable<SerializedMessage> {
       const regExp = new RegExp(pattern, 'gmi')
       let match
 
-      // tslint:disable-next-line:no-conditional-assignment
       while ((match = regExp.exec(message)) != null) {
         const bits = parseInt(match[3], 10)
         let currentBits = bits

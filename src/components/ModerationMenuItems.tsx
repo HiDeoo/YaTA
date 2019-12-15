@@ -44,7 +44,6 @@ export default class ModerationMenuItems extends React.Component<Props> {
           />
           {_.map(SlowModeDurations, (slowModeDuration) => (
             <Menu.Item
-              // tslint:disable-next-line:jsx-no-lambda
               onClick={(event: React.MouseEvent) => this.toggleSlowMode(event, slowModeDuration)}
               text={`${slowModeDuration} ${pluralize('second', slowModeDuration)}`}
               icon={this.getSlowModeMenuIcon(slowModeDuration)}
