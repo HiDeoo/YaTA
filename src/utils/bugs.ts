@@ -1,4 +1,4 @@
-import * as bowser from 'bowser'
+import bowser from 'bowser'
 
 /**
  * Opens the report issue page on Github.

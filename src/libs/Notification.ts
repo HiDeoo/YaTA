@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import pluralize from 'pluralize'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
 import LogType from 'constants/logType'
 

@@ -1,5 +1,5 @@
 import linkifyHtml from 'linkifyjs/html'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
 import Event from 'constants/event'
 import LogType from 'constants/logType'

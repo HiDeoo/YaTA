@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
 import { SerializedHighlights } from 'store/ducks/settings'
 

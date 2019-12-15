@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { Reducer } from 'redux'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
 import Logs from 'constants/logs'
 import LogType from 'constants/logType'

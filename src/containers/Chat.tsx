@@ -2,7 +2,7 @@ import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 import tmi, {
   Client as TwitchClient,
   EmoteSets,
