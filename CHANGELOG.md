@@ -2,6 +2,7 @@
 
 ### 🚀 New Feature
 
+- `Alt` clicking the channel description menu will now opens the channel video player.
 - When autocompleting a username argument of a command, only usernames will now be suggested ([#32](https://github.com/HiDeoo/YaTA/pull/32) - [nD00rn](https://github.com/nD00rn)).
 
 ### 🐛 Bug Fix

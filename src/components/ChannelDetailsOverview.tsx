@@ -285,11 +285,7 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
    * Triggered when a preview is clicked.
    */
   private onClickPreview = () => {
-    window.open(
-      `https://player.twitch.tv/?muted=false&channel=${this.props.name}`,
-      'videoPopupWindow',
-      'height=360,width=600'
-    )
+    Twitch.openVideoPlayer(this.props.name)
   }
 }
 

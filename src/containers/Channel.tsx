@@ -89,6 +89,14 @@ const ChannelLink = styled.a.attrs({
 `
 
 /**
+ * ChannelDetailsTooltip component.
+ */
+const ChannelDetailsTooltip = styled.div`
+  min-width: 112px;
+  text-align: center;
+`
+
+/**
  * RegExp used to identify links to preview.
  */
 const PreviewRegExp = /https?:\/\/.[\w\-/:.%+]*\.(jpg|jpeg|png|gif|gifv)/
@@ -100,6 +108,7 @@ const initialState = {
   focusedChatter: undefined as Optional<SerializedChatter>,
   inputValue: '',
   isUploadingFile: false,
+  shouldQuickOpenPlayer: false,
   viewerCount: undefined as Optional<number>,
   [ToggleableUI.BroadcasterOverlay]: false,
   [ToggleableUI.Chatters]: false,
@@ -149,6 +158,8 @@ class Channel extends React.Component<Props, State> {
     this.setHeaderComponents()
 
     window.addEventListener('focus', this.onFocusWindow)
+    window.addEventListener('keydown', this.onKeyDown)
+    window.addEventListener('keyup', this.onKeyUp)
   }
 
   /**
@@ -178,14 +189,15 @@ class Channel extends React.Component<Props, State> {
       }
     }
 
-    const { viewerCount: prevViewerCount } = prevState
-    const { viewerCount } = this.state
+    const { shouldQuickOpenPlayer: prevShouldQuickOpenPlayer, viewerCount: prevViewerCount } = prevState
+    const { shouldQuickOpenPlayer, viewerCount } = this.state
 
     if (
       prevIsAutoScrollPaused !== isAutoScrollPaused ||
       prevRoomState !== roomState ||
       prevIsMod !== isMod ||
-      prevViewerCount !== viewerCount
+      prevViewerCount !== viewerCount ||
+      prevShouldQuickOpenPlayer !== shouldQuickOpenPlayer
     ) {
       this.setHeaderComponents()
     }
@@ -201,6 +213,8 @@ class Channel extends React.Component<Props, State> {
     this.props.setHeaderRightComponent(null)
 
     window.removeEventListener('focus', this.onFocusWindow)
+    window.removeEventListener('keydown', this.onKeyDown)
+    window.removeEventListener('keyup', this.onKeyUp)
 
     if (this.props.showViewerCount) {
       this.stopMonitoringViewerCount()
@@ -334,6 +348,26 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Triggerred when a key is pressed.
+   * @param event - The associated event.
+   */
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (event.altKey) {
+      this.setState(() => ({ shouldQuickOpenPlayer: true }))
+    }
+  }
+
+  /**
+   * Triggerred when a key is released.
+   * @param event - The associated event.
+   */
+  private onKeyUp = (event: KeyboardEvent) => {
+    if (!event.altKey) {
+      this.setState(() => ({ shouldQuickOpenPlayer: false }))
+    }
+  }
+
+  /**
    * Sets the current channel if necessary.
    */
   private setChannel() {
@@ -358,6 +392,7 @@ class Channel extends React.Component<Props, State> {
    */
   private setHeaderComponents() {
     const { channel, isAutoScrollPaused, isMod, loginDetails, roomState } = this.props
+    const { shouldQuickOpenPlayer } = this.state
 
     const channelId = this.getChannelId()
 
@@ -404,9 +439,19 @@ class Channel extends React.Component<Props, State> {
             <Button onClick={this.toggleSearch} icon="search" minimal />
           </HeaderTooltip>
         )}
-        <Popover usePortal={false}>
-          <HeaderTooltip content="Channel Details">
-            <Button icon="eye-open" minimal />
+        <Popover usePortal={false} disabled={shouldQuickOpenPlayer}>
+          <HeaderTooltip
+            content={
+              <ChannelDetailsTooltip>
+                {shouldQuickOpenPlayer ? 'Open video player' : 'Channel Details'}
+              </ChannelDetailsTooltip>
+            }
+          >
+            <Button
+              icon={shouldQuickOpenPlayer ? 'video' : 'eye-open'}
+              minimal
+              onClick={shouldQuickOpenPlayer ? this.openVideoPlayer : undefined}
+            />
           </HeaderTooltip>
           {!_.isNil(channel) && !_.isNil(channelId) && <ChannelDetails id={channelId} name={channel} />}
         </Popover>
@@ -623,6 +668,17 @@ class Channel extends React.Component<Props, State> {
           requestAnimationFrame(this.scrollToNewestLog)
         }
       }
+    }
+  }
+
+  /**
+   * Opens the video player for the current channel.
+   */
+  openVideoPlayer = () => {
+    const { channel } = this.props
+
+    if (!_.isNil(channel)) {
+      Twitch.openVideoPlayer(channel)
     }
   }
 
@@ -1413,4 +1469,4 @@ type Props = StateProps & DispatchProps & OwnProps
 /**
  * Channel toggleable UIs.
  */
-type ChannelToggleableUI = Exclude<ToggleableUI, ToggleableUI.Reason | ToggleableUI.Settings>
+type ChannelToggleableUI = Exclude<ToggleableUI, ToggleableUI.Reason | ToggleableUI.Settings>

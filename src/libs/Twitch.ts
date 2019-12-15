@@ -165,6 +165,18 @@ export default class Twitch {
   }
 
   /**
+   * Opens the video player of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openVideoPlayer(channel: string) {
+    window.open(
+      `https://player.twitch.tv/?muted=false&channel=${channel}`,
+      'videoPopupWindow',
+      'height=360,width=600'
+    )
+  }
+
+  /**
    * Fetches Twitch badges.
    * @param channelId - The id of the channel.
    * @return The badges.
