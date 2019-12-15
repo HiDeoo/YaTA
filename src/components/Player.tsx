@@ -1,12 +1,12 @@
 import { Classes, Overlay } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import Center from 'Components/Center'
-import Spinner from 'Components/Spinner'
-import styled from 'Styled'
-import base from 'Styled/base'
+import Center from 'components/Center'
+import Spinner from 'components/Spinner'
+import styled from 'styled'
+import base from 'styled/base'
 
 /**
  * Wrapper component.
@@ -102,6 +102,7 @@ export default class Player extends React.Component<{}, State> {
               <iframe
                 height={base.player.height}
                 width={base.player.width}
+                title="Twitch Player"
                 frameBorder="no"
                 allowFullScreen
                 scrolling="no"

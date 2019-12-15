@@ -1,9 +1,9 @@
 import linkifyHtml from 'linkifyjs/html'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
-import Event from 'Constants/event'
-import LogType from 'Constants/logType'
-import { escape } from 'Utils/html'
+import Event from 'constants/event'
+import LogType from 'constants/logType'
+import { escape } from 'utils/html'
 
 /**
  * Notice class.

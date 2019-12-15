@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import FlexLayout from 'Components/FlexLayout'
-import styled from 'Styled'
+import FlexLayout from 'components/FlexLayout'
+import styled from 'styled'
 
 /**
  * Wrapper component.

@@ -1,5 +1,5 @@
-import Theme from 'Constants/theme'
-import { HighlightColor, HighlightColors } from 'Libs/Highlight'
+import Theme from 'constants/theme'
+import { HighlightColor, HighlightColors } from 'libs/Highlight'
 
 /**
  * Theme definition.

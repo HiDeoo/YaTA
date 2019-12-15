@@ -1,17 +1,17 @@
 import linkifyHtml from 'linkifyjs/html'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Emotes, UserState } from 'twitch-js'
 import Unistring, { Word } from 'unistring'
 
-import LogType from 'Constants/logType'
-import Theme from 'Constants/theme'
-import Chatter, { SerializedChatter } from 'Libs/Chatter'
-import { EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import { Previews } from 'Libs/PreviewProvider'
-import Resources from 'Libs/Resources'
-import { CheermoteImageBackground, RawCheermoteImage } from 'Libs/Twitch'
-import { escape } from 'Utils/html'
-import { padTimeUnit } from 'Utils/time'
+import LogType from 'constants/logType'
+import Theme from 'constants/theme'
+import Chatter, { SerializedChatter } from 'libs/Chatter'
+import { EmoteProviderPrefix } from 'libs/EmotesProvider'
+import { Previews } from 'libs/PreviewProvider'
+import Resources from 'libs/Resources'
+import { CheermoteImageBackground, RawCheermoteImage } from 'libs/Twitch'
+import { escape } from 'utils/html'
+import { padTimeUnit } from 'utils/time'
 
 /**
  * Message class representing either a chat message, an action (/me) or a whisper.
@@ -224,7 +224,6 @@ export default class Message implements Serializable<SerializedMessage> {
       const regExp = new RegExp(pattern, 'gmi')
       let match
 
-      // tslint:disable-next-line:no-conditional-assignment
       while ((match = regExp.exec(message)) != null) {
         const bits = parseInt(match[3], 10)
         let currentBits = bits

@@ -1,14 +1,14 @@
 import { Tab, Tabs } from '@blueprintjs/core'
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 import * as React from 'react'
 
-import BroadcasterSection from 'Components/BroadcasterSection'
-import ExternalResource, { Resource, ResourceType } from 'Components/ExternalResource'
-import NonIdealState from 'Components/NonIdealState'
-import { BroadcasterSectionProps } from 'Containers/BroadcasterOverlay'
-import Twitch, { ClipPeriod } from 'Libs/Twitch'
-import styled, { theme } from 'Styled'
+import BroadcasterSection from 'components/BroadcasterSection'
+import ExternalResource, { Resource, ResourceType } from 'components/ExternalResource'
+import NonIdealState from 'components/NonIdealState'
+import { BroadcasterSectionProps } from 'containers/BroadcasterOverlay'
+import Twitch, { ClipPeriod } from 'libs/Twitch'
+import styled, { theme } from 'styled'
 
 /**
  * Wrapper component.

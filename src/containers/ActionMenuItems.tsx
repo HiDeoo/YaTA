@@ -1,13 +1,13 @@
 import { Menu } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import ActionMenuItem from 'Components/ActionMenuItem'
-import { ActionHandler } from 'Libs/Action'
-import { SerializedChatter } from 'Libs/Chatter'
-import { ApplicationState } from 'Store/reducers'
-import { getActions } from 'Store/selectors/settings'
+import ActionMenuItem from 'components/ActionMenuItem'
+import { ActionHandler } from 'libs/Action'
+import { SerializedChatter } from 'libs/Chatter'
+import { ApplicationState } from 'store/reducers'
+import { getActions } from 'store/selectors/settings'
 
 /**
  * ActionMenuItems Component.

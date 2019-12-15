@@ -1,8 +1,8 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Reducer } from 'redux'
 
-import { SerializedChatter } from 'Libs/Chatter'
-import { createAction } from 'Utils/redux'
+import { SerializedChatter } from 'libs/Chatter'
+import { createAction } from 'utils/redux'
 
 /**
  * Actions types.

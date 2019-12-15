@@ -1,7 +1,7 @@
-import * as _ from 'lodash'
-import * as tinycolor from 'tinycolor2'
+import _ from 'lodash'
+import tinycolor from 'tinycolor2'
 
-import Logs from 'Constants/logs'
+import Logs from 'constants/logs'
 
 /**
  * ChatterColor class used to sanitize user colors.

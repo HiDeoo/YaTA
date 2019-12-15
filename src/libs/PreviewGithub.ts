@@ -1,8 +1,8 @@
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 
-import RequestMethod from 'Constants/requestMethod'
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
+import RequestMethod from 'constants/requestMethod'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
 
 /**
  * Preview types.
@@ -20,12 +20,12 @@ const BaseUrl = 'https://api.github.com'
 /**
  * RegExp used to identify a repository link.
  */
-const RepoRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)(?:[^\s]+)?/g
+const RepoRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w.-]+)(?:[^\s]+)?/g
 
 /**
  * RegExp used to identify an issue or PR link.
  */
-const IssueOrPRRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w\.-]+)\/(?:issues|pull)\/(\d+)(?:[^\s]+)?/g
+const IssueOrPRRegExp = /https:\/\/(?:www\.)?github\.com\/([\w-]+\/[\w.-]+)\/(?:issues|pull)\/(\d+)(?:[^\s]+)?/g
 
 /**
  * Github preview provider.
@@ -49,7 +49,6 @@ const PreviewGithub: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = RepoRegExp.exec(message)) != null) {
       previews[match[1]] = {
         extra: { initialLink: match[0] },
@@ -60,7 +59,6 @@ const PreviewGithub: PreviewProvider = class {
       }
     }
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = IssueOrPRRegExp.exec(message)) != null) {
       previews[match[1]] = {
         extra: { initialLink: match[0], issueId: match[2] },

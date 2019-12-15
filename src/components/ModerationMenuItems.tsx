@@ -1,9 +1,9 @@
 import { Icon, Menu } from '@blueprintjs/core'
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 import * as React from 'react'
 
-import { SerializedRoomState } from 'Libs/RoomState'
+import { SerializedRoomState } from 'libs/RoomState'
 
 /**
  * Supported slow mode durations.
@@ -44,7 +44,6 @@ export default class ModerationMenuItems extends React.Component<Props> {
           />
           {_.map(SlowModeDurations, (slowModeDuration) => (
             <Menu.Item
-              // tslint:disable-next-line:jsx-no-lambda
               onClick={(event: React.MouseEvent) => this.toggleSlowMode(event, slowModeDuration)}
               text={`${slowModeDuration} ${pluralize('second', slowModeDuration)}`}
               icon={this.getSlowModeMenuIcon(slowModeDuration)}

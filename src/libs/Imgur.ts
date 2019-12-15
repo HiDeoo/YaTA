@@ -1,6 +1,6 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import RequestMethod from 'Constants/requestMethod'
+import RequestMethod from 'constants/requestMethod'
 
 /**
  * Imgur base API URL.

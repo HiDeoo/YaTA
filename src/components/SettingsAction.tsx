@@ -1,10 +1,10 @@
 import { Button, ButtonGroup, Classes, Colors, Icon, Intent, Text } from '@blueprintjs/core'
 import * as React from 'react'
 
-import FlexContent from 'Components/FlexContent'
-import ActionIconMap from 'Constants/actionIconMap'
-import { ActionType, SerializedAction } from 'Libs/Action'
-import styled from 'Styled'
+import FlexContent from 'components/FlexContent'
+import ActionIconMap from 'constants/actionIconMap'
+import { ActionType, SerializedAction } from 'libs/Action'
+import styled from 'styled'
 
 /**
  * Wrapper component.

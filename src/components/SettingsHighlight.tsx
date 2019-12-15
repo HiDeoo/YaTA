@@ -1,10 +1,10 @@
 import { Button, EditableText, Intent } from '@blueprintjs/core'
 import * as React from 'react'
 
-import SettingsHighlightColorMenu from 'Components/SettingsHighlightColorMenu'
-import Key from 'Constants/key'
-import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
-import styled from 'Styled'
+import SettingsHighlightColorMenu from 'components/SettingsHighlightColorMenu'
+import Key from 'constants/key'
+import { HighlightColors, SerializedHighlight } from 'libs/Highlight'
+import styled from 'styled'
 
 /**
  * Wrapper component.

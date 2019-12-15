@@ -1,8 +1,8 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 import tmi, {
   Client as TwitchClient,
   EmoteSets,
@@ -13,37 +13,37 @@ import tmi, {
   UserState,
 } from 'twitch-js'
 
-import Emoticons from 'Constants/emoticons'
-import Event from 'Constants/event'
-import LogType from 'Constants/logType'
-import Notices from 'Constants/notices'
-import Page from 'Constants/page'
-import ReadyState from 'Constants/readyState'
-import RitualType from 'Constants/ritualType'
-import Status from 'Constants/status'
-import Bttv from 'Libs/Bttv'
-import Chatter from 'Libs/Chatter'
-import EmotesProvider, { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import Message from 'Libs/Message'
-import Notice from 'Libs/Notice'
-import Notification, { NotificationEvent } from 'Libs/Notification'
-import Resources from 'Libs/Resources'
-import RoomState from 'Libs/RoomState'
-import Sound, { SoundId } from 'Libs/Sound'
-import Twitch from 'Libs/Twitch'
-import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'Store/ducks/app'
+import Emoticons from 'constants/emoticons'
+import Event from 'constants/event'
+import LogType from 'constants/logType'
+import Notices from 'constants/notices'
+import Page from 'constants/page'
+import ReadyState from 'constants/readyState'
+import RitualType from 'constants/ritualType'
+import Status from 'constants/status'
+import Bttv from 'libs/Bttv'
+import Chatter from 'libs/Chatter'
+import EmotesProvider, { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
+import Message from 'libs/Message'
+import Notice from 'libs/Notice'
+import Notification, { NotificationEvent } from 'libs/Notification'
+import Resources from 'libs/Resources'
+import RoomState from 'libs/RoomState'
+import Sound, { SoundId } from 'libs/Sound'
+import Twitch from 'libs/Twitch'
+import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'store/ducks/app'
 import {
   addChatter,
   addPotentialChatter,
   clearChatters,
   markChatterAsBanned,
   markChatterAsUnbanned,
-} from 'Store/ducks/chatters'
-import { addLog, clearLogs, purgeLog, purgeLogs, unshiftLog } from 'Store/ducks/logs'
-import { setModerator } from 'Store/ducks/user'
-import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
-import { getChatters, getChattersMap } from 'Store/selectors/chatters'
+} from 'store/ducks/chatters'
+import { addLog, clearLogs, purgeLog, purgeLogs, unshiftLog } from 'store/ducks/logs'
+import { setModerator } from 'store/ducks/user'
+import { ApplicationState } from 'store/reducers'
+import { getChannel } from 'store/selectors/app'
+import { getChatters, getChattersMap } from 'store/selectors/chatters'
 import {
   getAutoHostThreshold,
   getDelayBetweenThrottledSounds,
@@ -57,8 +57,8 @@ import {
   getPlayMessageSoundOnlyInOwnChannel,
   getSoundSettings,
   getTheme,
-} from 'Store/selectors/settings'
-import { getChatLoginDetails, getIsMod } from 'Store/selectors/user'
+} from 'store/selectors/settings'
+import { getChatLoginDetails, getIsMod } from 'store/selectors/user'
 
 /**
  * React State.
@@ -895,7 +895,9 @@ export class ChatClient extends React.Component<Props, State> {
   private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
     let emoticonsSetId = 0
 
-    _.forEach(Emoticons.setIds, (id) => {
+    _.forEach(Emoticons, (_emoticons, idStr) => {
+      const id = parseInt(idStr, 10)
+
       if (_.has(sets, id)) {
         emoticonsSetId = id
       }

@@ -1,9 +1,9 @@
 import { Classes, H3 } from '@blueprintjs/core'
 import * as React from 'react'
 
-import Center from 'Components/Center'
-import Spinner from 'Components/Spinner'
-import styled, { theme } from 'Styled'
+import Center from 'components/Center'
+import Spinner from 'components/Spinner'
+import styled, { theme } from 'styled'
 
 /**
  * Wrapper component.

@@ -1,7 +1,7 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
-import StrawPoll from 'Libs/StrawPoll'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
+import StrawPoll from 'libs/StrawPoll'
 
 /**
  * RegExp used to identify a poll link.
@@ -30,7 +30,6 @@ const PreviewStrawPoll: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = PollRegExp.exec(message)) != null) {
       previews[match[1]] = { id: match[1], provider: PreviewStrawPoll.getProviderId(), resolved: false }
     }

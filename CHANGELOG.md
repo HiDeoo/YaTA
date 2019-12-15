@@ -4,6 +4,10 @@
 
 - When autocompleting a username argument of a command, only usernames will now be suggested ([#32](https://github.com/HiDeoo/YaTA/pull/32) - [nD00rn](https://github.com/nD00rn)).
 
+### ⚙️ Internal
+
+- Upgrade build tools.
+
 # 1.11.0
 
 ### 🚀 New Feature
@@ -15,7 +19,7 @@
   - Add the `/user` command to open a user viewer card without any click or having to find a user message first.
   - Add support for the `/block` & `/unblock` commands.
   - Add the `/purge` command which is an alias of the `/timeout user 1`.
-- Messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide) are now *slightly* highlighted (number of points & icon are not displayed on purpose).
+- Messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide) are now _slightly_ highlighted (number of points & icon are not displayed on purpose).
 - Alerts for long messages now include a live character counter.
 - When manually opening the video of the current Twitch live stream from YaTA, the player will have sound enabled by default.
 

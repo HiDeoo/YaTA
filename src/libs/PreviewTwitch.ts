@@ -1,8 +1,8 @@
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
-import Twitch from 'Libs/Twitch'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
+import Twitch from 'libs/Twitch'
 
 /**
  * Preview types.
@@ -44,7 +44,6 @@ const PreviewTwitch: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = ClipRegExp.exec(message)) != null) {
       previews[match[1]] = {
         id: match[1],
@@ -54,7 +53,6 @@ const PreviewTwitch: PreviewProvider = class {
       }
     }
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = VideoRegExp.exec(message)) != null) {
       previews[match[1]] = {
         id: match[1],

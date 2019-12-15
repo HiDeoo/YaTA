@@ -1,10 +1,10 @@
 import { Button, Classes, getKeyComboString, KeyCombo } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import FlexContent from 'Components/FlexContent'
-import { Shortcut, ShortcutCombo, ShortcutType } from 'Constants/shortcut'
-import styled, { ifProp } from 'Styled'
+import FlexContent from 'components/FlexContent'
+import { Shortcut, ShortcutCombo, ShortcutType } from 'constants/shortcut'
+import styled, { ifProp } from 'styled'
 
 /**
  * Name component.

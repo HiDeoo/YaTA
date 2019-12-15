@@ -1,9 +1,9 @@
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 
-import RequestMethod from 'Constants/requestMethod'
-import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'Libs/PreviewProvider'
-import { durationToString } from 'Utils/time'
+import RequestMethod from 'constants/requestMethod'
+import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
+import { durationToString } from 'utils/time'
 
 /**
  * Preview types.
@@ -50,7 +50,6 @@ const PreviewYoutube: PreviewProvider = class {
 
     let match
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = VideoRegExp.exec(message)) != null) {
       previews[match[1]] = {
         extra: { initialLink: match[0] },
@@ -61,7 +60,6 @@ const PreviewYoutube: PreviewProvider = class {
       }
     }
 
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = ChannelRegExp.exec(message)) != null) {
       previews[match[1]] = {
         id: match[1],

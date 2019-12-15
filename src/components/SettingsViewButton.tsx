@@ -1,9 +1,9 @@
 import { Icon } from '@blueprintjs/core'
 import * as React from 'react'
 
-import { SettingsView } from 'Components/Settings'
-import { IView } from 'Components/ViewStack'
-import styled, { theme } from 'Styled'
+import { SettingsView } from 'components/Settings'
+import { IView } from 'components/ViewStack'
+import styled, { theme } from 'styled'
 
 /**
  * Wrapper component.

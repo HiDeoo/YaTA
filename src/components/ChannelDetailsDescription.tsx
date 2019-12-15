@@ -1,14 +1,14 @@
 import { Colors, IPanelProps } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import { ChannelDetailsProps } from 'Components/ChannelDetails'
-import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
-import ExternalLink from 'Components/ExternalLink'
-import NonIdealState from 'Components/NonIdealState'
-import Spinner from 'Components/Spinner'
-import Twitch, { RawPanels } from 'Libs/Twitch'
-import styled from 'Styled'
+import { ChannelDetailsProps } from 'components/ChannelDetails'
+import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
+import ExternalLink from 'components/ExternalLink'
+import NonIdealState from 'components/NonIdealState'
+import Spinner from 'components/Spinner'
+import Twitch, { RawPanels } from 'libs/Twitch'
+import styled from 'styled'
 
 /**
  * Wrapper component.
@@ -112,7 +112,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
           const hasLink = !_.isNil(panel.data.link)
           const hasDescription = !_.isNil(panel.html_description) && panel.html_description.length > 0
 
-          let image = hasImage ? <img src={panel.data.image} /> : null
+          let image = hasImage ? <img alt="" src={panel.data.image} /> : null
 
           if (hasLink) {
             image = <ExternalLink href={panel.data.link}>{image}</ExternalLink>

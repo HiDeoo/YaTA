@@ -2,12 +2,12 @@ import { FocusStyleManager } from '@blueprintjs/core'
 import * as React from 'react'
 import { render } from 'react-dom'
 
-import Wrapper from 'Components/Wrapper'
-import configureStore, { StoreConfiguration } from 'Store'
+import Wrapper from 'components/Wrapper'
+import configureStore, { StoreConfiguration } from 'store'
 
-import 'node_modules/@blueprintjs/core/lib/css/blueprint.css'
-import 'node_modules/@blueprintjs/select/lib/css/blueprint-select.css'
-import 'node_modules/normalize.css/normalize.css'
+import '@blueprintjs/core/lib/css/blueprint.css'
+import '@blueprintjs/select/lib/css/blueprint-select.css'
+import 'normalize.css/normalize.css'
 
 /**
  * Renders the application while passing down the Redux store.

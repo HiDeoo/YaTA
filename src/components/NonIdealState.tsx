@@ -1,9 +1,9 @@
 import { Classes, H1 } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import Center from 'Components/Center'
-import styled, { ifProp } from 'Styled'
+import Center from 'components/Center'
+import styled, { ifProp } from 'styled'
 
 /**
  * Wrapper component.

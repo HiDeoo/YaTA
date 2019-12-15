@@ -1,9 +1,9 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
-import { IdToken } from 'Libs/Twitch'
-import { createAction, RehydrateAction } from 'Utils/redux'
+import { IdToken } from 'libs/Twitch'
+import { createAction, RehydrateAction } from 'utils/redux'
 
 /**
  * Actions types.

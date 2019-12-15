@@ -1,6 +1,6 @@
 import { Colors } from '@blueprintjs/core'
 
-import Theme from 'Constants/theme'
+import Theme from 'constants/theme'
 
 /**
  * Base theme.

@@ -1,10 +1,10 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import { SettingsViews } from 'Components/Settings'
-import SettingsViewButton from 'Components/SettingsViewButton'
-import { IViewProps } from 'Components/ViewStack'
-import styled from 'Styled'
+import { SettingsViews } from 'components/Settings'
+import SettingsViewButton from 'components/SettingsViewButton'
+import { IViewProps } from 'components/ViewStack'
+import styled from 'styled'
 
 /**
  * Wrapper component.

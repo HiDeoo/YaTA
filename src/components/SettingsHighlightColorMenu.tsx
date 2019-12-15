@@ -1,10 +1,10 @@
 import { Button, Classes, Menu, Popover, Position } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import HighlightColorMenuItem from 'Components/HighlightColorMenuItem'
-import { HighlightColors } from 'Libs/Highlight'
-import styled, { ifProp, theme } from 'Styled'
+import HighlightColorMenuItem from 'components/HighlightColorMenuItem'
+import { HighlightColors } from 'libs/Highlight'
+import styled, { ifProp, theme } from 'styled'
 
 /**
  * ColorMenuButton component.

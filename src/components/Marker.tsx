@@ -1,9 +1,9 @@
 import { Colors } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import { SerializedMarker } from 'Store/ducks/logs'
-import styled, { size, theme } from 'Styled'
+import { SerializedMarker } from 'store/ducks/logs'
+import styled, { size, theme } from 'styled'
 
 /**
  * Wrapper component.

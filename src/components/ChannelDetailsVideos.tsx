@@ -1,16 +1,16 @@
 import { IPanelProps } from '@blueprintjs/core'
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 import * as React from 'react'
 
-import { ChannelDetailsProps } from 'Components/ChannelDetails'
-import { ChannelDetailsType } from 'Components/ChannelDetailsOverview'
-import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
-import ExternalResource, { Resource, ResourceType } from 'Components/ExternalResource'
-import NonIdealState from 'Components/NonIdealState'
-import Spinner from 'Components/Spinner'
-import Twitch, { ClipPeriod } from 'Libs/Twitch'
-import styled, { theme } from 'Styled'
+import { ChannelDetailsProps } from 'components/ChannelDetails'
+import { ChannelDetailsType } from 'components/ChannelDetailsOverview'
+import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
+import ExternalResource, { Resource, ResourceType } from 'components/ExternalResource'
+import NonIdealState from 'components/NonIdealState'
+import Spinner from 'components/Spinner'
+import Twitch, { ClipPeriod } from 'libs/Twitch'
+import styled, { theme } from 'styled'
 
 /**
  * ChannelDetailsVideo component.

@@ -1,8 +1,8 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import { SerializedNotice } from 'Libs/Notice'
-import styled, { size, theme } from 'Styled'
+import { SerializedNotice } from 'libs/Notice'
+import styled, { size, theme } from 'styled'
 
 /**
  * Wrapper component.

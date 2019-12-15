@@ -1,10 +1,10 @@
 import { Slider } from '@blueprintjs/core'
 import * as React from 'react'
-import styled from 'Styled'
+import styled from 'styled'
 
-import Switch from 'Components/Switch'
-import Sound, { SoundId } from 'Libs/Sound'
-import { SoundSettings } from 'Store/ducks/settings'
+import Switch from 'components/Switch'
+import Sound, { SoundId } from 'libs/Sound'
+import { SoundSettings } from 'store/ducks/settings'
 
 /**
  * VolumeWrapper component.

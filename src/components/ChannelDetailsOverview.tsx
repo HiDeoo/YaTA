@@ -1,22 +1,22 @@
 import { ButtonGroup, Classes, Colors, Icon, IconName, Intent, IPanel, IPanelProps, Text } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
 
-import { ChannelDetailsProps } from 'Components/ChannelDetails'
-import ChannelDetailsButton from 'Components/ChannelDetailsButton'
-import ChannelDetailsDescription from 'Components/ChannelDetailsDescription'
-import ChannelDetailsPanel from 'Components/ChannelDetailsPanel'
-import ChannelDetailsVideos from 'Components/ChannelDetailsVideos'
-import ExternalLink from 'Components/ExternalLink'
-import NonIdealState from 'Components/NonIdealState'
-import Spinner from 'Components/Spinner'
-import Twitch, { RawRelationship, RawStream } from 'Libs/Twitch'
-import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
-import { getChatLoginDetails } from 'Store/selectors/user'
-import styled, { theme } from 'Styled'
+import { ChannelDetailsProps } from 'components/ChannelDetails'
+import ChannelDetailsButton from 'components/ChannelDetailsButton'
+import ChannelDetailsDescription from 'components/ChannelDetailsDescription'
+import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
+import ChannelDetailsVideos from 'components/ChannelDetailsVideos'
+import ExternalLink from 'components/ExternalLink'
+import NonIdealState from 'components/NonIdealState'
+import Spinner from 'components/Spinner'
+import Twitch, { RawRelationship, RawStream } from 'libs/Twitch'
+import { ApplicationState } from 'store/reducers'
+import { getChannel } from 'store/selectors/app'
+import { getChatLoginDetails } from 'store/selectors/user'
+import styled, { theme } from 'styled'
 
 /**
  * Detail component.
@@ -149,7 +149,8 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
     try {
       const response = await Promise.all([Twitch.fetchStream(id), Twitch.fetchRelationship(id)])
 
-      const [{ stream }, relationship] = response
+      const [streamResponse, relationship] = response
+      const stream = streamResponse?.stream
 
       this.setState(() => ({ didFail: false, stream, relationship }))
     } catch {

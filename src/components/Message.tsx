@@ -1,14 +1,14 @@
 import { Button, Classes, Colors, Intent, Menu, Popover } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import MessageContent from 'Components/MessageContent'
-import Preview from 'Components/Preview'
-import ActionMenuItems from 'Containers/ActionMenuItems'
-import { ActionHandler } from 'Libs/Action'
-import { SerializedChatter, WithNameColorProps } from 'Libs/Chatter'
-import { SerializedMessage } from 'Libs/Message'
-import styled, { ifProp, prop, size, theme } from 'Styled'
+import MessageContent from 'components/MessageContent'
+import Preview from 'components/Preview'
+import ActionMenuItems from 'containers/ActionMenuItems'
+import { ActionHandler } from 'libs/Action'
+import { SerializedChatter, WithNameColorProps } from 'libs/Chatter'
+import { SerializedMessage } from 'libs/Message'
+import styled, { ifProp, prop, size, theme } from 'styled'
 
 /**
  * Wrapper component.

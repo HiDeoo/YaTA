@@ -1,11 +1,11 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import { ShortcutType } from 'Constants/shortcut'
-import { HighlightColors } from 'Libs/Highlight'
-import { SoundId } from 'Libs/Sound'
-import { initialState as SettingsInitialState, SerializedActions, SettingsState } from 'Store/ducks/settings'
-import { initialState as UserInitialState } from 'Store/ducks/user'
-import { ApplicationState } from 'Store/reducers'
+import { ShortcutType } from 'constants/shortcut'
+import { HighlightColors } from 'libs/Highlight'
+import { SoundId } from 'libs/Sound'
+import { initialState as SettingsInitialState, SerializedActions, SettingsState } from 'store/ducks/settings'
+import { initialState as UserInitialState } from 'store/ducks/user'
+import { ApplicationState } from 'store/reducers'
 
 /**
  * Redux store migrations.
@@ -83,7 +83,7 @@ export default {
 
         return highlights
       },
-      {}
+      {} as typeof state.settings.highlights
     )
 
     return {

@@ -8,23 +8,20 @@
   "scripts": {
     "prepare": "patch-package",
     "prestart": "yarn run changelog",
-    "start": "cross-env BROWSER=none react-scripts-ts start",
+    "start": "react-scripts start",
     "prebuild": "yarn run changelog",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "test:coverage": "yarn run test --coverage && open coverage/index.html",
+    "build": "react-scripts build",
     "lint": "yarn run lint:ts; yarn run lint:css",
-    "lint:ts": "tslint -p . -t stylish && tsc -p tsconfig.prod.json  --noEmit",
+    "lint:ts": "eslint --max-warnings=0 --ext ts,tsx src && tsc --noEmit",
     "lint:css": "stylelint 'src/**/*.tsx'",
     "preanalyze": "yarn run build",
     "analyze": "source-map-explorer build/static/js/main.*",
     "changelog": "cp CHANGELOG.md src",
-    "eject": "react-scripts-ts eject",
     "precommit": "lint-staged",
     "deploy": "now"
   },
   "dependencies": {
-    "@blueprintjs/core": "3.18.0",
+    "@blueprintjs/core": "3.22.2",
     "@blueprintjs/icons": "3.10.0",
     "@blueprintjs/select": "3.10.0",
     "animejs": "3.1.0",
@@ -44,7 +41,7 @@
     "react-helmet": "5.2.1",
     "react-redux": "7.1.0",
     "react-router-dom": "5.0.1",
-    "react-scripts-ts": "3.1.0",
+    "react-scripts": "3.3.0",
     "react-timeago": "4.4.0",
     "react-tooltip": "3.10.0",
     "react-transition-group": "4.2.2",
@@ -61,12 +58,11 @@
     "unistring": "https://github.com/akahuku/unistring#master"
   },
   "devDependencies": {
-    "@blueprintjs/tslint-config": "1.9.0",
     "@types/animejs": "3.1.0",
     "@types/file-saver": "2.0.1",
-    "@types/jest": "24.0.17",
-    "@types/lodash": "4.14.137",
+    "@types/lodash": "4.14.149",
     "@types/marked": "0.6.5",
+    "@types/node": "12.12.17",
     "@types/pluralize": "0.0.29",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.8.5",
@@ -81,7 +77,6 @@
     "@types/styled-components": "4.0.3",
     "@types/tinycolor2": "1.4.2",
     "@types/webpack-env": "1.14.0",
-    "cross-env": "6.0.0",
     "husky": "3.0.3",
     "lint-staged": "9.2.1",
     "now": "16.1.2",
@@ -93,9 +88,7 @@
     "stylelint-config-standard": "18.3.0",
     "stylelint-config-styled-components": "0.1.1",
     "stylelint-processor-styled-components": "1.8.0",
-    "tslint": "5.18.0",
-    "tslint-plugin-prettier": "2.0.1",
-    "typescript": "3.5.3"
+    "typescript": "3.7.3"
   },
   "resolutions": {
     "@types/react": "16.9.2"
@@ -104,6 +97,21 @@
     "**/*.{ts,tsx,md,json,css}": [
       "prettier --write",
       "git add"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   },
   "repository": {

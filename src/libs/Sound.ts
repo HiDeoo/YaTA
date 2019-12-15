@@ -1,7 +1,7 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import { SoundData, SoundId, SoundIdToNameMap, SoundName } from 'Constants/sound'
-import { SettingsState } from 'Store/ducks/settings'
+import { SoundData, SoundId, SoundIdToNameMap, SoundName } from 'constants/sound'
+import { SettingsState } from 'store/ducks/settings'
 
 /**
  * Re-exports sound list.
@@ -45,7 +45,8 @@ export default class Sound {
    * @param settings - The new settings.
    */
   public udpateVolumes(settings: SettingsState['sounds']) {
-    _.forEach(settings, ({ volume }, soundId) => {
+    _.forEach(settings, ({ volume }, soundIdStr) => {
+      const soundId: SoundId = parseInt(soundIdStr, 10)
       this.volumes[soundId] = volume
     })
   }

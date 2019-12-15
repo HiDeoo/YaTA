@@ -1,11 +1,11 @@
 import { Text } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import Player from 'Libs/Player'
-import styled, { ifProp, theme } from 'Styled'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import Player from 'libs/Player'
+import styled, { ifProp, theme } from 'styled'
 
 /**
  * Wrapper component.

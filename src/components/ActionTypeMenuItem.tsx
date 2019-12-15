@@ -1,7 +1,7 @@
 import { Menu } from '@blueprintjs/core'
 import * as React from 'react'
 
-import { ActionType } from 'Libs/Action'
+import { ActionType } from 'libs/Action'
 
 /**
  * ActionTypeMenuItem Component.

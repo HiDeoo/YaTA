@@ -1,20 +1,20 @@
 import { Classes, Colors, Icon, InputGroup, Popover, Position } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Grid, GridCellRenderer } from 'react-virtualized/dist/es/Grid'
 import { compose } from 'recompose'
 
-import EmotePickerEmote from 'Components/EmotePickerEmote'
-import EmotePickerProvider from 'Components/EmotePickerProvider'
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import NonIdealState from 'Components/NonIdealState'
-import { Emote, EmoteProviderPrefix } from 'Libs/EmotesProvider'
-import Resources from 'Libs/Resources'
-import { ApplicationState } from 'Store/reducers'
-import { getEmotesSets } from 'Store/selectors/app'
-import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'Styled'
+import EmotePickerEmote from 'components/EmotePickerEmote'
+import EmotePickerProvider from 'components/EmotePickerProvider'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import NonIdealState from 'components/NonIdealState'
+import { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
+import Resources from 'libs/Resources'
+import { ApplicationState } from 'store/reducers'
+import { getEmotesSets } from 'store/selectors/app'
+import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'styled'
 
 /**
  * EmotePickerButton component.
@@ -164,7 +164,7 @@ class EmotePicker extends React.Component<Props, State> {
         minimal
       >
         <EmotePickerButton title="Emote Picker" isOpen={visible} onMouseEnter={this.onMouseEnterButton}>
-          <img src={buttonIcon} />
+          <img src={buttonIcon} alt="Emote Picker" />
         </EmotePickerButton>
       </Popover>
     )
@@ -259,7 +259,7 @@ class EmotePicker extends React.Component<Props, State> {
     return (
       <Preview>
         <PreviewImage>
-          <img src={urls['2x']} />
+          <img src={urls['2x']} alt={hovered.code} />
         </PreviewImage>
         {hovered.code}
       </Preview>

@@ -1,6 +1,6 @@
 import { IconName } from '@blueprintjs/core'
 
-import { ActionType } from 'Libs/Action'
+import { ActionType } from 'libs/Action'
 
 /**
  * Action icons mapping.

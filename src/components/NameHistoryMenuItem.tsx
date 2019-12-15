@@ -1,7 +1,7 @@
 import { Classes, Colors, Menu } from '@blueprintjs/core'
 import * as React from 'react'
 
-import styled from 'Styled'
+import styled from 'styled'
 
 /**
  * Name component.

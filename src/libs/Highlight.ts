@@ -1,12 +1,12 @@
-import * as _ from 'lodash'
-import * as shortid from 'shortid'
+import _ from 'lodash'
+import shortid from 'shortid'
 
-import { SerializedHighlights } from 'Store/ducks/settings'
+import { SerializedHighlights } from 'store/ducks/settings'
 
 /**
  * RegExp used to identify a valid highlight pattern.
  */
-const PatternRegExp = /^[\w\-]+$/
+const PatternRegExp = /^[\w-]+$/
 
 /**
  * Highlight class.

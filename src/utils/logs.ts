@@ -1,10 +1,10 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import { SerializedMessage } from 'Libs/Message'
-import { SerializedNotice } from 'Libs/Notice'
-import { SerializedNotification } from 'Libs/Notification'
-import { SerializedMarker } from 'Store/ducks/logs'
-import { replaceImgTagByAlt } from 'Utils/html'
+import { SerializedMessage } from 'libs/Message'
+import { SerializedNotice } from 'libs/Notice'
+import { SerializedNotification } from 'libs/Notification'
+import { SerializedMarker } from 'store/ducks/logs'
+import { replaceImgTagByAlt } from 'utils/html'
 
 /**
  * HTMLDivElement used when converting messages to a string.

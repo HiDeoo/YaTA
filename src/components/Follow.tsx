@@ -1,15 +1,15 @@
 import { Colors, Icon, Text } from '@blueprintjs/core'
 import anime from 'animejs'
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
+import _ from 'lodash'
+import pluralize from 'pluralize'
 import * as React from 'react'
 import { Flipped } from 'react-flip-toolkit'
 import TimeAgo, { Formatter } from 'react-timeago'
 
-import FlexContent from 'Components/FlexContent'
-import FlexLayout from 'Components/FlexLayout'
-import Twitch, { Follower, RawChannel, RawStream } from 'Libs/Twitch'
-import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'Styled'
+import FlexContent from 'components/FlexContent'
+import FlexLayout from 'components/FlexLayout'
+import Twitch, { Follower, RawChannel, RawStream } from 'libs/Twitch'
+import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'styled'
 
 /**
  * Wrapper component.

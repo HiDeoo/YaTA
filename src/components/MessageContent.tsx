@@ -1,11 +1,11 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import LogType from 'Constants/logType'
-import { WithNameColorProps } from 'Libs/Chatter'
-import { HighlightColors } from 'Libs/Highlight'
-import { SerializedMessage } from 'Libs/Message'
-import styled, { prop, theme } from 'Styled'
+import LogType from 'constants/logType'
+import { WithNameColorProps } from 'libs/Chatter'
+import { HighlightColors } from 'libs/Highlight'
+import { SerializedMessage } from 'libs/Message'
+import styled, { prop, theme } from 'styled'
 
 /**
  * Message component.

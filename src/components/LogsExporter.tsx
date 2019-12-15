@@ -1,27 +1,27 @@
 import { Button, Classes, Colors, Intent } from '@blueprintjs/core'
-import * as copy from 'copy-to-clipboard'
-import * as FileSaver from 'file-saver'
-import * as _ from 'lodash'
+import copy from 'copy-to-clipboard'
+import FileSaver from 'file-saver'
+import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import LogsExporterCheckbox from 'Components/LogsExporterCheckbox'
-import Logs from 'Constants/logs'
-import { ToggleableProps } from 'Constants/toggleable'
-import Dialog from 'Containers/Dialog'
-import Toaster from 'Libs/Toaster'
-import { isMarker, isMessage, isNotice, isNotification, isWhisper } from 'Store/ducks/logs'
-import { ApplicationState } from 'Store/reducers'
-import { getChannel } from 'Store/selectors/app'
-import { getLogs } from 'Store/selectors/logs'
-import styled, { ifProp } from 'Styled'
+import LogsExporterCheckbox from 'components/LogsExporterCheckbox'
+import Logs from 'constants/logs'
+import { ToggleableProps } from 'constants/toggleable'
+import Dialog from 'containers/Dialog'
+import Toaster from 'libs/Toaster'
+import { isMarker, isMessage, isNotice, isNotification, isWhisper } from 'store/ducks/logs'
+import { ApplicationState } from 'store/reducers'
+import { getChannel } from 'store/selectors/app'
+import { getLogs } from 'store/selectors/logs'
+import styled, { ifProp } from 'styled'
 import {
   convertMarkerToString,
   convertMessagesToString,
   convertNoticeToString,
   convertNotificationToString,
   convertWhisperToString,
-} from 'Utils/logs'
+} from 'utils/logs'
 
 /**
  * Label component.

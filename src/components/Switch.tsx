@@ -1,9 +1,9 @@
 import { Classes, ISwitchProps, Switch as OriginalSwitch } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import Sound, { SoundId } from 'Libs/Sound'
-import styled, { theme } from 'Styled'
+import Sound, { SoundId } from 'libs/Sound'
+import styled, { theme } from 'styled'
 
 /**
  * Wrapper component.

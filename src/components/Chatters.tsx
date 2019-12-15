@@ -1,16 +1,16 @@
 import { InputGroup } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
 import { List, ListRowRenderer } from 'react-virtualized/dist/es/List'
 
-import ExternalLink from 'Components/ExternalLink'
-import NonIdealState from 'Components/NonIdealState'
-import Spinner from 'Components/Spinner'
-import { ToggleableProps } from 'Constants/toggleable'
-import Dialog from 'Containers/Dialog'
-import Twitch, { RawChatters } from 'Libs/Twitch'
-import styled, { theme, ThemeProps, withTheme } from 'Styled'
+import ExternalLink from 'components/ExternalLink'
+import NonIdealState from 'components/NonIdealState'
+import Spinner from 'components/Spinner'
+import { ToggleableProps } from 'constants/toggleable'
+import Dialog from 'containers/Dialog'
+import Twitch, { RawChatters } from 'libs/Twitch'
+import styled, { theme, ThemeProps, withTheme } from 'styled'
 
 /**
  * Content component.

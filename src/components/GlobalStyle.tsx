@@ -1,7 +1,7 @@
 import { Classes, Colors } from '@blueprintjs/core'
 
-import { createGlobalStyle } from 'Styled'
-import base from 'Styled/base'
+import { createGlobalStyle } from 'styled'
+import base from 'styled/base'
 
 /**
  * Global Style Component.

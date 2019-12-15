@@ -1,7 +1,7 @@
-import * as _ from 'lodash'
-import * as shortid from 'shortid'
+import _ from 'lodash'
+import shortid from 'shortid'
 
-import { SerializedChatter } from 'Libs/Chatter'
+import { SerializedChatter } from 'libs/Chatter'
 
 /**
  * RegExp used to identify a valid action text.
@@ -17,6 +17,16 @@ const NameRegExp = /^[\w\- ]+$/
  * RegExp used to identify a valid action recipient.
  */
 const RecipientRegExp = /^[\w]{3,}$/
+
+/**
+ * Types of action available.
+ */
+export enum ActionType {
+  Say = 'Say',
+  Whisper = 'Whisper',
+  Prepare = 'Prepare',
+  Open = 'Open URL',
+}
 
 /**
  * Action class.
@@ -122,16 +132,6 @@ export enum ActionPlaceholder {
  * Action placeholders replacement values..
  */
 type ActionReplacement = Record<ActionPlaceholder, string>
-
-/**
- * Types of action available.
- */
-export enum ActionType {
-  Say = 'Say',
-  Whisper = 'Whisper',
-  Prepare = 'Prepare',
-  Open = 'Open URL',
-}
 
 /**
  * Serialized action.

@@ -1,4 +1,4 @@
-import Player from 'Components/Player'
+import Player from 'components/Player'
 
 /**
  * Global player.

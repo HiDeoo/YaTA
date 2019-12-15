@@ -1,8 +1,8 @@
 import { Colors } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import base from 'Styled/base'
-import ITheme from 'Styled/theme'
+import base from 'styled/base'
+import ITheme from 'styled/theme'
 
 /**
  * Dark theme.

@@ -1,10 +1,22 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import { CommandArgument, CommandDescriptor, CommandName, Commands } from 'Constants/command'
-import Notice from 'Libs/Notice'
-import { SerializedRoomState } from 'Libs/RoomState'
-import Twitch from 'Libs/Twitch'
-import { Log } from 'Store/ducks/logs'
+import { CommandArgument, CommandDescriptor, CommandName, Commands } from 'constants/command'
+import Notice from 'libs/Notice'
+import { SerializedRoomState } from 'libs/RoomState'
+import Twitch from 'libs/Twitch'
+import { Log } from 'store/ducks/logs'
+
+/**
+ * Actions that could arise when handling a command.
+ */
+export enum CommandDelegateAction {
+  AddLog,
+  AddToHistory,
+  Say,
+  SayWithoutHistory,
+  Timeout,
+  Whisper,
+}
 
 /**
  * Command class.
@@ -25,7 +37,7 @@ export default class Command {
    * @param message - A message potentially containing a whisper reply command.
    */
   public static isWhisperReplyCommand(message: string) {
-    return /^[\/|\.]r /i.test(message)
+    return /^[/|.]r /i.test(message)
   }
 
   /**
@@ -33,7 +45,7 @@ export default class Command {
    * @param message - A message potentially containing a marker command.
    */
   public static isMarkerCommand(message: string) {
-    return /^[\/|.]marker(?:$|\s)/i.test(message)
+    return /^[/|.]marker(?:$|\s)/i.test(message)
   }
 
   /**
@@ -41,7 +53,7 @@ export default class Command {
    * @param message - A message potentially containing a help command.
    */
   public static isHelpCommand(message: string) {
-    return /^[\/|.]help(?:$|\s)/i.test(message)
+    return /^[/|.]help(?:$|\s)/i.test(message)
   }
 
   /**
@@ -100,7 +112,7 @@ export default class Command {
    * @return The whisper details.
    */
   public static parseWhisper(message: string) {
-    const matches = message.match(/^[\/|\.]w (\S+) (.+)/i)
+    const matches = message.match(/^[/|.]w (\S+) (.+)/i)
 
     const details = { username: undefined as Optional<string>, whisper: undefined as Optional<string> }
 
@@ -117,7 +129,7 @@ export default class Command {
    * @return The new message with the inserted shrug if the message contained a shrug command..
    */
   public static parseShrug(message: string) {
-    const matches = message.match(/(^|.* )[\/|\.]shrug($| .*)/i)
+    const matches = message.match(/(^|.* )[/|.]shrug($| .*)/i)
 
     const result = { isShrug: false, message }
 
@@ -154,9 +166,24 @@ export default class Command {
    * @return The descriptor.
    */
   public static getDescriptor(commandName: string | CommandName): EnhancedCommandDescriptor {
-    const name: CommandName = CommandName[_.upperFirst(commandName)]
+    const formattedCommandName = _.upperFirst(commandName)
+
+    if (!Command.isKnownCommand(formattedCommandName)) {
+      throw new Error('Unknown command name.')
+    }
+
+    const name: CommandName = CommandName[formattedCommandName]
 
     return { ...Commands[name], name }
+  }
+
+  /**
+   * Defines if an emote code matches a Twitch RegExp emote.
+   * @param code - The emote code.
+   * @return `true` when the code matches a Twitch RegExp emote.
+   */
+  private static isKnownCommand(code: string): code is keyof typeof CommandName {
+    return code in CommandName
   }
 
   private command: string
@@ -377,7 +404,6 @@ export default class Command {
   /**
    * List of commands with special handlers.
    */
-  // tslint:disable-next-line:member-ordering
   private commandHandlers: { [key in CommandName]?: () => void } = {
     [CommandName.Block]: this.handleCommandBlockUnblock,
     [CommandName.Followed]: this.handleCommandFollowed,
@@ -388,18 +414,6 @@ export default class Command {
     [CommandName.User]: this.handleCommandUser,
     [CommandName.W]: this.handleCommandWhisper,
   }
-}
-
-/**
- * Actions that could arise when handling a command.
- */
-export enum CommandDelegateAction {
-  AddLog,
-  AddToHistory,
-  Say,
-  SayWithoutHistory,
-  Timeout,
-  Whisper,
 }
 
 /**

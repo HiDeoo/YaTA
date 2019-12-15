@@ -1,15 +1,15 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 
-import Emoticons from 'Constants/emoticons'
-import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'Libs/EmotesProvider'
-import { PreviewProvider } from 'Libs/PreviewProvider'
-import { RawBadges, RawCheermote } from 'Libs/Twitch'
-import { SerializedHighlights } from 'Store/ducks/settings'
+import Emoticons from 'constants/emoticons'
+import EmotesProvider, { Emote, EmoteProviderPrefix, TwitchRegExpEmotesMap } from 'libs/EmotesProvider'
+import { PreviewProvider } from 'libs/PreviewProvider'
+import { RawBadges, RawCheermote } from 'libs/Twitch'
+import { SerializedHighlights } from 'store/ducks/settings'
 
-import PreviewGithub from 'Libs/PreviewGithub'
-import PreviewStrawPoll from 'Libs/PreviewStrawPoll'
-import PreviewTwitch from 'Libs/PreviewTwitch'
-import PreviewYoutube from 'Libs/PreviewYoutube'
+import PreviewGithub from 'libs/PreviewGithub'
+import PreviewStrawPoll from 'libs/PreviewStrawPoll'
+import PreviewTwitch from 'libs/PreviewTwitch'
+import PreviewYoutube from 'libs/PreviewYoutube'
 
 /**
  * Manager for various resources used mostly during messages parsing like badges, emotes, cheermotes, etc.
@@ -38,8 +38,8 @@ export default class Resources {
   private highlightsPermanentUsers: string[] = []
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
-  private emoticonsMap: Record<string, { code: string; id: string }> = {}
-  private emoticonsList = _.flatten(_.map(Emoticons.bySetId, (set) => _.map(set, (id) => id)))
+  private emoticonsMap: EmoticonsMap = {}
+  private emoticonsList = _.flatten(_.map(Emoticons, (set) => _.map(set, (id) => id)))
   private previewProviders: Record<string, PreviewProvider>
 
   /**
@@ -84,18 +84,18 @@ export default class Resources {
    * @param id - The emoticons set id.
    */
   public setEmoticonsSetId(id: number) {
-    const emoticonsSetId = _.get(Emoticons.bySetId, id)
+    const emoticonsSetId = _.get(Emoticons, id)
 
     this.emoticonsSetId = !_.isNil(emoticonsSetId) ? id : 0
 
     this.emoticonsMap = _.reduce(
       TwitchRegExpEmotesMap,
       (map, code, regex) => {
-        map[regex] = { code, id: Emoticons.bySetId[this.emoticonsSetId][regex] }
+        map[regex] = { code, id: Emoticons[this.emoticonsSetId][regex].toString() }
 
         return map
       },
-      {}
+      {} as EmoticonsMap
     )
   }
 
@@ -230,3 +230,8 @@ export default class Resources {
     return this.previewProviders
   }
 }
+
+/**
+ * Emoticons map.
+ */
+type EmoticonsMap = Record<string, { code: string; id: string }>

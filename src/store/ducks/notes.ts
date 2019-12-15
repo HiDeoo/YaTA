@@ -1,7 +1,6 @@
-import * as _ from 'lodash'
 import { Reducer } from 'redux'
 
-import { createAction } from 'Utils/redux'
+import { createAction } from 'utils/redux'
 
 /**
  * Actions types.

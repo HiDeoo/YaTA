@@ -1,14 +1,14 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Reducer } from 'redux'
-import * as shortid from 'shortid'
+import shortid from 'shortid'
 
-import Logs from 'Constants/logs'
-import LogType from 'Constants/logType'
-import { SerializedMessage } from 'Libs/Message'
-import { SerializedNotice } from 'Libs/Notice'
-import { SerializedNotification } from 'Libs/Notification'
-import { createAction } from 'Utils/redux'
-import { padTimeUnit } from 'Utils/time'
+import Logs from 'constants/logs'
+import LogType from 'constants/logType'
+import { SerializedMessage } from 'libs/Message'
+import { SerializedNotice } from 'libs/Notice'
+import { SerializedNotification } from 'libs/Notification'
+import { createAction } from 'utils/redux'
+import { padTimeUnit } from 'utils/time'
 
 /**
  * Determines if logs should be rotated.
@@ -36,7 +36,7 @@ function rotateLogs(state: LogsState) {
 
       return newById
     },
-    {}
+    {} as LogsState['byId']
   )
 
   return {

@@ -1,13 +1,13 @@
-import * as _ from 'lodash'
+import _ from 'lodash'
 import { Reducer } from 'redux'
 import { REHYDRATE } from 'redux-persist/lib/constants'
 
-import { ShortcutCombo, ShortcutType } from 'Constants/shortcut'
-import Theme from 'Constants/theme'
-import { SerializedAction } from 'Libs/Action'
-import { HighlightColors, SerializedHighlight } from 'Libs/Highlight'
-import { SoundId } from 'Libs/Sound'
-import { createAction, RehydrateAction } from 'Utils/redux'
+import { ShortcutCombo, ShortcutType } from 'constants/shortcut'
+import Theme from 'constants/theme'
+import { SerializedAction } from 'libs/Action'
+import { HighlightColors, SerializedHighlight } from 'libs/Highlight'
+import { SoundId } from 'libs/Sound'
+import { createAction, RehydrateAction } from 'utils/redux'
 
 /**
  * Follows sort order.

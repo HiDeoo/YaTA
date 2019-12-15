@@ -1,9 +1,9 @@
 import { Menu } from '@blueprintjs/core'
 import * as React from 'react'
 
-import ActionIconMap from 'Constants/actionIconMap'
-import { ActionHandler, SerializedAction } from 'Libs/Action'
-import { SerializedChatter } from 'Libs/Chatter'
+import ActionIconMap from 'constants/actionIconMap'
+import { ActionHandler, SerializedAction } from 'libs/Action'
+import { SerializedChatter } from 'libs/Chatter'
 
 /**
  * ActionMenuItem Component.

@@ -1,7 +1,7 @@
 import { Classes } from '@blueprintjs/core'
 import * as React from 'react'
 
-import styled, { theme } from 'Styled'
+import styled, { theme } from 'styled'
 
 /**
  * Title component.

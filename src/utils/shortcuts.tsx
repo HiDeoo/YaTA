@@ -1,9 +1,9 @@
 import { Hotkey, Hotkeys } from '@blueprintjs/core'
-import * as _ from 'lodash'
+import _ from 'lodash'
 import * as React from 'react'
 
-import { ShortcutImplementations } from 'Constants/shortcut'
-import { getShortcuts } from 'Store/selectors/settings'
+import { ShortcutImplementations } from 'constants/shortcut'
+import { getShortcuts } from 'store/selectors/settings'
 
 /**
  * Renders shortcuts.

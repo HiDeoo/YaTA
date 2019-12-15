@@ -1,9 +1,9 @@
 declare module 'twitch-js' {
-  import { Emote } from 'Libs/EmotesProvider'
-  import Event from 'Constants/event'
-  import LogType from 'Constants/logType'
-  import ReadyState from 'Constants/readyState'
-  import RitualType from 'Constants/ritualType'
+  import { Emote } from 'libs/EmotesProvider'
+  import Event from 'constants/event'
+  import LogType from 'constants/logType'
+  import ReadyState from 'constants/readyState'
+  import RitualType from 'constants/ritualType'
 
   type ClientOptions = {
     options?: {

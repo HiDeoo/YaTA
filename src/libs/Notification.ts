@@ -1,8 +1,28 @@
-import * as _ from 'lodash'
-import * as pluralize from 'pluralize'
-import * as shortid from 'shortid'
+import _ from 'lodash'
+import pluralize from 'pluralize'
+import shortid from 'shortid'
 
-import LogType from 'Constants/logType'
+import LogType from 'constants/logType'
+
+/**
+ * Notification associated events.
+ */
+export enum NotificationEvent {
+  AnonGiftPaidUpgrade,
+  AnonSubGift,
+  AnonSubMysteryGift,
+  BitsBadgeTier,
+  GiftPaidUpgrade,
+  Host,
+  PrimePaidUpgrade,
+  Raid,
+  ReSub,
+  RewardGift,
+  RitualNewChatter,
+  SubGift,
+  Subscription,
+  SubMysteryGift,
+}
 
 /**
  * Notification class.
@@ -168,26 +188,6 @@ export default class Notification implements Serializable<SerializedNotification
       type: LogType.Notification,
     }
   }
-}
-
-/**
- * Notification associated events.
- */
-export enum NotificationEvent {
-  AnonGiftPaidUpgrade,
-  AnonSubGift,
-  AnonSubMysteryGift,
-  BitsBadgeTier,
-  GiftPaidUpgrade,
-  Host,
-  PrimePaidUpgrade,
-  Raid,
-  ReSub,
-  RewardGift,
-  RitualNewChatter,
-  SubGift,
-  Subscription,
-  SubMysteryGift,
 }
 
 /**
