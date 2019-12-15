@@ -8,7 +8,7 @@
   "scripts": {
     "prepare": "patch-package",
     "prestart": "yarn run changelog",
-    "start": "cross-env BROWSER=none react-scripts start",
+    "start": "react-scripts start",
     "prebuild": "yarn run changelog",
     "build": "react-scripts build",
     "lint": "yarn run lint:ts; yarn run lint:css",
@@ -77,7 +77,6 @@
     "@types/styled-components": "4.0.3",
     "@types/tinycolor2": "1.4.2",
     "@types/webpack-env": "1.14.0",
-    "cross-env": "6.0.0",
     "husky": "3.0.3",
     "lint-staged": "9.2.1",
     "now": "16.1.2",
