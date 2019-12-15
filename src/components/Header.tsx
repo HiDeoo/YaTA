@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 
 import HeaderTooltip from 'components/HeaderTooltip'
 import Page from 'constants/page'

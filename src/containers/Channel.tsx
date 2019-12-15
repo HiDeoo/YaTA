@@ -3,7 +3,7 @@ import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/h
 import copy from 'copy-to-clipboard'
 import _ from 'lodash'
 import * as React from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
 import ReactTooltip from 'react-tooltip'
@@ -381,7 +381,7 @@ class Channel extends React.Component<Props, State> {
             {connected && <Menu.Item onClick={this.clip} icon="film" text="Create clip" />}
             <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
             {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
-            {connected && <Menu.Item onClick={this.toggleLogsExporter} icon="book" text="Export logs" />}
+            {connected && <Menu.Item onClick={this.toggleLogsExporter} icon="archive" text="Export logs" />}
             <ModerationMenuItems
               toggleFollowersOnly={this.toggleFollowersOnly}
               toggleEmoteOnly={this.toggleEmoteOnly}

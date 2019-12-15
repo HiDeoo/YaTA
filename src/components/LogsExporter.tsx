@@ -114,7 +114,7 @@ class LogsExporter extends React.Component<Props, State> {
     const showRotationWarning = allLogs.logs.length >= Logs.Max
 
     return (
-      <Dialog isOpen={visible} onClose={this.toggle} icon="book" title="Export logs">
+      <Dialog isOpen={visible} onClose={this.toggle} icon="archive" title="Export logs">
         <div className={Classes.DIALOG_BODY}>
           <Label onClick={this.onClickContentLabel} disabled={isProcessing}>
             Content <em>(at least 1 required)</em>

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -16,13 +17,15 @@ const Wrapper: React.SFC<Props> = ({ storeConfiguration }) => {
 
   return (
     <Provider store={store}>
-      <ErrorBoundary>
-        <PersistGate persistor={persistor}>
-          <BrowserRouter basename={process.env.PUBLIC_URL}>
-            <Route component={App} />
-          </BrowserRouter>
-        </PersistGate>
-      </ErrorBoundary>
+      <HelmetProvider>
+        <ErrorBoundary>
+          <PersistGate persistor={persistor}>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
+              <Route component={App} />
+            </BrowserRouter>
+          </PersistGate>
+        </ErrorBoundary>
+      </HelmetProvider>
     </Provider>
   )
 }

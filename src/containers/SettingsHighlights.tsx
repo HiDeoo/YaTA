@@ -62,7 +62,7 @@ const UsersInput = styled(TagInput)`
     margin-bottom: 0;
   }
 
-  &.${Classes.INPUT}, &.${Classes.TAG_INPUT}, & > .${Classes.TAG_INPUT_VALUES} {
+  & > .${Classes.TAG_INPUT_VALUES}, &.${Classes.INPUT}, &.${Classes.TAG_INPUT} {
     max-height: 30px;
     overflow-y: auto;
   }
