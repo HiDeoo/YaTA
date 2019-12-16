@@ -892,8 +892,17 @@ export class ChatClient extends React.Component<Props, State> {
    * @param setsList - The list of emote sets.
    * @param sets - The emote sets.
    */
-  private onEmoteSets = (_setsList: string, sets: EmoteSets) => {
+  private onEmoteSets = async (_setsList: string, sets: EmoteSets) => {
     let emoticonsSetId = 0
+    let twitchEmotes: Emote[] = []
+
+    try {
+      // Fetch the emotes the user can use in chat from the API as the IRC results may be incomplete.
+      const { emoticon_sets } = await Twitch.fetchUserEmotes()
+      twitchEmotes = this.flattenEmoteSets(emoticon_sets)
+    } catch (error) {
+      //
+    }
 
     _.forEach(Emoticons, (_emoticons, idStr) => {
       const id = parseInt(idStr, 10)
@@ -905,9 +914,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     Resources.manager().setEmoticonsSetId(emoticonsSetId)
 
-    const emotes = EmotesProvider.sanitizeTwitchEmotes(
-      _.flatten(_.map(sets, (set) => _.filter(set, (emote) => !Resources.manager().isEmoticon(emote.id))))
-    )
+    const emotes = EmotesProvider.sanitizeTwitchEmotes(_.unionBy(this.flattenEmoteSets(sets), twitchEmotes, 'code'))
 
     const provider = new EmotesProvider(
       EmoteProviderPrefix.Twitch,
@@ -917,6 +924,15 @@ export class ChatClient extends React.Component<Props, State> {
     )
 
     this.addEmotesProvider(provider)
+  }
+
+  /**
+   * Flattens various emote sets into an array of emotes.
+   * @param  sets - The emote sets.
+   * @return The emotes array.
+   */
+  private flattenEmoteSets(sets: EmoteSets) {
+    return _.flatten(_.map(sets, (set) => _.filter(set, (emote) => !Resources.manager().isEmoticon(emote.id))))
   }
 
   /**

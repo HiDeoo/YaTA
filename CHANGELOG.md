@@ -7,6 +7,7 @@
 
 ### 🐛 Bug Fix
 
+- Fix an issue with some emote sets not being usable (like the [HAHAHAlidays](https://help.twitch.tv/s/article/happy-hahahalidays?language=en_es) one) - this requires login and accepting permissions again as we now need to read your current subscriptions.
 - Remove the channel details description tab as the mandatory API endpoint was blocked by Twitch. This tab was only containing panels usually visible on a Twitch channel page below the player.
 
 ### ⚙️ Internal

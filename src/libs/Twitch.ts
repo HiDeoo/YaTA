@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { EmoteSets } from 'twitch-js'
 
 import RequestMethod from 'constants/requestMethod'
 
@@ -79,7 +80,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_read user_blocks_edit clips:edit user_follows_edit channel_editor channel_commercial',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_read user_blocks_edit clips:edit user_follows_edit channel_editor channel_commercial user_subscriptions',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -169,11 +170,7 @@ export default class Twitch {
    * @param channel - The channel.
    */
   public static openVideoPlayer(channel: string) {
-    window.open(
-      `https://player.twitch.tv/?muted=false&channel=${channel}`,
-      'videoPopupWindow',
-      'height=360,width=600'
-    )
+    window.open(`https://player.twitch.tv/?muted=false&channel=${channel}`, 'videoPopupWindow', 'height=360,width=600')
   }
 
   /**
@@ -268,6 +265,27 @@ export default class Twitch {
       {
         length: duration,
       }
+    )
+
+    return response.json()
+  }
+
+  /**
+   * Fetches user emotes.
+   * @param  channelId - The id of the channel.
+   * @return The channel live notification.
+   */
+  public static async fetchUserEmotes(): Promise<{ emoticon_sets: EmoteSets }> {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing user id for emotes fetching.')
+    }
+
+    const response = await Twitch.fetch(
+      TwitchApi.Kraken,
+      `/users/${Twitch.userId}/emotes`,
+      undefined,
+      true,
+      RequestMethod.Get
     )
 
     return response.json()
