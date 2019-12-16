@@ -7,6 +7,7 @@
 
 ### 🐛 Bug Fix
 
+- Add a close button to the overlay appearing when dragging a file over the application. Some people have reported the overlay not being automatically dismissed but I couldn't reproduce the issue yet so I added a button to close the overlay manually.
 - Fix an issue with some emote sets not being usable (like the [HAHAHAlidays](https://help.twitch.tv/s/article/happy-hahahalidays?language=en_es) one) - this requires login and accepting permissions again as we now need to read your current subscriptions.
 - Remove the channel details description tab as the mandatory API endpoint was blocked by Twitch. This tab was only containing panels usually visible on a Twitch channel page below the player.
 

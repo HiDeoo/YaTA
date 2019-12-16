@@ -1,4 +1,4 @@
-import { Callout, Classes, Intent, Overlay } from '@blueprintjs/core'
+import { Button, Callout, Classes, Intent, Overlay } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -19,6 +19,8 @@ const Wrapper = styled.div`
  * Tooltip component.
  */
 const Tooltip = styled(Callout)`
+  position: relative;
+
   &.${Classes.CALLOUT}, .${Classes.DARK} &.${Classes.CALLOUT} {
     background-color: red;
     padding: 20px;
@@ -90,6 +92,24 @@ const Details = styled.ul`
   & > li,
   .${Classes.DARK} & > li {
     margin: 4px 0;
+  }
+`
+
+/**
+ * CloseButton component.
+ */
+const CloseButton = styled(Button)`
+  pointer-events: auto;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+
+  .${Classes.CALLOUT} &,
+  .${Classes.DARK} .${Classes.CALLOUT} & {
+    & svg {
+      height: 18px;
+      width: 18px;
+    }
   }
 `
 
@@ -192,6 +212,7 @@ export default class DropOverlay extends React.Component<Props, State> {
         <Wrapper>
           <Center>
             <Tooltip title="Upload an image…" intent={Intent.PRIMARY} icon="cloud-upload">
+              <CloseButton minimal icon="cross" small onClick={this.closeOverlay} />
               <Details>
                 <li>Images are uploaded to Imgur.</li>
                 <li>Uploads are anonymous.</li>
@@ -202,6 +223,15 @@ export default class DropOverlay extends React.Component<Props, State> {
         </Wrapper>
       </Overlay>
     )
+  }
+
+  /**
+   * Closes the overlay (this only exists as a workaround to an issue where some
+   * people have reported that the overlay was not automatically dismissed).
+   * @see https://github.com/HiDeoo/YaTA/issues/34
+   */
+  private closeOverlay = () => {
+    this.setState(() => ({ isDragging: false, isDraggingOver: false }))
   }
 
   /**
