@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  <a href="https://circleci.com/gh/HiDeoo/YaTA"><img alt="Build Status" src="https://circleci.com/gh/HiDeoo/YaTA.png?style=shield&circle-token=3e5f415ca17efc0c2ba4ad5de222eac5d90561f4"></a>
+  <a href="https://github.com/HiDeoo/YaTA/actions?query=workflow%3Aintegration"><img alt="Integration Status" src="https://github.com/HiDeoo/YaTA/workflows/integration/badge.svg"></a>
   <a href="https://github.com/HiDeoo/YaTA/blob/master/LICENSE"><img alt="License" src="https://badgen.now.sh/badge/license/MIT/blue"></a>
   <br /><br />
 </p>
