@@ -805,8 +805,16 @@ export class ChatClient extends React.Component<Props, State> {
    * @param username - The username.
    * @param recipient - The gift recipient.
    */
-  private onSubGift = (_channel: string, username: string, recipient: string) => {
-    const notification = new Notification(`${username} just gifted a sub to ${recipient}!`, NotificationEvent.SubGift)
+  private onSubGift = (_channel: string, username: string, recipient: string, method: Omit<Payment, 'prime'>) => {
+    let tierInfo = ''
+
+    if (method.plan === '2000') {
+      tierInfo = ' tier 2'
+    } else if (method.plan === '3000') {
+      tierInfo = ' tier 3'
+    }
+
+    const notification = new Notification(`${username} just gifted a${tierInfo} sub to ${recipient}!`, NotificationEvent.SubGift)
 
     const serializedNotification = notification.serialize()
 

@@ -157,7 +157,13 @@ declare module 'twitch-js' {
     ): void
     on(
       event: Event.SubGift,
-      listener: (channel: string, username: string, recipient: string, method: Payment, userstate: UserState) => void
+      listener: (
+        channel: string,
+        username: string,
+        recipient: string,
+        method: Omit<Payment, 'prime'>,
+        userstate: UserState
+      ) => void
     ): void
     on(event: Event.Ritual, listener: (ritual: Ritual) => void): void
     on(event: Event.Raid, listener: (raid: Raid) => void): void
