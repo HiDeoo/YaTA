@@ -1,3 +1,9 @@
+# 1.12.1
+
+### 🐛 Bug Fix
+
+- Ensure emotes are properly fetched even if Twitch fails to return them.
+
 # 1.12.0
 
 ### 🚀 New Feature

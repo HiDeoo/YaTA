@@ -65,3 +65,12 @@ patch-package
              }
            }
            break;
+@@ -1212,6 +1228,8 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
+     if (!err) {
+       _this8.emotesets = body.emoticon_sets || {};
+       return _this8.emit('emotesets', sets, _this8.emotesets);
++    } else {
++      return _this8.emit('emotesets', sets, {});
+     }
+     setTimeout(function () {
+       _this8._updateEmoteset(sets);
