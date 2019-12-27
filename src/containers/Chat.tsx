@@ -501,7 +501,7 @@ export class ChatClient extends React.Component<Props, State> {
       if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
         this.props.addChatter(serializedMessage.user, serializedMessage.id)
 
-        const shouldPlayMentionSound = this.props.soundSettings[SoundId.Mention].enabled && serializedMessage.mentionned
+        const shouldPlayMentionSound = this.props.soundSettings[SoundId.Mention].enabled && serializedMessage.mentioned
 
         if (shouldPlayMentionSound) {
           Sound.manager().play(SoundId.Mention)
@@ -814,7 +814,10 @@ export class ChatClient extends React.Component<Props, State> {
       tierInfo = ' tier 3'
     }
 
-    const notification = new Notification(`${username} just gifted a${tierInfo} sub to ${recipient}!`, NotificationEvent.SubGift)
+    const notification = new Notification(
+      `${username} just gifted a${tierInfo} sub to ${recipient}!`,
+      NotificationEvent.SubGift
+    )
 
     const serializedNotification = notification.serialize()
 

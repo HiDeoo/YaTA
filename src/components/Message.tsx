@@ -17,14 +17,14 @@ const Wrapper = styled.div<WrapperProps>`
   background-color: ${ifProp(
     'highlighted',
     theme('log.permanent.background'),
-    ifProp('mentionned', theme('log.mention.self.background'), ifProp('alternate', theme('log.alternate'), 'inherit'))
+    ifProp('mentioned', theme('log.mention.self.background'), ifProp('alternate', theme('log.alternate'), 'inherit'))
   )};
   border-left: 3px solid
     ${ifProp(
       'highlighted',
       theme('log.permanent.border'),
       ifProp(
-        'mentionned',
+        'mentioned',
         theme('log.mention.self.color'),
         ifProp('read', ifProp('twitchHighlighted', theme('twitch.purple'), 'transparent'), Colors.BLUE4)
       )
@@ -177,7 +177,7 @@ export default class Message extends React.Component<Props, State> {
         read={!markNewAsUnread || message.read}
         onDoubleClick={this.onDoubleClick}
         highlighted={message.highlighted}
-        mentionned={message.mentionned}
+        mentioned={message.mentioned}
         alternate={useAlternate}
         purged={message.purged}
         onClick={this.onClick}
@@ -460,7 +460,7 @@ interface Props {
 interface WrapperProps {
   alternate: boolean
   highlighted: boolean
-  mentionned: boolean
+  mentioned: boolean
   purged: boolean
   read: boolean
   twitchHighlighted: boolean

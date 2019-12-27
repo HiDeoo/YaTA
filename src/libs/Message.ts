@@ -26,7 +26,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private type: LogType
   private time: string
   private purged: boolean = false
-  private mentionned: boolean = false
+  private mentioned: boolean = false
   private previews: Previews = {}
   private ignoreHighlight: boolean
   private highlighted: boolean
@@ -89,7 +89,7 @@ export default class Message implements Serializable<SerializedMessage> {
       date: this.date,
       highlighted: this.highlighted,
       id: this.id,
-      mentionned: this.mentionned,
+      mentioned: this.mentioned,
       message: this.message,
       previews: this.previews,
       purged: this.purged,
@@ -322,7 +322,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private parseMentions(words: Word[], parsedMessage: string[], currentUsername: string) {
     _.forEach(words, (word, index) => {
       if (!this.ignoreHighlight && word.text.toLowerCase() === currentUsername) {
-        this.mentionned = true
+        this.mentioned = true
 
         const previousWord = index > 0 ? words[index - 1] : null
 
@@ -436,7 +436,7 @@ export type SerializedMessage = {
   date: string
   self: boolean
   type: LogType
-  mentionned: boolean
+  mentioned: boolean
   message: string
   purged: boolean
   text: string
