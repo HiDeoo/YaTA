@@ -65,12 +65,34 @@ patch-package
              }
            }
            break;
-@@ -1212,6 +1228,8 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
-     if (!err) {
-       _this8.emotesets = body.emoticon_sets || {};
-       return _this8.emit('emotesets', sets, _this8.emotesets);
-+    } else {
+@@ -1209,9 +1225,15 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
+       'Client-ID': this.clientId
+     }
+   }, function (err, res, body) {
+-    if (!err) {
+-      _this8.emotesets = body.emoticon_sets || {};
+-      return _this8.emit('emotesets', sets, _this8.emotesets);
++    try {
++      if (!err) {
++        _this8.emotesets = body.emoticon_sets || {};
++        return _this8.emit('emotesets', sets, _this8.emotesets);
++      } else {
++        return _this8.emit('emotesets', sets, {});
++      }
++    } catch (error) {
 +      return _this8.emit('emotesets', sets, {});
      }
      setTimeout(function () {
        _this8._updateEmoteset(sets);
+patch-package
+--- a/node_modules/twitch-js/lib/utils/fetch-helper.js
++++ b/node_modules/twitch-js/lib/utils/fetch-helper.js
+@@ -28,7 +28,7 @@ var parseResponse = exports.parseResponse = function parseResponse(response) {
+     }
+
+     return json;
+-  });
++  }).catch((e) => {});
+ };
+
+ exports.default = function () {
