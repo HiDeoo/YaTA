@@ -60,6 +60,7 @@ import {
   getAlternateMessageBackgrounds,
   getAutoFocusInput,
   getCopyMessageOnDoubleClick,
+  getIncreaseTwitchHighlight,
   getMarkNewAsUnread,
   getPrioritizeUsernames,
   getShortcuts,
@@ -243,6 +244,7 @@ class Channel extends React.Component<Props, State> {
       channel,
       chatters,
       copyMessageOnDoubleClick,
+      increaseTwitchHighlight,
       lastReadId,
       loginDetails,
       markNewAsUnread,
@@ -286,6 +288,7 @@ class Channel extends React.Component<Props, State> {
           alternateMessageBackgrounds={alternateMessageBackgrounds}
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          increaseTwitchHighlight={increaseTwitchHighlight}
           pauseAutoScroll={this.props.pauseAutoScroll}
           scrollToNewestLog={this.scrollToNewestLog}
           copyToClipboard={this.copyToClipboard}
@@ -1380,6 +1383,7 @@ const enhance = compose<Props, {}>(
       emotes: getEmotes(state),
       history: getHistory(state),
       historyIndex: getHistoryIndex(state),
+      increaseTwitchHighlight: getIncreaseTwitchHighlight(state),
       isAutoScrollPaused: getIsAutoScrollPaused(state),
       isMod: getIsMod(state),
       lastReadId: getLastReadId(state),
@@ -1426,6 +1430,7 @@ interface StateProps {
   shortcuts: ReturnType<typeof getShortcuts>
   history: ReturnType<typeof getHistory>
   historyIndex: ReturnType<typeof getHistoryIndex>
+  increaseTwitchHighlight: ReturnType<typeof getIncreaseTwitchHighlight>
   isAutoScrollPaused: ReturnType<typeof getIsAutoScrollPaused>
   isMod: ReturnType<typeof getIsMod>
   lastReadId: ReturnType<typeof getLastReadId>

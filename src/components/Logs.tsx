@@ -68,6 +68,7 @@ export class Logs extends React.Component<Props> {
     const {
       alternateMessageBackgrounds,
       copyMessageOnDoubleClick,
+      increaseTwitchHighlight,
       lastReadId,
       logs,
       markNewAsUnread,
@@ -85,6 +86,7 @@ export class Logs extends React.Component<Props> {
             <List
               alternateMessageBackgrounds={alternateMessageBackgrounds}
               copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+              increaseTwitchHighlight={increaseTwitchHighlight}
               deferredMeasurementCache={this.logMeasureCache}
               rowHeight={this.logMeasureCache.rowHeight}
               showContextMenu={showContextMenu}
@@ -195,6 +197,7 @@ export class Logs extends React.Component<Props> {
       copyToClipboard,
       deleteMessage,
       focusChatter,
+      increaseTwitchHighlight,
       markNewAsUnread,
       quoteMessage,
       showContextMenu,
@@ -211,6 +214,7 @@ export class Logs extends React.Component<Props> {
       LogComponent = (
         <Message
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          increaseTwitchHighlight={increaseTwitchHighlight}
           copyMessageToClipboard={copyMessageToClipboard}
           onToggleContextMenu={this.onToggleContextMenu}
           showUnbanContextMenuItem={isBanned}
@@ -277,6 +281,7 @@ interface Props extends ThemeProps {
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  increaseTwitchHighlight: boolean
   lastReadId: string | null
   logs: Log[]
   markAsRead: (id: string) => void

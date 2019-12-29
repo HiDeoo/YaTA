@@ -337,3 +337,13 @@ export const getMarkNewAsUnread = createSelector(
   [getSettingsState],
   (settings) => settings.markNewAsUnread
 )
+
+/**
+ * Returns the 'Increase highlight for messages redeemed using Channel Points' setting.
+ * @param  state - The Redux state.
+ * @return The 'Increase highlight for messages redeemed using Channel Points' setting.
+ */
+export const getIncreaseTwitchHighlight = createSelector(
+  [getSettingsState],
+  (settings) => settings.increaseTwitchHighlight
+)

@@ -60,6 +60,7 @@ export enum Actions {
   TOGGLE_HIDE_HEADER = 'TOGGLE_HIDE_HEADER',
   TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS = 'settings/TOGGLE_ALTERNATE_MESSAGE_BACKGROUNDS',
   TOGGLE_MARK_NEW_AS_UNREAD = 'settings/TOGGLE_MARK_NEW_AS_UNREAD',
+  TOGGLE_INCREASE_TWITCH_HIGHLIGHT = 'settings/TOGGLE_INCREASE_TWITCH_HIGHLIGHT',
 }
 
 /**
@@ -87,6 +88,7 @@ export const initialState = {
   highlightsIgnoredUsers: [],
   highlightsPermanentUsers: [],
   hostThreshold: 1,
+  increaseTwitchHighlight: false,
   lastKnownVersion: null,
   markNewAsUnread: false,
   playMessageSoundOnlyInOwnChannel: true,
@@ -428,6 +430,12 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         markNewAsUnread: !state.markNewAsUnread,
       }
     }
+    case Actions.TOGGLE_INCREASE_TWITCH_HIGHLIGHT: {
+      return {
+        ...state,
+        increaseTwitchHighlight: !state.increaseTwitchHighlight,
+      }
+    }
     default: {
       return state
     }
@@ -756,6 +764,12 @@ export const toggleHideHeader = () => createAction(Actions.TOGGLE_HIDE_HEADER)
 export const toggleMarkNewAsUnread = () => createAction(Actions.TOGGLE_MARK_NEW_AS_UNREAD)
 
 /**
+ * Toggle the 'Increase highlight for messages redeemed using Channel Points' setting.
+ * @return The action.
+ */
+export const toggleIncreaseTwitchHighlight = () => createAction(Actions.TOGGLE_INCREASE_TWITCH_HIGHLIGHT)
+
+/**
  * Settings actions.
  */
 export type SettingsActions =
@@ -797,6 +811,7 @@ export type SettingsActions =
   | ReturnType<typeof updateDelayBetweenThrottledSounds>
   | ReturnType<typeof toggleHideHeader>
   | ReturnType<typeof toggleMarkNewAsUnread>
+  | ReturnType<typeof toggleIncreaseTwitchHighlight>
 
 /**
  * Settings state.
@@ -946,6 +961,11 @@ export type SettingsState = {
    * Mark new messages as unread.
    */
   markNewAsUnread: boolean
+
+  /**
+   * Defines if the Twitch highlight should be increased.
+   */
+  increaseTwitchHighlight: boolean
 }
 
 /**

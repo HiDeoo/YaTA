@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Add a new streamer setting to uglify messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide).
+
 ### 🐛 Bug Fix
 
 - Fix an icon issue when opening the channel video player using the `Alt` key shortcut.

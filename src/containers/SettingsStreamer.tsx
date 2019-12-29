@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 
 import SettingsView from 'components/SettingsView'
 import Switch from 'components/Switch'
-import { toggleHideWhispers, toggleShowViewerCount } from 'store/ducks/settings'
+import { toggleHideWhispers, toggleIncreaseTwitchHighlight, toggleShowViewerCount } from 'store/ducks/settings'
 import { ApplicationState } from 'store/reducers'
-import { getHideWhispers, getShowViewerCount } from 'store/selectors/settings'
+import { getHideWhispers, getIncreaseTwitchHighlight, getShowViewerCount } from 'store/selectors/settings'
 
 /**
  * SettingsStreamer Component.
@@ -16,7 +16,7 @@ class SettingsStreamer extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { hideWhispers, showViewerCount } = this.props
+    const { hideWhispers, increaseTwitchHighlight, showViewerCount } = this.props
 
     return (
       <SettingsView>
@@ -32,6 +32,11 @@ class SettingsStreamer extends React.Component<Props> {
           checked={showViewerCount}
           label="Show viewer count"
         />
+        <Switch
+          label="Increase highlight for messages redeemed using Channel Points"
+          onChange={this.props.toggleIncreaseTwitchHighlight}
+          checked={increaseTwitchHighlight}
+        />
       </SettingsView>
     )
   }
@@ -40,10 +45,12 @@ class SettingsStreamer extends React.Component<Props> {
 export default connect<StateProps, DispatchProps, {}, ApplicationState>(
   (state) => ({
     hideWhispers: getHideWhispers(state),
+    increaseTwitchHighlight: getIncreaseTwitchHighlight(state),
     showViewerCount: getShowViewerCount(state),
   }),
   {
     toggleHideWhispers,
+    toggleIncreaseTwitchHighlight,
     toggleShowViewerCount,
   }
 )(SettingsStreamer)
@@ -53,6 +60,7 @@ export default connect<StateProps, DispatchProps, {}, ApplicationState>(
  */
 interface StateProps {
   hideWhispers: ReturnType<typeof getHideWhispers>
+  increaseTwitchHighlight: ReturnType<typeof getIncreaseTwitchHighlight>
   showViewerCount: ReturnType<typeof getShowViewerCount>
 }
 
@@ -61,6 +69,7 @@ interface StateProps {
  */
 interface DispatchProps {
   toggleHideWhispers: typeof toggleHideWhispers
+  toggleIncreaseTwitchHighlight: typeof toggleIncreaseTwitchHighlight
   toggleShowViewerCount: typeof toggleShowViewerCount
 }
 

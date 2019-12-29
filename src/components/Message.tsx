@@ -32,6 +32,13 @@ const Wrapper = styled.div<WrapperProps>`
   opacity: ${ifProp('purged', 0.5, 1.0)};
   padding: 4px ${size('log.hPadding')} 1px 7px;
   white-space: pre-wrap;
+
+  ${(props) =>
+    props.twitchHighlighted &&
+    props.increaseTwitchHighlight &&
+    `
+      background-color: ${theme('twitch.lightPurple')(props)};
+      `};
 `
 
 /**
@@ -167,12 +174,13 @@ export default class Message extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { markNewAsUnread, message, style, useAlternate } = this.props
+    const { increaseTwitchHighlight, markNewAsUnread, message, style, useAlternate } = this.props
 
     const usernameColor = message.user.color as string
 
     return (
       <Wrapper
+        increaseTwitchHighlight={increaseTwitchHighlight}
         twitchHighlighted={message.twitchHighlighted}
         read={!markNewAsUnread || message.read}
         onDoubleClick={this.onDoubleClick}
@@ -440,6 +448,7 @@ interface Props {
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  increaseTwitchHighlight: boolean
   markNewAsUnread: boolean
   message: SerializedMessage
   onClick: (id: string) => void
@@ -460,6 +469,7 @@ interface Props {
 interface WrapperProps {
   alternate: boolean
   highlighted: boolean
+  increaseTwitchHighlight: boolean
   mentioned: boolean
   purged: boolean
   read: boolean

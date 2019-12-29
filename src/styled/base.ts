@@ -121,6 +121,7 @@ export default {
   },
   twitch: {
     purple: '#9146FF',
+    lightPurple: 'rgba(145, 70, 255, 0.15)',
   },
   twitchState: {
     gap: 6,
