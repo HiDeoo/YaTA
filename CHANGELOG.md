@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an icon issue when opening the channel video player using the `Alt` key shortcut.
+
 # 1.12.1
 
 ### 🐛 Bug Fix

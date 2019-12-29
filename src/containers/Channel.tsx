@@ -677,6 +677,8 @@ class Channel extends React.Component<Props, State> {
   openVideoPlayer = () => {
     const { channel } = this.props
 
+    this.setState(() => ({ shouldQuickOpenPlayer: false }))
+
     if (!_.isNil(channel)) {
       Twitch.openVideoPlayer(channel)
     }
