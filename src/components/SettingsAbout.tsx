@@ -14,6 +14,7 @@ const Content = styled.div`
 
   p {
     line-height: 1.5rem;
+    margin-bottom: 9px;
   }
 `
 /**
@@ -28,7 +29,7 @@ const Logo = styled.div`
   display: flex;
   height: 128px;
   justify-content: center;
-  margin: 35px auto 35px auto;
+  margin: 20px auto 30px auto;
   width: 128px;
 `
 
@@ -93,6 +94,9 @@ const SettingsAbout: React.SFC<ThemeProps> = (props) => (
       <p>
         Message sound by{' '}
         <ExternalLink href="https://freesound.org/people/kwahmah_02/sounds/268822/">kwahmah_02</ExternalLink>
+      </p>
+      <p>
+        Emotes data provided by <ExternalLink href="https://twitchemotes.com/">Twitch Emotes</ExternalLink>
       </p>
     </Content>
   </SettingsView>

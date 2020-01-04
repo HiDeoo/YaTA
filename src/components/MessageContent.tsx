@@ -5,12 +5,12 @@ import LogType from 'constants/logType'
 import { WithNameColorProps } from 'libs/Chatter'
 import { HighlightColors } from 'libs/Highlight'
 import { SerializedMessage } from 'libs/Message'
-import styled, { prop, theme } from 'styled'
+import styled, { ifProp, prop, theme } from 'styled'
 
 /**
  * Message component.
  */
-const Message = styled.span<WithNameColorProps>`
+const Message = styled.span<MessageProps>`
   color: ${prop('color')};
   word-wrap: break-word;
 
@@ -25,6 +25,10 @@ const Message = styled.span<WithNameColorProps>`
     display: inline-block;
     margin-top: -3px;
     vertical-align: middle;
+  }
+
+  [class='emote'] {
+    cursor: ${ifProp('withEmoteDetails', 'pointer', 'default')};
   }
 
   img:-moz-loading,
@@ -74,18 +78,84 @@ const Message = styled.span<WithNameColorProps>`
 /**
  * MessageContent Component.
  */
-const MessageContent: React.SFC<Props> = ({ message }) => {
-  const isAction = message.type === LogType.Action
-  const messageColor = isAction && !_.isNil(message.user.color) ? message.user.color : 'inherit'
+export default class MessageContent extends React.Component<Props> {
+  /**
+   * Renders the component.
+   * @return Element to render.
+   */
+  public render() {
+    const { message, withEmoteDetails } = this.props
+    const isAction = message.type === LogType.Action
+    const messageColor = isAction && !_.isNil(message.user.color) ? message.user.color : 'inherit'
 
-  return <Message color={messageColor} dangerouslySetInnerHTML={{ __html: message.message }} />
+    return (
+      <Message
+        dangerouslySetInnerHTML={{ __html: message.message }}
+        withEmoteDetails={withEmoteDetails}
+        onClick={this.onClick}
+        color={messageColor}
+      />
+    )
+  }
+
+  /**
+   * Triggered when a message content is clicked.
+   */
+  private onClick = (event: React.MouseEvent<HTMLSpanElement>) => {
+    const { focusEmote } = this.props
+
+    // If we don't care about emote clicks, bail out early.
+    if (_.isNil(focusEmote)) {
+      return
+    }
+
+    // Ignore modified or canceled events.
+    if (event.defaultPrevented) {
+      return
+    }
+
+    // Ignore non-left-click-related events.
+    if (event.button !== 0) {
+      return
+    }
+
+    // Get the element.
+    const element = event.target as Element
+
+    // Ignore non <img /> related events.
+    if (!element || element.nodeName !== 'IMG') {
+      return
+    }
+
+    // At this point, we know the user clicked an image, let's ensure it was an emote.
+    if (element.classList.length !== 1 || !element.classList.contains('emote')) {
+      return
+    }
+
+    // At this point, we're pretty much certain you clicked an emote.
+    const id = element.getAttribute('data-id')
+    const name = element.getAttribute('data-tip')
+    const provider = element.getAttribute('data-provider')
+
+    if (!_.isNil(id) && !_.isNil(name) && !_.isNil(provider)) {
+      // Focus the emote.
+      focusEmote(id, name, provider)
+    }
+  }
 }
-
-export default MessageContent
 
 /**
  * React Props.
  */
 interface Props {
+  focusEmote?: (id: string, name: string, provider: string) => void
   message: SerializedMessage
+  withEmoteDetails?: boolean
+}
+
+/**
+ * React Props.
+ */
+interface MessageProps extends WithNameColorProps {
+  withEmoteDetails?: boolean
 }

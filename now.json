@@ -9,7 +9,8 @@
       "REACT_APP_TWITCH_CLIENT_ID": "@react_app_twitch_client_id",
       "REACT_APP_TWITCH_REDIRECT_URI": "@react_app_twitch_redirect_uri",
       "REACT_APP_YOUTUBE_API_KEY": "@react_app_youtube_api_key",
-      "REACT_APP_IMGUR_CLIENT_ID": "@react_app_imgur_client_id"
+      "REACT_APP_IMGUR_CLIENT_ID": "@react_app_imgur_client_id",
+      "REACT_APP_YATA_API_URL": "@react_app_yata_api_url"
     }
   },
   "builds": [{ "src": "package.json", "use": "@now/static-build", "config": { "distDir": "build" } }],

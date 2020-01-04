@@ -32,6 +32,7 @@ import { ToggleableUI } from 'constants/toggleable'
 import BroadcasterOverlay from 'containers/BroadcasterOverlay'
 import Chat, { ChatClient } from 'containers/Chat'
 import ChatterDetails from 'containers/ChatterDetails'
+import EmoteDetails, { FocusedEmote } from 'containers/EmoteDetails'
 import Search from 'containers/Search'
 import Action, { ActionPlaceholder, ActionType, SerializedAction } from 'libs/Action'
 import { SerializedChatter } from 'libs/Chatter'
@@ -107,6 +108,7 @@ const PreviewRegExp = /https?:\/\/.[\w\-/:.%+]*\.(jpg|jpeg|png|gif|gifv)/
  */
 const initialState = {
   focusedChatter: undefined as Optional<SerializedChatter>,
+  focusedEmote: undefined as Optional<FocusedEmote>,
   inputValue: '',
   isUploadingFile: false,
   shouldQuickOpenPlayer: false,
@@ -229,6 +231,7 @@ class Channel extends React.Component<Props, State> {
   public render() {
     const {
       focusedChatter,
+      focusedEmote,
       isUploadingFile,
       [ToggleableUI.BroadcasterOverlay]: showBroadcasterOverlay,
       [ToggleableUI.Chatters]: showChatters,
@@ -302,6 +305,7 @@ class Channel extends React.Component<Props, State> {
           quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
+          focusEmote={this.focusEmote}
           ref={this.logsComponent}
           lastReadId={lastReadId}
           timeout={this.timeout}
@@ -338,6 +342,7 @@ class Channel extends React.Component<Props, State> {
           unban={this.unban}
           ban={this.ban}
         />
+        <EmoteDetails emote={focusedEmote} unfocus={this.unfocusEmote} />
       </FlexLayout>
     )
   }
@@ -482,7 +487,7 @@ class Channel extends React.Component<Props, State> {
     }
 
     if (!_.isNil(this.logsWrapper.current)) {
-      const wrapper = this.logsWrapper.current
+      const wrapper = !_.isNil(this.state.focusedEmote) ? document : this.logsWrapper.current
 
       const nodes = wrapper.querySelectorAll(':hover')
       const node = nodes.item(nodes.length - 1)
@@ -815,6 +820,25 @@ class Channel extends React.Component<Props, State> {
    */
   private unfocusChatter = () => {
     this.setState(() => ({ focusedChatter: undefined }))
+
+    this.focusChatInput()
+  }
+
+  /**
+   * Focuses a specific emote.
+   * @param id - The emote ID.
+   * @param name - The emote name.
+   * @param provider - The emote provider.
+   */
+  private focusEmote = (id: string, name: string, provider: string) => {
+    this.setState(() => ({ focusedEmote: { id, name, provider } }))
+  }
+
+  /**
+   * Unfocuses any focused emote.
+   */
+  private unfocusEmote = () => {
+    this.setState(() => ({ focusedEmote: undefined }))
 
     this.focusChatInput()
   }

@@ -86,6 +86,24 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
   }
 
   /**
+   * Defines if a provider prefix is valid.
+   * @param prefix - The prefix.
+   * @return `true` when the prefix is valid.
+   */
+  public static isValidPrefix(prefix: string): prefix is EmoteProviderPrefix {
+    return _.some(EmoteProviderPrefix, (value) => value === prefix)
+  }
+
+  /**
+   * Defines if a prefix is the Twitch one.
+   * @param prefix - The prefix.
+   * @return `true` when the prefix is the Twitch one.
+   */
+  public static isTwitchPrefix(prefix: string): prefix is EmoteProviderPrefix.Twitch {
+    return prefix === EmoteProviderPrefix.Twitch
+  }
+
+  /**
    * Defines if an emote code matches a Twitch RegExp emote.
    * @param code - The emote code.
    * @return `true` when the code matches a Twitch RegExp emote.
@@ -173,7 +191,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     const { src, srcset } = this.getEmoteTagUrls(id)
     const minWidth = this.getSpecificWidth(id)
 
-    return `<span class="emoteWrapper"${minWidth}><img class="emote" data-tip="${name}" src="${src}" srcset="${srcset}" alt="${name}" /></span>`
+    return `<span class="emoteWrapper"${minWidth}><img class="emote" data-tip="${name}" data-id="${id}" data-provider="${this.prefix}" src="${src}" srcset="${srcset}" alt="${name}" /></span>`
   }
 
   /**

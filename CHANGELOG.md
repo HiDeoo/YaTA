@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Add a new streamer setting to uglify messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide).
+- Emotes are now clickable: enhance, check the streamer or take a look at other emotes from the same channel.
 
 ### 🐛 Bug Fix
 

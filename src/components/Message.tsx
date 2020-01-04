@@ -174,7 +174,7 @@ export default class Message extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { increaseTwitchHighlight, markNewAsUnread, message, style, useAlternate } = this.props
+    const { focusEmote, increaseTwitchHighlight, markNewAsUnread, message, style, useAlternate } = this.props
 
     const usernameColor = message.user.color as string
 
@@ -198,7 +198,7 @@ export default class Message extends React.Component<Props, State> {
           {message.user.displayName}
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
-        <MessageContent message={message} />
+        <MessageContent message={message} focusEmote={focusEmote} withEmoteDetails />
         {'\n'}
         {this.renderPreviews()}
       </Wrapper>
@@ -448,6 +448,7 @@ interface Props {
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  focusEmote: (id: string, name: string, provider: string) => void
   increaseTwitchHighlight: boolean
   markNewAsUnread: boolean
   message: SerializedMessage

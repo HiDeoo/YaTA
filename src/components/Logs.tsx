@@ -197,6 +197,7 @@ export class Logs extends React.Component<Props> {
       copyToClipboard,
       deleteMessage,
       focusChatter,
+      focusEmote,
       increaseTwitchHighlight,
       markNewAsUnread,
       quoteMessage,
@@ -228,6 +229,7 @@ export class Logs extends React.Component<Props> {
           quoteMessage={quoteMessage}
           useAlternate={useAlternate}
           canModerate={canModerate}
+          focusEmote={focusEmote}
           timeout={timeout}
           whisper={whisper}
           unban={unban}
@@ -243,10 +245,11 @@ export class Logs extends React.Component<Props> {
     } else if (isWhisper(log)) {
       LogComponent = (
         <Whisper
-          style={style}
-          whisper={log}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           copyMessageToClipboard={copyMessageToClipboard}
+          focusEmote={focusEmote}
+          style={style}
+          whisper={log}
         />
       )
     } else if (isMarker(log)) {
@@ -281,6 +284,7 @@ interface Props extends ThemeProps {
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
   focusChatter: (chatter: SerializedChatter) => void
+  focusEmote: (id: string, name: string, provider: string) => void
   increaseTwitchHighlight: boolean
   lastReadId: string | null
   logs: Log[]

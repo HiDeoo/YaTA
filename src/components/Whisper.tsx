@@ -56,7 +56,7 @@ export default class Whisper extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { style, whisper } = this.props
+    const { focusEmote, style, whisper } = this.props
 
     const usernameColor = whisper.user.color as string
 
@@ -67,7 +67,7 @@ export default class Whisper extends React.Component<Props> {
           title={whisper.self ? 'Whisper sent' : 'Whisper received'}
         />
         <Username color={whisper.self ? 'inherit' : usernameColor}>{whisper.user.displayName}</Username>
-        <MessageContent message={whisper} />
+        <MessageContent message={whisper} focusEmote={focusEmote} withEmoteDetails />
         {'\n'}
       </Wrapper>
     )
@@ -91,6 +91,7 @@ export default class Whisper extends React.Component<Props> {
 interface Props {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
+  focusEmote: (id: string, name: string, provider: string) => void
   style: React.CSSProperties
   whisper: SerializedMessage
 }

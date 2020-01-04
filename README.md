@@ -45,7 +45,7 @@
       REACT_APP_TWITCH_REDIRECT_URI=http://localhost:3000/auth
      ```
 
-     The `REACT_APP_YOUTUBE_API_KEY` & `REACT_APP_IMGUR_CLIENT_ID` variables are not required and only used when interacting with these APIs.
+     The `REACT_APP_YOUTUBE_API_KEY`, `REACT_APP_IMGUR_CLIENT_ID` & `REACT_APP_YATA_API_URL` variables are not required and only used when interacting with these APIs.
 
 4. Build & run the development version: `yarn run start`.
 
