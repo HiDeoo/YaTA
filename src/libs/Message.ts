@@ -58,9 +58,10 @@ export default class Message implements Serializable<SerializedMessage> {
     this.text = message.trim()
     this.highlighted = !self && Resources.manager().shouldAlwaysHighlight(this.user.userName)
     this.read = self
-    this.twitchHighlighted = _.isString(userstate['msg-id']) && userstate['msg-id'] === 'highlighted-message'
 
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
+    this.twitchHighlighted =
+      _.isString(userstate['msg-id']) && userstate['msg-id'] === 'highlighted-message' && !this.ignoreHighlight
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`
