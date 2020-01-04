@@ -7,6 +7,7 @@
 
 ### 🐛 Bug Fix
 
+- Fix an issue with custom BetterTTV channel emotes not being displayed or even usable.
 - Fix an icon issue when opening the channel video player using the `Alt` key shortcut.
 
 # 1.12.1

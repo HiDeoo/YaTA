@@ -23,7 +23,7 @@ export default class Bttv {
 
     const [emotesInfo, channelInfo] = response
 
-    const isChannelRegistered = channelInfo.status === 200
+    const isChannelRegistered = channelInfo.message !== 'channel not found'
 
     let rawEmotes: BttvEmote[] = isChannelRegistered ? [...emotesInfo.emotes, ...channelInfo.emotes] : emotesInfo.emotes
 
