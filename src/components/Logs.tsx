@@ -188,6 +188,7 @@ export class Logs extends React.Component<Props> {
 
     const {
       actionHandler,
+      addHighlightsIgnoredUser,
       alternateMessageBackgrounds,
       ban,
       canModerate,
@@ -214,6 +215,7 @@ export class Logs extends React.Component<Props> {
 
       LogComponent = (
         <Message
+          addHighlightsIgnoredUser={addHighlightsIgnoredUser}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           increaseTwitchHighlight={increaseTwitchHighlight}
           copyMessageToClipboard={copyMessageToClipboard}
@@ -275,6 +277,7 @@ export default withTheme(Logs)
  */
 interface Props extends ThemeProps {
   actionHandler: ActionHandler
+  addHighlightsIgnoredUser: (username: string) => void
   alternateMessageBackgrounds: boolean
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean

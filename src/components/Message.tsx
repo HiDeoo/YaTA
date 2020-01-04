@@ -232,6 +232,12 @@ export default class Message extends React.Component<Props, State> {
       return null
     }
 
+    const isHighlighted =
+      message.highlighted ||
+      message.mentioned ||
+      message.twitchHighlighted ||
+      _.includes(message.message, 'class="highlight')
+
     const menu = (
       <ContextMenu>
         <Menu.Divider
@@ -246,6 +252,13 @@ export default class Message extends React.Component<Props, State> {
         )}
         <Menu.Item icon="clipboard" text="Copy message" onClick={this.copyMessage} />
         <Menu.Item icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
+        {isHighlighted && (
+          <Menu.Item
+            text={`Stop highlighting ${message.user.displayName}`}
+            onClick={this.onClickStopHighlights}
+            icon="delete"
+          />
+        )}
         <ActionMenuItems startDivider actionHandler={actionHandler} chatter={message.user} />
         {canModerate(message.user) && (
           <>
@@ -355,6 +368,15 @@ export default class Message extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when the stop highlights menu item is clicked.
+   */
+  private onClickStopHighlights = () => {
+    const { addHighlightsIgnoredUser, message } = this.props
+
+    addHighlightsIgnoredUser(message.user.userName)
+  }
+
+  /**
    * Triggered when the delete message menu item is clicked.
    */
   private onClickDelete = () => {
@@ -441,6 +463,7 @@ export default class Message extends React.Component<Props, State> {
  */
 interface Props {
   actionHandler: ActionHandler
+  addHighlightsIgnoredUser: (username: string) => void
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   copyMessageOnDoubleClick: boolean

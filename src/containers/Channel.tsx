@@ -44,6 +44,7 @@ import Twitch from 'libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'store/ducks/chatters'
 import { addLog, addMarker, isLog, Log, markAsRead, pauseAutoScroll } from 'store/ducks/logs'
+import { addHighlightsIgnoredUsers } from 'store/ducks/settings'
 import { ApplicationState } from 'store/reducers'
 import {
   getChannel,
@@ -289,6 +290,7 @@ class Channel extends React.Component<Props, State> {
         />
         <Logs
           alternateMessageBackgrounds={alternateMessageBackgrounds}
+          addHighlightsIgnoredUser={this.addHighlightsIgnoredUser}
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           increaseTwitchHighlight={increaseTwitchHighlight}
@@ -875,6 +877,14 @@ class Channel extends React.Component<Props, State> {
   }
 
   /**
+   * Adds a user to the highlights blacklist.
+   * @param username - The user name.
+   */
+  private addHighlightsIgnoredUser = (username: string) => {
+    this.props.addHighlightsIgnoredUsers([username])
+  }
+
+  /**
    * Determines if the current user can moderate a specific user.
    * @param  chatter - The user to moderate.
    * @retern `true` when the user can be moderated.
@@ -1422,6 +1432,7 @@ const enhance = compose<Props, {}>(
       status: getStatus(state),
     }),
     {
+      addHighlightsIgnoredUsers,
       addLog,
       addMarker,
       addToHistory,
@@ -1472,6 +1483,7 @@ interface StateProps {
  * React Props.
  */
 interface DispatchProps {
+  addHighlightsIgnoredUsers: typeof addHighlightsIgnoredUsers
   addLog: typeof addLog
   addMarker: typeof addMarker
   addToHistory: typeof addToHistory
