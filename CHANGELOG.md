@@ -4,6 +4,8 @@
 
 - Add a new streamer setting to uglify messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide).
 - Emotes are now clickable: enhance, check the streamer or take a look at other emotes from the same channel.
+- Jump immediately in the conversation: when joinging a channel, the previous 15 messages will be displayed.
+  - If we don't have historical data for the channel you just joined, don't worry, we'll have it ready for the next time.
 - Add support for [FrankerFaceZ emotes](https://www.frankerfacez.com/emoticons/?q=&sort=count-desc).
 - You can now quickly add a user to the highlight blacklist from the context menu of an highlighted message.
 

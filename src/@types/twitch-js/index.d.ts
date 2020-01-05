@@ -70,6 +70,7 @@ declare module 'twitch-js' {
     'badges-raw': string
     username: string
     'message-type': LogType.Action | LogType.Chat | LogType.Whisper | LogType.Cheer
+    historical?: boolean
   }
 
   export type Payment = {
@@ -94,6 +95,10 @@ declare module 'twitch-js' {
 
   export type EmoteSets = Record<number, Emote[]>
 
+  type MessageEvent = {
+    data: string
+  }
+
   export class Client {
     constructor()
     connect(): void
@@ -101,6 +106,7 @@ declare module 'twitch-js' {
     join(channel: string): void
     removeAllListeners(event?: Event): void
     readyState(): ReadyState
+    _onMessage(event: MessageEvent): void
 
     on(
       event: Event.Message,

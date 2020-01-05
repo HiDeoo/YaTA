@@ -33,6 +33,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private text: string
   private read: boolean
   private twitchHighlighted: boolean
+  private historical: boolean
 
   /**
    * Creates and parses a new chat message instance.
@@ -57,7 +58,8 @@ export default class Message implements Serializable<SerializedMessage> {
     this.type = userstate['message-type']
     this.text = message.trim()
     this.highlighted = !self && Resources.manager().shouldAlwaysHighlight(this.user.userName)
-    this.read = self
+    this.historical = userstate.historical === true
+    this.read = self || this.historical
 
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
     this.twitchHighlighted =
@@ -89,6 +91,7 @@ export default class Message implements Serializable<SerializedMessage> {
       color: this.color,
       date: this.date,
       highlighted: this.highlighted,
+      historical: this.historical,
       id: this.id,
       mentioned: this.mentioned,
       message: this.message,
@@ -433,6 +436,7 @@ export type SerializedMessage = {
   color: string | null
   user: SerializedChatter
   highlighted: boolean
+  historical: boolean
   id: string
   date: string
   self: boolean

@@ -28,6 +28,7 @@ import Message from 'libs/Message'
 import Notice from 'libs/Notice'
 import Notification, { NotificationEvent } from 'libs/Notification'
 import Resources from 'libs/Resources'
+import Robotty from 'libs/Robotty'
 import RoomState from 'libs/RoomState'
 import Sound, { SoundId } from 'libs/Sound'
 import Twitch from 'libs/Twitch'
@@ -75,6 +76,7 @@ export class ChatClient extends React.Component<Props, State> {
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
   private didFetchExternalResources = false
+  private isFetchingHistoricalMessage = false
 
   /**
    * Creates a new instance of the component.
@@ -473,7 +475,15 @@ export class ChatClient extends React.Component<Props, State> {
 
       const serializedMessage = parsedMessage.serialize()
 
-      if (!Resources.manager().isBot(serializedMessage.user.userName) && _.size(serializedMessage.previews) > 0) {
+      if (this.isFetchingHistoricalMessage && !serializedMessage.historical) {
+        return
+      }
+
+      if (
+        !serializedMessage.historical &&
+        !Resources.manager().isBot(serializedMessage.user.userName) &&
+        _.size(serializedMessage.previews) > 0
+      ) {
         const providers = Resources.manager().getPreviewProviders()
 
         for (const previewId in serializedMessage.previews) {
@@ -499,7 +509,10 @@ export class ChatClient extends React.Component<Props, State> {
 
       this.props.addLog(serializedMessage)
 
-      if (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action) {
+      if (
+        !serializedMessage.historical &&
+        (serializedMessage.type === LogType.Chat || serializedMessage.type === LogType.Action)
+      ) {
         this.props.addChatter(serializedMessage.user, serializedMessage.id)
 
         const shouldPlayMentionSound = this.props.soundSettings[SoundId.Mention].enabled && serializedMessage.mentioned
@@ -984,6 +997,21 @@ export class ChatClient extends React.Component<Props, State> {
     }
 
     try {
+      if (!_.isNil(this.props.channel)) {
+        try {
+          this.isFetchingHistoricalMessage = true
+
+          const recentMessages = await Robotty.fetchRecentMessages(this.props.channel)
+          _.forEach(recentMessages, (message) => {
+            this.client._onMessage({ data: message })
+          })
+        } catch (error) {
+          //
+        } finally {
+          this.isFetchingHistoricalMessage = false
+        }
+      }
+
       const channel = await Twitch.fetchChannel(channelId)
 
       if (!_.isNil(channel.status) && channel.status.length > 0) {

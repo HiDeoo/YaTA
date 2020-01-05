@@ -86,7 +86,8 @@ export default class MessageContent extends React.Component<Props> {
   public render() {
     const { message, withEmoteDetails } = this.props
     const isAction = message.type === LogType.Action
-    const messageColor = isAction && !_.isNil(message.user.color) ? message.user.color : 'inherit'
+    const messageColor =
+      isAction && !_.isNil(message.user.color) && !message.historical ? message.user.color : 'inherit'
 
     return (
       <Message

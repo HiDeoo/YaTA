@@ -42,6 +42,17 @@ const Wrapper = styled.div<WrapperProps>`
 `
 
 /**
+ * HistoricalWrapper component.
+ */
+const HistoricalWrapper = styled.div`
+  border-left: 3px solid transparent;
+  color: ${theme('message.time.color')};
+  font-style: italic;
+  padding: 4px ${size('log.hPadding')} 1px 7px;
+  white-space: pre-wrap;
+`
+
+/**
  * MenuButton component.
  */
 const MenuButton = styled(Button)`
@@ -121,6 +132,15 @@ const Name = styled.span<WithNameColorProps>`
 `
 
 /**
+ * HistoricalName component.
+ */
+const HistoricalName = styled.span`
+  color: ${theme('message.time.color')};
+  font-weight: bold;
+  padding-right: 2px;
+`
+
+/**
  * Username component.
  */
 const Username = styled.span`
@@ -176,6 +196,10 @@ export default class Message extends React.Component<Props, State> {
   public render() {
     const { focusEmote, increaseTwitchHighlight, markNewAsUnread, message, style, useAlternate } = this.props
 
+    if (message.historical) {
+      return this.renderHistoricalMessage()
+    }
+
     const usernameColor = message.user.color as string
 
     return (
@@ -202,6 +226,26 @@ export default class Message extends React.Component<Props, State> {
         {'\n'}
         {this.renderPreviews()}
       </Wrapper>
+    )
+  }
+
+  /**
+   * Renders an historical message.
+   * @return Element to render.
+   */
+  private renderHistoricalMessage() {
+    const { message, style } = this.props
+
+    return (
+      <HistoricalWrapper style={style} onDoubleClick={this.onDoubleClick} onClick={this.onClick}>
+        <Time>{message.time} </Time>
+        <HistoricalName>
+          {message.user.displayName}
+          {message.user.showUserName && <Username> ({message.user.userName})</Username>}
+        </HistoricalName>{' '}
+        <MessageContent message={message} />
+        {'\n'}
+      </HistoricalWrapper>
     )
   }
 
