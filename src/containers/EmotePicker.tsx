@@ -93,6 +93,7 @@ const Notice = styled.div`
 const EmoteProviderIconMap: Record<EmoteProviderPrefix, string | string[]> = {
   [EmoteProviderPrefix.Twitch]: ['115847', '28087', '64138', '68856', '123171', '30259', '4339', '114836', '425618'],
   [EmoteProviderPrefix.Bttv]: '56e9f494fff3cc5c35e5287e',
+  [EmoteProviderPrefix.Ffz]: '28136',
 }
 
 /**
@@ -254,12 +255,10 @@ class EmotePicker extends React.Component<Props, State> {
       return <Preview />
     }
 
-    const urls = provider.getEmoteTagUrls(hovered.id)
-
     return (
       <Preview>
         <PreviewImage>
-          <img src={urls['2x']} alt={hovered.code} />
+          <img src={provider.getEmoteUrlWithSize(hovered.id, '2x')} alt={hovered.code} />
         </PreviewImage>
         {hovered.code}
       </Preview>

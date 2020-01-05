@@ -4,6 +4,7 @@
 
 - Add a new streamer setting to uglify messages redeemed using [Channel Points](https://help.twitch.tv/s/article/channel-points-guide).
 - Emotes are now clickable: enhance, check the streamer or take a look at other emotes from the same channel.
+- Add support for [FrankerFaceZ emotes](https://www.frankerfacez.com/emoticons/?q=&sort=count-desc).
 - You can now quickly add a user to the highlight blacklist from the context menu of an highlighted message.
 
 ### 🐛 Bug Fix

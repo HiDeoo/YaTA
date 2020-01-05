@@ -31,6 +31,7 @@ import Resources from 'libs/Resources'
 import RoomState from 'libs/RoomState'
 import Sound, { SoundId } from 'libs/Sound'
 import Twitch from 'libs/Twitch'
+import Ffz from 'libs/Ffz'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'store/ducks/app'
 import {
   addChatter,
@@ -995,12 +996,24 @@ export class ChatClient extends React.Component<Props, State> {
       Resources.manager().setCheermotes((await Twitch.fetchCheermotes(channelId)).actions)
 
       if (!_.isNil(this.props.channel)) {
-        const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
+        try {
+          const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
 
-        this.addEmotesProvider(emotesAndBots.emotes)
+          this.addEmotesProvider(emotesAndBots.emotes)
 
-        if (!_.isNil(emotesAndBots.bots)) {
-          Resources.manager().addBots(emotesAndBots.bots)
+          if (!_.isNil(emotesAndBots.bots)) {
+            Resources.manager().addBots(emotesAndBots.bots)
+          }
+        } catch (error) {
+          //
+        }
+
+        try {
+          const emotes = await Ffz.fetchEmotes(this.props.channel)
+
+          this.addEmotesProvider(emotes)
+        } catch (error) {
+          //
         }
 
         this.didFetchExternalResources = true

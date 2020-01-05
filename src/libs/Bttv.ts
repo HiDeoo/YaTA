@@ -13,6 +13,7 @@ const baseAPIUrl = 'https://api.betterttv.net/2'
 export default class Bttv {
   /**
    * Fetches Bttv emotes & bots for a specific channel.
+   * @param  channel - The name of the channel.
    * @return The emotes provider and bots details.
    */
   public static async fetchEmotesAndBots(channel: string): Promise<BttvEmotesAndBots> {

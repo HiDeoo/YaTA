@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { Emotes } from 'twitch-js'
 import { Word } from 'unistring'
 
+import { FfzEmote } from 'libs/Ffz'
 import Resources from 'libs/Resources'
 
 /**
@@ -9,6 +10,7 @@ import Resources from 'libs/Resources'
  */
 export enum EmoteProviderPrefix {
   Bttv = 'bttv',
+  Ffz = 'ffz',
   Twitch = 'twitch',
 }
 
@@ -121,25 +123,27 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
     return id in TwitchRegExpEmotesMap
   }
 
-  private urlCompiledTemplate: _.TemplateExecutor
+  private urlCompiledTemplate: Optional<_.TemplateExecutor>
 
   /**
    * Creates a new emotes provider.
    * @class
    * @param prefix - Provider prefix.
    * @param emotes - The additional emotes.
-   * @param urlTemplate - The provider url template.
-   * @param sizePrefix - The size prefix.
+   * @param [urlTemplate] - The provider url template if any.
+   * @param [sizePrefix] - The size prefix if any.
    */
   constructor(
     public prefix: EmoteProviderPrefix,
     public emotes: ExternalEmote[],
-    urlTemplate: string,
-    private sizePrefix: string
+    urlTemplate?: string,
+    private sizePrefix?: string
   ) {
-    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
+    if (!_.isNil(urlTemplate)) {
+      _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
-    this.urlCompiledTemplate = _.template(urlTemplate)
+      this.urlCompiledTemplate = _.template(urlTemplate)
+    }
   }
 
   /**
@@ -147,7 +151,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return `true` if Twitch.
    */
   public isTwitch() {
-    return this.prefix === 'twitch'
+    return EmotesProvider.isTwitchPrefix(this.prefix)
   }
 
   /**
@@ -200,17 +204,69 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return The emote tag URLs.
    */
   public getEmoteTagUrls(id: string): EmoteTagUrls {
-    const url1x = this.urlCompiledTemplate({ id, image: this.getSizePath(1) })
-    const url2x = this.urlCompiledTemplate({ id, image: this.getSizePath(2) })
-    const url4x = this.urlCompiledTemplate({ id, image: this.getSizePath(3) })
+    let url1x
+    let url2x
+    let url4x
+    let srcset
+
+    if (this.urlCompiledTemplate) {
+      url1x = this.urlCompiledTemplate({ id, image: this.getSizePath(1) })
+      url2x = this.urlCompiledTemplate({ id, image: this.getSizePath(2) })
+      url4x = this.urlCompiledTemplate({ id, image: this.getSizePath(3) })
+      srcset = `${url1x} 1x,${url2x} 2x,${url4x} 4x`
+    } else if (this.isFfz()) {
+      const emote = this.getFfzEmote(id)
+
+      if (_.isNil(emote)) {
+        throw new Error(`Unknown Ffz emote (id: ${id}).`)
+      }
+
+      url1x = emote.urls[1]
+      url2x = emote.urls[2]
+      url4x = emote.urls[4]
+
+      srcset = `${url1x} 1x${!_.isNil(url2x) ? `,${url2x} 2x` : ''}${!_.isNil(url4x) ? `,${url4x} 4x` : ''}`
+    } else {
+      throw new Error('Unable to generate emote tag URLs.')
+    }
 
     return {
       '1x': url1x,
       '2x': url2x,
       '4x': url4x,
       src: url1x,
-      srcset: `${url1x} 1x,${url2x} 2x,${url4x} 4x`,
+      srcset,
     }
+  }
+
+  /**
+   * Returns the emote URL at a specific size.
+   * If the size do not exists, the `1x` URL will be returned.
+   * @param  id - The emote ID.
+   * @param  size - The size.
+   * @return The emote URL.
+   */
+  public getEmoteUrlWithSize(id: string, size: '1x' | '2x' | '4x') {
+    const urls = this.getEmoteTagUrls(id)
+
+    return _.get(urls, size, urls['1x'])
+  }
+
+  /**
+   * Determines if the emote provider is the Ffz one.
+   * @return `true` if Ffz.
+   */
+  private isFfz() {
+    return this.prefix === EmoteProviderPrefix.Ffz
+  }
+
+  /**
+   * Returns a specific Ffz emote based on its ID.
+   * @param  id - The emote ID.
+   * @return The emote if existing.
+   */
+  private getFfzEmote(id: string) {
+    return _.find(this.emotes, (emote) => emote.id === id) as Optional<FfzEmote>
   }
 
   /**
@@ -241,7 +297,16 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return The minimum width or an empty string.
    */
   private getSpecificWidth(id: string) {
-    return EmotesProvider.isFixedWidthEmote(id) ? `  style="min-width: ${EmotesWidthsMap[id]}px;"` : ''
+    let width: Optional<number>
+
+    if (!this.isFfz() && EmotesProvider.isFixedWidthEmote(id)) {
+      width = EmotesWidthsMap[id]
+    } else if (this.isFfz()) {
+      const emote = this.getFfzEmote(id)
+      width = emote?.width
+    }
+
+    return !_.isNil(width) ? `  style="min-width: ${width}px;"` : ''
   }
 }
 
@@ -258,8 +323,8 @@ export type Emote = {
  */
 export type EmoteTagUrls = {
   '1x': string
-  '2x': string
-  '4x': string
+  '2x'?: string
+  '4x'?: string
   src: string
   srcset: string
 }

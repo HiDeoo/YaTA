@@ -209,9 +209,13 @@ export default class EmotesDetails extends React.Component<Props, State> {
       <div>
         <FlexLayout>
           <Preview>
-            <ProgressiveImage src={tagUrls['4x']} placeholder={tagUrls['1x']}>
-              {(src: string) => <img alt={emote.name} src={src} />}
-            </ProgressiveImage>
+            {_.isNil(tagUrls['4x']) ? (
+              <img alt={emote.name} src={tagUrls['1x']} />
+            ) : (
+              <ProgressiveImage src={tagUrls['4x']} placeholder={tagUrls['1x']}>
+                {(src: string) => <img alt={emote.name} src={src} />}
+              </ProgressiveImage>
+            )}
           </Preview>
           <Infos loading={isLoading}>
             {isLoading ? (
