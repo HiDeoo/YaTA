@@ -14,13 +14,13 @@
     }
   },
   "builds": [{ "src": "package.json", "use": "@now/static-build", "config": { "distDir": "build" } }],
-  "routes": [
-    { "src": "^/static/(.*)", "dest": "/build/static/$1" },
-    { "src": "^/asset-manifest.json", "dest": "/asset-manifest.json" },
-    { "src": "^/favicon.ico", "dest": "/favicon.ico" },
-    { "src": "^/icon.png", "dest": "/icon.png" },
-    { "src": "^/manifest.json", "dest": "/manifest.json" },
-    { "src": "^/service-worker.js", "dest": "/service-worker.js" },
-    { "src": "(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "^/static/(.*)", "destination": "/build/static/$1" },
+    { "source": "^/asset-manifest.json", "destination": "/asset-manifest.json" },
+    { "source": "^/favicon.ico", "destination": "/favicon.ico" },
+    { "source": "^/icon.png", "destination": "/icon.png" },
+    { "source": "^/manifest.json", "destination": "/manifest.json" },
+    { "source": "^/service-worker.js", "destination": "/service-worker.js" },
+    { "source": "(.*)", "destination": "/index.html" }
   ]
 }

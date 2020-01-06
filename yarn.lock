@@ -8132,10 +8132,10 @@ normalize.css@^8.0.1:
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
   integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
 
-now@16.7.0:
-  version "16.7.0"
-  resolved "https://registry.yarnpkg.com/now/-/now-16.7.0.tgz#4a1f1588410e7cbe9ca8d2c3fdcdc61e7116e8cc"
-  integrity sha512-YUMFYphAxcLE441/o2h55QgtXerF3M0GlQgy7ihJhPcz6OsllCqGgxaN5/XgnAJOlgKCW84HxSB8ZzCY55H4lQ==
+now@16.7.1:
+  version "16.7.1"
+  resolved "https://registry.yarnpkg.com/now/-/now-16.7.1.tgz#b936ee398588849d0374bb76196e43b8cbe14738"
+  integrity sha512-iAf6eUaVXc2phDUcM2kYCevhSmk10DRWEraRAUstwUChx14DJRB1Kb65M65Bk13qBXkHIjdfTAH2dR4s1y64+w==
 
 npm-run-path@^2.0.0:
   version "2.0.2"

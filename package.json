@@ -79,7 +79,7 @@
     "@types/webpack-env": "1.14.1",
     "husky": "3.1.0",
     "lint-staged": "9.5.0",
-    "now": "16.7.0",
+    "now": "16.7.1",
     "patch-package": "6.2.0",
     "postinstall-prepare": "1.0.1",
     "prettier": "1.19.1",
