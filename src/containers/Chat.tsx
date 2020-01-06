@@ -315,6 +315,10 @@ export class ChatClient extends React.Component<Props, State> {
       const notification = Notification.fromBitsBadgeTier(tags)
 
       this.props.addLog(notification.serialize())
+    } else if (id === Notices.ExtraUser.ExtendedSub) {
+      const notification = Notification.fromExtendedSub(tags)
+
+      this.props.addLog(notification.serialize())
     }
   }
 

@@ -100,7 +100,8 @@ export default class Notification extends React.Component<Props> {
       event === NotificationEvent.AnonGiftPaidUpgrade ||
       event === NotificationEvent.PrimePaidUpgrade ||
       event === NotificationEvent.RewardGift ||
-      event === NotificationEvent.BitsBadgeTier
+      event === NotificationEvent.BitsBadgeTier ||
+      event === NotificationEvent.ExtendedSub
     )
   }
 }

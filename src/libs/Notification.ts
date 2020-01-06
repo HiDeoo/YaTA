@@ -3,6 +3,7 @@ import pluralize from 'pluralize'
 import shortid from 'shortid'
 
 import LogType from 'constants/logType'
+import { getMonthFromIndex } from 'utils/time'
 
 /**
  * Notification associated events.
@@ -12,6 +13,7 @@ export enum NotificationEvent {
   AnonSubGift,
   AnonSubMysteryGift,
   BitsBadgeTier,
+  ExtendedSub,
   GiftPaidUpgrade,
   Host,
   PrimePaidUpgrade,
@@ -145,6 +147,28 @@ export default class Notification implements Serializable<SerializedNotification
         : `${username} just earned a new ${badge.toLocaleString()} Bits badge!`,
       NotificationEvent.BitsBadgeTier
     )
+  }
+
+  /**
+   * Creates a new notification from a extendsub user notice.
+   * @param  tags - The notice tags.
+   * @return The new notice.
+   */
+  public static fromExtendedSub(tags: Record<string, string>) {
+    const username = tags['display-name'] || tags.login
+    const endMonthIndex = tags['msg-param-sub-benefit-end-month']
+    const endMonth = getMonthFromIndex(parseInt(endMonthIndex, 10))
+    const plan = _.get(tags, 'msg-param-sub-plan', '')
+
+    let tier = 1
+
+    if (plan === '2000') {
+      tier = 2
+    } else if (plan === '3000') {
+      tier = 3
+    }
+
+    return new Notification(`${username} extended their Tier ${tier} subscription through ${endMonth}!`, NotificationEvent.ExtendedSub)
   }
 
   /**

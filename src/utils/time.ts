@@ -49,3 +49,16 @@ export function durationToString(duration: string) {
 export function padTimeUnit(timeUnit: string | number) {
   return _.padStart(_.isNumber(timeUnit) ? timeUnit.toString() : timeUnit, 2, '0')
 }
+
+/**
+ * Returns the name of a month based on its index.
+ * @param  monthNumber - The month index.
+ * @return The month name.
+ */
+export function getMonthFromIndex(monthIndex: number) {
+  const date = new Date()
+  date.setDate(1)
+  date.setMonth(monthIndex - 1)
+
+  return date.toLocaleString('en-US', { month: 'long' })
+}
