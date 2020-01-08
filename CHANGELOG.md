@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Custom [Channel Points](https://help.twitch.tv/s/article/channel-points-guide) rewards which requires the viewer to enter text are now properly highlighted in chat.
+- You can now open the rewards queue of your own channel from the Tools menu.
 
 # 1.13.0
 

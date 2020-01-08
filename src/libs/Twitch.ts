@@ -166,6 +166,18 @@ export default class Twitch {
   }
 
   /**
+   * Opens the Twitch rewards queue of a specific channel.
+   * @param channel - The channel.
+   */
+  public static async openRewardsQueue(channel: string) {
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/reward-queue`,
+      'twitchRewardsQueuePopupWindow',
+      'height=500,width=800'
+    )
+  }
+
+  /**
    * Opens the video player of a specific channel.
    * @param channel - The channel.
    */

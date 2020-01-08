@@ -427,6 +427,7 @@ class Channel extends React.Component<Props, State> {
             <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
             {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
             {connected && <Menu.Item onClick={this.toggleLogsExporter} icon="archive" text="Export logs" />}
+            {isBroadcaster && <Menu.Item onClick={this.openRewardsQueue} icon="stopwatch" text="Rewards queue" />}
             <ModerationMenuItems
               toggleFollowersOnly={this.toggleFollowersOnly}
               toggleEmoteOnly={this.toggleEmoteOnly}
@@ -727,6 +728,16 @@ class Channel extends React.Component<Props, State> {
    */
   private toggleLogsExporter = () => {
     this.toggleUI(ToggleableUI.LogsExporter)
+  }
+
+  /**
+   * Opens the Twitch rewards queue.
+   */
+  private openRewardsQueue = () => {
+    const { channel } = this.props
+    if (!_.isNil(channel)) {
+      Twitch.openRewardsQueue(channel)
+    }
   }
 
   /**
