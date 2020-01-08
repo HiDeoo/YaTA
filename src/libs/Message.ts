@@ -59,11 +59,12 @@ export default class Message implements Serializable<SerializedMessage> {
     this.text = message.trim()
     this.highlighted = !self && Resources.manager().shouldAlwaysHighlight(this.user.userName)
     this.historical = userstate.historical === true
-    this.read = self || this.historical
+    this.read = self || this.historical
 
     this.ignoreHighlight = self || Resources.manager().shouldIgnoreHighlights(this.user.userName)
     this.twitchHighlighted =
-      _.isString(userstate['msg-id']) && userstate['msg-id'] === 'highlighted-message' && !this.ignoreHighlight
+      (_.isString(userstate['msg-id']) && userstate['msg-id'] === 'highlighted-message' && !this.ignoreHighlight) ||
+      (_.isString(userstate['custom-reward-id']) && !this.ignoreHighlight)
 
     const date = new Date(parseInt(this.date, 10))
     this.time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`

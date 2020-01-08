@@ -71,6 +71,7 @@ declare module 'twitch-js' {
     username: string
     'message-type': LogType.Action | LogType.Chat | LogType.Whisper | LogType.Cheer
     historical?: boolean
+    'custom-reward-id'?: string
   }
 
   export type Payment = {

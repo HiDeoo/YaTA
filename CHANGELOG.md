@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🚀 New Feature
+
+- Custom [Channel Points](https://help.twitch.tv/s/article/channel-points-guide) rewards which requires the viewer to enter text are now properly highlighted in chat.
+
 # 1.13.0
 
 ### 🚀 New Feature
