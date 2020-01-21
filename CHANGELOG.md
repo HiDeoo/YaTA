@@ -1,3 +1,9 @@
+# 1.13.3
+
+### 🐛 Bug Fix
+
+- Fix a client crash introduced earlier today (sorry).
+
 # 1.13.2
 
 ### 🐛 Bug Fix

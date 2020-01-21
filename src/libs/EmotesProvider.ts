@@ -256,7 +256,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * Determines if the emote provider is the Ffz one.
    * @return `true` if Ffz.
    */
-  private isFfz() {
+  public isFfz() {
     return this.prefix === EmoteProviderPrefix.Ffz
   }
 

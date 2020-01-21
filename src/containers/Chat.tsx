@@ -987,26 +987,25 @@ export class ChatClient extends React.Component<Props, State> {
    */
   private addEmotesProvider(provider: EmotesProvider<Emote>) {
     const providers = Resources.manager().getEmotesProviders()
-    let sanitizedProvider = provider
 
     if (providers.size > 1) {
       const allEmoteCodes: string[] = []
 
-      providers.forEach((provider) => {
-        allEmoteCodes.push(..._.map(provider.emotes, 'code'))
+      providers.forEach((aProvider) => {
+        if (aProvider.prefix !== provider.prefix) {
+          allEmoteCodes.push(..._.map(aProvider.emotes, 'code'))
+        }
       })
 
-      sanitizedProvider = new EmotesProvider(
-        provider.prefix,
-        _.filter(provider.emotes, (emote) => {
-          return !_.includes(allEmoteCodes, emote.code)
-        })
-      )
+      provider.emotes = _.filter(provider.emotes, (emote) => {
+        return !_.includes(allEmoteCodes, emote.code)
+      })
     }
 
-    Resources.manager().addEmotesProvider(sanitizedProvider)
+    Resources.manager().addEmotesProvider(provider)
 
-    this.props.updateEmotes(sanitizedProvider.prefix, sanitizedProvider.emotes)
+    this.props.updateEmotes(provider.prefix, provider.emotes)
+
   }
 
   /**
