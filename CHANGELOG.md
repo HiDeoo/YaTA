@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue with emotes having the same name in BetterTTV & FrankerFaceZ.
+
 # 1.13.1
 
 ### 🚀 New Feature
