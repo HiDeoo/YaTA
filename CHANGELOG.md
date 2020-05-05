@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue with unreadable mentions in action (`/me`) messages.
+
 # 1.13.3
 
 ### 🐛 Bug Fix

@@ -1,3 +1,4 @@
+import { Colors } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -45,6 +46,7 @@ const Message = styled.span<MessageProps>`
 
     &.self {
       background-color: ${theme('log.mention.self.color')};
+      color: ${Colors.WHITE};
     }
   }
 
