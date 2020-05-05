@@ -719,7 +719,7 @@ export default class Twitch {
       'Content-Type': 'application/json; charset=UTF-8',
     })
 
-    if (authenticated) {
+    if (authenticated || api === TwitchApi.Helix) {
       const authHeader = Twitch.getAuthHeader(api)
 
       _.forEach(authHeader, (value, name) => {

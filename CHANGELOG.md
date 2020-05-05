@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Fix an issue with unreadable mentions in action (`/me`) messages.
+- Following [Twitch changes](https://discuss.dev.twitch.tv/t/requiring-oauth-for-helix-twitch-api-endpoints/23916), all requests to the Helix Twitch API endpoints use OAuth.
 
 # 1.13.3
 
