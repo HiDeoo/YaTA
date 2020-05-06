@@ -1046,7 +1046,7 @@ export class ChatClient extends React.Component<Props, State> {
 
       if (!_.isNil(this.props.channel)) {
         try {
-          const emotesAndBots = await Bttv.fetchEmotesAndBots(this.props.channel)
+          const emotesAndBots = await Bttv.fetchEmotesAndBots(channelId)
 
           this.addEmotesProvider(emotesAndBots.emotes)
 

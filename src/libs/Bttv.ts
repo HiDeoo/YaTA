@@ -5,7 +5,7 @@ import EmotesProvider, { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
 /**
  * Bttv base API URL.
  */
-const baseAPIUrl = 'https://api.betterttv.net/2'
+const baseAPIUrl = 'https://api.betterttv.net/3/cached'
 
 /**
  * Bttv class.
@@ -13,27 +13,24 @@ const baseAPIUrl = 'https://api.betterttv.net/2'
 export default class Bttv {
   /**
    * Fetches Bttv emotes & bots for a specific channel.
-   * @param  channel - The name of the channel.
+   * @param channelId - The channel id.
    * @return The emotes provider and bots details.
    */
-  public static async fetchEmotesAndBots(channel: string): Promise<BttvEmotesAndBots> {
+  public static async fetchEmotesAndBots(channelId: string): Promise<BttvEmotesAndBots> {
     const response = await Promise.all([
-      (await Bttv.fetch(`${baseAPIUrl}/emotes`)).json(),
-      (await Bttv.fetch(`${baseAPIUrl}/channels/${channel}`)).json(),
+      (await Bttv.fetch(`${baseAPIUrl}/emotes/global`)).json(),
+      (await Bttv.fetch(`${baseAPIUrl}/users/twitch/${channelId}`)).json(),
     ])
 
-    const [emotesInfo, channelInfo] = response
+    const [globalResponse, channelResponse] = response
 
-    const isChannelRegistered = channelInfo.message !== 'channel not found'
+    const isChannelRegistered = channelResponse.message !== 'user not found'
 
-    let rawEmotes: BttvEmote[] = isChannelRegistered ? [...emotesInfo.emotes, ...channelInfo.emotes] : emotesInfo.emotes
+    let rawEmotes: BttvEmote[] = isChannelRegistered ? [...globalResponse, ...channelResponse.sharedEmotes, ...channelResponse.channelEmotes] : globalResponse
 
-    // Remove Night's emotes.
-    rawEmotes = _.filter(rawEmotes, (emote) => _.get(emote.restrictions, 'emoticonSet') !== 'night')
+    const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? channelResponse.bots : null
 
-    const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? channelInfo.bots : null
-
-    const emotes = new EmotesProvider(EmoteProviderPrefix.Bttv, rawEmotes, emotesInfo.urlTemplate, 'x')
+    const emotes = new EmotesProvider(EmoteProviderPrefix.Bttv, rawEmotes, 'https://cdn.betterttv.net/emote/{{id}}/{{image}}', 'x')
 
     return {
       bots,
@@ -68,13 +65,7 @@ export default class Bttv {
  * Bttv emote.
  */
 interface BttvEmote extends Emote {
-  channel: string
   imageType: string
-  restrictions?: {
-    channels: string[]
-    games: string[]
-    emoticonSet?: string
-  }
 }
 
 /**

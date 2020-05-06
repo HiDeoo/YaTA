@@ -2,7 +2,11 @@
 
 ### 🐛 Bug Fix
 
+- Upgrade BetterTTV API version to fix various issues with emotes rendering.
 - Fix an issue with unreadable mentions in action (`/me`) messages.
+
+### ⚙️ Internal
+
 - Following [Twitch changes](https://discuss.dev.twitch.tv/t/requiring-oauth-for-helix-twitch-api-endpoints/23916), all requests to the Helix Twitch API endpoints use OAuth.
 
 # 1.13.3
