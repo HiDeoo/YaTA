@@ -330,7 +330,6 @@ class Channel extends React.Component<Props, State> {
         <ChatterDetails
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
-          copyToClipboard={this.copyToClipboard}
           actionHandler={this.handleAction}
           canModerate={this.canModerate}
           unfocus={this.unfocusChatter}

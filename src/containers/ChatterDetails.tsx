@@ -18,7 +18,6 @@ import { connect } from 'react-redux'
 import ExternalButton from 'components/ExternalButton'
 import FlexLayout from 'components/FlexLayout'
 import History from 'components/History'
-import NameHistoryMenuItem from 'components/NameHistoryMenuItem'
 import ReasonDialog from 'components/ReasonDialog'
 import { ToggleableUI } from 'constants/toggleable'
 import ActionMenuItems from 'containers/ActionMenuItems'
@@ -27,7 +26,6 @@ import { ActionHandler, SerializedAction } from 'libs/Action'
 import { SerializedChatter, WithNameColorProps } from 'libs/Chatter'
 import { SerializedMessage } from 'libs/Message'
 import Twitch, { RawChannel, RawRelationship } from 'libs/Twitch'
-import TwitchTools, { UsernameHistory } from 'libs/TwitchTools'
 import { isMessage } from 'store/ducks/logs'
 import { updateNote } from 'store/ducks/notes'
 import { ApplicationState } from 'store/reducers'
@@ -192,15 +190,6 @@ const Note = styled(EditableText)`
 `
 
 /**
- * HistoryDate component.
- */
-const HistoryDate = styled(Menu.Item)`
-  &.${Classes.MENU_ITEM}.${Classes.DISABLED}, .${Classes.DARK} &.${Classes.MENU_ITEM}.${Classes.DISABLED} {
-    cursor: auto !important;
-  }
-`
-
-/**
  * ErrorIcon component.
  */
 const ErrorIcon = styled(Icon)`
@@ -215,7 +204,6 @@ const initialState = {
   error: undefined as Optional<Error>,
   isEditingNote: false,
   relationship: undefined as Optional<RawRelationship> | null,
-  usernameHistory: [] as UsernameHistory,
   [ToggleableUI.Reason]: false,
 }
 type State = Readonly<typeof initialState>
@@ -253,14 +241,6 @@ class ChatterDetails extends React.Component<Props, State> {
           error: undefined,
           relationship,
         }))
-
-        try {
-          const usernameHistory = await TwitchTools.fetchUsernameHistory(id)
-
-          this.setState(() => ({ usernameHistory }))
-        } catch (error) {
-          // We don't care about errors while fetching a username history.
-        }
       } catch (error) {
         this.setState(() => ({ error }))
       }
@@ -414,7 +394,7 @@ class ChatterDetails extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderDetails() {
-    const { details, error, relationship, usernameHistory } = this.state
+    const { details, error, relationship } = this.state
     const { chatter } = this.props
 
     if (_.isNil(chatter)) {
@@ -436,7 +416,6 @@ class ChatterDetails extends React.Component<Props, State> {
       )
     }
 
-    const hasUsernameHistory = _.isArray(usernameHistory) && usernameHistory.length > 0
     const followed = !_.isNil(relationship)
 
     return (
@@ -472,9 +451,6 @@ class ChatterDetails extends React.Component<Props, State> {
         )}
         <Tools>
           <ExternalButton text="Open Channel" icon="document-open" href={details.url} />
-          <Popover disabled={!hasUsernameHistory} content={this.renderUsernameHistory()} usePortal={false}>
-            <Button disabled={!hasUsernameHistory} text="Username History" icon="history" rightIcon="caret-down" />
-          </Popover>
           <Popover content={<ActionMenuItems actionHandler={this.actionHandler} wrap />} usePortal={false}>
             <Button icon="caret-down" />
           </Popover>
@@ -501,40 +477,6 @@ class ChatterDetails extends React.Component<Props, State> {
         logs={logs}
       />
     )
-  }
-
-  /**
-   * Renders the username history.
-   * @return Element to render.
-   */
-  private renderUsernameHistory() {
-    const { usernameHistory } = this.state
-
-    return (
-      <Menu>
-        {_.map(usernameHistory, (history, index) => (
-          <React.Fragment key={index}>
-            <NameHistoryMenuItem onClick={this.onClickHistoryUsername} name={history.username_new} last={index === 0} />
-            <HistoryDate disabled icon="arrow-up" text={new Date(history.found_at).toLocaleDateString()} />
-            {index === usernameHistory.length - 1 && (
-              <NameHistoryMenuItem name={history.username_old} onClick={this.onClickHistoryUsername} />
-            )}
-          </React.Fragment>
-        ))}
-      </Menu>
-    )
-  }
-
-  /**
-   * Triggered when a username from the history is clicked to be copied.
-   * @param username - The username.
-   */
-  private onClickHistoryUsername = (username: string) => {
-    const { copyToClipboard, unfocus } = this.props
-
-    copyToClipboard(username)
-
-    unfocus()
   }
 
   /**
@@ -776,7 +718,6 @@ interface OwnProps {
   chatter?: SerializedChatter
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
-  copyToClipboard: (message: string) => void
   follow: (targetId: string) => void
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
