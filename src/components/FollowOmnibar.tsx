@@ -109,9 +109,7 @@ class FollowOmnibar extends React.Component<Props, State> {
    * @return `true` when the query matches the follow.
    */
   private itemPredicate: ItemPredicate<Follower> = (query, follow) => {
-    return this.getFollowTitle(follow)
-      .toLowerCase()
-      .includes(query.toLowerCase())
+    return this.getFollowTitle(follow).toLowerCase().includes(query.toLowerCase())
   }
 
   /**

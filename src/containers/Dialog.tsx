@@ -16,7 +16,7 @@ const Dialog: React.SFC<Props> = ({ disableDialogAnimations, ...restProps }) => 
   />
 )
 
-export default connect<StateProps, {}, IDialogProps, ApplicationState>((state) => ({
+export default connect<StateProps, {}, IDialogProps & { children: React.ReactNode }, ApplicationState>((state) => ({
   disableDialogAnimations: getDisableDialogAnimations(state),
 }))(Dialog)
 

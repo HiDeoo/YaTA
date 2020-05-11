@@ -26,11 +26,18 @@ export default class Bttv {
 
     const isChannelRegistered = channelResponse.message !== 'user not found'
 
-    let rawEmotes: BttvEmote[] = isChannelRegistered ? [...globalResponse, ...channelResponse.sharedEmotes, ...channelResponse.channelEmotes] : globalResponse
+    let rawEmotes: BttvEmote[] = isChannelRegistered
+      ? [...globalResponse, ...channelResponse.sharedEmotes, ...channelResponse.channelEmotes]
+      : globalResponse
 
     const bots: BttvEmotesAndBots['bots'] = isChannelRegistered ? channelResponse.bots : null
 
-    const emotes = new EmotesProvider(EmoteProviderPrefix.Bttv, rawEmotes, 'https://cdn.betterttv.net/emote/{{id}}/{{image}}', 'x')
+    const emotes = new EmotesProvider(
+      EmoteProviderPrefix.Bttv,
+      rawEmotes,
+      'https://cdn.betterttv.net/emote/{{id}}/{{image}}',
+      'x'
+    )
 
     return {
       bots,

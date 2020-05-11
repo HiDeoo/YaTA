@@ -2,7 +2,7 @@ import { Card, Classes, H2, Spinner, Text } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 import ProgressiveImage from 'react-progressive-image'
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 
 import Dialog from 'containers/Dialog'
 import ExternalLink from 'components/ExternalLink'

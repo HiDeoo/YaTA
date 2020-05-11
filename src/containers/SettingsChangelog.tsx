@@ -132,10 +132,9 @@ class SettingsChangelog extends React.Component<Props, State> {
   }
 }
 
-export default connect<{}, DispatchProps, {}, ApplicationState>(
-  null,
-  { setVersion, setShouldReadChangelog }
-)(SettingsChangelog)
+export default connect<{}, DispatchProps, {}, ApplicationState>(null, { setVersion, setShouldReadChangelog })(
+  SettingsChangelog
+)
 
 /**
  * React Props.

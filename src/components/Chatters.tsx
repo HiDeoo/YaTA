@@ -253,7 +253,10 @@ class Chatters extends React.Component<Props, State> {
         rows.push(this.createRow(RowType.Separator))
         rows.push(this.createRow(RowType.Group, this.sanitizeGroup(group)))
 
-        rows = _.concat(rows, _.map(groupChatters, (chatter) => this.createRow(RowType.Chatter, chatter)))
+        rows = _.concat(
+          rows,
+          _.map(groupChatters, (chatter) => this.createRow(RowType.Chatter, chatter))
+        )
       }
     })
 

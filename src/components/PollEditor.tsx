@@ -404,7 +404,10 @@ export default class PollEditor extends React.Component<Props, State> {
    * @return The options values.
    */
   private getOptionsValues(options: string) {
-    return _.filter(_.map(options.split(OptionsRegExp), (value) => value.trim()), (value) => value.length > 0)
+    return _.filter(
+      _.map(options.split(OptionsRegExp), (value) => value.trim()),
+      (value) => value.length > 0
+    )
   }
 }
 

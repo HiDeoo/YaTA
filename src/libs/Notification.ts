@@ -168,7 +168,10 @@ export default class Notification implements Serializable<SerializedNotification
       tier = 3
     }
 
-    return new Notification(`${username} extended their Tier ${tier} subscription through ${endMonth}!`, NotificationEvent.ExtendedSub)
+    return new Notification(
+      `${username} extended their Tier ${tier} subscription through ${endMonth}!`,
+      NotificationEvent.ExtendedSub
+    )
   }
 
   /**

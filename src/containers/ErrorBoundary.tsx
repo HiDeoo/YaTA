@@ -107,10 +107,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 }
 
-export default connect<{}, DispatchProps, OwnProps, ApplicationState>(
-  null,
-  { resetUser }
-)(ErrorBoundary)
+export default connect<{}, DispatchProps, OwnProps, ApplicationState>(null, { resetUser })(ErrorBoundary)
 
 /**
  * React Props.

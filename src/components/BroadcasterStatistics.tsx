@@ -105,7 +105,10 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
 
     this.state = {
       ...initialState,
-      statistics: [{ name: 'Follower', value: channel.followers }, { name: 'View', value: channel.views }],
+      statistics: [
+        { name: 'Follower', value: channel.followers },
+        { name: 'View', value: channel.views },
+      ],
     }
   }
 

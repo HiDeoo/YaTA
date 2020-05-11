@@ -1005,7 +1005,6 @@ export class ChatClient extends React.Component<Props, State> {
     Resources.manager().addEmotesProvider(provider)
 
     this.props.updateEmotes(provider.prefix, provider.emotes)
-
   }
 
   /**

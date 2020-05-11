@@ -19,6 +19,7 @@
     "selector-list-comma-newline-after": null,
     "no-descending-specificity": null,
     "declaration-block-semicolon-newline-after": null,
-    "rule-empty-line-before": null
+    "rule-empty-line-before": null,
+    "value-keyword-case": null
   }
 }
