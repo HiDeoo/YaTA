@@ -214,6 +214,8 @@ export default class Input extends React.Component<Props, State> {
     const { disabled, isUploadingFile, value } = this.props
     const { hideToasts, intent, toasts } = this.state
 
+    const inputDisabled = disabled || isUploadingFile
+
     const classes = clsx(Classes.INPUT, Classes.FILL, Classes.LARGE, intent)
 
     return (
@@ -236,7 +238,7 @@ export default class Input extends React.Component<Props, State> {
         <TextArea
           dir="auto"
           value={value}
-          disabled={disabled || isUploadingFile}
+          disabled={inputDisabled}
           className={classes}
           ref={this.input as any}
           onBlur={this.onBlurInput}
@@ -244,7 +246,7 @@ export default class Input extends React.Component<Props, State> {
           onChange={this.onChangeInputValue}
           onKeyDown={this.onKeyDownInputValue}
         />
-        <EmotePicker onPick={this.onPickEmote} onCancel={this.onCancelEmote} />
+        <EmotePicker onPick={this.onPickEmote} onCancel={this.onCancelEmote} disabled={inputDisabled} />
       </Wrapper>
     )
   }

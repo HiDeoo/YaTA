@@ -10,6 +10,11 @@ export default {
   UnbanNotices: ['bad_unban_no_ban', 'unban_success', 'untimeout_success'],
 
   /**
+   * Notice indicating that the current user is banned.
+   */
+  BanNotice: 'msg_banned',
+
+  /**
    * Extra notices not handled natively which will be outputted as is.
    */
   Extra: [

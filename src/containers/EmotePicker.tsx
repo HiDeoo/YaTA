@@ -22,14 +22,15 @@ import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'styled'
 const EmotePickerButton = styled.button<EmotePickerButtonProps>`
   background-color: initial;
   border: none;
-  cursor: pointer;
-  filter: ${ifProp('isOpen', 'none', 'grayscale(100%)')};
+  cursor: ${ifProp('disabled', 'not-allowed', 'pointer')};
+  filter: ${ifProp('disabled', 'grayscale(100%)', ifProp('isOpen', 'none', 'grayscale(100%)'))};
+  opacity: ${ifProp('disabled', 0.5, 1)};
   position: absolute;
   right: 12px;
   top: 20px;
 
   &:hover {
-    filter: none;
+    filter: ${ifProp('disabled', 'grayscale(100%)', 'none')};
   }
 `
 
@@ -164,7 +165,12 @@ class EmotePicker extends React.Component<Props, State> {
         popoverClassName="emotePickerPopover"
         minimal
       >
-        <EmotePickerButton title="Emote Picker" isOpen={visible} onMouseEnter={this.onMouseEnterButton}>
+        <EmotePickerButton
+          isOpen={visible}
+          title="Emote Picker"
+          disabled={this.props.disabled}
+          onMouseEnter={this.onMouseEnterButton}
+        >
           <img src={buttonIcon} alt="Emote Picker" />
         </EmotePickerButton>
       </Popover>
@@ -381,7 +387,7 @@ class EmotePicker extends React.Component<Props, State> {
    * Triggered when the mouse enters the emote picker button.
    */
   private onMouseEnterButton = () => {
-    if (!this.state.visible) {
+    if (!this.props.disabled && !this.state.visible) {
       this.updateButtonIcon()
     }
   }
@@ -449,6 +455,10 @@ class EmotePicker extends React.Component<Props, State> {
    * Toggles the vibility of the picker.
    */
   private toggleVisibility = (nextOpenState: boolean) => {
+    if (nextOpenState && this.props.disabled) {
+      return
+    }
+
     this.setState(
       () => ({ visible: nextOpenState, filter: '', filteredSet: [] }),
       () => {
@@ -493,6 +503,7 @@ interface StateProps {
  * React Props.
  */
 interface OwnProps {
+  disabled: boolean
   onCancel: () => void
   onPick: (emote: Emote, withShiftKey: boolean) => void
 }
@@ -506,5 +517,6 @@ type Props = StateProps & OwnProps & ThemeProps
  * React Props.
  */
 interface EmotePickerButtonProps {
+  disabled: boolean
   isOpen: boolean
 }

@@ -248,7 +248,11 @@ export class ChatClient extends React.Component<Props, State> {
 
     if (!_.isNil(error)) {
       if (error.message.includes('No response from Twitch')) {
-        return <Redirect to={Page.Home} />
+        if (this.props.banned) {
+          return null
+        } else {
+          return <Redirect to={Page.Home} />
+        }
       }
 
       throw error
@@ -913,6 +917,12 @@ export class ChatClient extends React.Component<Props, State> {
       if (!_.isNil(username)) {
         this.props.markChatterAsUnbanned(username)
       }
+    } else if (id === Notices.BanNotice) {
+      this.props.markUserAsBanned()
+
+      const notice = new Notice(`You are unable to read or participate in ${this.props.channel}'s channel until a moderator unbans you.`)
+
+      this.props.addLog(notice.serialize())
     }
   }
 
@@ -1164,7 +1174,7 @@ export class ChatClient extends React.Component<Props, State> {
   }
 }
 
-export default connect<StateProps, DispatchProps, {}, ApplicationState>(
+export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
   (state) => ({
     autoHostThreshold: getAutoHostThreshold(state),
     channel: getChannel(state),
@@ -1254,4 +1264,12 @@ interface DispatchProps {
 /**
  * React Props.
  */
-type Props = StateProps & DispatchProps
+interface OwnProps {
+  banned: boolean
+  markUserAsBanned: () => void
+}
+
+/**
+ * React Props.
+ */
+type Props = StateProps & DispatchProps & OwnProps

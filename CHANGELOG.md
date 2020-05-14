@@ -2,12 +2,13 @@
 
 ### 😢 Removed Feature
 
-- To comply with [a request from the Twitch legal team](https://twitch-tools.rootonline.de/img/twitch_legal_notice.png), the username history feature had to be removed as the service used had to take down and delete all username changelogs.
+- To comply with [a request from the Twitch legal team](https://twitch-tools.rootonline.de/img/twitch_legal_notice.png), the username history feature has been removed as the service used had to take down and delete all username changelogs.
 
 ### 🐛 Bug Fix
 
 - Upgrade BetterTTV API version to fix various issues with emotes rendering.
 - Fix an issue with unreadable mentions in action (`/me`) messages.
+- Improve messaging when joining a channel while being permanently banned.
 
 ### ⚙️ Internal
 

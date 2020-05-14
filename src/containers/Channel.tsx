@@ -108,6 +108,7 @@ const PreviewRegExp = /https?:\/\/.[\w\-/:.%+]*\.(jpg|jpeg|png|gif|gifv)/
  * React State.
  */
 const initialState = {
+  banned: false,
   focusedChatter: undefined as Optional<SerializedChatter>,
   focusedEmote: undefined as Optional<FocusedEmote>,
   inputValue: '',
@@ -231,6 +232,7 @@ class Channel extends React.Component<Props, State> {
    */
   public render() {
     const {
+      banned,
       focusedChatter,
       focusedEmote,
       isUploadingFile,
@@ -266,7 +268,7 @@ class Channel extends React.Component<Props, State> {
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
         <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
-        <Chat ref={this.chatClient} key={channel} />
+        <Chat ref={this.chatClient} key={channel} banned={banned} markUserAsBanned={this.markUserAsBanned} />
         <DropOverlay
           onSuccess={this.onUploadSuccess}
           onInvalid={this.onUploadInvalid}
@@ -317,7 +319,7 @@ class Channel extends React.Component<Props, State> {
           ban={this.ban}
         />
         <Input
-          disabled={this.props.status !== Status.Connected}
+          disabled={this.props.status !== Status.Connected || banned}
           username={_.get(loginDetails, 'username')}
           getCompletions={this.getCompletions}
           onChange={this.onChangeInputValue}
@@ -627,6 +629,13 @@ class Channel extends React.Component<Props, State> {
       // Update every 2mins.
       this.viewerCountMonitorId = window.setInterval(this.monitorViewerCount, 120000)
     }
+  }
+
+  /**
+   * Marks the current user as banned from the current channel.
+   */
+  private markUserAsBanned = () => {
+    this.setState(() => ({ banned: true }))
   }
 
   /**
