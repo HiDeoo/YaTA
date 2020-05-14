@@ -194,15 +194,20 @@ class Channel extends React.Component<Props, State> {
       }
     }
 
-    const { shouldQuickOpenPlayer: prevShouldQuickOpenPlayer, viewerCount: prevViewerCount } = prevState
-    const { shouldQuickOpenPlayer, viewerCount } = this.state
+    const {
+      banned: prevBanned,
+      shouldQuickOpenPlayer: prevShouldQuickOpenPlayer,
+      viewerCount: prevViewerCount,
+    } = prevState
+    const { banned, shouldQuickOpenPlayer, viewerCount } = this.state
 
     if (
       prevIsAutoScrollPaused !== isAutoScrollPaused ||
       prevRoomState !== roomState ||
       prevIsMod !== isMod ||
       prevViewerCount !== viewerCount ||
-      prevShouldQuickOpenPlayer !== shouldQuickOpenPlayer
+      prevShouldQuickOpenPlayer !== shouldQuickOpenPlayer ||
+      prevBanned !== banned
     ) {
       this.setHeaderComponents()
     }
@@ -403,7 +408,7 @@ class Channel extends React.Component<Props, State> {
    */
   private setHeaderComponents() {
     const { channel, isAutoScrollPaused, isMod, loginDetails, roomState } = this.props
-    const { shouldQuickOpenPlayer } = this.state
+    const { banned, shouldQuickOpenPlayer } = this.state
 
     const channelId = this.getChannelId()
 
@@ -418,9 +423,9 @@ class Channel extends React.Component<Props, State> {
           viewerCount={this.state.viewerCount}
           roomState={roomState}
         />
-        <Popover position={Position.BOTTOM} usePortal={false} autoFocus={false}>
+        <Popover position={Position.BOTTOM} usePortal={false} autoFocus={false} disabled={banned}>
           <HeaderTooltip content="Tools">
-            <Button icon="wrench" minimal />
+            <Button icon="wrench" minimal disabled={banned} />
           </HeaderTooltip>
           <Menu>
             <Menu.Divider title="Tools" />
@@ -451,7 +456,7 @@ class Channel extends React.Component<Props, State> {
             <Button onClick={this.toggleSearch} icon="search" minimal />
           </HeaderTooltip>
         )}
-        <Popover usePortal={false} disabled={shouldQuickOpenPlayer}>
+        <Popover usePortal={false} disabled={shouldQuickOpenPlayer || banned}>
           <HeaderTooltip
             content={
               <ChannelDetailsTooltip>
@@ -460,15 +465,16 @@ class Channel extends React.Component<Props, State> {
             }
           >
             <Button
-              icon={shouldQuickOpenPlayer ? 'video' : 'eye-open'}
               minimal
+              disabled={banned}
+              icon={shouldQuickOpenPlayer ? 'video' : 'eye-open'}
               onClick={shouldQuickOpenPlayer ? this.openVideoPlayer : undefined}
             />
           </HeaderTooltip>
           {!_.isNil(channel) && !_.isNil(channelId) && <ChannelDetails id={channelId} name={channel} />}
         </Popover>
         <HeaderTooltip content="Chatters List">
-          <Button onClick={this.toggleChatters} icon="people" minimal />
+          <Button onClick={this.toggleChatters} icon="people" minimal disabled={banned} />
         </HeaderTooltip>
         <NavbarDivider />
       </>
