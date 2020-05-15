@@ -11,6 +11,13 @@ import styled from 'styled'
 import { reportError } from 'utils/bugs'
 
 /**
+ * Wrapper component.
+ */
+const Wrapper = styled.div`
+  height: 100vh;
+`
+
+/**
  * Extra component.
  */
 const Extra = styled.div`
@@ -69,7 +76,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     if (hasError) {
       return (
-        <>
+        <Wrapper>
           <NonIdealState
             details="Try reloading the application."
             extra={
@@ -79,7 +86,7 @@ class ErrorBoundary extends React.Component<Props, State> {
               </Extra>
             }
           />
-        </>
+        </Wrapper>
       )
     }
 
