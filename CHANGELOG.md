@@ -7,6 +7,7 @@
 ### 🚀 New Feature
 
 - Moderators can now quickly open a Twitch viewer card by middle-clicking a username in chat.
+- You can now open the mod view if you are a moderator of a channel from the Tools menu.
 
 ### 🐛 Bug Fix
 

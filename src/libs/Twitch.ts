@@ -178,6 +178,18 @@ export default class Twitch {
   }
 
   /**
+   * Opens the Twitch mod view of a specific channel.
+   * @param channel - The channel.
+   */
+  public static async openModView(channel: string) {
+    window.open(
+      `https://www.twitch.tv/moderator/${channel}`,
+      'twitchModViewPopupWindow',
+      'height=800,width=1200'
+    )
+  }
+
+  /**
    * Opens the video player of a specific channel.
    * @param channel - The channel.
    */
