@@ -4,6 +4,10 @@
 
 - To comply with [a request from the Twitch legal team](https://twitch-tools.rootonline.de/img/twitch_legal_notice.png), the username history feature has been removed as the service used had to take down and delete all username changelogs.
 
+### 🚀 New Feature
+
+- Moderators can now quickly open a Twitch viewer card by middle-clicking a username in chat.
+
 ### 🐛 Bug Fix
 
 - Upgrade BetterTTV API version to fix various issues with emotes rendering.

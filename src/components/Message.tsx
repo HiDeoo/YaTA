@@ -218,7 +218,7 @@ export default class Message extends React.Component<Props, State> {
         {this.renderContextMenu()}
         <Time>{message.time} </Time>
         {this.renderBadges()}
-        <Name color={usernameColor} onClick={this.onClickUsername}>
+        <Name color={usernameColor} onClick={this.onClickUsername} onMouseDown={this.onMouseDownUsername}>
           {message.user.displayName}
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
@@ -394,6 +394,17 @@ export default class Message extends React.Component<Props, State> {
   }
 
   /**
+   * Triggered when mouse down event is detected on a username.
+   */
+  private onMouseDownUsername = (event: React.MouseEvent<HTMLSpanElement>) => {
+    const { message, openTwitchViewerCard } = this.props
+
+    if (event.button === 1) {
+      openTwitchViewerCard(message.user)
+    }
+  }
+
+  /**
    * Copy the message to the clipboard.
    */
   private copyMessage = () => {
@@ -521,6 +532,7 @@ interface Props {
   message: SerializedMessage
   onClick: (id: string) => void
   onToggleContextMenu: (open: boolean) => void
+  openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   quoteMessage: (message: SerializedMessage) => void
   showContextMenu: boolean
   showUnbanContextMenuItem: boolean

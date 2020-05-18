@@ -532,13 +532,9 @@ class ChatterDetails extends React.Component<Props, State> {
    * Triggered when the Twitch viewer card button is clicked.
    */
   private onClickTwitchViewerCard = () => {
-    const { channel, chatter } = this.props
+    const { chatter, openTwitchViewerCard } = this.props
 
-    if (_.isNil(channel) || _.isNil(chatter)) {
-      return
-    }
-
-    Twitch.openViewerCard(channel, chatter.userName)
+    openTwitchViewerCard(chatter)
   }
 
   /**
@@ -719,6 +715,7 @@ interface OwnProps {
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
   follow: (targetId: string) => void
+  openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
   unblock: (targetId: string) => void

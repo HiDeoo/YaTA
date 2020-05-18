@@ -201,6 +201,7 @@ export class Logs extends React.Component<Props> {
       focusEmote,
       increaseTwitchHighlight,
       markNewAsUnread,
+      openTwitchViewerCard,
       quoteMessage,
       showContextMenu,
       timeout,
@@ -220,6 +221,7 @@ export class Logs extends React.Component<Props> {
           increaseTwitchHighlight={increaseTwitchHighlight}
           copyMessageToClipboard={copyMessageToClipboard}
           onToggleContextMenu={this.onToggleContextMenu}
+          openTwitchViewerCard={openTwitchViewerCard}
           showUnbanContextMenuItem={isBanned}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
@@ -293,6 +295,7 @@ interface Props extends ThemeProps {
   logs: Log[]
   markAsRead: (id: string) => void
   markNewAsUnread: boolean
+  openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number
   quoteMessage: (message: SerializedMessage) => void

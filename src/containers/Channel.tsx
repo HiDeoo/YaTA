@@ -301,6 +301,7 @@ class Channel extends React.Component<Props, State> {
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           increaseTwitchHighlight={increaseTwitchHighlight}
+          openTwitchViewerCard={this.openTwitchViewerCard}
           pauseAutoScroll={this.props.pauseAutoScroll}
           scrollToNewestLog={this.scrollToNewestLog}
           copyToClipboard={this.copyToClipboard}
@@ -337,6 +338,7 @@ class Channel extends React.Component<Props, State> {
         <ChatterDetails
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
+          openTwitchViewerCard={this.openTwitchViewerCard}
           actionHandler={this.handleAction}
           canModerate={this.canModerate}
           unfocus={this.unfocusChatter}
@@ -693,6 +695,17 @@ class Channel extends React.Component<Props, State> {
           requestAnimationFrame(this.scrollToNewestLog)
         }
       }
+    }
+  }
+
+  /**
+   * Opens the viewer card for a specific user.
+   */
+  openTwitchViewerCard = (user: Optional<SerializedChatter>) => {
+    const { channel } = this.props
+
+    if (!_.isNil(channel) && !_.isNil(user) && this.canModerate(user)) {
+      Twitch.openViewerCard(channel, user.userName)
     }
   }
 
