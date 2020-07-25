@@ -182,11 +182,7 @@ export default class Twitch {
    * @param channel - The channel.
    */
   public static async openModView(channel: string) {
-    window.open(
-      `https://www.twitch.tv/moderator/${channel}`,
-      'twitchModViewPopupWindow',
-      'height=800,width=1200'
-    )
+    window.open(`https://www.twitch.tv/moderator/${channel}`, 'twitchModViewPopupWindow', 'height=800,width=1200')
   }
 
   /**
@@ -194,7 +190,11 @@ export default class Twitch {
    * @param channel - The channel.
    */
   public static openVideoPlayer(channel: string) {
-    window.open(`https://player.twitch.tv/?muted=false&channel=${channel}&parent=yata.now.sh`, 'videoPopupWindow', 'height=360,width=600')
+    window.open(
+      `https://player.twitch.tv/?muted=false&channel=${channel}&parent=yata.now.sh`,
+      'videoPopupWindow',
+      'height=360,width=600'
+    )
   }
 
   /**
