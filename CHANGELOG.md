@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- Fix an issue preventing to open the channel video player.
+
 # 1.14.0
 
 ### 😢 Removed Feature
