@@ -120,7 +120,7 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    * @return `true` when the id matches a fixed width emote.
    */
   private static isFixedWidthEmote(id: string | number): id is keyof typeof EmotesWidthsMap {
-    return id in TwitchRegExpEmotesMap
+    return id in EmotesWidthsMap
   }
 
   private urlCompiledTemplate: Optional<_.TemplateExecutor>
