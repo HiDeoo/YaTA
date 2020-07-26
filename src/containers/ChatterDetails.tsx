@@ -226,8 +226,7 @@ class ChatterDetails extends React.Component<Props, State> {
         let id: string
 
         if (chatter.isSelf) {
-          const user = await Twitch.fetchAuthenticatedUser()
-          id = user._id
+          id = Twitch.getAuthenticatedUserId()
         } else {
           id = chatter.id
         }

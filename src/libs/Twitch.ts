@@ -214,17 +214,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches details about a specific user.
-   * @param  userId - The user id.
-   * @return The user details.
-   */
-  public static async fetchUser(userId: string): Promise<RawUser> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${userId}`)
-
-    return response.json()
-  }
-
-  /**
    * Fetches details about a specific user using its name.
    * @param  name - The user name.
    * @return The user details.
@@ -605,16 +594,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches details about the current authenticated user.
-   * @return The user details.
-   */
-  public static async fetchAuthenticatedUser(): Promise<AuthenticatedUserDetails> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, '/user', undefined, true)
-
-    return response.json()
-  }
-
-  /**
    * Blocks a user.
    * @param  targetId - The id of the user to block.
    * @return The blocked user.
@@ -700,6 +679,18 @@ export default class Twitch {
 
   private static token: string | null
   private static userId: string | null
+
+  /**
+   * Returns the ID of the current authenticated user.
+   * @return The user ID.
+   */
+  public static getAuthenticatedUserId(): string {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('No user ID found.')
+    }
+
+    return Twitch.userId
+  }
 
   /**
    * Returns the URL for a request.
@@ -841,20 +832,6 @@ export type RawBadge = {
 }
 
 /**
- * Twitch user details.
- */
-export type RawUser = {
-  bio: string | null
-  created_at: string
-  display_name: string
-  logo: string
-  name: string
-  type: string
-  updated_at: string
-  _id: string
-}
-
-/**
  * Twitch user details returned by the Helix API.
  */
 export type RawHelixUser = {
@@ -896,16 +873,6 @@ export type RawChannel = {
   description: string
   private_video: boolean
   privacy_options_enabled: boolean
-}
-
-/**
- * Twitch authenticated user details.
- */
-export interface AuthenticatedUserDetails extends RawUser {
-  email: string
-  email_verified: boolean
-  partnered: boolean
-  twitter_connected: boolean
 }
 
 /**
