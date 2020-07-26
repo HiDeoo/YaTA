@@ -60,6 +60,12 @@ export default {
     padding: 10,
     width: 344,
   },
+  external: {
+    thumbnail: {
+      height: 45,
+      width: 80,
+    },
+  },
   follow: {
     background: 'rgba(219, 55, 55, 0.05)',
     border: 'rgba(219, 55, 55, 0.4)',
@@ -112,6 +118,12 @@ export default {
   player: {
     height: 282,
     width: 500,
+  },
+  previews: {
+    thumbnail: {
+      height: 46,
+      width: 80,
+    },
   },
   settings: {
     height: 550,

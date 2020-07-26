@@ -10,7 +10,7 @@ import ExternalResource, { Resource, ResourceType } from 'components/ExternalRes
 import NonIdealState from 'components/NonIdealState'
 import Spinner from 'components/Spinner'
 import Twitch, { ClipPeriod } from 'libs/Twitch'
-import styled, { theme } from 'styled'
+import styled, { theme, ThemeProps, withTheme } from 'styled'
 
 /**
  * ChannelDetailsVideo component.
@@ -30,7 +30,7 @@ type State = Readonly<typeof initialState>
 /**
  * ChannelDetailsVideos Component.
  */
-export default class ChannelDetailsVideos extends React.Component<IPanelProps & ChannelDetailsProps & Props, State> {
+class ChannelDetailsVideos extends React.Component<IPanelProps & ChannelDetailsProps & Props & ThemeProps, State> {
   public state: State = initialState
 
   /**
@@ -41,16 +41,19 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
 
     try {
       if (type === ChannelDetailsType.LastVods) {
-        const { videos } = await Twitch.fetchChannelVideos(id, 10)
+        const videos = await Twitch.fetchChannelVideos(id, 10)
 
         const parsedVideos = _.map(videos, (video) => ({
-          id: video._id,
-          meta: `${new Date(video.created_at).toLocaleDateString()} - ${video.views.toLocaleString()} ${pluralize(
+          id: video.id,
+          meta: `${new Date(video.created_at).toLocaleDateString()} - ${video.view_count.toLocaleString()} ${pluralize(
             'views',
-            video.views
+            video.view_count
           )}`,
           text: video.title,
-          thumbnail: video.preview.small,
+          thumbnail: Twitch.getTwitchTemplatedUrl(video.thumbnail_url, {
+            width: this.props.theme.external.thumbnail.width.toString(),
+            height: this.props.theme.external.thumbnail.height.toString(),
+          }),
           type: ResourceType.Vod,
           url: video.url,
         }))
@@ -110,6 +113,8 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
     )
   }
 }
+
+export default withTheme(ChannelDetailsVideos)
 
 /**
  * React Props.

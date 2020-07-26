@@ -69,6 +69,12 @@ export default interface ITheme {
     padding: number
     width: number
   }
+  external: {
+    thumbnail: {
+      height: number
+      width: number
+    }
+  }
   follow: {
     background: string
     border: string
@@ -163,6 +169,10 @@ export default interface ITheme {
   }
   previews: {
     meta: string
+    thumbnail: {
+      height: number
+      width: number
+    }
   }
   resource: {
     divider: string

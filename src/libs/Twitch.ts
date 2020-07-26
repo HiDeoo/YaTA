@@ -21,6 +21,7 @@ enum TwitchApi {
  * Twitch broadcast type.
  */
 export enum BroadcastType {
+  All = 'all',
   Archive = 'archive',
   Highlight = 'highlight',
   Upload = 'upload',
@@ -139,6 +140,23 @@ export default class Twitch {
     }
 
     return channel
+  }
+
+  /**
+   * Returns an URL based on a URL template returned by Twitch.
+   * @param  templateUrl - The URL template.
+   * @param  params - An object describing the key & associated values for each template segments.
+   * @return The transformed URL.
+   */
+  public static getTwitchTemplatedUrl(templateUrl: string, params: Record<string, string>): string {
+    let url = templateUrl
+
+    _.forEach(params, (value, key) => {
+      const regExp = new RegExp(`%{${key}}`, 'g')
+      url = url.replace(regExp, value)
+    })
+
+    return url
   }
 
   /**
@@ -394,15 +412,20 @@ export default class Twitch {
     channelId: string,
     limit = 10,
     type = BroadcastType.Archive
-  ): Promise<RawVideos> {
-    const params = {
-      broadcast_type: type,
-      limit: limit.toString(),
-    }
+  ): Promise<RawVideo[]> {
+    const response = await Twitch.fetch(
+      TwitchApi.Helix,
+      '/videos',
+      {
+        first: limit.toString(),
+        type,
+        user_id: channelId,
+      },
+      true,
+      RequestMethod.Get
+    )
 
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}/videos`, params)
-
-    return response.json()
+    return (await response.json()).data
   }
 
   /**
@@ -466,9 +489,17 @@ export default class Twitch {
    * @return The video details.
    */
   public static async fetchVideo(videoId: string): Promise<RawVideo> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/videos/${videoId}`)
+    const response = await Twitch.fetch(
+      TwitchApi.Helix,
+      '/videos',
+      {
+        id: videoId,
+      },
+      true,
+      RequestMethod.Get
+    )
 
-    return response.json()
+    return (await response.json()).data[0]
   }
 
   /**
@@ -1042,40 +1073,23 @@ type RawCheermoteTier = {
 }
 
 /**
- * Twitch videos.
- */
-export type RawVideos = {
-  videos: RawVideo[]
-  _total: number
-}
-
-/**
  * Twitch video.
  */
 export type RawVideo = {
-  animated_preview_url: string
-  broadcast_id: number
-  broadcast_type: BroadcastType
-  channel: RawChannel
-  communities: string[]
-  created_at: string
-  description: string | null
-  description_html: string | null
-  game: string
-  language: string
-  length: number
-  preview: RawPreview
-  published_at: string
-  recorded_at: string
-  restriction: string
-  status: string
-  tag_list: string
+  id: string
+  user_id: string
+  user_name: string
   title: string
+  description: string
+  created_at: string
+  published_at: string
   url: string
-  viewable: string
-  viewable_at: string | null
-  views: number
-  _id: string
+  thumbnail_url: string
+  viewable: 'public' | 'private'
+  view_count: number
+  language: string
+  type: Exclude<BroadcastType, BroadcastType.All>
+  duration: string
 }
 
 /**

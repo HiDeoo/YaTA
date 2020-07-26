@@ -1,11 +1,11 @@
-import { Text } from '@blueprintjs/core'
+import { Colors, Icon, Text } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'
 import Player from 'libs/Player'
-import styled, { ifProp, theme } from 'styled'
+import styled, { ifProp, size, theme } from 'styled'
 
 /**
  * Wrapper component.
@@ -55,9 +55,22 @@ const Meta = styled(Text).attrs({
  */
 const Thumbnail = styled.img`
   display: inline-block;
-  height: 45px;
+  height: ${size('external.thumbnail.height')};
   margin-right: 10px;
-  width: 80px;
+  width: ${size('external.thumbnail.width')};
+`
+
+/**
+ * EmptyThumbnail component.
+ */
+const EmptyThumbnail = styled.div`
+  align-items: center;
+  background-color: ${Colors.GRAY1};
+  display: flex;
+  height: ${size('external.thumbnail.height')};
+  justify-content: center;
+  margin-right: 10px;
+  width: ${size('external.thumbnail.width')};
 `
 
 /**
@@ -100,7 +113,12 @@ export default class ExternalResource extends React.Component<Props> {
       <>
         <Wrapper link={!_.isNil(url)} onClick={this.onClick} {...restProps}>
           <FlexLayout>
-            {!_.isNil(thumbnail) && <Thumbnail src={thumbnail} />}
+            {!_.isNil(thumbnail) && !_.isEmpty(thumbnail) && <Thumbnail src={thumbnail} />}
+            {!_.isNil(thumbnail) && _.isEmpty(thumbnail) && (
+              <EmptyThumbnail>
+                <Icon icon="play" iconSize={28} color={Colors.GRAY5} />
+              </EmptyThumbnail>
+            )}
             <Content>
               <Text ellipsize>{text}</Text>
               {!_.isNil(meta) && <Meta>{meta}</Meta>}

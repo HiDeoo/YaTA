@@ -3,6 +3,7 @@ import pluralize from 'pluralize'
 
 import { Preview, PreviewProvider, Previews, UnresolvedPreview } from 'libs/PreviewProvider'
 import Twitch from 'libs/Twitch'
+import base from 'styled/base'
 
 /**
  * Preview types.
@@ -93,13 +94,16 @@ const PreviewTwitch: PreviewProvider = class {
     } else if (preview.type === TwitchPreviewType.Video) {
       const video = await Twitch.fetchVideo(preview.id)
 
-      const meta = `Recorded by ${video.channel.display_name} on ${new Date(
+      const meta = `Recorded by ${video.user_name} on ${new Date(
         video.created_at
-      ).toLocaleDateString()} (${video.views.toLocaleString()} ${pluralize('view', video.views)})`
+      ).toLocaleDateString()} (${video.view_count.toLocaleString()} ${pluralize('view', video.view_count)})`
 
       return {
         ...preview,
-        image: video.preview.small,
+        image: Twitch.getTwitchTemplatedUrl(video.thumbnail_url, {
+          width: base.previews.thumbnail.width.toString(),
+          height: base.previews.thumbnail.height.toString(),
+        }),
         meta,
         resolved: true,
         title: video.title,
