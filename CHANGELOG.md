@@ -2,7 +2,7 @@
 
 ### 🐛 Bug Fix
 
-- Fix an issue preventing to open the channel video player.
+- Fix an issue preventing to open the channel video player or preview clips.
 - Ensure emotes larger than the default allowed width are displayed properly.
 
 ### ⚙️ Internal
