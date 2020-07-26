@@ -7,7 +7,7 @@
 
 ### ⚙️ Internal
 
-- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained).
+- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained). We are down to 8 API calls still relying on the forever deprecated but still working Twitch v5 API that cannot be updated yet due to total lack of some endpoints / informations in the new Twitch API.
 
 # 1.14.0
 
