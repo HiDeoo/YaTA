@@ -414,8 +414,16 @@ export default class Twitch {
    * @param channelId - The id of the channel.
    * @return The cheermotes.
    */
-  public static async fetchCheermotes(channelId: string): Promise<{ actions: RawCheermote[] }> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, '/bits/actions', { channel_id: channelId })
+  public static async fetchCheermotes(channelId: string): Promise<{ data: RawCheermote[] }> {
+    const response = await Twitch.fetch(
+      TwitchApi.Helix,
+      '/bits/cheermotes',
+      {
+        broadcaster_id: channelId,
+      },
+      true,
+      RequestMethod.Get
+    )
 
     return response.json()
   }
@@ -1024,13 +1032,12 @@ export type RawStream = {
  * Twitch Cheermote.
  */
 export type RawCheermote = {
-  background: string[]
+  is_charitable: boolean
+  last_updated: string
+  order: number
   prefix: string
-  priority: number
-  scales: string[]
   tiers: RawCheermoteTier[]
-  type: string
-  updated_at: string
+  type: 'global_first_party' | 'global_third_party' | 'channel_custom' | 'display_only' | 'sponsored'
 }
 
 /**
@@ -1042,6 +1049,7 @@ type RawCheermoteTier = {
   id: string
   images: Record<CheermoteImageBackground, RawCheermoteImages>
   min_bits: number
+  show_in_bits_card: boolean
 }
 
 /**
