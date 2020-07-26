@@ -80,7 +80,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_read user_blocks_edit clips:edit user_follows_edit channel_editor channel:edit:commercial user_subscriptions',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_read user_blocks_edit clips:edit user:edit:follows channel_editor channel:edit:commercial user_subscriptions',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -641,18 +641,23 @@ export default class Twitch {
    * Follows a channel.
    * @param  targetId - The id of the channel to follow.
    * @param  withNotifications - `true` to get notifications when the channel goes live.
-   * @return The follow action.
    */
-  public static async followChannel(targetId: string, withNotifications = true): Promise<RawFollowing> {
-    const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/follows/channels/${targetId}`,
-      { notifications: withNotifications ? 'true' : 'false' },
-      true,
-      RequestMethod.Put
-    )
+  public static async followChannel(targetId: string, withNotifications = true) {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing user id to follow channel.')
+    }
 
-    return response.json()
+    return Twitch.fetch(
+      TwitchApi.Helix,
+      '/users/follows',
+      {
+        allow_notifications: withNotifications ? 'true' : 'false',
+        from_id: Twitch.userId,
+        to_id: targetId,
+      },
+      true,
+      RequestMethod.Post
+    )
   }
 
   /**
@@ -660,10 +665,17 @@ export default class Twitch {
    * @param  targetId - The id of the channel to unfollow.
    */
   public static async unfollowChannel(targetId: string) {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing user id to unfollow channel.')
+    }
+
     return Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/follows/channels/${targetId}`,
-      undefined,
+      TwitchApi.Helix,
+      '/users/follows',
+      {
+        from_id: Twitch.userId,
+        to_id: targetId,
+      },
       true,
       RequestMethod.Delete
     )
@@ -876,15 +888,6 @@ export type RawChannel = {
   description: string
   private_video: boolean
   privacy_options_enabled: boolean
-}
-
-/**
- * Twitch follow response.
- */
-type RawFollowing = {
-  channel: RawChannel
-  created_at: string
-  notifications: boolean
 }
 
 /**
