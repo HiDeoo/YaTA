@@ -9,13 +9,13 @@ import ExternalLink from 'components/ExternalLink'
 import NonIdealState from 'components/NonIdealState'
 import Spinner from 'components/Spinner'
 import { BroadcasterSectionProps } from 'containers/BroadcasterOverlay'
-import Twitch, { RawGame, RawNotification } from 'libs/Twitch'
+import Twitch, { RawCategory, RawNotification } from 'libs/Twitch'
 import styled, { theme } from 'styled'
 
 /**
- * Game suggest component.
+ * Category suggest component.
  */
-const GameSuggest = Suggest.ofType<RawGame>()
+const CategorySuggest = Suggest.ofType<RawCategory>()
 
 /**
  * InfoInput component.
@@ -27,16 +27,16 @@ const InfoInput = styled(InputGroup)`
 `
 
 /**
- * GameFormGroup component.
+ * CategoryFormGroup component.
  */
-const GameFormGroup = styled(FormGroup)`
+const CategoryFormGroup = styled(FormGroup)`
   width: 100%;
 `
 
 /**
- * GameInput component.
+ * CategoryInput component.
  */
-const GameInput = styled(GameSuggest)`
+const CategoryInput = styled(CategorySuggest)`
   width: 100%;
 
   & > span {
@@ -61,9 +61,9 @@ const GameInput = styled(GameSuggest)`
 `
 
 /**
- * GameMenuItem component.
+ * CategoryMenuItem component.
  */
-const GameMenuItem = styled(Menu.Item)`
+const CategoryMenuItem = styled(Menu.Item)`
   &.${Classes.MENU_ITEM} {
     align-items: center;
   }
@@ -86,7 +86,7 @@ const UpdateButton = styled(Button)`
  * Various controlled inputs.
  */
 enum Input {
-  Game = 'game',
+  Category = 'category',
   Notification = 'notification',
   Title = 'title',
 }
@@ -104,12 +104,12 @@ const InputMaxLengths = {
  */
 const initialState = {
   didFail: false,
-  games: null as RawGame[] | null,
+  categories: null as RawCategory[] | null,
   isModified: false,
   isReady: false,
   isUpdating: false,
   liveNotification: undefined as Optional<RawNotification>,
-  [Input.Game]: '',
+  [Input.Category]: '',
   [Input.Notification]: '',
   [Input.Title]: '',
 }
@@ -120,8 +120,8 @@ type State = Readonly<typeof initialState>
  */
 export default class BroadcasterInformations extends React.Component<BroadcasterSectionProps, State> {
   public state: State = initialState
-  private lastGameQuery = ''
-  private lastGameSearchController: AbortController | null = null
+  private lastCategoryQuery = ''
+  private lastCategorySearchController: AbortController | null = null
 
   /**
    * Lifecycle: componentDidMount.
@@ -136,7 +136,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         didFail: false,
         isReady: true,
         liveNotification,
-        [Input.Game]: channel.game || '',
+        [Input.Category]: channel.game || '',
         [Input.Notification]: liveNotification.message || '',
         [Input.Title]: channel.status || '',
       }))
@@ -152,11 +152,11 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   public render() {
     const {
       didFail,
-      games,
+      categories,
       isModified,
       isUpdating,
       isReady,
-      [Input.Game]: game,
+      [Input.Category]: category,
       [Input.Notification]: notification,
       [Input.Title]: title,
     } = this.state
@@ -177,29 +177,29 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
             id="title"
           />
         </FormGroup>
-        <GameFormGroup label="Game / Category" labelFor="game" disabled={isUpdating}>
-          <GameInput
+        <CategoryFormGroup label="Game / Category" labelFor="category" disabled={isUpdating}>
+          <CategoryInput
             initialContent={<Menu.Item disabled text="Search for a new game or category…" />}
             // Note: we use the placeholder to display the previous value until the initial value can be defined.
             // @see https://github.com/palantir/blueprint/issues/2784
-            inputProps={{ id: 'game', placeholder: game, disabled: isUpdating }}
-            inputValueRenderer={this.gameValueRenderer}
-            onItemSelect={this.onSelectGame}
-            onQueryChange={this.onChangeGameQuery}
-            itemRenderer={this.gameRenderer}
+            inputProps={{ id: 'category', placeholder: category, disabled: isUpdating }}
+            inputValueRenderer={this.categoryValueRenderer}
+            onItemSelect={this.onSelectCategory}
+            onQueryChange={this.onChangeCategoryQuery}
+            itemRenderer={this.categoryRenderer}
             popoverProps={{ minimal: true }}
-            items={games || []}
+            items={categories || []}
             resetOnSelect
             openOnKeyDown
             noResults={
-              _.isNil(games) ? (
+              _.isNil(categories) ? (
                 <Menu.Item disabled text="No results." />
               ) : (
                 <Menu.Item disabled text={<Spinner small />} />
               )
             }
           />
-        </GameFormGroup>
+        </CategoryFormGroup>
         <FormGroup
           labelInfo={this.getInputLabelInfo(Input.Notification)}
           helperText={this.renderHelperDashoardLink()}
@@ -235,61 +235,61 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   }
 
   /**
-   * Render a game suggestion input value.
+   * Render a category suggestion input value.
    * @return Value to render.
    */
-  private gameValueRenderer = (game: RawGame) => {
-    return game.name
+  private categoryValueRenderer = (category: RawCategory) => {
+    return category.name
   }
 
   /**
-   * Renders a game suggestion.
+   * Renders a category suggestion.
    * @return Element to render.
    */
-  private gameRenderer: ItemRenderer<RawGame> = (game, { handleClick, modifiers }) => {
+  private categoryRenderer: ItemRenderer<RawCategory> = (category, { handleClick, modifiers }) => {
     if (!modifiers.matchesPredicate) {
       return null
     }
 
     return (
-      <GameMenuItem
-        labelElement={<img src={game.box.small} alt={`${game.name} cover`} />}
+      <CategoryMenuItem
+        labelElement={<img src={category.box_art_url} alt={`${category.name} cover`} />}
         disabled={modifiers.disabled}
         active={modifiers.active}
         onClick={handleClick}
-        text={game.name}
-        key={game._id}
+        text={category.name}
+        key={category.id}
       />
     )
   }
 
   /**
-   * Triggered when the game query is modified.
+   * Triggered when the category query is modified.
    * @param query - The new query.
    */
-  private onChangeGameQuery = async (query: string) => {
-    if (query === this.lastGameQuery) {
+  private onChangeCategoryQuery = async (query: string) => {
+    if (query === this.lastCategoryQuery) {
       return
     }
 
-    this.lastGameQuery = query
+    this.lastCategoryQuery = query
 
-    this.setState(() => ({ games: [] }))
+    this.setState(() => ({ categories: [] }))
 
     if (query.length > 0) {
       try {
-        if (!_.isNil(this.lastGameSearchController)) {
-          this.lastGameSearchController.abort()
-          this.lastGameSearchController = null
+        if (!_.isNil(this.lastCategorySearchController)) {
+          this.lastCategorySearchController.abort()
+          this.lastCategorySearchController = null
         }
 
-        this.lastGameSearchController = new AbortController()
+        this.lastCategorySearchController = new AbortController()
 
-        const { games } = await Twitch.searchGames(query, this.lastGameSearchController.signal)
+        const categories = await Twitch.searchCategories(query, this.lastCategorySearchController.signal)
 
-        this.lastGameSearchController = null
+        this.lastCategorySearchController = null
 
-        this.setState(() => ({ games }))
+        this.setState(() => ({ categories }))
       } catch {
         //
       }
@@ -297,11 +297,11 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   }
 
   /**
-   * Triggered when a game is selected.
-   * @param game - The selected game.
+   * Triggered when a category is selected.
+   * @param category - The selected category.
    */
-  private onSelectGame = (game: RawGame) => {
-    this.setState(({ title }) => this.getModificationsState(title, game.name))
+  private onSelectCategory = (category: RawCategory) => {
+    this.setState(({ title }) => this.getModificationsState(title, category.name))
   }
 
   /**
@@ -309,21 +309,21 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
    */
   private onClickUpdate = async () => {
     const { channelId } = this.props
-    const { game, title } = this.state
+    const { category, title } = this.state
 
-    if (_.isNil(channelId) || _.isNil(title) || _.isNil(game)) {
+    if (_.isNil(channelId) || _.isNil(title) || _.isNil(category)) {
       return
     }
 
     try {
       this.setState(() => ({ isUpdating: true }))
 
-      const channel = await Twitch.updateChannel(channelId, title, game)
+      const channel = await Twitch.updateChannel(channelId, title, category)
 
       this.setState(() => ({
         isModified: false,
         isUpdating: false,
-        [Input.Game]: channel.game || '',
+        [Input.Category]: channel.game || '',
         [Input.Title]: channel.status || '',
       }))
     } catch {
@@ -338,7 +338,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   private onChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     const title = event.currentTarget.value
 
-    this.setState(({ game }) => this.getModificationsState(title, game))
+    this.setState(({ category }) => this.getModificationsState(title, category))
   }
 
   /**
@@ -354,15 +354,15 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   /**
    * Returns the state after modifying values.
    * @param  title - The stream title.
-   * @param  game - The stream game.
+   * @param  category - The stream category.
    * @return The modified state.
    */
-  private getModificationsState(title: string, game: string) {
+  private getModificationsState(title: string, category: string) {
     const sanitizedTitle = title.substring(0, InputMaxLengths[Input.Title])
 
     const { channel } = this.props
-    const isModified = (!_.isNil(channel) && channel.status !== title) || (!_.isNil(channel) && channel.game !== game)
+    const isModified = (!_.isNil(channel) && channel.status !== title) || (!_.isNil(channel) && channel.game !== category)
 
-    return { isModified, [Input.Game]: game, [Input.Title]: sanitizedTitle }
+    return { isModified, [Input.Category]: category, [Input.Title]: sanitizedTitle }
   }
 }

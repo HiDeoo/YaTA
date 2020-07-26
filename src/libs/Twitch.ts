@@ -316,23 +316,21 @@ export default class Twitch {
   }
 
   /**
-   * Searches for games.
+   * Searches for a game / category.
    * @param  query - The query to use for the search.
    * @param  [signal] - A signal to abort the search if necessary.
    * @return The results.
    */
-  public static async searchGames(query: string, signal?: AbortSignal): Promise<RawGames> {
+  public static async searchCategories(query: string, signal?: AbortSignal): Promise<RawCategory[]> {
     const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      '/search/games',
+      TwitchApi.Helix,
+      '/search/categories',
       { query },
-      false,
-      RequestMethod.Get,
-      undefined,
-      signal
+      true,
+      RequestMethod.Get
     )
 
-    return response.json()
+    return (await response.json()).data
   }
 
   /**
@@ -1112,24 +1110,12 @@ export type RawNotification = {
 }
 
 /**
- * Twitch games & categories.
+ * Twitch category.
  */
-export type RawGames = {
-  games: RawGame[] | null
-}
-
-/**
- * Twitch game or category.
- */
-export type RawGame = {
-  box: RawPreview
-  giantbomb_id: number
-  locale: string
-  localized_name: string
-  logo: RawPreview
+export type RawCategory = {
+  box_art_url: string
+  id: string
   name: string
-  popularity: number
-  _id: number
 }
 
 /**
