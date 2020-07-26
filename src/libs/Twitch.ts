@@ -80,7 +80,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows channel_editor channel:edit:commercial user_subscriptions',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -242,25 +242,37 @@ export default class Twitch {
   }
 
   /**
-   * Updates a channel.
-   * @param  channelId - The id of the channel to update.
-   * @param  title - The channel status / title.
-   * @param  game - The channel game.
-   * @return The updated channel.
+   * Fetches informations about a channel.
+   * @param  channelId - The channel id.
+   * @return The channel informations.
    */
-  public static async updateChannel(channelId: string, title: string, game: string): Promise<RawChannel> {
+  public static async fetchChannelInformations(channelId: string): Promise<RawChannelInformations> {
     const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/channels/${channelId}`,
-      undefined,
+      TwitchApi.Helix,
+      '/channels',
+      { broadcaster_id: channelId },
       true,
-      RequestMethod.Put,
-      {
-        channel: { game, status: title },
-      }
+      RequestMethod.Get
     )
 
-    return response.json()
+    return (await response.json()).data[0]
+  }
+
+  /**
+   * Updates a channel informations.
+   * @param  channelId - The id of the channel to update.
+   * @param  title - The channel status / title.
+   * @param  categoryId - The channel category ID.
+   * @return The updated channel.
+   */
+  public static async updateChannelInformations(channelId: string, title: string, categoryId: string) {
+    return Twitch.fetch(
+      TwitchApi.Helix,
+      '/channels',
+      { broadcaster_id: channelId, game_id: categoryId, title },
+      true,
+      RequestMethod.Patch
+    )
   }
 
   /**
@@ -322,13 +334,7 @@ export default class Twitch {
    * @return The results.
    */
   public static async searchCategories(query: string, signal?: AbortSignal): Promise<RawCategory[]> {
-    const response = await Twitch.fetch(
-      TwitchApi.Helix,
-      '/search/categories',
-      { query },
-      true,
-      RequestMethod.Get
-    )
+    const response = await Twitch.fetch(TwitchApi.Helix, '/search/categories', { query }, true, RequestMethod.Get)
 
     return (await response.json()).data
   }
@@ -871,6 +877,18 @@ export type RawChannel = {
   description: string
   private_video: boolean
   privacy_options_enabled: boolean
+}
+
+/**
+ * Twitch channel informations.
+ */
+export type RawChannelInformations = {
+  broadcaster_id: string
+  broadcaster_name: string
+  broadcaster_language: string
+  game_id: string
+  game_name: string
+  title: string
 }
 
 /**

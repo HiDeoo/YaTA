@@ -109,7 +109,7 @@ const initialState = {
   isReady: false,
   isUpdating: false,
   liveNotification: undefined as Optional<RawNotification>,
-  [Input.Category]: '',
+  [Input.Category]: undefined as Optional<Omit<RawCategory, 'box_art_url'>>,
   [Input.Notification]: '',
   [Input.Title]: '',
 }
@@ -130,13 +130,18 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
     try {
       const { channel, channelId } = this.props
 
-      const liveNotification = await Twitch.fetchChannelLiveNotification(channelId)
+      const response = await Promise.all([
+        Twitch.fetchChannelInformations(channelId),
+        Twitch.fetchChannelLiveNotification(channelId),
+      ])
+
+      const [informations, liveNotification] = response
 
       this.setState(() => ({
         didFail: false,
         isReady: true,
         liveNotification,
-        [Input.Category]: channel.game || '',
+        [Input.Category]: { id: informations.game_id, name: informations.game_name },
         [Input.Notification]: liveNotification.message || '',
         [Input.Title]: channel.status || '',
       }))
@@ -182,7 +187,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
             initialContent={<Menu.Item disabled text="Search for a new game or category…" />}
             // Note: we use the placeholder to display the previous value until the initial value can be defined.
             // @see https://github.com/palantir/blueprint/issues/2784
-            inputProps={{ id: 'category', placeholder: category, disabled: isUpdating }}
+            inputProps={{ id: 'category', placeholder: category?.name || '', disabled: isUpdating }}
             inputValueRenderer={this.categoryValueRenderer}
             onItemSelect={this.onSelectCategory}
             onQueryChange={this.onChangeCategoryQuery}
@@ -301,7 +306,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
    * @param category - The selected category.
    */
   private onSelectCategory = (category: RawCategory) => {
-    this.setState(({ title }) => this.getModificationsState(title, category.name))
+    this.setState(({ title }) => this.getModificationsState(title, category))
   }
 
   /**
@@ -309,22 +314,20 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
    */
   private onClickUpdate = async () => {
     const { channelId } = this.props
-    const { category, title } = this.state
+    const { [Input.Category]: category, title } = this.state
 
-    if (_.isNil(channelId) || _.isNil(title) || _.isNil(category)) {
+    if (_.isNil(channelId) || (_.isNil(title) && _.isNil(category))) {
       return
     }
 
     try {
       this.setState(() => ({ isUpdating: true }))
 
-      const channel = await Twitch.updateChannel(channelId, title, category)
+      await Twitch.updateChannelInformations(channelId, title, category?.id || '')
 
       this.setState(() => ({
         isModified: false,
         isUpdating: false,
-        [Input.Category]: channel.game || '',
-        [Input.Title]: channel.status || '',
       }))
     } catch {
       this.setState(() => ({ didFail: true, isUpdating: false }))
@@ -338,7 +341,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   private onChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     const title = event.currentTarget.value
 
-    this.setState(({ category }) => this.getModificationsState(title, category))
+    this.setState(({ [Input.Category]: category }) => this.getModificationsState(title, category))
   }
 
   /**
@@ -354,14 +357,16 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
   /**
    * Returns the state after modifying values.
    * @param  title - The stream title.
-   * @param  category - The stream category.
+   * @param  [category] - The stream category.
    * @return The modified state.
    */
-  private getModificationsState(title: string, category: string) {
+  private getModificationsState(title: string, category: Optional<Omit<RawCategory, 'box_art_url'>>) {
     const sanitizedTitle = title.substring(0, InputMaxLengths[Input.Title])
 
     const { channel } = this.props
-    const isModified = (!_.isNil(channel) && channel.status !== title) || (!_.isNil(channel) && channel.game !== category)
+    const isModified =
+      (!_.isNil(channel) && channel.status !== title) ||
+      (!_.isNil(channel) && !_.isNil(category) && channel.game !== category.name)
 
     return { isModified, [Input.Category]: category, [Input.Title]: sanitizedTitle }
   }
