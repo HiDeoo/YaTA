@@ -1042,10 +1042,10 @@ export class ChatClient extends React.Component<Props, State> {
         }
       }
 
-      const channel = await Twitch.fetchChannel(channelId)
+      const channelInfos = await Twitch.fetchChannelInformations(channelId)
 
-      if (!_.isNil(channel.status) && channel.status.length > 0) {
-        const notice = new Notice(`Current title: ${channel.status}`, null, true)
+      if (!_.isNil(channelInfos.title) && !_.isEmpty(channelInfos.title)) {
+        const notice = new Notice(`Current title: ${channelInfos.title}`, null, true)
 
         this.props.unshiftLog(notice.serialize())
       }

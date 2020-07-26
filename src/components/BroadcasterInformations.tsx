@@ -128,7 +128,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
    */
   public async componentDidMount() {
     try {
-      const { channel, channelId } = this.props
+      const { channelId } = this.props
 
       const response = await Promise.all([
         Twitch.fetchChannelInformations(channelId),
@@ -143,7 +143,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         liveNotification,
         [Input.Category]: { id: informations.game_id, name: informations.game_name },
         [Input.Notification]: liveNotification.message || '',
-        [Input.Title]: channel.status || '',
+        [Input.Title]: informations.title,
       }))
     } catch {
       this.setState(() => ({ didFail: true, isReady: true }))
