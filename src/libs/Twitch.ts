@@ -10,7 +10,6 @@ import { subDays, subMonths } from 'utils/date'
 enum TwitchApi {
   Auth = 'https://id.twitch.tv/oauth2',
   Badges = 'https://badges.twitch.tv/v1/badges',
-  Base = 'https://api.twitch.tv',
   Helix = 'https://api.twitch.tv/helix',
   Kraken = 'https://api.twitch.tv/kraken',
   Status = 'https://devstatus.twitch.tv',
