@@ -5,6 +5,7 @@ import * as ReactDOM from 'react-dom'
 
 import Center from 'components/Center'
 import Spinner from 'components/Spinner'
+import Twitch from 'libs/Twitch'
 import styled from 'styled'
 import base from 'styled/base'
 
@@ -124,7 +125,7 @@ export default class Player extends React.Component<{}, State> {
    * @param slug - The clip slug.
    */
   public playTwitchClip(slug: string) {
-    this.setState(() => ({ url: `https://clips.twitch.tv/embed?clip=${slug}` }))
+    this.setState(() => ({ url: Twitch.getTwitchEmbedUrl(`https://clips.twitch.tv/embed?clip=${slug}`) }))
   }
 
   /**

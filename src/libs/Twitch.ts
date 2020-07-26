@@ -142,6 +142,15 @@ export default class Twitch {
   }
 
   /**
+   * Returns the URL to use to embed Twitch content.
+   * @param  url - The Twitch URL to embed.
+   * @return The parent parameter.
+   */
+  public static getTwitchEmbedUrl(url: string): string {
+    return url.concat('&parent=yata.now.sh')
+  }
+
+  /**
    * Returns an URL based on a URL template returned by Twitch.
    * @param  templateUrl - The URL template.
    * @param  params - An object describing the key & associated values for each template segments.
@@ -209,7 +218,7 @@ export default class Twitch {
    */
   public static openVideoPlayer(channel: string) {
     window.open(
-      `https://player.twitch.tv/?muted=false&channel=${channel}&parent=yata.now.sh`,
+      Twitch.getTwitchEmbedUrl(`https://player.twitch.tv/?muted=false&channel=${channel}`),
       'videoPopupWindow',
       'height=360,width=600'
     )
