@@ -37,7 +37,7 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
    * Lifecycle: componentDidMount.
    */
   public async componentDidMount() {
-    const { id, name, type } = this.props
+    const { id, type } = this.props
 
     try {
       if (type === ChannelDetailsType.LastVods) {
@@ -59,16 +59,16 @@ export default class ChannelDetailsVideos extends React.Component<IPanelProps & 
       } else if (type === ChannelDetailsType.TopClips || type === ChannelDetailsType.RecentClips) {
         const period = type === ChannelDetailsType.TopClips ? ClipPeriod.All : ClipPeriod.Week
 
-        const { clips } = await Twitch.fetchTopClips(name, period)
+        const clips = await Twitch.fetchTopClips(id, period)
 
         const parsedVideos = _.map(clips, (clip) => ({
-          id: clip.slug,
-          meta: `${new Date(clip.created_at).toLocaleDateString()} - ${clip.views.toLocaleString()} ${pluralize(
+          id: clip.id,
+          meta: `${new Date(clip.created_at).toLocaleDateString()} - ${clip.view_count.toLocaleString()} ${pluralize(
             'views',
-            clip.views
-          )} - ${clip.curator.display_name}`,
+            clip.view_count
+          )} - ${clip.creator_name}`,
           text: clip.title,
-          thumbnail: clip.thumbnails.small,
+          thumbnail: clip.thumbnail_url,
           type: ResourceType.Clip,
           url: clip.url,
         }))

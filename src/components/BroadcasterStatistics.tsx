@@ -117,14 +117,14 @@ export default class BroadcasterStatistics extends React.Component<BroadcasterSe
    */
   public async componentDidMount() {
     try {
-      const { channel, channelId } = this.props
+      const { channelId } = this.props
 
       const response = await Promise.all([
-        Twitch.fetchTopClips(channel.name, ClipPeriod.Day, 100),
+        Twitch.fetchTopClips(channelId, ClipPeriod.Day, 100),
         Twitch.fetchStream(channelId),
       ])
 
-      const [{ clips }, { stream }] = response
+      const [clips, { stream }] = response
 
       this.setState(({ statistics }) => {
         let newStatistics = [

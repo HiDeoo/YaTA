@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { EmoteSets } from 'twitch-js'
 
 import RequestMethod from 'constants/requestMethod'
+import { subDays, subMonths } from 'utils/date'
 
 /**
  * Twitch various APIs.
@@ -341,15 +342,34 @@ export default class Twitch {
 
   /**
    * Returns the top clips for a specific channel.
-   * @param  channel - The channel.
+   * @param  channelId - The ID of the channel.
    * @param  period - The period to include.
    * @param  [limit=10] - The number of clips to return.
    * @return The top clips.
    */
-  public static async fetchTopClips(channel: string, period: ClipPeriod, limit = 10): Promise<RawClips> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/clips/top`, { channel, limit: limit.toString(), period })
+  public static async fetchTopClips(channelId: string, period: ClipPeriod, limit = 10): Promise<RawClip[]> {
+    const params: Record<string, string> = {
+      broadcaster_id: channelId,
+      first: limit.toString(),
+    }
 
-    return response.json()
+    if (period !== ClipPeriod.All) {
+      const now = new Date()
+
+      params['ended_at'] = now.toISOString()
+
+      if (period === ClipPeriod.Day) {
+        params['started_at'] = subDays(now, 1).toISOString()
+      } else if (period === ClipPeriod.Week) {
+        params['started_at'] = subDays(now, 7).toISOString()
+      } else if (period === ClipPeriod.Month) {
+        params['started_at'] = subMonths(now, 1).toISOString()
+      }
+    }
+
+    const response = await Twitch.fetch(TwitchApi.Helix, '/clips', params, true, RequestMethod.Get)
+
+    return (await response.json()).data
   }
 
   /**
@@ -423,13 +443,21 @@ export default class Twitch {
 
   /**
    * Fetches details about a clip.
-   * @param  slug - The clip slug.
+   * @param  clipId - The clip ID.
    * @return The clip details.
    */
-  public static async fetchClip(slug: string): Promise<RawClip> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/clips/${slug}`)
+  public static async fetchClip(clipId: string): Promise<RawClip> {
+    const response = await Twitch.fetch(
+      TwitchApi.Helix,
+      '/clips',
+      {
+        id: clipId,
+      },
+      true,
+      RequestMethod.Get
+    )
 
-    return response.json()
+    return (await response.json()).data[0]
   }
 
   /**
@@ -916,42 +944,20 @@ export type RawChatters = {
  * Twitch clip.
  */
 export type RawClip = {
-  broadcast_id: string
-  broadcaster: RawClipUser
+  broadcaster_id: string
+  broadcaster_name: string
   created_at: string
-  curator: RawClipUser
-  duration: number
-  embed_html: string
+  creator_id: string
+  creator_name: string
   embed_url: string
-  game: string
-  language: string
-  slug: string
-  thumbnails: {
-    medium: string
-    small: string
-    tiny: string
-  }
-  title: string
-  tracking_id: string
-  url: string
-  views: number
-  vod: {
-    id: string
-    offset: number
-    preview_image_url: string
-    url: string
-  }
-}
-
-/**
- * Twitch clip user.
- */
-type RawClipUser = {
-  channel_url: string
-  display_name: string
+  game_id: string
   id: string
-  logo: string
-  name: string
+  language: string
+  thumbnail_url: string
+  title: string
+  url: string
+  video_id: string
+  view_count: number
 }
 
 /**
@@ -1087,14 +1093,6 @@ type RawPreview = {
  */
 type RawNewClips = {
   data: Array<{ edit_url: string; id: string }>
-}
-
-/**
- * Twitch clips.
- */
-export type RawClips = {
-  clips: RawClip[]
-  _cursor: string
 }
 
 /**

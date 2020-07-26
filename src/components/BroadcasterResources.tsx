@@ -66,20 +66,20 @@ export default class BroadcasterResources extends React.Component<BroadcasterSec
    */
   public async componentDidMount() {
     try {
-      const { channel, channelId } = this.props
+      const { channelId } = this.props
 
       const response = await Promise.all([
         Twitch.fetchHosts(channelId),
-        Twitch.fetchTopClips(channel.name, ClipPeriod.Day, 25),
+        Twitch.fetchTopClips(channelId, ClipPeriod.Day, 25),
       ])
 
-      const [{ hosts }, { clips }] = response
+      const [{ hosts }, clips] = response
 
       const clipResources = _.map(clips, (clip) => ({
-        id: clip.slug,
-        meta: `${clip.views.toLocaleString()} ${pluralize('views', clip.views)} - ${clip.curator.display_name}`,
+        id: clip.id,
+        meta: `${clip.view_count.toLocaleString()} ${pluralize('views', clip.view_count)} - ${clip.creator_name}`,
         text: clip.title,
-        thumbnail: clip.thumbnails.tiny,
+        thumbnail: clip.thumbnail_url,
         type: ResourceType.Clip,
         url: clip.url,
       }))

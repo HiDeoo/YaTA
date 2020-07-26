@@ -78,13 +78,13 @@ const PreviewTwitch: PreviewProvider = class {
     if (preview.type === TwitchPreviewType.Clip) {
       const clip = await Twitch.fetchClip(preview.id)
 
-      const meta = `Clipped by ${clip.curator.display_name} on ${
-        clip.broadcaster.display_name
-      } (${clip.views.toLocaleString()} ${pluralize('view', clip.views)})`
+      const meta = `Clipped by ${clip.creator_name} on ${
+        clip.broadcaster_name
+      } (${clip.view_count.toLocaleString()} ${pluralize('view', clip.view_count)})`
 
       return {
         ...preview,
-        image: clip.thumbnails.tiny,
+        image: clip.thumbnail_url,
         meta,
         resolved: true,
         title: clip.title,
