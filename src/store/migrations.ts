@@ -339,4 +339,10 @@ export default {
       settings: { ...state.settings, increaseTwitchHighlight: SettingsInitialState.increaseTwitchHighlight },
     }
   },
+  42: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      user: UserInitialState,
+    }
+  },
 }

@@ -80,7 +80,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_read user_blocks_edit clips:edit user_follows_edit channel_editor channel_commercial user_subscriptions',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_read user_blocks_edit clips:edit user_follows_edit channel_editor channel:edit:commercial user_subscriptions',
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -280,16 +280,10 @@ export default class Twitch {
    * @param duration - The commercial duration.
    */
   public static async startCommercial(channelId: string, duration: CommercialDuration) {
-    const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/channels/${channelId}/commercial`,
-      undefined,
-      true,
-      RequestMethod.Post,
-      {
-        length: duration,
-      }
-    )
+    const response = await Twitch.fetch(TwitchApi.Helix, '/channels/commercial', undefined, true, RequestMethod.Post, {
+      broadcaster_id: channelId,
+      length: duration,
+    })
 
     return response.json()
   }

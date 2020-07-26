@@ -4,6 +4,10 @@
 
 - Fix an issue preventing to open the channel video player.
 
+### ⚙️ Internal
+
+- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained).
+
 # 1.14.0
 
 ### 😢 Removed Feature
