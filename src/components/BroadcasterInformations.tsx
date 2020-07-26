@@ -109,7 +109,7 @@ const initialState = {
   isReady: false,
   isUpdating: false,
   liveNotification: undefined as Optional<RawNotification>,
-  [Input.Category]: undefined as Optional<Omit<RawCategory, 'box_art_url'>>,
+  [Input.Category]: undefined as Optional<RawCategory>,
   [Input.Notification]: '',
   [Input.Title]: '',
 }
@@ -141,7 +141,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         didFail: false,
         isReady: true,
         liveNotification,
-        [Input.Category]: { id: informations.game_id, name: informations.game_name },
+        [Input.Category]: { box_art_url: '', id: informations.game_id, name: informations.game_name },
         [Input.Notification]: liveNotification.message || '',
         [Input.Title]: informations.title,
       }))
@@ -185,14 +185,13 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
         <CategoryFormGroup label="Game / Category" labelFor="category" disabled={isUpdating}>
           <CategoryInput
             initialContent={<Menu.Item disabled text="Search for a new game or category…" />}
-            // Note: we use the placeholder to display the previous value until the initial value can be defined.
-            // @see https://github.com/palantir/blueprint/issues/2784
-            inputProps={{ id: 'category', placeholder: category?.name || '', disabled: isUpdating }}
+            inputProps={{ id: 'category', disabled: isUpdating }}
             inputValueRenderer={this.categoryValueRenderer}
             onItemSelect={this.onSelectCategory}
             onQueryChange={this.onChangeCategoryQuery}
             itemRenderer={this.categoryRenderer}
             popoverProps={{ minimal: true }}
+            defaultSelectedItem={category}
             items={categories || []}
             resetOnSelect
             openOnKeyDown
@@ -360,7 +359,7 @@ export default class BroadcasterInformations extends React.Component<Broadcaster
    * @param  [category] - The stream category.
    * @return The modified state.
    */
-  private getModificationsState(title: string, category: Optional<Omit<RawCategory, 'box_art_url'>>) {
+  private getModificationsState(title: string, category: Optional<RawCategory>) {
     const sanitizedTitle = title.substring(0, InputMaxLengths[Input.Title])
 
     const { channel } = this.props
