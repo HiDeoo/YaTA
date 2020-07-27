@@ -764,6 +764,18 @@ export default class Twitch {
   }
 
   /**
+   * Returns the token of the current authenticated user.
+   * @return The token.
+   */
+  public static getAuthenticatedUserToken(): string {
+    if (_.isNil(Twitch.token)) {
+      throw new Error('No token found.')
+    }
+
+    return Twitch.token
+  }
+
+  /**
    * Returns the URL for a request.
    * @param  api - The Twitch API to use.
    * @param  endpoint - The endpoint to fetch.

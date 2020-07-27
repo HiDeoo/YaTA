@@ -33,6 +33,7 @@ import RoomState from 'libs/RoomState'
 import Sound, { SoundId } from 'libs/Sound'
 import Twitch from 'libs/Twitch'
 import Ffz from 'libs/Ffz'
+import PubSub, { PubSubEvent } from 'libs/PubSub'
 import { resetAppState, setLastWhisperSender, updateEmotes, updateRoomState, updateStatus } from 'store/ducks/app'
 import {
   addChatter,
@@ -140,7 +141,7 @@ export class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.Mods, this.onMods)
     this.client.on(Event.Mod, this.onMod)
     this.client.on(Event.Unmod, this.onUnmod)
-    this.client.on(Event.Ban, this.onBan)
+    this.client.on(Event.Ban, this.onIrcBan)
     this.client.on(Event.Timeout, this.onTimeout)
     this.client.on(Event.Notice, this.onNotice)
     this.client.on(Event.Subscription, this.onSubscription)
@@ -151,6 +152,8 @@ export class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.Cheer, this.onCheer)
     this.client.on(Event.EmoteSets, this.onEmoteSets)
     this.client.on(Event.MessageDeleted, this.onMessageDeleted)
+
+    PubSub.addHandler(PubSubEvent.Ban, this.onPubSubBan)
 
     try {
       await this.client.connect()
@@ -234,6 +237,8 @@ export class ChatClient extends React.Component<Props, State> {
       }
 
       this.client.removeAllListeners()
+
+      PubSub.disconnect()
     } catch {
       //
     }
@@ -372,6 +377,10 @@ export class ChatClient extends React.Component<Props, State> {
     this.props.updateRoomState(state.serialize())
 
     this.fetchExternalResources(state.roomId)
+
+    if (!PubSub.isConnected()) {
+      PubSub.connect(state.roomId)
+    }
   }
 
   /**
@@ -674,15 +683,43 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a user is banned.
+   * Triggered when a user is banned (detected through IRC).
    * @param channel - The channel.
    * @param username - The banned username.
    * @param reason - The ban reason if specified.
    */
-  private onBan = (_channel: string, username: string, reason: string | null) => {
+  private onIrcBan = (channel: string, username: string, reason: string | null) => {
+    if (!PubSub.isConnected()) {
+      this.onBan(channel, username, reason)
+    }
+  }
+
+  /**
+   * Triggered when a user is banned (detected through PubSub).
+   * @param author - The action author.
+   * @param username - The banned username.
+   * @param reason - The ban reason if specified.
+   */
+  private onPubSubBan = (author: string, username: string, reason: Optional<string>) => {
+    const { channel } = this.props
+
+    if (channel) {
+      this.onBan(channel, username, reason ? reason : null, author)
+    }
+  }
+
+  /**
+   * Triggered when a user is banned.
+   * @param channel - The channel.
+   * @param username - The banned username.
+   * @param reason - The ban reason if specified.
+   * @param [author] - The ban author.
+   */
+  private onBan = (_channel: string, username: string, reason: string | null, author?: string) => {
     if (this.props.isMod) {
-      let noticeMsg = `${username} is now banned.`
-      noticeMsg += !_.isNil(reason) ? ` Reason: ${reason}.` : ''
+      let noticeMsg = `${username} was banned`
+      noticeMsg += !_.isEmpty(author) ? ` by ${author}.` : '.'
+      noticeMsg += !_.isEmpty(reason) ? ` Reason: ${reason}.` : ''
 
       const notice = new Notice(noticeMsg, Event.Ban)
 
@@ -920,7 +957,9 @@ export class ChatClient extends React.Component<Props, State> {
     } else if (id === Notices.BanNotice) {
       this.props.markUserAsBanned()
 
-      const notice = new Notice(`You are unable to read or participate in ${this.props.channel}'s channel until a moderator unbans you.`)
+      const notice = new Notice(
+        `You are unable to read or participate in ${this.props.channel}'s channel until a moderator unbans you.`
+      )
 
       this.props.addLog(notice.serialize())
     }

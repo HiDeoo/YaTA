@@ -17,6 +17,11 @@ declare global {
    * Recursive Partial<T>.
    */
   export type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> }
+
+  /**
+   * Infer the types of the arguments of a function.
+   */
+  type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never
 }
 
 /**
