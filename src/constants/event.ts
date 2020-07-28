@@ -2,6 +2,7 @@
  * Events.
  */
 enum Event {
+  ApprovedAutomodMessage = 'approvedautomodmessage',
   AutomodMessageApproved = 'automodmessageapproved',
   AutomodMessageDenied = 'automodmessagedenied',
   AutomodMessageRejected = 'automodmessagerejected',
@@ -10,6 +11,7 @@ enum Event {
   Clearchat = 'clearchat',
   Connected = 'connected',
   Connecting = 'connecting',
+  DeniedAutomodMessage = 'deniedautomodmessage',
   Disconnected = 'disconnected',
   EmoteOnly = 'emoteonly',
   EmoteSets = 'emotesets',

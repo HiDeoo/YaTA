@@ -4,6 +4,15 @@ import LogType from 'constants/logType'
  * Message rejected by AutoMod.
  */
 export default class RejectedMessage implements Serializable<SerializedRejectedMessage> {
+  /**
+   * Returns the internal ID of a rejected message based on a message ID.
+   * @param  messageId - The message ID.
+   * @return The rejected message ID.
+   */
+  public static getRejectedMessageInternalId(messageId: string) {
+    return `_rejected_${messageId}`
+  }
+
   private id: string
   private handled: boolean
 
@@ -16,7 +25,7 @@ export default class RejectedMessage implements Serializable<SerializedRejectedM
    * @param reason - The reason of the rejection.
    */
   constructor(private username: string, private messageId: string, private message: string, private reason: string) {
-    this.id = `_rejected_${messageId}`
+    this.id = RejectedMessage.getRejectedMessageInternalId(messageId)
     this.handled = false
   }
 

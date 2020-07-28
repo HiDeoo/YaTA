@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { SerializedRejectedMessage } from 'libs/RejectedMessage'
 import Twitch from 'libs/Twitch'
-import styled, { size, theme } from 'styled'
+import styled, { ifProp, size, theme } from 'styled'
 
 /**
  * Wrapper component.
@@ -15,6 +15,7 @@ const Wrapper = styled.div<WrapperProps>`
   border-style: solid;
   border-width: 0 0 0 3px;
   display: flex;
+  opacity: ${ifProp('highlight', 1, 0.6)};
   padding: 4px ${size('log.hPadding')} 4px ${size('log.hPadding', -1)};
   position: relative;
 `
@@ -142,7 +143,7 @@ export default class RejectedMessage extends React.Component<Props, State> {
     const disabled = pendingAllow || pendingDeny || rejectedMessage.handled
 
     return (
-      <Wrapper style={style} highlight={true}>
+      <Wrapper style={style} highlight={!rejectedMessage.handled}>
         <Actions>
           <AllowButton
             onClick={this.onClickAllow}
@@ -163,7 +164,7 @@ export default class RejectedMessage extends React.Component<Props, State> {
         </Actions>
         <div>
           <div>
-            AutoMod held a message from {rejectedMessage.username} (reason: {rejectedMessage.reason}):
+            AutoMod held a message from {rejectedMessage.username} (reason: {rejectedMessage.reason})!
           </div>
           <Message dangerouslySetInnerHTML={{ __html: `“${rejectedMessage.message}”` }} />
         </div>

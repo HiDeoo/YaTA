@@ -43,7 +43,7 @@ import {
   markChatterAsBanned,
   markChatterAsUnbanned,
 } from 'store/ducks/chatters'
-import { addLog, clearLogs, purgeLog, purgeLogs, unshiftLog } from 'store/ducks/logs'
+import { addLog, clearLogs, markRejectedMessageAsHandled, purgeLog, purgeLogs, unshiftLog } from 'store/ducks/logs'
 import { setModerator } from 'store/ducks/user'
 import { ApplicationState } from 'store/reducers'
 import { getChannel } from 'store/selectors/app'
@@ -162,6 +162,8 @@ export class ChatClient extends React.Component<Props, State> {
     PubSub.addHandler(PubSubEvent.AutomodMessageRejected, this.onAutomodMessageRejected)
     PubSub.addHandler(PubSubEvent.AutomodMessageApproved, this.onAutomodMessageApproved)
     PubSub.addHandler(PubSubEvent.AutomodMessageDenied, this.onAutomodMessageDenied)
+    PubSub.addHandler(PubSubEvent.ApprovedAutomodMessage, this.onApprovedAutomodMessage)
+    PubSub.addHandler(PubSubEvent.DeniedAutomodMessage, this.onDeniedAutomodMessage)
 
     try {
       await this.client.connect()
@@ -877,7 +879,7 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a message rejected by AutoMod is approved.
+   * Triggered when a message send by the user and rejected by AutoMod is approved.
    * @param username - The message author.
    */
   private onAutomodMessageApproved = (username: string) => {
@@ -891,7 +893,7 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a message rejected by AutoMod is denied.
+   * Triggered when a message send by the user and rejected by AutoMod is denied.
    * @param username - The message author.
    */
   private onAutomodMessageDenied = (username: string) => {
@@ -902,6 +904,38 @@ export class ChatClient extends React.Component<Props, State> {
 
       this.props.addLog(notice.serialize())
     }
+  }
+
+  /**
+   * Triggered when a message rejected by AutoMod is approved.
+   * @param messageId - The message ID.
+   * @param username - The message author.
+   * @param moderator - The moderator who allowed the message.
+   */
+  private onApprovedAutomodMessage = (messageId: string, username: string, moderator: string) => {
+    if (this.props.isMod) {
+      const notice = new Notice(`The message from ${username} was allowed by ${moderator}.`, Event.ApprovedAutomodMessage)
+
+      this.props.addLog(notice.serialize())
+    }
+
+    this.props.markRejectedMessageAsHandled(RejectedMessage.getRejectedMessageInternalId(messageId))
+  }
+
+  /**
+   * Triggered when a message rejected by AutoMod is denied.
+   * @param messageId - The message ID.
+   * @param username - The message author.
+   * @param moderator - The moderator who allowed the message.
+   */
+  private onDeniedAutomodMessage = (messageId: string, username: string, moderator: string) => {
+    if (this.props.isMod) {
+      const notice = new Notice(`The message from ${username} was denied by ${moderator}.`, Event.DeniedAutomodMessage)
+
+      this.props.addLog(notice.serialize())
+    }
+
+    this.props.markRejectedMessageAsHandled(RejectedMessage.getRejectedMessageInternalId(messageId))
   }
 
   /**
@@ -1376,6 +1410,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     clearLogs,
     markChatterAsBanned,
     markChatterAsUnbanned,
+    markRejectedMessageAsHandled,
     purgeLog,
     purgeLogs,
     resetAppState,
@@ -1424,6 +1459,7 @@ interface DispatchProps {
   clearLogs: typeof clearLogs
   markChatterAsBanned: typeof markChatterAsBanned
   markChatterAsUnbanned: typeof markChatterAsUnbanned
+  markRejectedMessageAsHandled: typeof markRejectedMessageAsHandled
   purgeLog: typeof purgeLog
   purgeLogs: typeof purgeLogs
   resetAppState: typeof resetAppState

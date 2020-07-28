@@ -7,11 +7,13 @@ import Twitch from 'libs/Twitch'
  * Supported events.
  */
 export enum PubSubEvent {
+  ApprovedAutomodMessage,
   AutomodMessageApproved,
   AutomodMessageDenied,
   AutomodMessageRejected,
   AutomodRejected,
   Ban,
+  DeniedAutomodMessage,
   Timeout,
   Unban,
   Untimeout,
@@ -77,11 +79,13 @@ class PubSub {
    * @param type - The event type.
    * @param handler - The associated handler.
    */
+  public addHandler(type: PubSubEvent.ApprovedAutomodMessage, handler: ApprovedAutomodMessageHandler): void
   public addHandler(type: PubSubEvent.AutomodMessageApproved, handler: AutomodMessageApprovedHandler): void
   public addHandler(type: PubSubEvent.AutomodMessageDenied, handler: AutomodMessageDeniedHandler): void
   public addHandler(type: PubSubEvent.AutomodMessageRejected, handler: AutomodMessageRejectedHandler): void
   public addHandler(type: PubSubEvent.AutomodRejected, handler: AutomodRejectedHandler): void
   public addHandler(type: PubSubEvent.Ban, handler: BanHandler): void
+  public addHandler(type: PubSubEvent.DeniedAutomodMessage, handler: DeniedAutomodMessageHandler): void
   public addHandler(type: PubSubEvent.Timeout, handler: TimeoutHandler): void
   public addHandler(type: PubSubEvent.Unban, handler: UnbanHandler): void
   public addHandler(type: PubSubEvent.Untimeout, handler: UntimeoutHandler): void
@@ -332,6 +336,20 @@ class PubSub {
       this.callHandler<AutomodMessageApprovedHandler>(PubSubEvent.AutomodMessageApproved, message.args[0])
     } else if (message.moderation_action === 'automod_message_denied') {
       this.callHandler<AutomodMessageDeniedHandler>(PubSubEvent.AutomodMessageDenied, message.args[0])
+    } else if (message.moderation_action === 'approved_automod_message') {
+      this.callHandler<ApprovedAutomodMessageHandler>(
+        PubSubEvent.ApprovedAutomodMessage,
+        message.msg_id,
+        message.args[0],
+        message.created_by
+      )
+    } else if (message.moderation_action === 'denied_automod_message') {
+      this.callHandler<DeniedAutomodMessageHandler>(
+        PubSubEvent.DeniedAutomodMessage,
+        message.msg_id,
+        message.args[0],
+        message.created_by
+      )
     }
   }
 }
@@ -369,11 +387,13 @@ interface ModerationMessage {
 /**
  * Event handlers definitions.
  */
+type ApprovedAutomodMessageHandler = (messageId: string, username: string, moderator: string) => void
 type AutomodMessageApprovedHandler = (username: string) => void
 type AutomodMessageDeniedHandler = (username: string) => void
 type AutomodMessageRejectedHandler = (username: string) => void
 type AutomodRejectedHandler = (username: string, messageId: string, message: string, reason: string) => void
 type BanHandler = (author: string, username: string, reason: string) => void
+type DeniedAutomodMessageHandler = (messageId: string, username: string, moderator: string) => void
 type TimeoutHandler = (author: string, username: string, duration: number, reason: Optional<string>) => void
 type UnbanHandler = (author: string, username: string) => void
 type UntimeoutHandler = (author: string, username: string) => void
