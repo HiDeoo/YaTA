@@ -1,9 +1,14 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Moderator actions (ban, unban, timeout & untimeout) now properly report the author of the action (e.g. *Alice was banned by Bob.* instead of *Alice was banned.*).
+
 ### 🐛 Bug Fix
 
 - Fix an issue preventing to open the channel video player or preview clips.
 - Ensure emotes larger than the default allowed width are displayed properly.
+- Fix an issue with some moderator action notices that were not visible.
 
 ### ⚙️ Internal
 
