@@ -8,6 +8,7 @@ import Twitch from 'libs/Twitch'
  */
 export enum PubSubEvent {
   Ban,
+  Timeout,
   Unban,
 }
 
@@ -72,6 +73,7 @@ class PubSub {
    * @param handler - The associated handler.
    */
   public addHandler(type: PubSubEvent.Ban, handler: BanHandler): void
+  public addHandler(type: PubSubEvent.Timeout, handler: TimeoutHandler): void
   public addHandler(type: PubSubEvent.Unban, handler: UnbanHandler): void
   public addHandler(type: PubSubEvent, handler: (...args: any) => void) {
     this.handlers[type] = handler
@@ -296,6 +298,14 @@ class PubSub {
       this.callHandler<BanHandler>(PubSubEvent.Ban, message.created_by, message.args[0], message.args[1])
     } else if (message.moderation_action === 'unban') {
       this.callHandler<UnbanHandler>(PubSubEvent.Unban, message.created_by, message.args[0])
+    } else if (message.moderation_action === 'timeout') {
+      this.callHandler<TimeoutHandler>(
+        PubSubEvent.Timeout,
+        message.created_by,
+        message.args[0],
+        parseInt(message.args[1], 10),
+        message.args[2]
+      )
     }
   }
 }
@@ -334,4 +344,5 @@ interface ModerationMessage {
  * Event handlers definitions.
  */
 type BanHandler = (author: string, username: string, reason: string) => void
+type TimeoutHandler = (author: string, username: string, duration: number, reason: Optional<string>) => void
 type UnbanHandler = (author: string, username: string) => void

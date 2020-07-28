@@ -142,7 +142,7 @@ export class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.Mod, this.onMod)
     this.client.on(Event.Unmod, this.onUnmod)
     this.client.on(Event.Ban, this.onIrcBan)
-    this.client.on(Event.Timeout, this.onTimeout)
+    this.client.on(Event.Timeout, this.onIrcTimeout)
     this.client.on(Event.Notice, this.onNotice)
     this.client.on(Event.Subscription, this.onSubscription)
     this.client.on(Event.ReSub, this.onResub)
@@ -155,6 +155,7 @@ export class ChatClient extends React.Component<Props, State> {
 
     PubSub.addHandler(PubSubEvent.Ban, this.onPubSubBan)
     PubSub.addHandler(PubSubEvent.Unban, this.onPubSubUnban)
+    PubSub.addHandler(PubSubEvent.Timeout, this.onPubSubTimeout)
 
     try {
       await this.client.connect()
@@ -740,7 +741,7 @@ export class ChatClient extends React.Component<Props, State> {
     }
   }
 
-    /**
+  /**
    * Triggered when a user is unbanned (detected through PubSub).
    * @param author - The action author.
    * @param username - The unbanned username.
@@ -756,15 +757,52 @@ export class ChatClient extends React.Component<Props, State> {
   }
 
   /**
-   * Triggered when a user is timed out.
+   * Triggered when a user is timed out (detected through IRC).
    * @param channel - The channel.
    * @param username - The username.
    * @param reason - The timeout reason if specified.
    * @param duration - The timeout duration in seconds.
    */
-  private onTimeout = (_channel: string, username: string, reason: string | null, duration: number) => {
+  private onIrcTimeout = (channel: string, username: string, reason: string | null, duration: number) => {
+    if (!PubSub.isConnected()) {
+      this.onTimeout(channel, username, reason, duration)
+    }
+  }
+
+  /**
+   * Triggered when a user is timed out (detected through PubSub).
+   * @param author - The action author.
+   * @param username - The username.
+   * @param duration - The timeout duration.
+   * @param reason - The timeout reason if specified.
+   */
+  private onPubSubTimeout = (author: string, username: string, duration: number, reason: Optional<string>) => {
+    const { channel } = this.props
+
+    if (channel) {
+      this.onTimeout(channel, username, reason ? reason : null, duration, author)
+    }
+  }
+
+  /**
+   * Triggered when a user is timed out.
+   * @param channel - The channel.
+   * @param username - The username.
+   * @param reason - The timeout reason if specified.
+   * @param duration - The timeout duration in seconds.
+   * @param [author] - The ban author.
+   */
+  private onTimeout = (
+    _channel: string,
+    username: string,
+    reason: string | null,
+    duration: number,
+    author?: string
+  ) => {
     if (this.props.isMod) {
-      let noticeMsg = `${username} is now timed out for ${duration} seconds.`
+      let noticeMsg = `${username} was timed out`
+      noticeMsg += !_.isEmpty(author) ? ` by ${author}` : ''
+      noticeMsg += ` for ${duration} seconds.`
       noticeMsg += !_.isNil(reason) ? ` Reason: ${reason}.` : ''
 
       const notice = new Notice(noticeMsg, Event.Timeout)
