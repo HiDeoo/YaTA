@@ -159,6 +159,9 @@ export class ChatClient extends React.Component<Props, State> {
     PubSub.addHandler(PubSubEvent.Timeout, this.onPubSubTimeout)
     PubSub.addHandler(PubSubEvent.Untimeout, this.onPubSubUntimeout)
     PubSub.addHandler(PubSubEvent.AutomodRejected, this.onAutomodRejected)
+    PubSub.addHandler(PubSubEvent.AutomodMessageRejected, this.onAutomodMessageRejected)
+    PubSub.addHandler(PubSubEvent.AutomodMessageApproved, this.onAutomodMessageApproved)
+    PubSub.addHandler(PubSubEvent.AutomodMessageDenied, this.onAutomodMessageDenied)
 
     try {
       await this.client.connect()
@@ -854,6 +857,51 @@ export class ChatClient extends React.Component<Props, State> {
     const rejectedMessage = new RejectedMessage(username, messageId, message, reason)
 
     this.props.addLog(rejectedMessage.serialize())
+  }
+
+  /**
+   * Triggered when a message send by the user is rejected by AutoMod.
+   * @param username - The message author.
+   */
+  private onAutomodMessageRejected = (username: string) => {
+    const { loginDetails } = this.props
+
+    if (loginDetails && loginDetails.username.toLowerCase() === username.toLowerCase()) {
+      const notice = new Notice(
+        'Your message is being checked by moderators before being sent.',
+        Event.AutomodMessageRejected
+      )
+
+      this.props.addLog(notice.serialize())
+    }
+  }
+
+  /**
+   * Triggered when a message rejected by AutoMod is approved.
+   * @param username - The message author.
+   */
+  private onAutomodMessageApproved = (username: string) => {
+    const { loginDetails } = this.props
+
+    if (loginDetails && loginDetails.username.toLowerCase() === username.toLowerCase()) {
+      const notice = new Notice('Your message has been approved by moderators.', Event.AutomodMessageApproved)
+
+      this.props.addLog(notice.serialize())
+    }
+  }
+
+  /**
+   * Triggered when a message rejected by AutoMod is denied.
+   * @param username - The message author.
+   */
+  private onAutomodMessageDenied = (username: string) => {
+    const { loginDetails } = this.props
+
+    if (loginDetails && loginDetails.username.toLowerCase() === username.toLowerCase()) {
+      const notice = new Notice('Your message has been removed by moderators.', Event.AutomodMessageDenied)
+
+      this.props.addLog(notice.serialize())
+    }
   }
 
   /**

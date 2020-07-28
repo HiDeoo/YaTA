@@ -7,6 +7,9 @@ import Twitch from 'libs/Twitch'
  * Supported events.
  */
 export enum PubSubEvent {
+  AutomodMessageApproved,
+  AutomodMessageDenied,
+  AutomodMessageRejected,
   AutomodRejected,
   Ban,
   Timeout,
@@ -74,6 +77,9 @@ class PubSub {
    * @param type - The event type.
    * @param handler - The associated handler.
    */
+  public addHandler(type: PubSubEvent.AutomodMessageApproved, handler: AutomodMessageApprovedHandler): void
+  public addHandler(type: PubSubEvent.AutomodMessageDenied, handler: AutomodMessageDeniedHandler): void
+  public addHandler(type: PubSubEvent.AutomodMessageRejected, handler: AutomodMessageRejectedHandler): void
   public addHandler(type: PubSubEvent.AutomodRejected, handler: AutomodRejectedHandler): void
   public addHandler(type: PubSubEvent.Ban, handler: BanHandler): void
   public addHandler(type: PubSubEvent.Timeout, handler: TimeoutHandler): void
@@ -320,6 +326,12 @@ class PubSub {
         message.args[1],
         message.args[2]
       )
+    } else if (message.moderation_action === 'automod_message_rejected') {
+      this.callHandler<AutomodMessageRejectedHandler>(PubSubEvent.AutomodMessageRejected, message.args[0])
+    } else if (message.moderation_action === 'automod_message_approved') {
+      this.callHandler<AutomodMessageApprovedHandler>(PubSubEvent.AutomodMessageApproved, message.args[0])
+    } else if (message.moderation_action === 'automod_message_denied') {
+      this.callHandler<AutomodMessageDeniedHandler>(PubSubEvent.AutomodMessageDenied, message.args[0])
     }
   }
 }
@@ -357,6 +369,9 @@ interface ModerationMessage {
 /**
  * Event handlers definitions.
  */
+type AutomodMessageApprovedHandler = (username: string) => void
+type AutomodMessageDeniedHandler = (username: string) => void
+type AutomodMessageRejectedHandler = (username: string) => void
 type AutomodRejectedHandler = (username: string, messageId: string, message: string, reason: string) => void
 type BanHandler = (author: string, username: string, reason: string) => void
 type TimeoutHandler = (author: string, username: string, duration: number, reason: Optional<string>) => void

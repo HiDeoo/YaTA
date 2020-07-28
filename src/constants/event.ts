@@ -2,6 +2,9 @@
  * Events.
  */
 enum Event {
+  AutomodMessageApproved = 'automodmessageapproved',
+  AutomodMessageDenied = 'automodmessagedenied',
+  AutomodMessageRejected = 'automodmessagerejected',
   Ban = 'ban',
   Cheer = 'cheer',
   Clearchat = 'clearchat',
