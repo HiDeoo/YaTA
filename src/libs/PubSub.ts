@@ -271,7 +271,10 @@ class PubSub {
    */
   private handleReponse(response: Message) {
     if (response.nonce === this.connectionNonce && !_.isEmpty(response.error)) {
-      this.reconnect()
+      if (this.ws) {
+        this.ws.close()
+        this.ws = undefined
+      }
     }
   }
 
