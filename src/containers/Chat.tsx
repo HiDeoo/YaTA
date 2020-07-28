@@ -154,6 +154,7 @@ export class ChatClient extends React.Component<Props, State> {
     this.client.on(Event.MessageDeleted, this.onMessageDeleted)
 
     PubSub.addHandler(PubSubEvent.Ban, this.onPubSubBan)
+    PubSub.addHandler(PubSubEvent.Unban, this.onPubSubUnban)
 
     try {
       await this.client.connect()
@@ -739,6 +740,21 @@ export class ChatClient extends React.Component<Props, State> {
     }
   }
 
+    /**
+   * Triggered when a user is unbanned (detected through PubSub).
+   * @param author - The action author.
+   * @param username - The unbanned username.
+   */
+  private onPubSubUnban = (author: string, username: string) => {
+    if (this.props.isMod) {
+      const notice = new Notice(`${author} removed the ban on ${username}.`, Event.Unban)
+
+      this.props.addLog(notice.serialize())
+    }
+
+    this.props.markChatterAsUnbanned(username)
+  }
+
   /**
    * Triggered when a user is timed out.
    * @param channel - The channel.
@@ -946,7 +962,9 @@ export class ChatClient extends React.Component<Props, State> {
 
     const notice = new Notice(message, Event.Notice)
 
-    this.props.addLog(notice.serialize())
+    if (!PubSub.isConnected() || !_.includes(Notices.PubSubNotices, id)) {
+      this.props.addLog(notice.serialize())
+    }
 
     if (_.includes(Notices.UnbanNotices, id)) {
       const username = _.first(message.split(' '))

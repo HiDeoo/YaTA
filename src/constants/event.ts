@@ -31,6 +31,7 @@ enum Event {
   Subscribers = 'subscribers',
   Subscription = 'subscription',
   Timeout = 'timeout',
+  Unban = 'unban',
   Unhost = 'unhost',
   Unmod = 'unmod',
   UserNotices = 'usernotices',
