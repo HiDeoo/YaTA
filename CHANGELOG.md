@@ -2,7 +2,8 @@
 
 ### 🚀 New Feature
 
-- Moderator actions (ban, unban, timeout & untimeout) now properly report the author of the action (e.g. *Alice was banned by Bob.* instead of *Alice was banned.*).
+- Add [AutoMod](https://blog.twitch.tv/en/2016/12/12/moderators-are-the-sword-now-automod-is-the-shield-df3d8aae32a9/#.xg0dxjk23) support: moderators can now allow or deny a message rejected by AutoMod and users are noticed when their messages are being held by AutoMod.
+- Moderator actions (ban, unban, timeout, untimeout & AutoMod related actions) now properly report the author of the action (e.g. *Alice was banned by Bob.* instead of *Alice was banned.*).
 
 ### 🐛 Bug Fix
 
@@ -12,7 +13,7 @@
 
 ### ⚙️ Internal
 
-- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained). We are down to 8 API calls still relying on the forever deprecated but still working Twitch v5 API that cannot be updated yet due to total lack of some endpoints / informations in the new Twitch API.
+- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained).
 
 # 1.14.0
 
