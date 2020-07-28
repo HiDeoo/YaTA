@@ -355,6 +355,36 @@ export default class Twitch {
   }
 
   /**
+   * Approves a message rejected by AutoMod.
+   * @param messageId - The ID of the rejected message.
+   */
+  public static async allowAutoModMessage(messageId: string) {
+    return Twitch.fetch(
+      TwitchApi.Kraken,
+      '/chat/twitchbot/approve',
+      undefined,
+      true,
+      RequestMethod.Post,
+      { msg_id: messageId }
+    )
+  }
+
+  /**
+   * Denies a message rejected by AutoMod.
+   * @param messageId - The ID of the rejected message.
+   */
+  public static async denyAutoModMessage(messageId: string) {
+    return Twitch.fetch(
+      TwitchApi.Kraken,
+      '/chat/twitchbot/deny',
+      undefined,
+      true,
+      RequestMethod.Post,
+      { msg_id: messageId }
+    )
+  }
+
+  /**
    * Searches for a game / category.
    * @param  query - The query to use for the search.
    * @param  [signal] - A signal to abort the search if necessary.

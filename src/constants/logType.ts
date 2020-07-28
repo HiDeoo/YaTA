@@ -9,6 +9,7 @@ enum LogType {
   Notice = 'notice',
   Notification = 'notification',
   Cheer = 'cheer',
+  RejectedMessage = 'rejected_message',
 }
 
 export default LogType

@@ -110,6 +110,11 @@ const dark = {
   previews: {
     meta: Colors.GRAY3,
   },
+  rejectedMessage: {
+    background: Colors.DARK_GRAY2,
+    border: Colors.RED3,
+    message: Colors.GRAY4,
+  },
   resource: {
     divider: `linear-gradient(
       90deg,

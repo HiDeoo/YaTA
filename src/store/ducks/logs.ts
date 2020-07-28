@@ -7,6 +7,7 @@ import LogType from 'constants/logType'
 import { SerializedMessage } from 'libs/Message'
 import { SerializedNotice } from 'libs/Notice'
 import { SerializedNotification } from 'libs/Notification'
+import { SerializedRejectedMessage } from 'libs/RejectedMessage'
 import { createAction } from 'utils/redux'
 import { padTimeUnit } from 'utils/time'
 
@@ -58,6 +59,7 @@ export enum Actions {
   ADD_MARKER = 'logs/ADD_MARKER',
   UNSHIFT = 'logs/UNSHIFT',
   MARK_AS_READ = 'logs/MARK_AS_READ',
+  MARK_REJECTED_MESSAGE_AS_HANDLED = 'logs/MARK_REJECTED_MESSAGE_AS_HANDLED',
 }
 
 /**
@@ -188,6 +190,16 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
         lastReadId: id,
       }
     }
+    case Actions.MARK_REJECTED_MESSAGE_AS_HANDLED: {
+      const { id } = action.payload
+      const rejectedMessage = _.get(state.byId, id)
+
+      if (_.isNil(rejectedMessage)) {
+        return state
+      }
+
+      return { ...state, byId: { ...state.byId, [id]: { ...rejectedMessage, handled: true } } }
+    }
     default: {
       return state
     }
@@ -269,6 +281,16 @@ export const markAsRead = (id: string) =>
   })
 
 /**
+ * Mark a rejected message as handled.
+ * @param  id - The id of the rejected message.
+ * @return The action.
+ */
+export const markRejectedMessageAsHandled = (id: string) =>
+  createAction(Actions.MARK_REJECTED_MESSAGE_AS_HANDLED, {
+    id,
+  })
+
+/**
  * Logs actions.
  */
 export type LogsActions =
@@ -280,6 +302,7 @@ export type LogsActions =
   | ReturnType<typeof purgeLog>
   | ReturnType<typeof unshiftLog>
   | ReturnType<typeof markAsRead>
+  | ReturnType<typeof markRejectedMessageAsHandled>
 
 /**
  * Logs state.
@@ -309,7 +332,12 @@ export type LogsState = {
 /**
  * Log possible types.
  */
-export type Log = SerializedMessage | SerializedNotice | SerializedNotification | SerializedMarker
+export type Log =
+  | SerializedMessage
+  | SerializedNotice
+  | SerializedNotification
+  | SerializedMarker
+  | SerializedRejectedMessage
 
 /**
  * Marker.
@@ -372,4 +400,13 @@ export function isWhisper(log: Log): log is SerializedMessage {
  */
 export function isMarker(log: Log): log is SerializedMarker {
   return log.type === LogType.Marker
+}
+
+/**
+ * Determines if a log entry is a rejected message.
+ * @param  log - The log entry to validate.
+ * @return `true` if the log is a rejected message.
+ */
+export function isRejectedMessage(log: Log): log is SerializedRejectedMessage {
+  return log.type === LogType.RejectedMessage
 }

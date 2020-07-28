@@ -7,6 +7,7 @@ import Twitch from 'libs/Twitch'
  * Supported events.
  */
 export enum PubSubEvent {
+  AutomodRejected,
   Ban,
   Timeout,
   Unban,
@@ -73,6 +74,7 @@ class PubSub {
    * @param type - The event type.
    * @param handler - The associated handler.
    */
+  public addHandler(type: PubSubEvent.AutomodRejected, handler: AutomodRejectedHandler): void
   public addHandler(type: PubSubEvent.Ban, handler: BanHandler): void
   public addHandler(type: PubSubEvent.Timeout, handler: TimeoutHandler): void
   public addHandler(type: PubSubEvent.Unban, handler: UnbanHandler): void
@@ -310,6 +312,14 @@ class PubSub {
       )
     } else if (message.moderation_action === 'untimeout') {
       this.callHandler<UnbanHandler>(PubSubEvent.Untimeout, message.created_by, message.args[0])
+    } else if (message.moderation_action === 'automod_rejected') {
+      this.callHandler<AutomodRejectedHandler>(
+        PubSubEvent.AutomodRejected,
+        message.args[0],
+        message.msg_id,
+        message.args[1],
+        message.args[2]
+      )
     }
   }
 }
@@ -347,6 +357,7 @@ interface ModerationMessage {
 /**
  * Event handlers definitions.
  */
+type AutomodRejectedHandler = (username: string, messageId: string, message: string, reason: string) => void
 type BanHandler = (author: string, username: string, reason: string) => void
 type TimeoutHandler = (author: string, username: string, duration: number, reason: Optional<string>) => void
 type UnbanHandler = (author: string, username: string) => void

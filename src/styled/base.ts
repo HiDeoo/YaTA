@@ -115,6 +115,12 @@ export default {
   notice: {
     color: Colors.GRAY2,
   },
+  rejectedMessage: {
+    button: {
+      icon: 18,
+      size: 24,
+    },
+  },
   player: {
     height: 282,
     width: 500,

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 
 import { SerializedMessage } from 'libs/Message'
 import { SerializedNotification } from 'libs/Notification'
-import { isMessage, isNotification } from 'store/ducks/logs'
+import { isMessage, isNotification, isRejectedMessage } from 'store/ducks/logs'
 import { ApplicationState } from 'store/reducers'
 
 /**
@@ -28,12 +28,13 @@ const getLogsById = (state: ApplicationState) => state.logs.byId
 const getLogsAllIds = (state: ApplicationState) => state.logs.allIds
 
 /**
- * Returns all the logs in a chronological order and the number of purged logs.
+ * Returns all the logs in a chronological order and the number of purged logs and unhandled rejected messages.
  * @param  state - The Redux state.
  * @return The logs in chronological order and the number of purged logs.
  */
 export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byId) => {
   let purgedCount = 0
+  let unhandledRejectedMessageCount = 0
 
   const logs = _.map(allIds, (id) => {
     const log = byId[id]
@@ -42,10 +43,14 @@ export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byI
       purgedCount += 1
     }
 
+    if (isRejectedMessage(log) && !log.handled) {
+      unhandledRejectedMessageCount += 1
+    }
+
     return log
   })
 
-  return { logs, purgedCount }
+  return { logs, purgedCount, unhandledRejectedMessageCount }
 })
 
 /**

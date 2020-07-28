@@ -174,6 +174,15 @@ export default interface ITheme {
       width: number
     }
   }
+  rejectedMessage: {
+    background: string
+    border: string
+    button: {
+      icon: number
+      size: number
+    }
+    message: string
+  }
   resource: {
     divider: string
     hover: {

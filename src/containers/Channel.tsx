@@ -43,7 +43,15 @@ import Toaster from 'libs/Toaster'
 import Twitch from 'libs/Twitch'
 import { addToHistory, setChannel, updateHistoryIndex } from 'store/ducks/app'
 import { markChatterAsBlocked, markChatterAsUnblocked } from 'store/ducks/chatters'
-import { addLog, addMarker, isLog, Log, markAsRead, pauseAutoScroll } from 'store/ducks/logs'
+import {
+  addLog,
+  addMarker,
+  isLog,
+  Log,
+  markAsRead,
+  markRejectedMessageAsHandled,
+  pauseAutoScroll,
+} from 'store/ducks/logs'
 import { addHighlightsIgnoredUsers } from 'store/ducks/settings'
 import { ApplicationState } from 'store/reducers'
 import {
@@ -296,6 +304,8 @@ class Channel extends React.Component<Props, State> {
           visible={showSearch}
         />
         <Logs
+          markRejectedMessageAsHandled={this.props.markRejectedMessageAsHandled}
+          unhandledRejectedMessageCount={allLogs.unhandledRejectedMessageCount}
           alternateMessageBackgrounds={alternateMessageBackgrounds}
           addHighlightsIgnoredUser={this.addHighlightsIgnoredUser}
           copyMessageToClipboard={this.copyMessageToClipboard}
@@ -1488,6 +1498,7 @@ const enhance = compose<Props, {}>(
       addMarker,
       addToHistory,
       markAsRead,
+      markRejectedMessageAsHandled,
       markChatterAsBlocked,
       markChatterAsUnblocked,
       pauseAutoScroll,
@@ -1541,6 +1552,7 @@ interface DispatchProps {
   markAsRead: typeof markAsRead
   markChatterAsBlocked: typeof markChatterAsBlocked
   markChatterAsUnblocked: typeof markChatterAsUnblocked
+  markRejectedMessageAsHandled: typeof markRejectedMessageAsHandled
   pauseAutoScroll: typeof pauseAutoScroll
   setChannel: typeof setChannel
   updateHistoryIndex: typeof updateHistoryIndex

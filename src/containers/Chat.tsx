@@ -27,6 +27,7 @@ import EmotesProvider, { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
 import Message from 'libs/Message'
 import Notice from 'libs/Notice'
 import Notification, { NotificationEvent } from 'libs/Notification'
+import RejectedMessage from 'libs/RejectedMessage'
 import Resources from 'libs/Resources'
 import Robotty from 'libs/Robotty'
 import RoomState from 'libs/RoomState'
@@ -157,6 +158,7 @@ export class ChatClient extends React.Component<Props, State> {
     PubSub.addHandler(PubSubEvent.Unban, this.onPubSubUnban)
     PubSub.addHandler(PubSubEvent.Timeout, this.onPubSubTimeout)
     PubSub.addHandler(PubSubEvent.Untimeout, this.onPubSubUntimeout)
+    PubSub.addHandler(PubSubEvent.AutomodRejected, this.onAutomodRejected)
 
     try {
       await this.client.connect()
@@ -839,6 +841,19 @@ export class ChatClient extends React.Component<Props, State> {
     }
 
     this.props.markChatterAsUnbanned(username)
+  }
+
+  /**
+   * Triggered when AutoMod rejects a message.
+   * @param username - The message author.
+   * @param messageId - The message ID.
+   * @param message - The rejected message.
+   * @param reason - The rejection reason.
+   */
+  private onAutomodRejected = (username: string, messageId: string, message: string, reason: string) => {
+    const rejectedMessage = new RejectedMessage(username, messageId, message, reason)
+
+    this.props.addLog(rejectedMessage.serialize())
   }
 
   /**

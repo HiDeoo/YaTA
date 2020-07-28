@@ -10,12 +10,13 @@ import Marker from 'components/Marker'
 import Message from 'components/Message'
 import Notice from 'components/Notice'
 import Notification from 'components/Notification'
+import RejectedMessage from 'components/RejectedMessage'
 import Whisper from 'components/Whisper'
 import { ActionHandler } from 'libs/Action'
 import { SerializedChatter } from 'libs/Chatter'
 import { SerializedMessage } from 'libs/Message'
 import { ChattersState } from 'store/ducks/chatters'
-import { isMarker, isMessage, isNotice, isNotification, isWhisper, Log } from 'store/ducks/logs'
+import { isMarker, isMessage, isNotice, isNotification, isRejectedMessage, isWhisper, Log } from 'store/ducks/logs'
 import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'styled'
 
 /**
@@ -74,6 +75,7 @@ export class Logs extends React.Component<Props> {
       markNewAsUnread,
       purgedCount,
       showContextMenu,
+      unhandledRejectedMessageCount,
     } = this.props
     const { bottom, top } = this.props.theme.log.border
 
@@ -84,6 +86,7 @@ export class Logs extends React.Component<Props> {
         <AutoSizer onResize={this.onResize}>
           {({ height, width }) => (
             <List
+              unhandledRejectedMessageCount={unhandledRejectedMessageCount}
               alternateMessageBackgrounds={alternateMessageBackgrounds}
               copyMessageOnDoubleClick={copyMessageOnDoubleClick}
               increaseTwitchHighlight={increaseTwitchHighlight}
@@ -201,6 +204,7 @@ export class Logs extends React.Component<Props> {
       focusEmote,
       increaseTwitchHighlight,
       markNewAsUnread,
+      markRejectedMessageAsHandled,
       openTwitchViewerCard,
       quoteMessage,
       showContextMenu,
@@ -258,6 +262,14 @@ export class Logs extends React.Component<Props> {
       )
     } else if (isMarker(log)) {
       LogComponent = <Marker style={style} marker={log} />
+    } else if (isRejectedMessage(log)) {
+      LogComponent = (
+        <RejectedMessage
+          markRejectedMessageAsHandled={markRejectedMessageAsHandled}
+          rejectedMessage={log}
+          style={style}
+        />
+      )
     }
 
     if (_.isNil(LogComponent)) {
@@ -294,6 +306,7 @@ interface Props extends ThemeProps {
   lastReadId: string | null
   logs: Log[]
   markAsRead: (id: string) => void
+  markRejectedMessageAsHandled: (id: string) => void
   markNewAsUnread: boolean
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   pauseAutoScroll: (pause: boolean) => void
@@ -303,6 +316,7 @@ interface Props extends ThemeProps {
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
+  unhandledRejectedMessageCount: number
   whisper: (username: string) => void
 }
 

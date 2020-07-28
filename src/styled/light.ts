@@ -106,6 +106,11 @@ const light = {
   previews: {
     meta: Colors.GRAY1,
   },
+  rejectedMessage: {
+    background: Colors.LIGHT_GRAY3,
+    border: Colors.RED4,
+    message: Colors.GRAY1,
+  },
   resource: {
     divider: `linear-gradient(
       90deg,
