@@ -10,6 +10,7 @@ export enum PubSubEvent {
   Ban,
   Timeout,
   Unban,
+  Untimeout,
 }
 
 /**
@@ -75,6 +76,7 @@ class PubSub {
   public addHandler(type: PubSubEvent.Ban, handler: BanHandler): void
   public addHandler(type: PubSubEvent.Timeout, handler: TimeoutHandler): void
   public addHandler(type: PubSubEvent.Unban, handler: UnbanHandler): void
+  public addHandler(type: PubSubEvent.Untimeout, handler: UntimeoutHandler): void
   public addHandler(type: PubSubEvent, handler: (...args: any) => void) {
     this.handlers[type] = handler
   }
@@ -306,6 +308,8 @@ class PubSub {
         parseInt(message.args[1], 10),
         message.args[2]
       )
+    } else if (message.moderation_action === 'untimeout') {
+      this.callHandler<UnbanHandler>(PubSubEvent.Untimeout, message.created_by, message.args[0])
     }
   }
 }
@@ -346,3 +350,4 @@ interface ModerationMessage {
 type BanHandler = (author: string, username: string, reason: string) => void
 type TimeoutHandler = (author: string, username: string, duration: number, reason: Optional<string>) => void
 type UnbanHandler = (author: string, username: string) => void
+type UntimeoutHandler = (author: string, username: string) => void

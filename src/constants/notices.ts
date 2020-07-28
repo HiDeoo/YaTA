@@ -7,7 +7,7 @@ export default {
   /**
    * Notices that should be ignored when connected to the Twitch PubSub.
    */
-  PubSubNotices: ['unban_success'],
+  PubSubNotices: ['unban_success', 'untimeout_success'],
 
   /**
    * Notices indicating that a user can be marked as unbanned.

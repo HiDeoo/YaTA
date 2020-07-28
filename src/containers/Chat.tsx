@@ -156,6 +156,7 @@ export class ChatClient extends React.Component<Props, State> {
     PubSub.addHandler(PubSubEvent.Ban, this.onPubSubBan)
     PubSub.addHandler(PubSubEvent.Unban, this.onPubSubUnban)
     PubSub.addHandler(PubSubEvent.Timeout, this.onPubSubTimeout)
+    PubSub.addHandler(PubSubEvent.Untimeout, this.onPubSubUntimeout)
 
     try {
       await this.client.connect()
@@ -823,6 +824,21 @@ export class ChatClient extends React.Component<Props, State> {
         this.props.purgeLogs(user.logs)
       }
     }
+  }
+
+  /**
+   * Triggered when a user is untimeout (detected through PubSub).
+   * @param author - The action author.
+   * @param username - The username.
+   */
+  private onPubSubUntimeout = (author: string, username: string) => {
+    if (this.props.isMod) {
+      const notice = new Notice(`${author} removed the time out on ${username}.`, Event.Untimeout)
+
+      this.props.addLog(notice.serialize())
+    }
+
+    this.props.markChatterAsUnbanned(username)
   }
 
   /**

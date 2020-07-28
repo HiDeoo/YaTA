@@ -34,6 +34,7 @@ enum Event {
   Unban = 'unban',
   Unhost = 'unhost',
   Unmod = 'unmod',
+  Untimeout = 'untimeout',
   UserNotices = 'usernotices',
 }
 
