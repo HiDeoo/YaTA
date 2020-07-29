@@ -41,14 +41,6 @@ export default class Command {
   }
 
   /**
-   * Checks if a message is a marker command (`/marker`).
-   * @param message - A message potentially containing a marker command.
-   */
-  public static isMarkerCommand(message: string) {
-    return /^[/|.]marker(?:$|\s)/i.test(message)
-  }
-
-  /**
    * Checks if a message is a help command (`/help`).
    * @param message - A message potentially containing a help command.
    */
@@ -313,6 +305,39 @@ export default class Command {
   }
 
   /**
+   * Handles the /marker command.
+   */
+  private handleCommandMarker = async () => {
+    const { channelId } = this.delegateDataFetcher()
+    const [description] = this.arguments
+
+    if (!_.isNil(channelId)) {
+      let noticeStr
+
+      try {
+        await Twitch.createMarker(channelId, description)
+
+        noticeStr = 'Marker created successfully.'
+      } catch (error) {
+        noticeStr = 'Something went wrong while creating a marker.'
+
+        const matches = /message:"(?<message>[^"]*)/.exec(error)
+
+        if (matches) {
+          const message = _.get(matches, 'groups.message')
+
+          if (message) {
+            noticeStr = message
+          }
+        }
+      }
+
+      const notice = new Notice(noticeStr, null)
+      this.addLog(notice.serialize())
+    }
+  }
+
+  /**
    * Handles the /block & /unblock commands.
    */
   private handleCommandBlockUnblock = async () => {
@@ -407,6 +432,7 @@ export default class Command {
   private commandHandlers: { [key in CommandName]?: () => void } = {
     [CommandName.Block]: this.handleCommandBlockUnblock,
     [CommandName.Followed]: this.handleCommandFollowed,
+    [CommandName.Marker]: this.handleCommandMarker,
     [CommandName.Purge]: this.handleCommandPurge,
     [CommandName.Unblock]: this.handleCommandBlockUnblock,
     [CommandName.Uniquechat]: this.handleCommandUniqueChat,

@@ -146,14 +146,6 @@ export default class Input extends React.Component<Props, State> {
 
         intent = Classes.INTENT_SUCCESS
       }
-    } else if (Command.isMarkerCommand(value)) {
-      toasts.push({
-        icon: 'warning-sign',
-        intent: Intent.DANGER,
-        message: 'Markers can only be used on the Twitch website.',
-      })
-
-      intent = Classes.INTENT_DANGER
     } else if (value.length > Message.Max) {
       toasts.push({
         className: 'messageLengthError',
@@ -445,9 +437,7 @@ export default class Input extends React.Component<Props, State> {
   private validateInputValue() {
     const { value } = this.props
 
-    return (
-      value.length > 0 && _.trim(value).length > 0 && value.length <= Message.Max && !Command.isMarkerCommand(value)
-    )
+    return value.length > 0 && _.trim(value).length > 0 && value.length <= Message.Max
   }
 }
 

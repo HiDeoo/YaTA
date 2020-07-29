@@ -317,6 +317,20 @@ export default class Twitch {
   }
 
   /**
+   * Creates a stream marker.
+   * @param channelId - The id of the channel.
+   * @param description - A description of the marker.
+   */
+  public static async createMarker(channelId: string, description: Optional<string>) {
+    const response = await Twitch.fetch(TwitchApi.Helix, '/streams/markers', undefined, true, RequestMethod.Post, {
+      user_id: channelId,
+      description,
+    })
+
+    return response.json()
+  }
+
+  /**
    * Fetches user emotes.
    * @param  channelId - The id of the channel.
    * @return The channel live notification.

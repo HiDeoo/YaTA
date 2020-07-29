@@ -14,6 +14,7 @@ export enum CommandName {
   Followersoff = 'followersoff',
   Help = 'help',
   Host = 'host',
+  Marker = 'marker',
   Me = 'me',
   Mod = 'mod',
   Mods = 'mods',
@@ -67,6 +68,10 @@ export const Commands: Record<CommandName, CommandDescriptor> = {
   [CommandName.Host]: {
     arguments: [{ name: 'channel' }],
     description: 'Host another channel.',
+  },
+  [CommandName.Marker]: {
+    arguments: [{ name: 'description', optional: true }],
+    description: 'Add a stream marker at the current timestamp.',
   },
   [CommandName.Me]: {
     arguments: [{ name: 'message' }],
