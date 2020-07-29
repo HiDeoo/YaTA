@@ -54,6 +54,10 @@ const Changelog = styled.div`
     font-size: 1rem;
     line-height: 25px;
     margin: 20px 0 15px 0;
+
+    &::first-letter {
+      margin-right: 5px;
+    }
   }
 
   & code,
