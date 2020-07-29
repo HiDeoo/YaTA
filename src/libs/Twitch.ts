@@ -292,14 +292,14 @@ export default class Twitch {
    * @param  categoryId - The channel category ID.
    * @return The updated channel.
    */
-  public static async updateChannelInformations(channelId: string, title: string, categoryId: string) {
-    return Twitch.fetch(
-      TwitchApi.Helix,
-      '/channels',
-      { broadcaster_id: channelId, game_id: categoryId, title },
-      true,
-      RequestMethod.Patch
-    )
+  public static async updateChannelInformations(channelId: string, title: string, categoryId?: string) {
+    const params: Record<string, string> = { broadcaster_id: channelId, title }
+
+    if (categoryId) {
+      params['game_id'] = categoryId
+    }
+
+    return Twitch.fetch(TwitchApi.Helix, '/channels', params, true, RequestMethod.Patch)
   }
 
   /**
@@ -373,14 +373,9 @@ export default class Twitch {
    * @param messageId - The ID of the rejected message.
    */
   public static async allowAutoModMessage(messageId: string) {
-    return Twitch.fetch(
-      TwitchApi.Kraken,
-      '/chat/twitchbot/approve',
-      undefined,
-      true,
-      RequestMethod.Post,
-      { msg_id: messageId }
-    )
+    return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/approve', undefined, true, RequestMethod.Post, {
+      msg_id: messageId,
+    })
   }
 
   /**
@@ -388,14 +383,9 @@ export default class Twitch {
    * @param messageId - The ID of the rejected message.
    */
   public static async denyAutoModMessage(messageId: string) {
-    return Twitch.fetch(
-      TwitchApi.Kraken,
-      '/chat/twitchbot/deny',
-      undefined,
-      true,
-      RequestMethod.Post,
-      { msg_id: messageId }
-    )
+    return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/deny', undefined, true, RequestMethod.Post, {
+      msg_id: messageId,
+    })
   }
 
   /**

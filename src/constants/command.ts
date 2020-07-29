@@ -27,6 +27,7 @@ export enum CommandName {
   Subscribers = 'subscribers',
   Subscribersoff = 'subscribersoff',
   Timeout = 'timeout',
+  Title = 'title',
   Unban = 'unban',
   Unblock = 'unblock',
   Unhost = 'unhost',
@@ -107,6 +108,10 @@ export const Commands: Record<CommandName, CommandDescriptor> = {
     arguments: [{ name: 'username' }, { name: 'duration', optional: true }, { name: 'reason', optional: true }],
     description:
       'Timeout temporarily a user from chat. The duration (10min default, 2 weeks max) can specify a time unit (s, m, h, d or w).',
+  },
+  [CommandName.Title]: {
+    arguments: [{ name: 'title', optional: true }],
+    description: 'Display or update the stream title.',
   },
   [CommandName.Unban]: {
     arguments: [{ name: 'username' }],

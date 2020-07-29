@@ -338,6 +338,39 @@ export default class Command {
   }
 
   /**
+   * Handles the /title command.
+   */
+  private handleCommandTitle = async () => {
+    const { channelId } = this.delegateDataFetcher()
+    const title = this.arguments.join(' ')
+
+    if (!_.isNil(channelId)) {
+      let noticeStr
+
+      if (_.isEmpty(title)) {
+        try {
+          const channelInfos = await Twitch.fetchChannelInformations(channelId)
+
+          noticeStr = `Current title: ${channelInfos.title}`
+        } catch (error) {
+          noticeStr = 'Something went wrong while fetching the title.'
+        }
+      } else {
+        try {
+          await Twitch.updateChannelInformations(channelId, title)
+
+          noticeStr = `New title: ${title}`
+        } catch (error) {
+          noticeStr = 'Something went wrong while updating the title.'
+        }
+      }
+
+      const notice = new Notice(noticeStr, null)
+      this.addLog(notice.serialize())
+    }
+  }
+
+  /**
    * Handles the /block & /unblock commands.
    */
   private handleCommandBlockUnblock = async () => {
@@ -434,6 +467,7 @@ export default class Command {
     [CommandName.Followed]: this.handleCommandFollowed,
     [CommandName.Marker]: this.handleCommandMarker,
     [CommandName.Purge]: this.handleCommandPurge,
+    [CommandName.Title]: this.handleCommandTitle,
     [CommandName.Unblock]: this.handleCommandBlockUnblock,
     [CommandName.Uniquechat]: this.handleCommandUniqueChat,
     [CommandName.Uniquechatoff]: this.handleCommandUniqueChatOff,
