@@ -60,6 +60,7 @@ export enum Actions {
   UNSHIFT = 'logs/UNSHIFT',
   MARK_AS_READ = 'logs/MARK_AS_READ',
   MARK_REJECTED_MESSAGE_AS_HANDLED = 'logs/MARK_REJECTED_MESSAGE_AS_HANDLED',
+  TOGGLE_COMPRESS = 'logs/TOGGLE_COMPRESS',
 }
 
 /**
@@ -200,6 +201,19 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
 
       return { ...state, byId: { ...state.byId, [id]: { ...rejectedMessage, handled: true } } }
     }
+    case Actions.TOGGLE_COMPRESS: {
+      const { id } = action.payload
+      const compressedMessage = _.get(state.byId, id)
+
+      if (_.isNil(compressedMessage) || !isMessage(compressedMessage)) {
+        return state
+      }
+
+      console.log(`Hi Numbers, this is called ${compressedMessage.compressed}`)
+
+      return { ...state, byId: { ...state.byId, [id]: { ...compressedMessage, compressed: false } } }
+    }
+
     default: {
       return state
     }
@@ -290,6 +304,11 @@ export const markRejectedMessageAsHandled = (id: string) =>
     id,
   })
 
+export const markAsDecompressed = (id: string) =>
+  createAction(Actions.TOGGLE_COMPRESS, {
+    id,
+  })
+
 /**
  * Logs actions.
  */
@@ -303,6 +322,7 @@ export type LogsActions =
   | ReturnType<typeof unshiftLog>
   | ReturnType<typeof markAsRead>
   | ReturnType<typeof markRejectedMessageAsHandled>
+  | ReturnType<typeof markAsDecompressed>
 
 /**
  * Logs state.

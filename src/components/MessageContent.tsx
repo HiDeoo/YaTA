@@ -7,6 +7,7 @@ import { WithNameColorProps } from 'libs/Chatter'
 import { HighlightColors } from 'libs/Highlight'
 import { SerializedMessage } from 'libs/Message'
 import styled, { ifProp, prop, theme } from 'styled'
+import constants from 'constants/message'
 
 /**
  * Message component.
@@ -91,9 +92,12 @@ export default class MessageContent extends React.Component<Props> {
     const messageColor =
       isAction && !_.isNil(message.user.color) && !message.historical ? message.user.color : 'inherit'
 
+    console.log(`Message compressed = ${message.compressed}`)
+    const shownMessage = message.compressed ? constants.CompressedTxt: message.message
+
     return (
       <Message
-        dangerouslySetInnerHTML={{ __html: message.message }}
+        dangerouslySetInnerHTML={{ __html: shownMessage }}
         withEmoteDetails={withEmoteDetails}
         onClick={this.onClick}
         color={messageColor}

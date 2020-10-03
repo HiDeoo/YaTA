@@ -506,6 +506,12 @@ export class ChatClient extends React.Component<Props, State> {
         return
       }
 
+      // if (Resources.manager().shouldCompressMessage(userstate.username)) {
+
+      // This value should come from some list somewhere which has the user ids
+      serializedMessage.compressed = true
+      // }
+
       if (
         !serializedMessage.historical &&
         !Resources.manager().isBot(serializedMessage.user.userName) &&

@@ -179,6 +179,19 @@ export class Logs extends React.Component<Props> {
     }
   }
 
+  private onMessageContentClicked = (id: string, index: number) => {
+    const { markAsDecompressed, logs } = this.props
+
+    const message = logs[index]
+
+    if (isMessage(message) && message.compressed) {
+      markAsDecompressed(id)
+
+      // Clear the cache to force a height rerender if necessary
+      this.logMeasureCache.clear(index, 0)
+    }
+  }
+
   /**
    * Render a log based on its type.
    * @param  listRowProps - The props to add to the row being rendered.
@@ -220,6 +233,7 @@ export class Logs extends React.Component<Props> {
 
       LogComponent = (
         <Message
+          messageIndex={index}
           addHighlightsIgnoredUser={addHighlightsIgnoredUser}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
           increaseTwitchHighlight={increaseTwitchHighlight}
@@ -233,6 +247,7 @@ export class Logs extends React.Component<Props> {
           actionHandler={actionHandler}
           deleteMessage={deleteMessage}
           onClick={this.onClickMessage}
+          onMessageContentClicked={this.onMessageContentClicked}
           focusChatter={focusChatter}
           quoteMessage={quoteMessage}
           useAlternate={useAlternate}
@@ -307,6 +322,7 @@ interface Props extends ThemeProps {
   logs: Log[]
   markAsRead: (id: string) => void
   markRejectedMessageAsHandled: (id: string) => void
+  markAsDecompressed: (id: string) => void
   markNewAsUnread: boolean
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   pauseAutoScroll: (pause: boolean) => void

@@ -185,6 +185,7 @@ export default class Message extends React.Component<Props, State> {
       message.read !== nextMessage.read ||
       showUnbanContextMenuItem !== prevShowUnbanContextMenuItem ||
       markNewAsUnread !== prevMarkNewAsUnread ||
+      message.compressed !== nextMessage.compressed ||
       !_.isEqual(style, nextStyle)
     )
   }
@@ -364,9 +365,11 @@ export default class Message extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onClick = (event: React.MouseEvent<HTMLElement>) => {
-    const { message, onClick, quoteMessage } = this.props
+    const { message, onClick, quoteMessage, messageIndex, onMessageContentClicked } = this.props
 
     onClick(message.id)
+
+    onMessageContentClicked(message.id, messageIndex)
 
     if (event.altKey) {
       quoteMessage(message)
@@ -530,7 +533,9 @@ interface Props {
   increaseTwitchHighlight: boolean
   markNewAsUnread: boolean
   message: SerializedMessage
+  messageIndex: number
   onClick: (id: string) => void
+  onMessageContentClicked: (id: string, msgIndex: number) => void
   onToggleContextMenu: (open: boolean) => void
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   quoteMessage: (message: SerializedMessage) => void

@@ -34,6 +34,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private read: boolean
   private twitchHighlighted: boolean
   private historical: boolean
+  private compressed: boolean
 
   /**
    * Creates and parses a new chat message instance.
@@ -71,6 +72,8 @@ export default class Message implements Serializable<SerializedMessage> {
 
     this.badges = this.parseBadges(userstate, parseOptions.hideVIPBadge)
     this.message = this.parseMessage(message, userstate, currentUsername)
+
+    this.compressed = false
   }
 
   /**
@@ -105,6 +108,7 @@ export default class Message implements Serializable<SerializedMessage> {
       twitchHighlighted: this.twitchHighlighted,
       type: this.type,
       user: this.user.serialize(),
+      compressed: this.compressed,
     }
   }
 
@@ -450,6 +454,7 @@ export type SerializedMessage = {
   previews: Previews
   read: boolean
   twitchHighlighted: boolean
+  compressed: boolean
 }
 
 /**

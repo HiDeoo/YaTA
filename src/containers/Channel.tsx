@@ -49,6 +49,7 @@ import {
   isLog,
   Log,
   markAsRead,
+  markAsDecompressed,
   markRejectedMessageAsHandled,
   pauseAutoScroll,
 } from 'store/ducks/logs'
@@ -317,6 +318,7 @@ class Channel extends React.Component<Props, State> {
           copyToClipboard={this.copyToClipboard}
           deleteMessage={this.deleteMessage}
           markAsRead={this.props.markAsRead}
+          markAsDecompressed={this.props.markAsDecompressed}
           markNewAsUnread={markNewAsUnread}
           showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
@@ -1498,6 +1500,7 @@ const enhance = compose<Props, {}>(
       addMarker,
       addToHistory,
       markAsRead,
+      markAsDecompressed,
       markRejectedMessageAsHandled,
       markChatterAsBlocked,
       markChatterAsUnblocked,
@@ -1550,6 +1553,7 @@ interface DispatchProps {
   addMarker: typeof addMarker
   addToHistory: typeof addToHistory
   markAsRead: typeof markAsRead
+  markAsDecompressed: typeof markAsDecompressed
   markChatterAsBlocked: typeof markChatterAsBlocked
   markChatterAsUnblocked: typeof markChatterAsUnblocked
   markRejectedMessageAsHandled: typeof markRejectedMessageAsHandled

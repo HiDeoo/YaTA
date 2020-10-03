@@ -43,6 +43,11 @@ export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byI
       purgedCount += 1
     }
 
+    // TODO Check for compressed message instead and not abuse the purgedCount for it
+    if (isMessage(log) && log.compressed) {
+      purgedCount += 1
+    }
+
     if (isRejectedMessage(log) && !log.handled) {
       unhandledRejectedMessageCount += 1
     }
