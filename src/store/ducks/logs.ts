@@ -60,7 +60,7 @@ export enum Actions {
   UNSHIFT = 'logs/UNSHIFT',
   MARK_AS_READ = 'logs/MARK_AS_READ',
   MARK_REJECTED_MESSAGE_AS_HANDLED = 'logs/MARK_REJECTED_MESSAGE_AS_HANDLED',
-  TOGGLE_COMPRESS = 'logs/TOGGLE_COMPRESS',
+  MARK_COMPRESSED_MESSAGE_AS_DECOMPRESSED = 'logs/MARK_COMPRESSED_MESSAGE_AS_DECOMPRESSED',
 }
 
 /**
@@ -201,7 +201,7 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
 
       return { ...state, byId: { ...state.byId, [id]: { ...rejectedMessage, handled: true } } }
     }
-    case Actions.TOGGLE_COMPRESS: {
+    case Actions.MARK_COMPRESSED_MESSAGE_AS_DECOMPRESSED: {
       const { id } = action.payload
       const compressedMessage = _.get(state.byId, id)
 
@@ -305,7 +305,7 @@ export const markRejectedMessageAsHandled = (id: string) =>
   })
 
 export const markAsDecompressed = (id: string) =>
-  createAction(Actions.TOGGLE_COMPRESS, {
+  createAction(Actions.MARK_COMPRESSED_MESSAGE_AS_DECOMPRESSED, {
     id,
   })
 
