@@ -92,7 +92,6 @@ export default class MessageContent extends React.Component<Props> {
     const messageColor =
       isAction && !_.isNil(message.user.color) && !message.historical ? message.user.color : 'inherit'
 
-    console.log(`Message compressed = ${message.compressed}`)
     const shownMessage = message.compressed ? constants.CompressedTxt: message.message
 
     return (

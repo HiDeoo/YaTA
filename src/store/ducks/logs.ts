@@ -209,8 +209,6 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
         return state
       }
 
-      console.log(`Hi Numbers, this is called ${compressedMessage.compressed}`)
-
       return { ...state, byId: { ...state.byId, [id]: { ...compressedMessage, compressed: false } } }
     }
 
