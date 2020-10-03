@@ -108,7 +108,9 @@ export default class MessageContent extends React.Component<Props> {
    * Triggered when a message content is clicked.
    */
   private onClick = (event: React.MouseEvent<HTMLSpanElement>) => {
-    const { focusEmote } = this.props
+    const { focusEmote, onClick } = this.props
+
+    if (!_.isNil(onClick)) onClick()
 
     // If we don't care about emote clicks, bail out early.
     if (_.isNil(focusEmote)) {
@@ -157,6 +159,7 @@ interface Props {
   focusEmote?: (id: string, name: string, provider: string) => void
   message: SerializedMessage
   withEmoteDetails?: boolean
+  onClick?: () => void
   shouldCompress?: boolean
 }
 

@@ -223,7 +223,7 @@ export default class Message extends React.Component<Props, State> {
           {message.user.displayName}
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
-        <MessageContent message={message} focusEmote={focusEmote} withEmoteDetails />
+        <MessageContent message={message} shouldCompress={true} onClick={this.onClickMessageContent} focusEmote={focusEmote} withEmoteDetails />
         {'\n'}
         {this.renderPreviews()}
       </Wrapper>
@@ -498,6 +498,12 @@ export default class Message extends React.Component<Props, State> {
   private onClickTimeout24H = () => {
     this.timeout(86400)
   }
+
+  private onClickMessageContent = () => {
+    const { message: {id}, messageIndex, onMessageContentClicked } = this.props
+
+    onMessageContentClicked(id, messageIndex)
+}
 
   /**
    * Timeouts a user.
