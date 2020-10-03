@@ -208,6 +208,9 @@ export class Logs extends React.Component<Props> {
       actionHandler,
       addHighlightsIgnoredUser,
       alternateMessageBackgrounds,
+      addUserToCompress,
+      deleteUserFromCompress,
+      compressedUserIds,
       ban,
       canModerate,
       chatters,
@@ -232,6 +235,7 @@ export class Logs extends React.Component<Props> {
       const chatter = _.get(chatters, log.user.id)
       const isBanned = _.isNil(chatter) ? false : chatter.banned
       const useAlternate = alternateMessageBackgrounds && index % 2 === 0
+      const isCompressedUser = compressedUserIds.indexOf(log.user.id) >= 0
 
       LogComponent = (
         <Message
@@ -242,6 +246,9 @@ export class Logs extends React.Component<Props> {
           copyMessageToClipboard={copyMessageToClipboard}
           onToggleContextMenu={this.onToggleContextMenu}
           openTwitchViewerCard={openTwitchViewerCard}
+          addUserToCompress={addUserToCompress}
+          deleteUserFromCompress={deleteUserFromCompress}
+          isCompressedUser={isCompressedUser}
           showUnbanContextMenuItem={isBanned}
           copyToClipboard={copyToClipboard}
           showContextMenu={showContextMenu}
@@ -309,15 +316,18 @@ export default withTheme(Logs)
 interface Props extends ThemeProps {
   actionHandler: ActionHandler
   addHighlightsIgnoredUser: (username: string) => void
+  addUserToCompress: (userId: string) => void
   alternateMessageBackgrounds: boolean
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   chatters: ChattersState['byId']
   compressedCount: number
+  compressedUserIds: string[]
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
+  deleteUserFromCompress: (userId: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   focusEmote: (id: string, name: string, provider: string) => void
   increaseTwitchHighlight: boolean

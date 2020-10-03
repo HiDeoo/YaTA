@@ -53,7 +53,7 @@ import {
   markRejectedMessageAsHandled,
   pauseAutoScroll,
 } from 'store/ducks/logs'
-import { addHighlightsIgnoredUsers } from 'store/ducks/settings'
+import {addHighlightsIgnoredUsers, addUserToCompress, deleteUserFromCompress} from 'store/ducks/settings'
 import { ApplicationState } from 'store/reducers'
 import {
   getChannel,
@@ -70,6 +70,7 @@ import {
   getAddWhispersToHistory,
   getAlternateMessageBackgrounds,
   getAutoFocusInput,
+  getCompressedUserIds,
   getCopyMessageOnDoubleClick,
   getIncreaseTwitchHighlight,
   getMarkNewAsUnread,
@@ -319,6 +320,9 @@ class Channel extends React.Component<Props, State> {
           deleteMessage={this.deleteMessage}
           markAsRead={this.props.markAsRead}
           markAsDecompressed={this.props.markAsDecompressed}
+          addUserToCompress={this.props.addUserToCompress}
+          deleteUserFromCompress={this.props.deleteUserFromCompress}
+          compressedUserIds={this.props.compressedIds}
           markNewAsUnread={markNewAsUnread}
           showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
@@ -1477,6 +1481,7 @@ const enhance = compose<Props, {}>(
       autoFocusInput: getAutoFocusInput(state),
       channel: getChannel(state),
       chatters: getChatters(state),
+      compressedIds: getCompressedUserIds(state),
       copyMessageOnDoubleClick: getCopyMessageOnDoubleClick(state),
       emotes: getEmotes(state),
       history: getHistory(state),
@@ -1500,6 +1505,8 @@ const enhance = compose<Props, {}>(
       addLog,
       addMarker,
       addToHistory,
+      addUserToCompress,
+      deleteUserFromCompress,
       markAsRead,
       markAsDecompressed,
       markRejectedMessageAsHandled,
@@ -1526,6 +1533,7 @@ interface StateProps {
   autoFocusInput: ReturnType<typeof getAutoFocusInput>
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
+  compressedIds: ReturnType<typeof getCompressedUserIds>
   copyMessageOnDoubleClick: ReturnType<typeof getCopyMessageOnDoubleClick>
   emotes: ReturnType<typeof getEmotes>
   shortcuts: ReturnType<typeof getShortcuts>
@@ -1553,6 +1561,8 @@ interface DispatchProps {
   addLog: typeof addLog
   addMarker: typeof addMarker
   addToHistory: typeof addToHistory
+  addUserToCompress: typeof addUserToCompress
+  deleteUserFromCompress: typeof deleteUserFromCompress
   markAsRead: typeof markAsRead
   markAsDecompressed: typeof markAsDecompressed
   markChatterAsBlocked: typeof markChatterAsBlocked

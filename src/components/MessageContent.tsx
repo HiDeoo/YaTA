@@ -87,12 +87,12 @@ export default class MessageContent extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { message, withEmoteDetails } = this.props
+    const { message, withEmoteDetails, shouldCompress } = this.props
     const isAction = message.type === LogType.Action
     const messageColor =
       isAction && !_.isNil(message.user.color) && !message.historical ? message.user.color : 'inherit'
 
-    const shownMessage = message.compressed ? constants.CompressedTxt: message.message
+    const shownMessage = message.compressed && shouldCompress ? constants.CompressedTxt: message.message
 
     return (
       <Message
@@ -157,6 +157,7 @@ interface Props {
   focusEmote?: (id: string, name: string, provider: string) => void
   message: SerializedMessage
   withEmoteDetails?: boolean
+  shouldCompress?: boolean
 }
 
 /**

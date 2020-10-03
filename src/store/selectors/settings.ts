@@ -50,6 +50,16 @@ export const getCopyMessageOnDoubleClick = createSelector(
 )
 
 /**
+ * Returns the users ids who's messages need compressing
+ * @param  state - The Redux state.
+ * @return List of user ids that have messages compressed
+ */
+export const getCompressedUserIds = createSelector(
+    [getSettingsState],
+    (settings) => settings.compressedUserIds
+)
+
+/**
  * Returns the 'Show context menu' setting.
  * @param  state - The Redux state.
  * @return The 'Show context menu' setting.

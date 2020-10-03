@@ -304,6 +304,15 @@ export default class Message extends React.Component<Props, State> {
             icon="delete"
           />
         )}
+
+        { !message.user.isSelf && <>
+          { this.props.isCompressedUser
+            ? <Menu.Item icon="maximize" text="Disable message compression" onClick={this.onMessageCompressionStopRequest} />
+            : <Menu.Item icon="minimize" text="Enable message compression" onClick={this.onMessageCompressionStartRequest} />
+          }
+          </>
+        }
+
         <ActionMenuItems startDivider actionHandler={actionHandler} chatter={message.user} />
         {canModerate(message.user) && (
           <>
@@ -365,11 +374,9 @@ export default class Message extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onClick = (event: React.MouseEvent<HTMLElement>) => {
-    const { message, onClick, quoteMessage, messageIndex, onMessageContentClicked } = this.props
+    const { message, onClick, quoteMessage } = this.props
 
     onClick(message.id)
-
-    onMessageContentClicked(message.id, messageIndex)
 
     if (event.altKey) {
       quoteMessage(message)
@@ -423,6 +430,20 @@ export default class Message extends React.Component<Props, State> {
     const { message } = this.props
 
     this.props.copyToClipboard(message.user.displayName)
+  }
+
+  private onMessageCompressionStartRequest = () => {
+    const { message, addUserToCompress } = this.props
+    const userId = message.user.id
+
+    addUserToCompress(userId)
+  }
+
+  private onMessageCompressionStopRequest = () => {
+    const { message, deleteUserFromCompress } = this.props
+    const userId = message.user.id
+
+    deleteUserFromCompress(userId)
   }
 
   /**
@@ -522,15 +543,18 @@ export default class Message extends React.Component<Props, State> {
 interface Props {
   actionHandler: ActionHandler
   addHighlightsIgnoredUser: (username: string) => void
+  addUserToCompress: (userId: string) => void
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void
   deleteMessage: (id: string) => void
+  deleteUserFromCompress: (userId: string) => void
   focusChatter: (chatter: SerializedChatter) => void
   focusEmote: (id: string, name: string, provider: string) => void
   increaseTwitchHighlight: boolean
+  isCompressedUser: boolean
   markNewAsUnread: boolean
   message: SerializedMessage
   messageIndex: number

@@ -50,6 +50,7 @@ import { getChannel } from 'store/selectors/app'
 import { getChatters, getChattersMap } from 'store/selectors/chatters'
 import {
   getAutoHostThreshold,
+  getCompressedUserIds,
   getDelayBetweenThrottledSounds,
   getHideVIPBadges,
   getHideWhispers,
@@ -506,11 +507,12 @@ export class ChatClient extends React.Component<Props, State> {
         return
       }
 
-      // if (Resources.manager().shouldCompressMessage(userstate.username)) {
+      const userId = parsedMessage.user.id;
+      const indexOfCompressedUser = this.props.compressedIds.indexOf(userId);
 
-      // This value should come from some list somewhere which has the user ids
-      serializedMessage.compressed = true
-      // }
+      if (indexOfCompressedUser > -1) {
+        serializedMessage.compressed = true
+      }
 
       if (
         !serializedMessage.historical &&
@@ -1394,6 +1396,7 @@ export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     channel: getChannel(state),
     chatters: getChatters(state),
     chattersMap: getChattersMap(state),
+    compressedIds: getCompressedUserIds(state),
     delayBetweenThrottledSounds: getDelayBetweenThrottledSounds(state),
     hideVIPBadges: getHideVIPBadges(state),
     hideWhispers: getHideWhispers(state),
@@ -1439,6 +1442,7 @@ interface StateProps {
   channel: ReturnType<typeof getChannel>
   chatters: ReturnType<typeof getChatters>
   chattersMap: ReturnType<typeof getChattersMap>
+  compressedIds: ReturnType<typeof getCompressedUserIds>
   delayBetweenThrottledSounds: ReturnType<typeof getDelayBetweenThrottledSounds>
   hideVIPBadges: ReturnType<typeof getHideVIPBadges>
   hideWhispers: ReturnType<typeof getHideWhispers>

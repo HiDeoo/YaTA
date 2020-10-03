@@ -39,6 +39,8 @@ export enum Actions {
   REMOVE_ACTION = 'settings/REMOVE_ACTION',
   UPDATE_ACTION = 'settings/UPDATE_ACTION',
   MOVE_ACTION = 'settings/MOVE_ACTION',
+  ADD_USER_TO_COMPRESS_LIST = 'settings/ADD_USER_TO_COMPRESS_LIST',
+  DELETE_USER_FROM_COMPRESS_LIST = 'settings/DELETE_USER_FROM_COMPRESS_LIST',
   TOGGLE_HIDE_WHISPERS = 'settings/TOGGLE_HIDE_WHISPERS',
   RESTORE = 'settings/RESTORE',
   TOGGLE_AUTO_FOCUS_INPUT = 'settings/TOGGLE_AUTO_FOCUS_INPUT',
@@ -75,6 +77,7 @@ export const initialState = {
   alternateMessageBackgrounds: false,
   autoFocusInput: true,
   autoHostThreshold: 1,
+  compressedUserIds: [],
   copyMessageOnDoubleClick: true,
   delayBetweenThrottledSounds: 10,
   disableDialogAnimations: false,
@@ -436,6 +439,18 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         increaseTwitchHighlight: !state.increaseTwitchHighlight,
       }
     }
+    case Actions.ADD_USER_TO_COMPRESS_LIST: {
+      return {
+        ...state,
+        compressedUserIds: [...state.compressedUserIds, action.payload.id]
+      }
+    }
+    case Actions.DELETE_USER_FROM_COMPRESS_LIST: {
+      return {
+        ...state,
+        compressedUserIds: state.compressedUserIds.filter(userId => userId !== action.payload.id)
+      }
+    }
     default: {
       return state
     }
@@ -769,6 +784,16 @@ export const toggleMarkNewAsUnread = () => createAction(Actions.TOGGLE_MARK_NEW_
  */
 export const toggleIncreaseTwitchHighlight = () => createAction(Actions.TOGGLE_INCREASE_TWITCH_HIGHLIGHT)
 
+export const addUserToCompress = (id: string) =>
+  createAction(Actions.ADD_USER_TO_COMPRESS_LIST, {
+    id,
+  })
+
+export const deleteUserFromCompress = (id: string) =>
+  createAction(Actions.DELETE_USER_FROM_COMPRESS_LIST, {
+    id,
+  })
+
 /**
  * Settings actions.
  */
@@ -812,6 +837,8 @@ export type SettingsActions =
   | ReturnType<typeof toggleHideHeader>
   | ReturnType<typeof toggleMarkNewAsUnread>
   | ReturnType<typeof toggleIncreaseTwitchHighlight>
+  | ReturnType<typeof addUserToCompress>
+  | ReturnType<typeof deleteUserFromCompress>
 
 /**
  * Settings state.
@@ -966,6 +993,11 @@ export type SettingsState = {
    * Defines if the Twitch highlight should be increased.
    */
   increaseTwitchHighlight: boolean
+
+  /**
+   * List of user ids which be default have their messages compressed.
+   */
+  compressedUserIds: string[]
 }
 
 /**
