@@ -69,6 +69,7 @@ export class Logs extends React.Component<Props> {
     const {
       alternateMessageBackgrounds,
       copyMessageOnDoubleClick,
+      compressedCount,
       increaseTwitchHighlight,
       lastReadId,
       logs,
@@ -98,6 +99,7 @@ export class Logs extends React.Component<Props> {
               rowRenderer={this.logRenderer}
               scrollToIndex={scrollToIndex}
               purgedCount={purgedCount}
+              compressedCount={compressedCount}
               onScroll={this.onScroll}
               lastReadId={lastReadId}
               rowCount={logs.length}
@@ -311,6 +313,7 @@ interface Props extends ThemeProps {
   ban: (username: string) => void
   canModerate: (chatter: SerializedChatter) => boolean
   chatters: ChattersState['byId']
+  compressedCount: number
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage) => void
   copyToClipboard: (message: string) => void

@@ -34,6 +34,7 @@ const getLogsAllIds = (state: ApplicationState) => state.logs.allIds
  */
 export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byId) => {
   let purgedCount = 0
+  let compressedCount = 0
   let unhandledRejectedMessageCount = 0
 
   const logs = _.map(allIds, (id) => {
@@ -43,9 +44,8 @@ export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byI
       purgedCount += 1
     }
 
-    // TODO Check for compressed message instead and not abuse the purgedCount for it
     if (isMessage(log) && log.compressed) {
-      purgedCount += 1
+      compressedCount += 1
     }
 
     if (isRejectedMessage(log) && !log.handled) {
@@ -55,7 +55,7 @@ export const getLogs = createSelector([getLogsAllIds, getLogsById], (allIds, byI
     return log
   })
 
-  return { logs, purgedCount, unhandledRejectedMessageCount }
+  return { logs, purgedCount, compressedCount, unhandledRejectedMessageCount }
 })
 
 /**

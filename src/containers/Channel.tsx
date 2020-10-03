@@ -323,6 +323,7 @@ class Channel extends React.Component<Props, State> {
           showContextMenu={showContextMenu}
           actionHandler={this.handleAction}
           purgedCount={allLogs.purgedCount}
+          compressedCount={allLogs.compressedCount}
           focusChatter={this.focusChatter}
           quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
