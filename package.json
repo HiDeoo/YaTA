@@ -76,6 +76,7 @@
     "@types/styled-components": "5.1.1",
     "@types/tinycolor2": "1.4.2",
     "@types/webpack-env": "1.15.2",
+    "eslint-plugin-prettier": "3.2.0",
     "husky": "4.2.5",
     "lint-staged": "10.2.11",
     "now": "19.2.0",
@@ -99,7 +100,11 @@
     ]
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "plugins": ["prettier"],
+    "rules": {
+      "prettier/prettier": "error"
+    }
   },
   "browserslist": {
     "production": [

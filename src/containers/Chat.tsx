@@ -914,7 +914,10 @@ export class ChatClient extends React.Component<Props, State> {
    */
   private onApprovedAutomodMessage = (messageId: string, username: string, moderator: string) => {
     if (this.props.isMod) {
-      const notice = new Notice(`The message from ${username} was allowed by ${moderator}.`, Event.ApprovedAutomodMessage)
+      const notice = new Notice(
+        `The message from ${username} was allowed by ${moderator}.`,
+        Event.ApprovedAutomodMessage
+      )
 
       this.props.addLog(notice.serialize())
     }
