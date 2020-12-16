@@ -226,7 +226,7 @@ const FeaturesList: FeatureDefinition[] = [
 /**
  * Login Component.
  */
-export default () => (
+const Login = () => (
   <Wrapper>
     <Header>
       <Preview src={PreviewImg} />
@@ -255,6 +255,8 @@ export default () => (
     </Features>
   </Wrapper>
 )
+
+export default Login
 
 /**
  * React Props.

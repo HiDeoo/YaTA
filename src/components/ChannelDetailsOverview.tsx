@@ -118,7 +118,7 @@ const ChannelDetailsPanels = {
   [ChannelDetailsType.LastVods]: { component: ChannelDetailsVideos, icon: 'video' },
   [ChannelDetailsType.RecentClips]: { component: ChannelDetailsVideos, icon: 'film' },
   [ChannelDetailsType.TopClips]: { component: ChannelDetailsVideos, icon: 'crown' },
-} as Record<ChannelDetailsType, ChannelDetailsPanel>
+} as Record<ChannelDetailsType, ChannelDetailsPanelConfiguration>
 
 /**
  * React State.
@@ -308,6 +308,6 @@ interface StateProps {
 type Props = StateProps & IPanelProps & ChannelDetailsProps
 
 /**
- * Channel details panel.
+ * Channel details panel configuration.
  */
-export type ChannelDetailsPanel = { component: React.ComponentType<any>; icon: IconName }
+export type ChannelDetailsPanelConfiguration = { component: React.ComponentType<any>; icon: IconName }

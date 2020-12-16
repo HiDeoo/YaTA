@@ -2,7 +2,7 @@ import { Button, Classes, IButtonProps, Position, Tooltip } from '@blueprintjs/c
 import _ from 'lodash'
 import * as React from 'react'
 
-import { ChannelDetailsPanel, ChannelDetailsType } from 'components/ChannelDetailsOverview'
+import { ChannelDetailsPanelConfiguration, ChannelDetailsType } from 'components/ChannelDetailsOverview'
 import styled, { theme } from 'styled'
 
 /**
@@ -82,7 +82,7 @@ interface Props {
   buttonProps?: ButtonProps
   onClick?: () => void
   onClickPanel?: (type: ChannelDetailsType) => void
-  panel?: ChannelDetailsPanel
+  panel?: ChannelDetailsPanelConfiguration
   tooltip?: JSX.Element | string
   type?: ChannelDetailsType
 }
