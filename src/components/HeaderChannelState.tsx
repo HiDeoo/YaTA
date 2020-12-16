@@ -1,6 +1,6 @@
 import { Button, Classes, Colors, Icon, NavbarDivider } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import HeaderTooltip from 'components/HeaderTooltip'
 import { SerializedRoomState } from 'libs/RoomState'
@@ -72,7 +72,7 @@ const ViewerCount = styled.div`
 /**
  * HeaderChannelState Component.
  */
-export default class HeaderChannelState extends React.Component<Props> {
+export default class HeaderChannelState extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ExternalButton from 'components/ExternalButton'
@@ -211,7 +211,7 @@ type State = Readonly<typeof initialState>
 /**
  * ChatterDetails Component.
  */
-class ChatterDetails extends React.Component<Props, State> {
+class ChatterDetails extends Component<Props, State> {
   public state: State = initialState
 
   /**

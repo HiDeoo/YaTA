@@ -1,6 +1,6 @@
 import { Button, Classes, IButtonProps, Position, Tooltip } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import { ChannelDetailsPanelConfiguration, ChannelDetailsType } from 'components/ChannelDetailsOverview'
 import styled, { theme } from 'styled'
@@ -29,7 +29,7 @@ const ButtonTooltip = styled(Tooltip)`
 /**
  * ChannelDetailsButton Component.
  */
-export default class ChannelDetailsButton extends React.Component<Props> {
+export default class ChannelDetailsButton extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

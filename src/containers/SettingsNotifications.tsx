@@ -1,6 +1,6 @@
 import { Classes, Colors, Slider } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { createRef, Component } from 'react'
 import { connect } from 'react-redux'
 
 import NumericInput from 'components/NumericInput'
@@ -61,9 +61,9 @@ const SoundDelayLabel = styled.div<SoundDelayLabelProps>`
 /**
  * SettingsNotifications Component.
  */
-class SettingsNotifications extends React.Component<Props> {
-  private hostThresholdInput = React.createRef<NumericInput>()
-  private autoHostThresholdInput = React.createRef<NumericInput>()
+class SettingsNotifications extends Component<Props> {
+  private hostThresholdInput = createRef<NumericInput>()
+  private autoHostThresholdInput = createRef<NumericInput>()
 
   /**
    * Renders the component.

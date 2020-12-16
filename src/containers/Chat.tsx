@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
 import shortid from 'shortid'
@@ -73,7 +73,7 @@ type State = Readonly<typeof initialState>
 /**
  * Chat Component.
  */
-export class ChatClient extends React.Component<Props, State> {
+export class ChatClient extends Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null

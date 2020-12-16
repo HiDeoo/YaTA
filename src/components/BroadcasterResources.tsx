@@ -1,7 +1,7 @@
 import { Tab, Tabs } from '@blueprintjs/core'
 import _ from 'lodash'
 import pluralize from 'pluralize'
-import * as React from 'react'
+import { Component } from 'react'
 
 import BroadcasterSection from 'components/BroadcasterSection'
 import ExternalResource, { Resource, ResourceType } from 'components/ExternalResource'
@@ -58,7 +58,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterResources Component.
  */
-export default class BroadcasterResources extends React.Component<BroadcasterSectionProps, State> {
+export default class BroadcasterResources extends Component<BroadcasterSectionProps, State> {
   public state: State = initialState
 
   /**

@@ -1,6 +1,6 @@
 import { Classes, Colors } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import SettingsView from 'components/SettingsView'
@@ -90,7 +90,7 @@ type State = Readonly<typeof initialState>
 /**
  * SettingsChangelog Component.
  */
-class SettingsChangelog extends React.Component<Props, State> {
+class SettingsChangelog extends Component<Props, State> {
   public state: State = initialState
 
   /**

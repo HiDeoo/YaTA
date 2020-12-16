@@ -2,7 +2,7 @@ import { Colors, Icon, Text } from '@blueprintjs/core'
 import anime from 'animejs'
 import _ from 'lodash'
 import pluralize from 'pluralize'
-import * as React from 'react'
+import { Component } from 'react'
 import { Flipped } from 'react-flip-toolkit'
 import TimeAgo, { Formatter } from 'react-timeago'
 
@@ -150,7 +150,7 @@ const Meta = styled(Text).attrs({
 /**
  * Follow Component.
  */
-class Follow extends React.Component<Props> {
+class Follow extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

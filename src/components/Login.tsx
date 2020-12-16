@@ -1,6 +1,5 @@
 import { AnchorButton, Classes, Colors, H2, H3, Icon, IconName, Intent } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'

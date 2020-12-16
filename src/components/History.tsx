@@ -1,6 +1,6 @@
 import { Button, Classes, Tooltip } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized/dist/es/CellMeasurer'
 import { List, ListRowRenderer } from 'react-virtualized/dist/es/List'
@@ -50,7 +50,7 @@ const CopyButton = styled(Button)`
 /**
  * History Component.
  */
-class History extends React.Component<Props> {
+class History extends Component<Props> {
   private logMeasureCache: CellMeasurerCache
 
   /**

@@ -1,7 +1,7 @@
 import { Text } from '@blueprintjs/core'
 import _ from 'lodash'
 import pluralize from 'pluralize'
-import * as React from 'react'
+import { Component } from 'react'
 import TimeAgo, { Formatter } from 'react-timeago'
 
 import BroadcasterSection from 'components/BroadcasterSection'
@@ -90,7 +90,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterStatistics Component.
  */
-export default class BroadcasterStatistics extends React.Component<BroadcasterSectionProps, State> {
+export default class BroadcasterStatistics extends Component<BroadcasterSectionProps, State> {
   public state: State = initialState
 
   /**

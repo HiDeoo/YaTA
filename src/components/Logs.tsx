@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as React from 'react'
+import { createRef, Component } from 'react'
 import ReactTooltip from 'react-tooltip'
 import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized/dist/es/CellMeasurer'
@@ -33,8 +33,8 @@ const Wrapper = styled(FlexContent)<WrapperProps>`
 /**
  * Logs Component.
  */
-export class Logs extends React.Component<Props> {
-  public list = React.createRef<List>()
+export class Logs extends Component<Props> {
+  public list = createRef<List>()
   private pauseAutoScroll: boolean = false
   private previousPauseAutoScroll: boolean = false
   private logMeasureCache: CellMeasurerCache

@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Classes, Colors, Icon, Intent, Text } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 
 import FlexContent from 'components/FlexContent'
 import ActionIconMap from 'constants/actionIconMap'
@@ -70,7 +70,7 @@ const ActionText = styled(Text).attrs({
 /**
  * SettingsAction Component.
  */
-export default class SettingsAction extends React.Component<Props> {
+export default class SettingsAction extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

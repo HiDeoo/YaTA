@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import SettingsView from 'components/SettingsView'
@@ -10,7 +10,7 @@ import { getHideWhispers, getIncreaseTwitchHighlight, getShowViewerCount } from 
 /**
  * SettingsStreamer Component.
  */
-class SettingsStreamer extends React.Component<Props> {
+class SettingsStreamer extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
