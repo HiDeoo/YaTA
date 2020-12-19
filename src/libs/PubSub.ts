@@ -147,7 +147,7 @@ class PubSub {
 
     this.pingInterval = window.setInterval(() => {
       if (this.ws && this.ws.readyState === 1) {
-        this.reconnectTimeout = setTimeout(() => {
+        this.reconnectTimeout = window.setTimeout(() => {
           this.reconnect()
         }, PING_TIMEOUT)
 
