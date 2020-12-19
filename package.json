@@ -11,7 +11,7 @@
     "start": "react-scripts start",
     "prebuild": "yarn run changelog",
     "build": "react-scripts build",
-    "lint": "yarn run lint:ts; yarn run lint:css",
+    "lint": "yarn run lint:ts && yarn run lint:css",
     "lint:ts": "eslint --max-warnings=0 --ext ts,tsx src && tsc --noEmit",
     "lint:css": "stylelint 'src/**/*.tsx'",
     "preanalyze": "yarn run build",
