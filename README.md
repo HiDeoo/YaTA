@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/HiDeoo/YaTA/actions?query=workflow%3Aintegration"><img alt="Integration Status" src="https://github.com/HiDeoo/YaTA/workflows/integration/badge.svg"></a>
-  <a href="https://github.com/HiDeoo/YaTA/blob/master/LICENSE"><img alt="License" src="https://badgen.now.sh/badge/license/MIT/blue"></a>
+  <a href="https://github.com/HiDeoo/YaTA/blob/master/LICENSE"><img alt="License" src="https://badgen.net/badge/license/MIT/blue"></a>
   <br /><br />
 </p>
 

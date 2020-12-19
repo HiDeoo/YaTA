@@ -85,7 +85,7 @@ const SettingsAbout: React.SFC<ThemeProps> = (props) => (
         Source code available on <ExternalLink href="https://github.com/HiDeoo/yata">Github</ExternalLink>
       </p>
       <p>
-        Hosted by <ExternalLink href="https://zeit.co">△ZEIT</ExternalLink>
+        Hosted by <ExternalLink href="https://vercel.com">△Vercel</ExternalLink>
       </p>
       <p>
         Notification sound by{' '}

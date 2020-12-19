@@ -13,7 +13,7 @@
       "REACT_APP_YATA_API_URL": "@react_app_yata_api_url"
     }
   },
-  "builds": [{ "src": "package.json", "use": "@now/static-build", "config": { "distDir": "build" } }],
+  "builds": [{ "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } }],
   "rewrites": [
     { "source": "^/static/(.*)", "destination": "/build/static/$1" },
     { "source": "^/asset-manifest.json", "destination": "/asset-manifest.json" },
