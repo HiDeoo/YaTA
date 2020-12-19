@@ -1,6 +1,6 @@
 import { Colors, Icon, Text } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'
@@ -100,7 +100,7 @@ export enum ResourceType {
 /**
  * ExternalResource Component.
  */
-export default class ExternalResource extends React.Component<Props> {
+export default class ExternalResource extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ComboPicker from 'components/ComboPicker'
@@ -28,7 +28,7 @@ const Row = styled(FlexLayout)`
 /**
  * SettingsShortcuts Component.
  */
-class SettingsShortcuts extends React.Component<Props> {
+class SettingsShortcuts extends Component<Props> {
   /**
    * Lifecycle: shouldComponentUpdate.
    * @param  nextProps - The next props.

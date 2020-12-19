@@ -1,5 +1,5 @@
 import { Slider } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 import styled from 'styled'
 
 import Switch from 'components/Switch'
@@ -16,7 +16,7 @@ const VolumeWrapper = styled.div`
 /**
  * SettingsSoundControl Component.
  */
-export default class SettingsSoundControl extends React.Component<Props> {
+export default class SettingsSoundControl extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

@@ -1,6 +1,6 @@
 import { Menu } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ActionMenuItem from 'components/ActionMenuItem'
@@ -12,7 +12,7 @@ import { getActions } from 'store/selectors/settings'
 /**
  * ActionMenuItems Component.
  */
-class ActionMenuItems extends React.Component<Props> {
+class ActionMenuItems extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

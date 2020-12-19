@@ -130,6 +130,7 @@ export default class Input extends React.Component<Props, State> {
     if (!_.isNil(username)) {
       if (!_.isNil(nextProps.username) && nextProps.username === username.toLowerCase()) {
         toasts.push({
+          key: 'whisper_self',
           icon: 'inbox',
           intent: Intent.DANGER,
           message: 'You cannot whisper yourself.',
@@ -138,6 +139,7 @@ export default class Input extends React.Component<Props, State> {
         intent = Classes.INTENT_DANGER
       } else {
         toasts.push({
+          key: 'whisper',
           hideable: true,
           icon: 'inbox',
           intent: Intent.SUCCESS,
@@ -148,6 +150,7 @@ export default class Input extends React.Component<Props, State> {
       }
     } else if (value.length > Message.Max) {
       toasts.push({
+        key: 'message_length_error',
         className: 'messageLengthError',
         icon: 'warning-sign',
         intent: Intent.DANGER,
@@ -157,6 +160,7 @@ export default class Input extends React.Component<Props, State> {
       intent = Classes.INTENT_DANGER
     } else if (value.length > Message.Warning) {
       toasts.push({
+        key: 'message_length_warning',
         className: 'messageLengthWarning',
         icon: 'hand',
         intent: Intent.WARNING,
@@ -223,7 +227,7 @@ export default class Input extends React.Component<Props, State> {
               className
             )
 
-            return <InputToast key={index} {...toastProps} className={toastClasses} />
+            return <InputToast {...toastProps} className={toastClasses} />
           })}
         </Toaster>
         {isUploadingFile && <UploadProgressBar intent={Intent.PRIMARY} />}

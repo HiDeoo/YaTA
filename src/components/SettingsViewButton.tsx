@@ -1,5 +1,5 @@
 import { Icon } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 
 import { SettingsView } from 'components/Settings'
 import { IView } from 'components/ViewStack'
@@ -64,7 +64,7 @@ const Name = styled.div`
 /**
  * SettingsViewButton Component.
  */
-export default class SettingsViewButton extends React.Component<Props> {
+export default class SettingsViewButton extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

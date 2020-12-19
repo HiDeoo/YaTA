@@ -1,7 +1,7 @@
 import { Colors, Icon, Menu } from '@blueprintjs/core'
 import { ItemPredicate, ItemRenderer, Omnibar } from '@blueprintjs/select'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router'
 
 import { ToggleableProps } from 'constants/toggleable'
@@ -21,7 +21,7 @@ type State = Readonly<typeof initialState>
 /**
  * FollowOmnibar Component.
  */
-class FollowOmnibar extends React.Component<Props, State> {
+class FollowOmnibar extends Component<Props, State> {
   public state: State = initialState
 
   /**

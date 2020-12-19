@@ -1,6 +1,6 @@
 import { Classes, Overlay } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { createRef, Component } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import Center from 'components/Center'
@@ -72,7 +72,7 @@ type State = Readonly<typeof initialState>
 /**
  * Player Component.
  */
-export default class Player extends React.Component<{}, State> {
+export default class Player extends Component<{}, State> {
   /**
    * Creates and returns a new `Player` instance for the application.
    */
@@ -85,7 +85,7 @@ export default class Player extends React.Component<{}, State> {
     return Player.instance
   }
 
-  private static instance = React.createRef<Player>()
+  private static instance = createRef<Player>()
   public state: State = initialState
 
   /**

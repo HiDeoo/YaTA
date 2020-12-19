@@ -179,8 +179,10 @@ class SettingsHighlights extends React.Component<Props, State> {
    * Triggered when an ignored user is removed.
    * @param username - The ignored username.
    */
-  private onRemoveIgnoredUser = (username: string) => {
-    this.props.removeHighlightsIgnoredUser(username)
+  private onRemoveIgnoredUser = (username: React.ReactNode) => {
+    if (_.isString(username)) {
+      this.props.removeHighlightsIgnoredUser(username)
+    }
   }
 
   /**
@@ -195,8 +197,10 @@ class SettingsHighlights extends React.Component<Props, State> {
    * Triggered when a permanent user is removed.
    * @param username - The permanent username.
    */
-  private onRemovePermanentUser = (username: string) => {
-    this.props.removeHighlightsPermanentUser(username)
+  private onRemovePermanentUser = (username: React.ReactNode) => {
+    if (_.isString(username)) {
+      this.props.removeHighlightsPermanentUser(username)
+    }
   }
 
   /**

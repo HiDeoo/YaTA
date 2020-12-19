@@ -1,5 +1,5 @@
 import { Menu } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 
 import { HighlightColors } from 'libs/Highlight'
 import styled, { theme } from 'styled'
@@ -19,7 +19,7 @@ const ColorPreview = styled.div<ColorPreviewProps>`
 /**
  * HighlightColorMenuItem Component.
  */
-export default class HighlightColorMenuItem extends React.Component<Props> {
+export default class HighlightColorMenuItem extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

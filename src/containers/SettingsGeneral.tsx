@@ -1,5 +1,5 @@
 import { Button, Classes, Code, H5, Intent, Popover } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import SettingsView from 'components/SettingsView'
@@ -60,7 +60,7 @@ type State = Readonly<typeof initialState>
 /**
  * SettingsGeneral Component.
  */
-class SettingsGeneral extends React.Component<Props, State> {
+class SettingsGeneral extends Component<Props, State> {
   public state: State = initialState
 
   /**

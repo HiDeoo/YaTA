@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 import Twitch from 'libs/Twitch'
 
@@ -147,7 +147,7 @@ class PubSub {
 
     this.pingInterval = window.setInterval(() => {
       if (this.ws && this.ws.readyState === 1) {
-        this.reconnectTimeout = setTimeout(() => {
+        this.reconnectTimeout = window.setTimeout(() => {
           this.reconnect()
         }, PING_TIMEOUT)
 
@@ -241,7 +241,7 @@ class PubSub {
    */
   private listen(topics: string[]) {
     if (this.ws) {
-      this.connectionNonce = shortid.generate()
+      this.connectionNonce = nanoid()
 
       this.ws.send(
         JSON.stringify({

@@ -1,5 +1,5 @@
 import { Classes } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 
 import { IView } from 'components/ViewStack'
 
@@ -7,7 +7,7 @@ import { IView } from 'components/ViewStack'
  * View Component.
  * @see ViewStack
  */
-export default class View extends React.Component<Props> {
+export default class View extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

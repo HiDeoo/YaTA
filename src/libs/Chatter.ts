@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 import { UserState } from 'twitch-js'
 
 import LogType from 'constants/logType'
@@ -24,12 +24,12 @@ export default class Chatter implements Serializable<SerializedChatter> {
         color: null,
         'display-name': username,
         emotes: null,
-        id: shortid.generate(),
+        id: nanoid(),
         'message-type': LogType.Chat,
         mod: false,
         subscriber: false,
         'tmi-sent-ts': Date.now().toString(),
-        'user-id': shortid.generate(),
+        'user-id': nanoid(),
         'user-type': null,
         username: username.toLowerCase(),
       },

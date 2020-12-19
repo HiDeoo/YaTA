@@ -1,5 +1,5 @@
 import { Menu } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 
 import ActionIconMap from 'constants/actionIconMap'
 import { ActionHandler, SerializedAction } from 'libs/Action'
@@ -8,7 +8,7 @@ import { SerializedChatter } from 'libs/Chatter'
 /**
  * ActionMenuItem Component.
  */
-export default class ActionMenuItem extends React.Component<Props> {
+export default class ActionMenuItem extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

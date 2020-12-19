@@ -2,7 +2,7 @@ import { Button, Classes, Colors, Intent } from '@blueprintjs/core'
 import copy from 'copy-to-clipboard'
 import FileSaver from 'file-saver'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import LogsExporterCheckbox from 'components/LogsExporterCheckbox'
@@ -90,7 +90,7 @@ type State = Readonly<typeof initialState>
 /**
  * LogsExporter Component.
  */
-class LogsExporter extends React.Component<Props, State> {
+class LogsExporter extends Component<Props, State> {
   public state: State = initialState
 
   /**

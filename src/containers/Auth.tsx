@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
@@ -18,7 +18,7 @@ type State = Readonly<typeof initialState>
 /**
  * Auth Component.
  */
-class Auth extends React.Component<Props, State> {
+class Auth extends Component<Props, State> {
   public state: State = initialState
 
   /**

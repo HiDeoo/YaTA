@@ -1,5 +1,5 @@
 import { Alert, Button, Classes, Colors } from '@blueprintjs/core'
-import * as React from 'react'
+import { Component } from 'react'
 
 import Key from 'constants/key'
 import styled from 'styled'
@@ -54,7 +54,7 @@ type State = Readonly<typeof initialState>
 /**
  * Help Component.
  */
-export default class Help extends React.Component<{}, State> {
+export default class Help extends Component<{}, State> {
   public state: State = initialState
 
   /**

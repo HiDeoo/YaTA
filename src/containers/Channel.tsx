@@ -2,7 +2,7 @@ import { Button, Classes, Intent, Menu, NavbarDivider, Popover, Position } from 
 import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget'
 import copy from 'copy-to-clipboard'
 import _ from 'lodash'
-import * as React from 'react'
+import { createRef, Component } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
@@ -136,12 +136,12 @@ type State = Readonly<typeof initialState>
 /**
  * Channel Component.
  */
-class Channel extends React.Component<Props, State> {
+class Channel extends Component<Props, State> {
   public state: State = initialState
-  public chatClient = React.createRef<any>()
-  private logsWrapper = React.createRef<HTMLElement>()
-  private logsComponent = React.createRef<InnerLogs>()
-  private input = React.createRef<Input>()
+  public chatClient = createRef<any>()
+  private logsWrapper = createRef<HTMLElement>()
+  private logsComponent = createRef<InnerLogs>()
+  private input = createRef<Input>()
   private viewerCountMonitorId?: number
   private shortcuts: ShortcutImplementations
 

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import { EmoteProviderPrefix } from 'libs/EmotesProvider'
 import styled, { ifProp } from 'styled'
@@ -34,7 +34,7 @@ const Wrapper = styled.button<WrapperProps>`
 /**
  * EmotePickerProvider Component.
  */
-export default class EmotePickerProvider extends React.Component<Props> {
+export default class EmotePickerProvider extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

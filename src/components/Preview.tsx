@@ -1,6 +1,6 @@
 import { Card, Classes, Icon, Text } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'
@@ -85,7 +85,7 @@ const IconWrapper = styled.div`
 /**
  * Preview Component.
  */
-export default class Preview extends React.Component<Props> {
+export default class Preview extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.

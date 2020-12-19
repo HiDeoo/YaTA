@@ -1,6 +1,6 @@
 import { Button, Classes, Menu, Popover, Position } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import HighlightColorMenuItem from 'components/HighlightColorMenuItem'
 import { HighlightColors } from 'libs/Highlight'
@@ -47,7 +47,7 @@ const ColorName = styled.div`
 /**
  * SettingsHighlightColorMenu Component.
  */
-export default class SettingsHighlightColorMenu extends React.Component<Props> {
+export default class SettingsHighlightColorMenu extends Component<Props> {
   /**
    * React Default Props.
    */

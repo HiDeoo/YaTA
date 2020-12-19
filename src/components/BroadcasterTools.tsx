@@ -1,6 +1,6 @@
 import { Button, Classes, Colors, Icon, Intent, Menu, Popover, Position } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import BroadcasterSection from 'components/BroadcasterSection'
 import ExternalButton from 'components/ExternalButton'
@@ -48,7 +48,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterTools Component.
  */
-export default class BroadcasterTools extends React.Component<Props, State> {
+export default class BroadcasterTools extends Component<BroadcasterSectionProps, State> {
   public state: State = initialState
 
   /**
@@ -181,9 +181,11 @@ export default class BroadcasterTools extends React.Component<Props, State> {
    * Triggered when the unhost button is clicked.
    */
   private onClickUnhost = () => {
-    this.props.unhost()
+    if (this.props.unhost) {
+      this.props.unhost()
 
-    this.setState(() => ({ host: undefined }))
+      this.setState(() => ({ host: undefined }))
+    }
   }
 
   /**
@@ -227,11 +229,4 @@ export default class BroadcasterTools extends React.Component<Props, State> {
   private onClickCommercial3M = () => {
     this.startCommercial(180)
   }
-}
-
-/**
- * React Props.
- */
-interface Props extends BroadcasterSectionProps {
-  unhost: () => void
 }

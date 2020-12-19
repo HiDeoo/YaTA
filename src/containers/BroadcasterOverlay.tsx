@@ -1,6 +1,6 @@
 import { Classes, Colors, Overlay } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import BroadcasterInformations from 'components/BroadcasterInformations'
@@ -92,7 +92,7 @@ type State = Readonly<typeof initialState>
 /**
  * BroadcasterOverlay Component.
  */
-class BroadcasterOverlay extends React.Component<Props, State> {
+class BroadcasterOverlay extends Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -160,14 +160,10 @@ class BroadcasterOverlay extends React.Component<Props, State> {
     }
 
     return _.map(BroadcasterOverlaySections, (Section, index) => {
-      const props = {
+      const props: BroadcasterSectionProps = {
         channel,
         channelId,
         unhost,
-      }
-
-      if (Section !== BroadcasterTools) {
-        delete props.unhost
       }
 
       return <Section key={index} {...props} />
@@ -218,4 +214,5 @@ type UnhostAction = () => void
 export interface BroadcasterSectionProps {
   channel: RawChannel
   channelId: string
+  unhost?: UnhostAction
 }

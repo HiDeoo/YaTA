@@ -1,6 +1,6 @@
 import { Button, Callout, Classes, Intent, Overlay } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 
 import Center from 'components/Center'
 import Imgur from 'libs/Imgur'
@@ -122,7 +122,7 @@ type State = Readonly<typeof initialState>
 /**
  * DropOverlay Component.
  */
-export default class DropOverlay extends React.Component<Props, State> {
+export default class DropOverlay extends Component<Props, State> {
   /**
    * Defines if a DragEvent is associated to a valid drag & drop operation / data transfer.
    * We're only accepting files at the moment.

@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import * as React from 'react'
+import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 import tmi, {
   Client as TwitchClient,
   EmoteSets,
@@ -73,7 +73,7 @@ type State = Readonly<typeof initialState>
 /**
  * Chat Component.
  */
-export class ChatClient extends React.Component<Props, State> {
+export class ChatClient extends Component<Props, State> {
   public state: State = initialState
   public client: TwitchClient
   public nextWhisperRecipient: string | null = null
@@ -1337,11 +1337,11 @@ export class ChatClient extends React.Component<Props, State> {
       case LogType.Whisper:
       case LogType.Chat: {
         if (userstate['message-type'] !== LogType.Whisper && self) {
-          userstate.id = shortid.generate()
+          userstate.id = nanoid()
           userstate['user-id'] = 'self'
           userstate['tmi-sent-ts'] = Date.now().toString()
         } else if (userstate['message-type'] === LogType.Whisper) {
-          userstate.id = self ? shortid.generate() : `${userstate['thread-id']}-${userstate['message-id']}`
+          userstate.id = self ? nanoid() : `${userstate['thread-id']}-${userstate['message-id']}`
           userstate['tmi-sent-ts'] = Date.now().toString()
 
           if (self) {

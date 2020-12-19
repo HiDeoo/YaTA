@@ -3,7 +3,7 @@
 ### 🚀 New Feature
 
 - Add [AutoMod](https://blog.twitch.tv/en/2016/12/12/moderators-are-the-sword-now-automod-is-the-shield-df3d8aae32a9/#.xg0dxjk23) support: moderators can now allow or deny a message rejected by AutoMod and users are noticed when their messages are being held by AutoMod.
-- Moderator actions (ban, unban, timeout, untimeout & AutoMod related actions) now properly report the author of the action (e.g. *Alice was banned by Bob.* instead of *Alice was banned.*).
+- Moderator actions (ban, unban, timeout, untimeout & AutoMod related actions) now properly report the author of the action (e.g. _Alice was banned by Bob._ instead of _Alice was banned._).
 - Add new `/title` command to display the current title of a stream or `/title new title` for broadcasters and channel editors to update the title.
 - The `/marker` command is no longer disabled and can be used by broadcasters or channel editors to add [a stream marker](https://help.twitch.tv/s/article/creating-highlights-and-stream-markers#markers) at the current timestamp with an optional description.
 

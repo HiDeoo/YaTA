@@ -1,6 +1,5 @@
 import { AnchorButton, Classes, Colors, H2, H3, Icon, IconName, Intent } from '@blueprintjs/core'
 import _ from 'lodash'
-import * as React from 'react'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'
@@ -226,7 +225,7 @@ const FeaturesList: FeatureDefinition[] = [
 /**
  * Login Component.
  */
-export default () => (
+const Login = () => (
   <Wrapper>
     <Header>
       <Preview src={PreviewImg} />
@@ -255,6 +254,8 @@ export default () => (
     </Features>
   </Wrapper>
 )
+
+export default Login
 
 /**
  * React Props.
