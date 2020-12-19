@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 import { SerializedChatter } from 'libs/Chatter'
 
@@ -94,7 +94,7 @@ export default class Action implements Serializable<SerializedAction> {
     private name: string,
     private text: string,
     private recipient?: string,
-    private id = shortid.generate()
+    private id = nanoid()
   ) {}
 
   /**

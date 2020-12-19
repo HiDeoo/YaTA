@@ -1,5 +1,5 @@
 import linkifyHtml from 'linkifyjs/html'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 import Event from 'constants/event'
 import LogType from 'constants/logType'
@@ -44,7 +44,7 @@ export default class Notice implements Serializable<SerializedNotice> {
    * @param linkify - Defines if the notice can include links or not.
    */
   constructor(private message: string, private event: Event | null = null, private linkify = false) {
-    this.id = shortid.generate()
+    this.id = nanoid()
   }
 
   /**

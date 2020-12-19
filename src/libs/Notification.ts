@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import pluralize from 'pluralize'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 import LogType from 'constants/logType'
 import { getMonthFromIndex } from 'utils/time'
@@ -199,7 +199,7 @@ export default class Notification implements Serializable<SerializedNotification
    * @param [message] - An additional notification message.
    */
   constructor(private title: string, private event: NotificationEvent, private message?: string) {
-    this.id = shortid.generate()
+    this.id = nanoid()
   }
 
   /**

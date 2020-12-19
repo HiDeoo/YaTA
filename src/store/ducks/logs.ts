@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { Reducer } from 'redux'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 import Logs from 'constants/logs'
 import LogType from 'constants/logType'
@@ -128,7 +128,7 @@ const logsReducer: Reducer<LogsState, LogsActions> = (state = initialState, acti
       return { ...state, byId: { ...state.byId, [id]: { ...message, purged: true } } }
     }
     case Actions.ADD_MARKER: {
-      const id = shortid.generate()
+      const id = nanoid()
       const date = new Date()
       const time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`
 

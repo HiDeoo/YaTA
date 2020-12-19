@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import shortid from 'shortid'
+import { nanoid } from 'nanoid'
 
 import { SerializedHighlights } from 'store/ducks/settings'
 
@@ -32,7 +32,7 @@ export default class Highlight implements Serializable<SerializedHighlight> {
    * @param color - The highlight color.
    */
   constructor(pattern: string, private color: HighlightColors) {
-    this.id = shortid.generate()
+    this.id = nanoid()
     this.pattern = pattern.toLowerCase()
   }
 
