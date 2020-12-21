@@ -8,7 +8,7 @@ import { getDisableDialogAnimations } from 'store/selectors/settings'
 /**
  * Dialog Component.
  */
-const Dialog: React.SFC<Props> = ({ disableDialogAnimations, ...restProps }) => (
+const Dialog: React.FunctionComponent<Props> = ({ disableDialogAnimations, ...restProps }) => (
   <OriginalDialog
     {...restProps}
     transitionName={disableDialogAnimations ? '' : undefined}

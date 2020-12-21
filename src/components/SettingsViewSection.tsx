@@ -32,7 +32,7 @@ const Title = styled.h1`
 /**
  * SettingsViewSection Component.
  */
-const SettingsViewSection: React.SFC<Props> = ({ children, title }) => (
+const SettingsViewSection: React.FunctionComponent<Props> = ({ children, title }) => (
   <>
     <Title>{title}</Title>
     {children}

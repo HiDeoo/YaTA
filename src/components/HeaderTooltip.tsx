@@ -4,6 +4,8 @@ import * as React from 'react'
 /**
  * HeaderTooltip Component.
  */
-const HeaderTooltip: React.SFC<ITooltipProps> = (props) => <Tooltip position={Position.BOTTOM} {...props} />
+const HeaderTooltip: React.FunctionComponent<ITooltipProps> = (props) => (
+  <Tooltip position={Position.BOTTOM} {...props} />
+)
 
 export default HeaderTooltip

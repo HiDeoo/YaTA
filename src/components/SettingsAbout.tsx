@@ -63,7 +63,7 @@ const Coffee = styled.span`
 /**
  * SettingsAbout Component.
  */
-const SettingsAbout: React.SFC<ThemeProps> = (props) => (
+const SettingsAbout: React.FunctionComponent<ThemeProps> = (props) => (
   <SettingsView>
     <Content>
       <Logo>

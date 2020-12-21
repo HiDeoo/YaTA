@@ -29,8 +29,8 @@ declare module 'react-flip-toolkit' {
     portalKey?: string
   }
 
-  export const FlippedWithContext: React.SFC<FlippedWithContextProps>
-  export const Flipped: React.SFC<FlippedWithContextProps>
+  export const FlippedWithContext: React.FunctionComponent<FlippedWithContextProps>
+  export const Flipped: React.FunctionComponent<FlippedWithContextProps>
 
   export interface FlipperProps {
     flipKey: any

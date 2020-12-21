@@ -32,7 +32,7 @@ const Shrug = styled.div<SizeProps>`
 /**
  * NonIdealState Component.
  */
-const NonIdealState: React.SFC<Props> = ({
+const NonIdealState: React.FunctionComponent<Props> = ({
   details,
   extra,
   retry = false,

@@ -14,7 +14,7 @@ const Wrapper = styled(FlexLayout)`
 /**
  * SettingsView Component.
  */
-const SettingsView: React.SFC<{}> = ({ children, ...restProps }) => (
+const SettingsView: React.FunctionComponent<{}> = ({ children, ...restProps }) => (
   <Wrapper vertical {...restProps}>
     {children}
   </Wrapper>

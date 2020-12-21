@@ -4,7 +4,7 @@ import * as React from 'react'
 /**
  * SettingsInput Component.
  */
-const SettingsInput: React.SFC<IInputGroupProps & HTMLInputProps> = (props) => (
+const SettingsInput: React.FunctionComponent<IInputGroupProps & HTMLInputProps> = (props) => (
   <InputGroup autoCorrect="off" spellCheck={false} {...props} />
 )
 
