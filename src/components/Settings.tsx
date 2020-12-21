@@ -25,6 +25,7 @@ const SettingsDialog = styled(Dialog)`
   height: ${size('settings.height')};
 
   &.${Classes.DIALOG} {
+    overflow: hidden;
     padding-bottom: 0;
   }
 

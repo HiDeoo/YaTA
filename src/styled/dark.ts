@@ -145,6 +145,7 @@ const dark = {
         icon: Colors.GRAY3,
         text: Colors.WHITE,
       },
+      border: 'rgba(32, 43, 51, 0.7)',
       icon: Colors.GRAY1,
       text: Colors.GRAY5,
     },

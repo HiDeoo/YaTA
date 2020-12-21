@@ -141,6 +141,7 @@ const light = {
         icon: Colors.GRAY1,
         text: Colors.DARK_GRAY1,
       },
+      border: 'rgba(206, 217, 224, 0.7)',
       icon: Colors.GRAY3,
       text: Colors.GRAY2,
     },
