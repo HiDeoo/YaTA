@@ -46,7 +46,7 @@ const Divider = styled.hr`
 /**
  * BroadcasterSection Component.
  */
-const BroadcasterSection: React.SFC<Props> = ({ children, ready = true, title }) => (
+const BroadcasterSection: React.FunctionComponent<Props> = ({ children, ready = true, title }) => (
   <>
     <Wrapper>
       <Title>{title}</Title>

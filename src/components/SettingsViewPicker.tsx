@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 /**
  * SettingsViewPicker Component.
  */
-const SettingsViewPicker: React.SFC<IViewProps> = ({ pushView }) => (
+const SettingsViewPicker: React.FunctionComponent<IViewProps> = ({ pushView }) => (
   <Wrapper>
     {_.map(SettingsViews, (view) => (
       <SettingsViewButton key={view.name} settingsView={view} push={pushView} />

@@ -3,7 +3,10 @@ import * as React from 'react'
 /**
  * ExternalLink Component.
  */
-const ExternalLink: React.SFC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = ({ children, ...restProps }) => (
+const ExternalLink: React.FunctionComponent<React.AnchorHTMLAttributes<HTMLAnchorElement>> = ({
+  children,
+  ...restProps
+}) => (
   <a target="_blank" {...restProps}>
     {children}
   </a>

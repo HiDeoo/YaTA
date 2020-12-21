@@ -6,7 +6,7 @@ import Center from 'components/Center'
 /**
  * Spinner Component.
  */
-const Spinner: React.SFC<ISpinnerProps & Props> = ({ size, large = false, small = false, ...props }) => {
+const Spinner: React.FunctionComponent<ISpinnerProps & Props> = ({ size, large = false, small = false, ...props }) => {
   let className: Optional<string>
 
   if (large) {

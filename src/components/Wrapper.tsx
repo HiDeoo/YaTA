@@ -12,7 +12,7 @@ import { StoreConfiguration } from 'store'
  * Wrapper Container.
  * This wrapper will wrap the application with the required components like Redux, React-Router, etc.
  */
-const Wrapper: React.SFC<Props> = ({ storeConfiguration }) => {
+const Wrapper: React.FunctionComponent<Props> = ({ storeConfiguration }) => {
   const { persistor, store } = storeConfiguration
 
   return (

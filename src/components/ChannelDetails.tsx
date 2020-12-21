@@ -15,7 +15,7 @@ const ChannelDetailsPanels = styled(PanelStack)`
 /**
  * ChannelDetails Component.
  */
-const ChannelDetails: React.SFC<ChannelDetailsProps> = ({ id, name }) => {
+const ChannelDetails: React.FunctionComponent<ChannelDetailsProps> = ({ id, name }) => {
   const initialPanel: IPanel<any> = {
     component: ChannelDetailsOverview,
     props: { id, name },
