@@ -1,6 +1,8 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
+import { RouteComponentProps, withRouter } from 'react-router'
 import { Redirect } from 'react-router-dom'
+import { compose } from 'recompose'
 
 import Spinner from 'components/Spinner'
 import Page from 'constants/page'
@@ -26,9 +28,13 @@ class Auth extends Component<Props, State> {
    */
   public async componentDidMount() {
     try {
-      const tokens = Twitch.getAuthTokens(this.props.location.hash)
+      const tokens = await Twitch.getAuthTokens(this.props.location.hash)
 
       const idToken = await Twitch.verifyIdToken(tokens.id)
+
+      if (tokens.redirect) {
+        this.props.history.replace(Page.Auth, { redirect: tokens.redirect })
+      }
 
       this.props.setTokens(tokens.access, idToken)
     } catch {
@@ -43,27 +49,26 @@ class Auth extends Component<Props, State> {
   public render() {
     if (this.state.authDidFail) {
       return <Redirect to={Page.Login} />
-    } else if (this.props.isLoggedIn) {
-      return <Redirect to={Page.Home} />
     }
 
     return <Spinner large />
   }
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-  (state) => ({
-    isLoggedIn: getIsLoggedIn(state),
-  }),
-  { setTokens }
-)(Auth)
-
 /**
- * React Props.
+ * Component enhancer.
  */
-interface StateProps {
-  isLoggedIn: ReturnType<typeof getIsLoggedIn>
-}
+const enhance = compose<Props, {}>(
+  connect<{}, DispatchProps, OwnProps, ApplicationState>(
+    (state) => ({
+      isLoggedIn: getIsLoggedIn(state),
+    }),
+    { setTokens }
+  ),
+  withRouter
+)
+
+export default enhance(Auth)
 
 /**
  * React Props.
@@ -82,4 +87,4 @@ interface OwnProps {
 /**
  * React Props.
  */
-type Props = StateProps & DispatchProps & OwnProps
+type Props = DispatchProps & RouteComponentProps<{}>

@@ -1,6 +1,6 @@
 import { Classes, Colors } from '@blueprintjs/core'
 import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget'
-import { History } from 'history'
+import type { History, Location } from 'history'
 import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -126,9 +126,16 @@ class App extends React.Component<Props, State> {
     const isLoggingIn = pathname === Page.Login || pathname === Page.Auth
 
     if (!isLoggedIn && !isLoggingIn) {
-      return <Redirect to={Page.Login} />
+      return (
+        <Redirect
+          to={{
+            pathname: Page.Login,
+            state: pathname !== Page.Home ? { redirect: pathname } : undefined,
+          }}
+        />
+      )
     } else if (isLoggedIn && isLoggingIn) {
-      return <Redirect to={Page.Home} />
+      return <Redirect to={location.state?.redirect ?? Page.Home} />
     }
 
     return (
@@ -307,7 +314,7 @@ interface DispatchProps {
  */
 interface OwnProps {
   history: History
-  location: Location
+  location: Location<Optional<{ redirect: string }>>
 }
 
 /**

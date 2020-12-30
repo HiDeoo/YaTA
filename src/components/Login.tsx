@@ -1,4 +1,5 @@
 import { AnchorButton, Classes, Colors, H2, H3, Icon, IconName, Intent } from '@blueprintjs/core'
+import type { Location } from 'history'
 import _ from 'lodash'
 
 import FlexContent from 'components/FlexContent'
@@ -225,12 +226,12 @@ const FeaturesList: FeatureDefinition[] = [
 /**
  * Login Component.
  */
-const Login = () => (
+const Login: React.FunctionComponent<Props> = ({ location }) => (
   <Wrapper>
     <Header>
       <Preview src={PreviewImg} />
       <LoginButton
-        href={Twitch.getAuthURL().toString()}
+        href={Twitch.getAuthURL(location.state?.redirect)}
         rightIcon="document-open"
         text="Login with Twitch"
         intent={Intent.PRIMARY}
@@ -256,6 +257,13 @@ const Login = () => (
 )
 
 export default Login
+
+/**
+ * React Props.
+ */
+interface Props {
+  location: Location<Optional<{ redirect: string }>>
+}
 
 /**
  * React Props.
