@@ -1,7 +1,9 @@
+import * as storage from 'localforage'
 import _ from 'lodash'
 import { EmoteSets } from 'twitch-js'
 
 import RequestMethod from 'constants/requestMethod'
+import { getRandomString } from 'utils/crypto'
 import { subDays, subMonths } from 'utils/date'
 
 /**
@@ -56,6 +58,11 @@ export type CommercialDuration = 30 | 60 | 90 | 120 | 150 | 180
 const ProxyURL = 'https://cors-anywhere.herokuapp.com/'
 
 /**
+ * The key used to persist a state used while authenticating with Twitch.
+ */
+const AuthStorageKey = 'persist:YaTA:auth'
+
+/**
  * Twitch class.
  */
 export default class Twitch {
@@ -71,10 +78,18 @@ export default class Twitch {
 
   /**
    * Returns the Twitch authentication URL.
+   * @param redirect - The optional channel to use when redirecting the user after authentication.
    * @return The auth URL.
    */
-  public static getAuthURL() {
+  public static getAuthURL(redirect: Optional<string>) {
     const { REACT_APP_TWITCH_CLIENT_ID, REACT_APP_TWITCH_REDIRECT_URI } = process.env
+
+    const state: AuthState = {
+      token: getRandomString(),
+      redirect: redirect,
+    }
+
+    storage.setItem(AuthStorageKey, state)
 
     const params = {
       client_id: REACT_APP_TWITCH_CLIENT_ID,
@@ -82,6 +97,7 @@ export default class Twitch {
       response_type: 'token id_token',
       scope:
         'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions',
+      state: encodeURIComponent(JSON.stringify(state)),
     }
 
     return Twitch.getUrl(TwitchApi.Auth, '/authorize', params)
@@ -92,16 +108,43 @@ export default class Twitch {
    * @param hash - The URL hash to parse
    * @return The parsed tokens.
    */
-  public static getAuthTokens(hash: string) {
+  public static async getAuthTokens(hash: string) {
     const params = new URLSearchParams(hash.substring(1))
 
-    if (!params.has('access_token') || !params.has('id_token')) {
+    if (!params.has('access_token') || !params.has('id_token') || !params.has('state')) {
       throw new Error('Invalid auth response.')
+    }
+
+    const persistedState = await storage.getItem<AuthState>(AuthStorageKey)
+
+    storage.removeItem(AuthStorageKey)
+
+    if (_.isNil(persistedState)) {
+      throw new Error('No persisted state in storage.')
+    }
+
+    const stateStr = params.get('state')
+
+    if (_.isNil(stateStr)) {
+      throw new Error('No state in response.')
+    }
+
+    let state: AuthState
+
+    try {
+      state = JSON.parse(decodeURIComponent(stateStr))
+    } catch (error) {
+      throw new Error('Unable to parse state from response.')
+    }
+
+    if (state.token !== persistedState.token) {
+      throw new Error('Invalid state from response.')
     }
 
     return {
       access: params.get('access_token') as string,
       id: params.get('id_token') as string,
+      redirect: state.redirect,
     }
   }
 
@@ -1261,3 +1304,11 @@ export type Followers = {
  * Online stream or offline channel.
  */
 export type Follower = RawStream | RawChannel
+
+/**
+ * State send to Twitch while authenticating.
+ */
+interface AuthState {
+  token: string
+  redirect?: string
+}
