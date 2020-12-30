@@ -1,3 +1,9 @@
+# Unreleased
+
+### 🐛 Bug Fix
+
+- After login with Twitch, you are now properly redirected to the page you were browsing before.
+
 # 1.15.0
 
 ### 🚀 New Feature
