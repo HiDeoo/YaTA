@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- Revamp the broadcaster tools which is now a menu to quickly edit the stream title, category and tags, run commercials, access your Twitch activity feed, channel points reward queue and various others tools.
+
 ### 🐛 Bug Fix
 
 - After login with Twitch, you are now properly redirected to the page you were browsing before.
