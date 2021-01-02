@@ -81,6 +81,7 @@ import styled from 'styled'
 import { sanitizeUrlForPreview } from 'utils/html'
 import { convertMessagesToString } from 'utils/logs'
 import { renderShorcuts } from 'utils/shortcuts'
+import BroadcasterMenuItems from 'components/BroadcasterMenuItems'
 
 /**
  * ChannelLink component.
@@ -450,14 +451,13 @@ class Channel extends Component<Props, State> {
             />
           </Menu>
         </Popover>
-        {isBroadcaster && (
+        {isBroadcaster && channel && (
           <Popover position={Position.BOTTOM} usePortal={false} autoFocus={false}>
             <HeaderTooltip content="Broadcaster Tools">
               <Button icon="mobile-video" minimal />
             </HeaderTooltip>
             <Menu>
-              <Menu.Divider title="Broadcaster Tools" />
-              <Menu.Item onClick={this.openRewardsQueue} icon="stopwatch" text="Rewards queue" />
+              <BroadcasterMenuItems channel={channel} />
             </Menu>
           </Popover>
         )}
@@ -763,17 +763,6 @@ class Channel extends Component<Props, State> {
    */
   private toggleLogsExporter = () => {
     this.toggleUI(ToggleableUI.LogsExporter)
-  }
-
-  /**
-   * Opens the Twitch rewards queue.
-   */
-  private openRewardsQueue = () => {
-    const { channel } = this.props
-
-    if (!_.isNil(channel)) {
-      Twitch.openRewardsQueue(channel)
-    }
   }
 
   /**
