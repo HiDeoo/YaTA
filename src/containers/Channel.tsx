@@ -437,12 +437,12 @@ class Channel extends Component<Props, State> {
             <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
             {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
             {connected && <Menu.Item onClick={this.toggleLogsExporter} icon="archive" text="Export logs" />}
-            {isMod && <Menu.Item onClick={this.openModView} icon="build" text="Mod view" />}
             <ModerationMenuItems
               toggleFollowersOnly={this.toggleFollowersOnly}
               toggleEmoteOnly={this.toggleEmoteOnly}
               toggleSlowMode={this.toggleSlowMode}
               toggleSubsOnly={this.toggleSubsOnly}
+              openModView={this.openModView}
               clearChat={this.clearChat}
               toggleR9k={this.toggleR9k}
               roomState={roomState}
