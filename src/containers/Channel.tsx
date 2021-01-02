@@ -29,7 +29,6 @@ import ReadyState from 'constants/readyState'
 import { ShortcutImplementations, ShortcutType } from 'constants/shortcut'
 import Status from 'constants/status'
 import { ToggleableUI } from 'constants/toggleable'
-import BroadcasterOverlay from 'containers/BroadcasterOverlay'
 import Chat, { ChatClient } from 'containers/Chat'
 import ChatterDetails from 'containers/ChatterDetails'
 import EmoteDetails, { FocusedEmote } from 'containers/EmoteDetails'
@@ -123,7 +122,6 @@ const initialState = {
   isUploadingFile: false,
   shouldQuickOpenPlayer: false,
   viewerCount: undefined as Optional<number>,
-  [ToggleableUI.BroadcasterOverlay]: false,
   [ToggleableUI.Chatters]: false,
   [ToggleableUI.CommandsHelp]: false,
   [ToggleableUI.FollowOmnibar]: false,
@@ -249,7 +247,6 @@ class Channel extends Component<Props, State> {
       focusedChatter,
       focusedEmote,
       isUploadingFile,
-      [ToggleableUI.BroadcasterOverlay]: showBroadcasterOverlay,
       [ToggleableUI.Chatters]: showChatters,
       [ToggleableUI.CommandsHelp]: showCommandsHelp,
       [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
@@ -292,11 +289,6 @@ class Channel extends Component<Props, State> {
         <PollEditor toggle={this.togglePollEditor} visible={showPollEditor} />
         <LogsExporter toggle={this.toggleLogsExporter} visible={showLogsExporter} />
         <CommandsHelp toggle={this.toggleCommandsHelp} visible={showCommandsHelp} />
-        <BroadcasterOverlay
-          toggle={this.toggleBroadcasterOverlay}
-          visible={showBroadcasterOverlay}
-          unhost={this.unhost}
-        />
         <Search
           copyMessageToClipboard={this.copyMessageToClipboard}
           copyMessageOnDoubleClick={copyMessageOnDoubleClick}
@@ -461,7 +453,7 @@ class Channel extends Component<Props, State> {
         </Popover>
         {isBroadcaster && (
           <HeaderTooltip content="Broadcaster Tools">
-            <Button onClick={this.toggleBroadcasterOverlay} icon="mobile-video" minimal />
+            <Button icon="mobile-video" minimal />
           </HeaderTooltip>
         )}
         {connected && (
@@ -788,13 +780,6 @@ class Channel extends Component<Props, State> {
     if (!_.isNil(channel)) {
       Twitch.openModView(channel)
     }
-  }
-
-  /**
-   * Toggles the broadcaster overlay.
-   */
-  private toggleBroadcasterOverlay = () => {
-    this.toggleUI(ToggleableUI.BroadcasterOverlay)
   }
 
   /**
@@ -1410,22 +1395,6 @@ class Channel extends Component<Props, State> {
         } else {
           await client.emoteonly(channel)
         }
-      } catch {
-        //
-      }
-    }
-  }
-
-  /**
-   * Unhosts a channel.
-   */
-  private unhost = async () => {
-    const { channel } = this.props
-    const client = this.getTwitchClient()
-
-    if (!_.isNil(client) && !_.isNil(channel)) {
-      try {
-        await client.unhost(channel)
       } catch {
         //
       }

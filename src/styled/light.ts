@@ -11,16 +11,6 @@ const light = {
   about: {
     description: Colors.GRAY1,
   },
-  broadcaster: {
-    border: Colors.LIGHT_GRAY1,
-    color: Colors.DARK_GRAY5,
-    input: {
-      disabled: '',
-    },
-    meta: Colors.GRAY4,
-    section: 'linear-gradient(90deg, rgba(16, 22, 26, 0.15) 70%, rgba(16, 22, 26, 0) 100%)',
-    shadow: '0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2), 0 18px 46px 6px rgba(16, 22, 26, 0.2)',
-  },
   channel: {
     background: Colors.LIGHT_GRAY5,
     border: Colors.GRAY5,
