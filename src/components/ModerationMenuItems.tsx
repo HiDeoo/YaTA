@@ -88,7 +88,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
   /**
    * Toggles the slow mode.
    * @param event - The associated event.
-   * @param duration - The optional
+   * @param duration - The optional slow mode duration.
    */
   private toggleSlowMode = (_event: React.MouseEvent, duration?: SlowModeDuration) => {
     this.props.toggleSlowMode(duration)
