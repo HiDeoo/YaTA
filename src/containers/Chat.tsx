@@ -1192,7 +1192,7 @@ export class ChatClient extends Component<Props, State> {
    */
   private getPaymentString(payment: Payment) {
     if (payment.prime) {
-      return ' with Twitch Prime'
+      return ' with Prime Gaming'
     } else if (payment.plan === '2000') {
       return ' with a tier 2 sub'
     } else if (payment.plan === '3000') {

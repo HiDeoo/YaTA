@@ -116,7 +116,7 @@ export default class Notification implements Serializable<SerializedNotification
     }
 
     return new Notification(
-      `${username} just converted their Twitch Prime sub to a tier ${tier} sub!`,
+      `${username} just converted their Prime Gaming sub to a tier ${tier} sub!`,
       NotificationEvent.PrimePaidUpgrade
     )
   }
