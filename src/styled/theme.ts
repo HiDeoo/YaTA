@@ -16,16 +16,6 @@ export default interface ITheme {
     height: number
     width: number
   }
-  broadcaster: {
-    border: string
-    color: string
-    input: {
-      disabled: string
-    }
-    meta: string
-    section: string
-    shadow: string
-  }
   changelog: {
     background: string
     dark: string

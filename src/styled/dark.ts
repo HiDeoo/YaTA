@@ -11,20 +11,6 @@ const dark = {
   about: {
     description: Colors.GRAY4,
   },
-  broadcaster: {
-    border: Colors.GRAY2,
-    color: Colors.LIGHT_GRAY1,
-    input: {
-      disabled: `background: rgba(16, 22, 26, 0.3);
-        box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0),
-          inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4);
-        color: #f5f8fa;
-        opacity: 0.5`,
-    },
-    meta: Colors.GRAY3,
-    section: 'linear-gradient(90deg, rgba(16, 22, 26, 0.4) 70%, rgba(16, 22, 26, 0) 100%)',
-    shadow: '0 0 0 1px rgba(16, 22, 26, 0.2), 0 4px 8px rgba(16, 22, 26, 0.4), 0 18px 46px 6px rgba(16, 22, 26, 0.4)',
-  },
   channel: {
     background: Colors.DARK_GRAY3,
     border: Colors.DARK_GRAY1,

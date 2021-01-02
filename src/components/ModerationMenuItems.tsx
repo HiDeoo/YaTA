@@ -19,7 +19,16 @@ export default class ModerationMenuItems extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { clearChat, isMod, roomState, toggleR9k, toggleFollowersOnly, toggleSubsOnly, toggleEmoteOnly } = this.props
+    const {
+      clearChat,
+      isMod,
+      openModView,
+      roomState,
+      toggleR9k,
+      toggleFollowersOnly,
+      toggleSubsOnly,
+      toggleEmoteOnly,
+    } = this.props
 
     if (_.isNil(roomState) || !isMod) {
       return null
@@ -71,6 +80,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
         />
         <Menu.Divider title="Moderation" />
         <Menu.Item icon="eraser" text="Clear chat" onClick={clearChat} />
+        <Menu.Item onClick={openModView} icon="build" text="Open Mod View" />
       </>
     )
   }
@@ -78,7 +88,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
   /**
    * Toggles the slow mode.
    * @param event - The associated event.
-   * @param duration - The optional
+   * @param duration - The optional slow mode duration.
    */
   private toggleSlowMode = (_event: React.MouseEvent, duration?: SlowModeDuration) => {
     this.props.toggleSlowMode(duration)
@@ -109,6 +119,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
 interface Props {
   clearChat: () => void
   isMod: boolean
+  openModView: () => void
   roomState: SerializedRoomState | null
   toggleR9k: () => void
   toggleSlowMode: (duration?: SlowModeDuration) => void

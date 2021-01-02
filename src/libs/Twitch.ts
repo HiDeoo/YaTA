@@ -211,23 +211,11 @@ export default class Twitch {
   }
 
   /**
-   * Fetches Twitch global status.
-   * @return Twitch global status.
-   */
-  public static async fetchGlobalStatus(): Promise<Status> {
-    const response = await Twitch.fetch(TwitchApi.Status, '/index.json')
-
-    const { status } = (await response.json()) as RawStatus
-
-    return status.indicator === 'none' ? Status.Online : Status.Disrupted
-  }
-
-  /**
    * Opens the viewer card of a specific user.
    * @param channel - The channel.
    * @param username - The user.
    */
-  public static async openViewerCard(channel: string, username: string) {
+  public static openViewerCard(channel: string, username: string) {
     window.open(
       `https://www.twitch.tv/popout/${channel}/viewercard/${username}?popout=`,
       'twitchToolsPopupWindow',
@@ -239,7 +227,7 @@ export default class Twitch {
    * Opens the Twitch rewards queue of a specific channel.
    * @param channel - The channel.
    */
-  public static async openRewardsQueue(channel: string) {
+  public static openRewardsQueue(channel: string) {
     window.open(
       `https://www.twitch.tv/popout/${channel}/reward-queue`,
       'twitchRewardsQueuePopupWindow',
@@ -251,8 +239,56 @@ export default class Twitch {
    * Opens the Twitch mod view of a specific channel.
    * @param channel - The channel.
    */
-  public static async openModView(channel: string) {
+  public static openModView(channel: string) {
     window.open(`https://www.twitch.tv/moderator/${channel}`, 'twitchModViewPopupWindow', 'height=800,width=1200')
+  }
+
+  /**
+   * Opens the Twitch stream manager of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openStreamManager(channel: string) {
+    window.open(
+      `https://dashboard.twitch.tv/u/${channel}/stream-manager`,
+      'twitchStreamManagerPopupWindow',
+      'height=800,width=1200'
+    )
+  }
+
+  /**
+   * Opens the Twitch stream summary of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openStreamSummary(channel: string) {
+    window.open(
+      `https://dashboard.twitch.tv/u/${channel}/stream-summary`,
+      'twitchStreamSummaryPopupWindow',
+      'height=800,width=1200'
+    )
+  }
+
+  /**
+   * Opens the Twitch stream infos of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openStreamInfos(channel: string) {
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/dashboard/live/stream-info`,
+      'twitchStreamInfosPopupWindow',
+      'height=600,width=500'
+    )
+  }
+
+  /**
+   * Opens the Twitch activity feed of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openActivityFeed(channel: string) {
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/dashboard/live/activity-feed`,
+      'twitchActivityFeedPopupWindow',
+      'height=800,width=500'
+    )
   }
 
   /**
@@ -395,23 +431,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches a channel live notification.
-   * @param  channelId - The id of the channel.
-   * @return The channel live notification.
-   */
-  public static async fetchChannelLiveNotification(channelId: string): Promise<RawNotification> {
-    const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${channelId}/notifications/custom`,
-      { notification_type: 'streamup' },
-      true,
-      RequestMethod.Get
-    )
-
-    return response.json()
-  }
-
-  /**
    * Approves a message rejected by AutoMod.
    * @param messageId - The ID of the rejected message.
    */
@@ -429,18 +448,6 @@ export default class Twitch {
     return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/deny', undefined, true, RequestMethod.Post, {
       msg_id: messageId,
     })
-  }
-
-  /**
-   * Searches for a game / category.
-   * @param  query - The query to use for the search.
-   * @param  [signal] - A signal to abort the search if necessary.
-   * @return The results.
-   */
-  public static async searchCategories(query: string, signal?: AbortSignal): Promise<RawCategory[]> {
-    const response = await Twitch.fetch(TwitchApi.Helix, '/search/categories', { query }, true, RequestMethod.Get)
-
-    return (await response.json()).data
   }
 
   /**
@@ -594,30 +601,6 @@ export default class Twitch {
    */
   public static async fetchChatters(channel: string): Promise<RawChattersDetails> {
     const response = await fetch(Twitch.getUrl(TwitchApi.Tmi, `/group/user/${channel}/chatters`, undefined, true))
-
-    return response.json()
-  }
-
-  /**
-   * Fetches hosts of a specific channel.
-   * @param  channelId - The channel id.
-   * @return The hosts.
-   */
-  public static async fetchHosts(channelId: string): Promise<RawHosts> {
-    const response = await fetch(
-      Twitch.getUrl(TwitchApi.Tmi, '/hosts', { include_logins: '1', target: channelId }, true)
-    )
-
-    return response.json()
-  }
-
-  /**
-   * Fetches the current host of a specific channel.
-   * @param  channelId - The channel id.
-   * @return The host.
-   */
-  public static async fetchHost(channelId: string): Promise<RawHosts> {
-    const response = await fetch(Twitch.getUrl(TwitchApi.Tmi, '/hosts', { include_logins: '1', host: channelId }, true))
 
     return response.json()
   }
@@ -1227,32 +1210,6 @@ export type RawRelationship = {
 }
 
 /**
- * Twitch notification.
- */
-export type RawNotification = {
-  is_default: boolean
-  message: string
-  notification_type: string
-  user_id: string
-}
-
-/**
- * Twitch category.
- */
-export type RawCategory = {
-  box_art_url: string
-  id: string
-  name: string
-}
-
-/**
- * Twitch hosts.
- */
-export type RawHosts = {
-  hosts: RawHost[]
-}
-
-/**
  * Twitch host.
  */
 export type RawHost = {
@@ -1262,16 +1219,6 @@ export type RawHost = {
   target_login: string
   host_display_name: string
   target_display_name: string
-}
-
-/**
- * Twitch status.
- */
-type RawStatus = {
-  status: {
-    description: string
-    indicator: string
-  }
 }
 
 /**
