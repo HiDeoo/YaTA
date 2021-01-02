@@ -215,7 +215,7 @@ export default class Twitch {
    * @param channel - The channel.
    * @param username - The user.
    */
-  public static async openViewerCard(channel: string, username: string) {
+  public static openViewerCard(channel: string, username: string) {
     window.open(
       `https://www.twitch.tv/popout/${channel}/viewercard/${username}?popout=`,
       'twitchToolsPopupWindow',
@@ -227,7 +227,7 @@ export default class Twitch {
    * Opens the Twitch rewards queue of a specific channel.
    * @param channel - The channel.
    */
-  public static async openRewardsQueue(channel: string) {
+  public static openRewardsQueue(channel: string) {
     window.open(
       `https://www.twitch.tv/popout/${channel}/reward-queue`,
       'twitchRewardsQueuePopupWindow',
@@ -239,8 +239,56 @@ export default class Twitch {
    * Opens the Twitch mod view of a specific channel.
    * @param channel - The channel.
    */
-  public static async openModView(channel: string) {
+  public static openModView(channel: string) {
     window.open(`https://www.twitch.tv/moderator/${channel}`, 'twitchModViewPopupWindow', 'height=800,width=1200')
+  }
+
+  /**
+   * Opens the Twitch stream manager of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openStreamManager(channel: string) {
+    window.open(
+      `https://dashboard.twitch.tv/u/${channel}/stream-manager`,
+      'twitchStreamManagerPopupWindow',
+      'height=800,width=1200'
+    )
+  }
+
+  /**
+   * Opens the Twitch stream summary of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openStreamSummary(channel: string) {
+    window.open(
+      `https://dashboard.twitch.tv/u/${channel}/stream-summary`,
+      'twitchStreamSummaryPopupWindow',
+      'height=800,width=1200'
+    )
+  }
+
+  /**
+   * Opens the Twitch stream infos of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openStreamInfos(channel: string) {
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/dashboard/live/stream-info`,
+      'twitchStreamInfosPopupWindow',
+      'height=600,width=500'
+    )
+  }
+
+  /**
+   * Opens the Twitch activity feed of a specific channel.
+   * @param channel - The channel.
+   */
+  public static openActivityFeed(channel: string) {
+    window.open(
+      `https://www.twitch.tv/popout/${channel}/dashboard/live/activity-feed`,
+      'twitchActivityFeedPopupWindow',
+      'height=800,width=500'
+    )
   }
 
   /**

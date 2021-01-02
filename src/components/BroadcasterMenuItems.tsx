@@ -32,6 +32,7 @@ class BroadcasterMenuItems extends React.Component<Props> {
     return (
       <>
         <Menu.Divider title="Broadcaster Tools" />
+        <Menu.Item onClick={this.openStreamInfos} icon="edit" text="Edit stream infos" />
         <Menu.Item icon="satellite" text="Run commercial">
           <Menu.Divider
             title={
@@ -48,9 +49,66 @@ class BroadcasterMenuItems extends React.Component<Props> {
             />
           ))}
         </Menu.Item>
-        <Menu.Item onClick={this.openRewardsQueue} icon="stopwatch" text="Rewards queue" />
+        <Menu.Divider title="Twitch" />
+        <Menu.Item onClick={this.openActivityFeed} icon="feed" text="Activity Feed" />
+        <Menu.Item onClick={this.openRewardsQueue} icon="stopwatch" text="Rewards Queue" />
+        <Menu.Item onClick={this.openStreamManager} icon="dashboard" text="Stream Manager" />
+        <Menu.Item onClick={this.openStreamSummary} icon="chart" text="Stream Summary" />
+        <Menu.Divider title="Others" />
+        <Menu.Item onClick={this.openTwitchStatus} icon="power" text="Twitch Status" />
+        <Menu.Item onClick={this.openTwitchSupport} icon="headset" text="Twitch Support" />
+        <Menu.Item onClick={this.openSullyGnome} icon="timeline-area-chart" text="SullyGnome Stats" />
       </>
     )
+  }
+
+  /**
+   * Opens the Twitch stream infos.
+   */
+  private openStreamInfos = () => {
+    Twitch.openStreamInfos(this.props.channel)
+  }
+
+  /**
+   * Opens the Twitch activity feed.
+   */
+  private openActivityFeed = () => {
+    Twitch.openActivityFeed(this.props.channel)
+  }
+
+  /**
+   * Opens the Twitch stream manager.
+   */
+  private openStreamManager = () => {
+    Twitch.openStreamManager(this.props.channel)
+  }
+
+  /**
+   * Opens the Twitch stream summary.
+   */
+  private openStreamSummary = () => {
+    Twitch.openStreamSummary(this.props.channel)
+  }
+
+  /**
+   * Opens the Twitch status page.
+   */
+  private openTwitchStatus = () => {
+    window.open('https://devstatus.twitch.tv')
+  }
+
+  /**
+   * Opens the Twitch support Twitter page.
+   */
+  private openTwitchSupport = () => {
+    window.open('https://twitter.com/TwitchSupport')
+  }
+
+  /**
+   * Opens the SullyGnome page.
+   */
+  private openSullyGnome = () => {
+    window.open(`https://sullygnome.com/channel/${this.props.channel}`)
   }
 
   /**
