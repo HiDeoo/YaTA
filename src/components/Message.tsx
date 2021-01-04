@@ -51,6 +51,15 @@ const HistoricalWrapper = styled.div`
   font-style: italic;
   padding: 4px ${size('log.hPadding')} 1px 7px;
   white-space: pre-wrap;
+
+  .mention,
+  .replyReference {
+    color: ${Colors.LIGHT_GRAY5};
+
+    .${Classes.DARK} & {
+      color: ${Colors.LIGHT_GRAY3};
+    }
+  }
 `
 
 /**

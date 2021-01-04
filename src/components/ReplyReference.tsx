@@ -66,7 +66,7 @@ export default class ReplyReference extends React.Component<Props> {
 
     if (headless) {
       return (
-        <Reference toSelf={replyReference.self}>
+        <Reference className="replyReference" toSelf={replyReference.self}>
           <ReferenceIcon icon="inheritance" /> @{replyReference.user.displayName}
         </Reference>
       )
