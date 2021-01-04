@@ -63,7 +63,7 @@ const light = {
   log: {
     alternate: Colors.LIGHT_GRAY3,
     mention: {
-      color: Colors.LIGHT_GRAY2,
+      color: Colors.GRAY4,
       self: {
         background: 'rgba(241, 99, 99, 0.3)',
         color: Colors.RED3,
