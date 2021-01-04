@@ -80,7 +80,7 @@ export default class ModerationMenuItems extends React.Component<Props> {
         />
         <Menu.Divider title="Moderation" />
         <Menu.Item icon="eraser" text="Clear chat" onClick={clearChat} />
-        <Menu.Item onClick={openModView} icon="build" text="Open Mod View" />
+        <Menu.Item onClick={openModView} icon="take-action" text="Open Mod View" />
       </>
     )
   }
