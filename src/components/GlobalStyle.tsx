@@ -17,6 +17,7 @@ export default createGlobalStyle`
   .__react_component_tooltip {
     &.channelTooltip {
       background-color: ${base.tooltip.background};
+      max-width: 60vw;
       padding: 5px 10px;
 
       &.show {
