@@ -52,7 +52,8 @@ export default class ReplyReference extends React.Component<Props> {
    * @return Element to render.
    */
   public render() {
-    const { replyReference } = this.props.message
+    const { headless, message } = this.props
+    const { replyReference } = message
 
     if (_.isNil(replyReference)) {
       return null
@@ -62,6 +63,14 @@ export default class ReplyReference extends React.Component<Props> {
       /(\\\\|\\s|\\:)/g,
       (match) => ReplyMessageReplacements[match] ?? match
     )
+
+    if (headless) {
+      return (
+        <Reference toSelf={replyReference.self}>
+          <ReferenceIcon icon="inheritance" /> @{replyReference.user.displayName}
+        </Reference>
+      )
+    }
 
     return (
       <Reference
@@ -79,6 +88,7 @@ export default class ReplyReference extends React.Component<Props> {
  * React Props.
  */
 interface Props {
+  headless?: boolean
   message: SerializedMessage
 }
 

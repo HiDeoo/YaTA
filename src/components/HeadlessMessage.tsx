@@ -2,6 +2,7 @@ import _ from 'lodash'
 import * as React from 'react'
 
 import MessageContent from 'components/MessageContent'
+import ReplyReference from 'components/ReplyReference'
 import { WithNameColorProps } from 'libs/Chatter'
 import { SerializedMessage } from 'libs/Message'
 import styled, { ifProp, prop, size, theme } from 'styled'
@@ -75,6 +76,7 @@ export default class HeadlessMessage extends React.Component<Props> {
             </Name>
           </>
         )}{' '}
+        <ReplyReference message={message} headless />
         <MessageContent message={message} />
         {'\n'}
       </Wrapper>
