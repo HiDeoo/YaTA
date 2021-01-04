@@ -1129,8 +1129,11 @@ export class ChatClient extends Component<Props, State> {
     } else if (id === Notices.BanNotice) {
       this.props.markUserAsBanned()
 
+      const { channel } = this.props
       const notice = new Notice(
-        `You are unable to read or participate in ${this.props.channel}'s channel until a moderator unbans you.`
+        `You are unable to read or participate in ${channel}'s channel until a moderator unbans you. You may be able to submit an appeal through <a href="https://www.twitch.tv/popout/${channel}/chat?popout=" target="_blank">the official Twitch chat</a>.`,
+        null,
+        true
       )
 
       this.props.addLog(notice.serialize())
