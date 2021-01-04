@@ -3,6 +3,7 @@
 ### 🚀 New Feature
 
 - Revamp the broadcaster tools which is now a menu to quickly edit the stream title, category and tags, run commercials, access your Twitch activity feed, channel points reward queue and various others tools.
+- Direct replies to messages made using the Twitch Reply feature are now properly handled and have a new *inline* custom UI.
 
 ### 🐛 Bug Fix
 

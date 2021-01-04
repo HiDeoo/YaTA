@@ -524,6 +524,13 @@ class Channel extends Component<Props, State> {
         }
       } else if (node instanceof HTMLImageElement) {
         return node.getAttribute('data-tip')
+      } else if (
+        node?.classList.contains('replyReference') ||
+        node?.parentElement?.classList.contains('replyReference')
+      ) {
+        return node.hasAttribute('data-tip')
+          ? node.getAttribute('data-tip')
+          : node.parentElement?.getAttribute('data-tip')
       }
     }
 

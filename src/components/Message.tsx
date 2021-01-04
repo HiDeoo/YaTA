@@ -4,6 +4,7 @@ import * as React from 'react'
 
 import MessageContent from 'components/MessageContent'
 import Preview from 'components/Preview'
+import ReplyReference from 'components/ReplyReference'
 import ActionMenuItems from 'containers/ActionMenuItems'
 import { ActionHandler } from 'libs/Action'
 import { SerializedChatter, WithNameColorProps } from 'libs/Chatter'
@@ -50,6 +51,15 @@ const HistoricalWrapper = styled.div`
   font-style: italic;
   padding: 4px ${size('log.hPadding')} 1px 7px;
   white-space: pre-wrap;
+
+  .mention,
+  .replyReference {
+    color: ${Colors.LIGHT_GRAY5};
+
+    .${Classes.DARK} & {
+      color: ${Colors.LIGHT_GRAY3};
+    }
+  }
 `
 
 /**
@@ -222,6 +232,7 @@ export default class Message extends React.Component<Props, State> {
           {message.user.displayName}
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </Name>{' '}
+        <ReplyReference message={message} />
         <MessageContent message={message} focusEmote={focusEmote} withEmoteDetails />
         {'\n'}
         {this.renderPreviews()}
@@ -243,6 +254,7 @@ export default class Message extends React.Component<Props, State> {
           {message.user.displayName}
           {message.user.showUserName && <Username> ({message.user.userName})</Username>}
         </HistoricalName>{' '}
+        <ReplyReference message={message} />
         <MessageContent message={message} />
         {'\n'}
       </HistoricalWrapper>
