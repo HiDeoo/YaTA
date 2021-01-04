@@ -359,7 +359,7 @@ export default class Message implements Serializable<SerializedMessage> {
         if (!this.replyReference || index !== 1) {
           parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${word.text}</span>`
         }
-      } else if (Resources.manager().shouldHighlightAllMentions() && word.text === '@') {
+      } else if (word.text === '@') {
         const previousWord = index > 0 ? words[index - 1] : null
 
         if (!_.isNil(previousWord) && previousWord.text.trim().length > 0 && previousWord.text !== '') {
@@ -372,12 +372,17 @@ export default class Message implements Serializable<SerializedMessage> {
           const startIndex = word.index
           const endIndex = nextWord.index + nextWord.length
 
-          for (let i = startIndex; i < endIndex; ++i) {
-            parsedMessage[i] = ''
+          if (this.replyReference || Resources.manager().shouldHighlightAllMentions()) {
+            for (let i = startIndex; i < endIndex; ++i) {
+              parsedMessage[i] = ''
+            }
           }
 
           // Ignore mentions automatically added when replying to a message.
-          if (!this.replyReference || index !== 0) {
+          if (
+            (Resources.manager().shouldHighlightAllMentions() && !this.replyReference) ||
+            (this.replyReference && index !== 0)
+          ) {
             parsedMessage[startIndex] = `<span class="mention">${word.text}${nextWord.text}</span>`
           }
         }
