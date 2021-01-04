@@ -34,6 +34,7 @@ export default class Message implements Serializable<SerializedMessage> {
   private read: boolean
   private twitchHighlighted: boolean
   private historical: boolean
+  private replyReference?: ReplyReference
 
   /**
    * Creates and parses a new chat message instance.
@@ -66,11 +67,15 @@ export default class Message implements Serializable<SerializedMessage> {
       (_.isString(userstate['msg-id']) && userstate['msg-id'] === 'highlighted-message' && !this.ignoreHighlight) ||
       (_.isString(userstate['custom-reward-id']) && !this.ignoreHighlight)
 
+    if (_.isString(userstate['reply-parent-msg-id'])) {
+      this.replyReference = this.parseReplyReference(userstate, currentUsername)
+    }
+
     const date = new Date(parseInt(this.date, 10))
     this.time = `${padTimeUnit(date.getHours())}:${padTimeUnit(date.getMinutes())}`
 
     this.badges = this.parseBadges(userstate, parseOptions.hideVIPBadge)
-    this.message = this.parseMessage(message, userstate, currentUsername)
+    this.message = this.parseMessage(this.text, userstate, currentUsername)
   }
 
   /**
@@ -87,7 +92,7 @@ export default class Message implements Serializable<SerializedMessage> {
    * @return The serialized chat message.
    */
   public serialize() {
-    return {
+    const serializedMessage: SerializedMessage = {
       badges: this.badges,
       color: this.color,
       date: this.date,
@@ -106,6 +111,12 @@ export default class Message implements Serializable<SerializedMessage> {
       type: this.type,
       user: this.user.serialize(),
     }
+
+    if (this.replyReference) {
+      serializedMessage.replyReference = this.replyReference
+    }
+
+    return serializedMessage
   }
 
   /**
@@ -344,7 +355,10 @@ export default class Message implements Serializable<SerializedMessage> {
           parsedMessage[i] = ''
         }
 
-        parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${word.text}</span>`
+        // Ignore mentions automatically added when replying to a message.
+        if (!this.replyReference || index !== 1) {
+          parsedMessage[startIndex] = `<span class="mention self">${withAtSign ? '@' : ''}${word.text}</span>`
+        }
       } else if (Resources.manager().shouldHighlightAllMentions() && word.text === '@') {
         const previousWord = index > 0 ? words[index - 1] : null
 
@@ -362,7 +376,10 @@ export default class Message implements Serializable<SerializedMessage> {
             parsedMessage[i] = ''
           }
 
-          parsedMessage[startIndex] = `<span class="mention">${word.text}${nextWord.text}</span>`
+          // Ignore mentions automatically added when replying to a message.
+          if (!this.replyReference || index !== 0) {
+            parsedMessage[startIndex] = `<span class="mention">${word.text}${nextWord.text}</span>`
+          }
         }
       }
     })
@@ -427,6 +444,35 @@ export default class Message implements Serializable<SerializedMessage> {
       }
     })
   }
+
+  /**
+   * Parses a message reply reference if any.
+   * @param  userstate - The userstate.
+   * @param  currentUsername - The name of the current user.
+   * @return The parsed reply reference if it exists.
+   */
+  private parseReplyReference(userstate: UserState, currentUsername: string): Optional<ReplyReference> {
+    const id = userstate['reply-parent-msg-id']
+    const message = userstate['reply-parent-msg-body']
+    const userDisplayName = userstate['reply-parent-display-name']
+    const userId = userstate['reply-parent-user-id']
+    const userLogin = userstate['reply-parent-user-login']
+
+    if (_.isNil(id) || _.isNil(message) || _.isNil(userDisplayName) || _.isNil(userId) || _.isNil(userLogin)) {
+      return
+    }
+
+    return {
+      id,
+      message,
+      self: userDisplayName.toLowerCase() === currentUsername,
+      user: {
+        displayName: userDisplayName,
+        id: userId,
+        login: userLogin,
+      },
+    }
+  }
 }
 
 /**
@@ -450,6 +496,21 @@ export type SerializedMessage = {
   previews: Previews
   read: boolean
   twitchHighlighted: boolean
+  replyReference?: ReplyReference
+}
+
+/**
+ * A reply reference when the message was a response to another one (replied using the built-in Twitch feature).
+ */
+type ReplyReference = {
+  id: string
+  message: string
+  self: boolean
+  user: {
+    displayName: string
+    id: string
+    login: string
+  }
 }
 
 /**
