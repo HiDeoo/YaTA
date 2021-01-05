@@ -49,7 +49,6 @@ export default class Robotty {
   private static fetch(url: string) {
     const headers = new Headers({
       Accept: 'application/json',
-      'User-Agent': 'YaTA',
     })
 
     const request = new Request(url, { headers })
