@@ -411,9 +411,13 @@ export default class Input extends React.Component<Props, State> {
           this.newCursor = before.length + completion.length + cursorOffset
         }
       }
-    } else if (event.key === Key.Escape && !_.isNil(this.splittedValueBeforeCompletion)) {
-      // Restore the value as it was before auto-completing.
-      this.props.onChange(this.splittedValueBeforeCompletion.join(''))
+    } else if (event.key === Key.Escape) {
+      if (!_.isNil(this.splittedValueBeforeCompletion)) {
+        // Restore the value as it was before auto-completing.
+        this.props.onChange(this.splittedValueBeforeCompletion.join(''))
+      } else if (!_.isNil(this.props.replyReference)) {
+        this.props.cancelReply()
+      }
     } else if (event.key !== Key.Shift) {
       this.completions = null
       this.completionIndex = -1
