@@ -194,7 +194,7 @@ export default class Input extends React.Component<Props, State> {
         className: 'messageLengthError',
         icon: 'warning-sign',
         intent: Intent.DANGER,
-        message: `Your message exceeds the 500 characters limit.  (${value.length}/${Message.Max})`,
+        message: `Your message exceeds the ${Message.Max} characters limit.  (${value.length}/${Message.Max})`,
       })
 
       intent = Classes.INTENT_DANGER
@@ -204,7 +204,7 @@ export default class Input extends React.Component<Props, State> {
         className: 'messageLengthWarning',
         icon: 'hand',
         intent: Intent.WARNING,
-        message: `Your message exceeds 400 characters. Try to avoid long messages. (${value.length}/${Message.Max})`,
+        message: `Your message exceeds ${Message.Max} characters. Try to avoid long messages. (${value.length}/${Message.Max})`,
       })
 
       intent = Classes.INTENT_WARNING
