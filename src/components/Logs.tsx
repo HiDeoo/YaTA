@@ -207,6 +207,7 @@ export class Logs extends Component<Props> {
       markRejectedMessageAsHandled,
       openTwitchViewerCard,
       quoteMessage,
+      reply,
       showContextMenu,
       timeout,
       unban,
@@ -240,6 +241,7 @@ export class Logs extends Component<Props> {
           focusEmote={focusEmote}
           timeout={timeout}
           whisper={whisper}
+          reply={reply}
           unban={unban}
           style={style}
           message={log}
@@ -312,6 +314,7 @@ interface Props extends ThemeProps {
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number
   quoteMessage: (message: SerializedMessage) => void
+  reply: (message: SerializedMessage) => void
   scrollToNewestLog: () => void
   showContextMenu: boolean
   timeout: (username: string, duration: number) => void

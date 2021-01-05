@@ -8,6 +8,7 @@ import Message from 'constants/message'
 import EmotePicker from 'containers//EmotePicker'
 import Command from 'libs/Command'
 import { Emote } from 'libs/EmotesProvider'
+import type { SerializedMessage } from 'libs/Message'
 import styled, { theme } from 'styled'
 import { endWithWhiteSpace, getWordAtPosition, startWithWhiteSpace } from 'utils/string'
 
@@ -61,6 +62,14 @@ const InputToast = styled(Toast)`
       & > .${Classes.ICON}, & > .${Classes.TOAST_MESSAGE} {
         opacity: 0;
       }
+
+      &.dismissableToast .${Classes.BUTTON_GROUP} {
+        opacity: 0;
+      }
+    }
+
+    &.dismissableToast .${Classes.BUTTON_GROUP} {
+      display: initial;
     }
   }
 
@@ -107,7 +116,7 @@ const initialState = {
   hideToasts: false,
   intent: '',
   lastKnownCursor: undefined as Optional<CursorPosition>,
-  toasts: [] as HideableToastOptions[],
+  toasts: [] as ToastOptions[],
 }
 type State = Readonly<typeof initialState>
 
@@ -121,10 +130,10 @@ export default class Input extends React.Component<Props, State> {
    * @return An object to update the state or `null` to update nothing.
    */
   public static getDerivedStateFromProps(nextProps: Props) {
-    const toasts: HideableToastOptions[] = []
+    const toasts: ToastOptions[] = []
     let intent = ''
 
-    const { value } = nextProps
+    const { replyReference, value } = nextProps
     const { username } = Command.parseWhisper(value)
 
     if (!_.isNil(username)) {
@@ -168,6 +177,21 @@ export default class Input extends React.Component<Props, State> {
       })
 
       intent = Classes.INTENT_WARNING
+    } else if (!_.isNil(replyReference)) {
+      toasts.push({
+        dismissable: true,
+        key: 'reply',
+        hideable: true,
+        icon: 'inheritance',
+        intent: Intent.SUCCESS,
+        message: (
+          <>
+            Replying to @{replyReference.user.displayName}: <em>“{replyReference.text}”</em>
+          </>
+        ),
+      })
+
+      intent = Classes.INTENT_SUCCESS
     }
 
     return { intent, toasts }
@@ -207,7 +231,7 @@ export default class Input extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { disabled, isUploadingFile, value } = this.props
+    const { cancelReply, disabled, isUploadingFile, value } = this.props
     const { hideToasts, intent, toasts } = this.state
 
     const inputDisabled = disabled || isUploadingFile
@@ -217,17 +241,19 @@ export default class Input extends React.Component<Props, State> {
     return (
       <Wrapper>
         <Toaster position={Position.BOTTOM} usePortal={false}>
-          {_.map(toasts, (toast, index) => {
-            const { className, hideable, ...toastProps } = toast
+          {_.map(toasts, (toast) => {
+            const { className, dismissable, hideable, key, ...toastProps } = toast
 
+            const onDismiss = key === 'reply' ? cancelReply : undefined
             const toastClasses = clsx(
               {
                 hiddenToast: hideable && hideToasts,
+                dismissableToast: dismissable,
               },
               className
             )
 
-            return <InputToast {...toastProps} className={toastClasses} />
+            return <InputToast key={key} {...toastProps} onDismiss={onDismiss} timeout={0} className={toastClasses} />
           })}
         </Toaster>
         {isUploadingFile && <UploadProgressBar intent={Intent.PRIMARY} />}
@@ -449,12 +475,14 @@ export default class Input extends React.Component<Props, State> {
  * React Props.
  */
 interface Props {
+  cancelReply: () => void
   disabled: boolean
   getCompletions: (word: string, excludeEmotes: boolean, isCommand: boolean) => string[]
   getHistory: (previous?: boolean) => { entry: string | null; atStart: boolean }
   isUploadingFile: boolean
   onChange: (value: string) => void
   onSubmit: () => void
+  replyReference?: SerializedMessage
   username?: string
   value: string
 }
@@ -468,6 +496,6 @@ type CursorPosition = {
 }
 
 /**
- * Hideable toast options.
+ * Input toast options.
  */
-type HideableToastOptions = IToastOptions & { hideable?: boolean; className?: string }
+type ToastOptions = IToastOptions & { hideable?: boolean; className?: string; dismissable?: boolean }

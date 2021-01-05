@@ -121,6 +121,7 @@ const initialState = {
   focusedEmote: undefined as Optional<FocusedEmote>,
   inputValue: '',
   isUploadingFile: false,
+  replyReference: undefined as Optional<SerializedMessage>,
   shouldQuickOpenPlayer: false,
   viewerCount: undefined as Optional<number>,
   [ToggleableUI.Chatters]: false,
@@ -248,6 +249,7 @@ class Channel extends Component<Props, State> {
       focusedChatter,
       focusedEmote,
       isUploadingFile,
+      replyReference,
       [ToggleableUI.Chatters]: showChatters,
       [ToggleableUI.CommandsHelp]: showCommandsHelp,
       [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
@@ -319,6 +321,7 @@ class Channel extends Component<Props, State> {
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
           focusEmote={this.focusEmote}
+          reply={this.prepareReply}
           ref={this.logsComponent}
           lastReadId={lastReadId}
           timeout={this.timeout}
@@ -333,6 +336,8 @@ class Channel extends Component<Props, State> {
           getCompletions={this.getCompletions}
           onChange={this.onChangeInputValue}
           isUploadingFile={isUploadingFile}
+          replyReference={replyReference}
+          cancelReply={this.clearReply}
           value={this.state.inputValue}
           getHistory={this.getHistory}
           onSubmit={this.sendMessage}
@@ -1114,15 +1119,21 @@ class Channel extends Component<Props, State> {
   /**
    * Sends a message.
    * @param message - The message to send.
-   * @param ignoreHistory - Defines if the message should not be added to the
-   * history.
+   * @param ignoreHistory - Defines if the message should not be added to the history.
    */
   private async say(message: string, ignoreHistory: boolean = false) {
+    const { replyReference } = this.state
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
-      await client.say(channel, message)
+      if (!_.isNil(replyReference)) {
+        await client.say(channel, message, `@reply-parent-msg-id=${replyReference.id}`)
+
+        this.clearReply()
+      } else {
+        await client.say(channel, message)
+      }
 
       if (!ignoreHistory) {
         this.props.addToHistory(message)
@@ -1274,11 +1285,30 @@ class Channel extends Component<Props, State> {
   }
 
   /**
-   * Prepare a whisper by setting the input to the whisper command.
+   * Prepares a whisper by setting the input to the whisper command.
    * @param username - The username to whisper.
    */
   private prepareWhisper = (username: string) => {
     this.setState(() => ({ inputValue: `/w ${username} ` }))
+
+    this.focusChatInput()
+  }
+
+  /**
+   * Prepares a reply by storing the reply reference.
+   * @param message - The reply reference.
+   */
+  private prepareReply = (message: SerializedMessage) => {
+    this.setState(() => ({ replyReference: message }))
+
+    this.focusChatInput()
+  }
+
+  /**
+   * Clears any reply reference.
+   */
+  private clearReply = () => {
+    this.setState(() => ({ replyReference: undefined }))
 
     this.focusChatInput()
   }
