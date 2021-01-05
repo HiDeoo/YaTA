@@ -191,7 +191,7 @@ declare module 'twitch-js' {
       listener: (channel: string, noticeId: string, message: string, tags: Record<string, string>) => void
     ): void
 
-    say(channel: string, message: string): void
+    say(channel: string, message: string, commandPrefix?: string): void
     whisper(username: string, message: string): void
     timeout(channel: string, username: string, length: number, reason?: string): void
     ban(channel: string, username: string, reason?: string): void

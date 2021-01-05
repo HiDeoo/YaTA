@@ -65,7 +65,29 @@ patch-package
              }
            }
            break;
-@@ -1209,9 +1225,15 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
+@@ -1140,7 +1156,7 @@ client.prototype._sendCommand = function _sendCommand(delay, channel, command, f
+ };
+
+ // Send a message to channel..
+-client.prototype._sendMessage = function _sendMessage(delay, channel, message, fn) {
++client.prototype._sendMessage = function _sendMessage(delay, channel, message, fn, commandPrefix) {
+   var _this7 = this;
+
+   // Promise a result..
+@@ -1161,7 +1177,11 @@ client.prototype._sendMessage = function _sendMessage(delay, channel, message, f
+         }, 350);
+       }
+
+-      _this7.ws.send('PRIVMSG ' + _.channel(channel) + ' :' + message);
++      if (commandPrefix) {
++	       _this7.ws.send(commandPrefix + ' PRIVMSG ' + _.channel(channel) + ' :' + message);
++      } else {
++        _this7.ws.send('PRIVMSG ' + _.channel(channel) + ' :' + message);
++      }
+
+       var emotes = {};
+
+@@ -1209,9 +1229,15 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
        'Client-ID': this.clientId
      }
    }, function (err, res, body) {
@@ -84,6 +106,27 @@ patch-package
      }
      setTimeout(function () {
        _this8._updateEmoteset(sets);
+patch-package
+--- a/node_modules/twitch-js/lib/commands.js
++++ b/node_modules/twitch-js/lib/commands.js
+@@ -422,7 +422,7 @@ module.exports = {
+   },
+
+   // Send a message on a channel..
+-  say: function say(channel, message) {
++  say: function say(channel, message, commandPrefix) {
+     channel = _.channel(channel);
+
+     if (message.startsWith('.') && !message.startsWith('..') || message.startsWith('/') || message.startsWith('\\')) {
+@@ -446,7 +446,7 @@ module.exports = {
+       // if a message has been sent has been eaten
+       // by the server, so we can only resolve the Promise.
+       resolve([channel, message]);
+-    });
++    }, commandPrefix);
+   },
+
+   // Enable slow mode on a channel..
 patch-package
 --- a/node_modules/twitch-js/lib/utils/fetch-helper.js
 +++ b/node_modules/twitch-js/lib/utils/fetch-helper.js
