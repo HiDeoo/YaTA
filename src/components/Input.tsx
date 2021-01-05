@@ -55,6 +55,17 @@ const InputToast = styled(Toast)`
       width: 435px;
     }
 
+    &.replyNotice {
+      max-width: unset;
+
+      & > .${Classes.TOAST_MESSAGE} {
+        max-width: 50vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
     &.hiddenToast {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
@@ -165,6 +176,7 @@ export default class Input extends React.Component<Props, State> {
         dismissable: true,
         key: 'reply',
         hideable: true,
+        className: 'replyNotice',
         icon: 'inheritance',
         intent: Intent.SUCCESS,
         message: (
