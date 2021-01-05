@@ -324,7 +324,6 @@ class Channel extends Component<Props, State> {
           actionHandler={this.handleAction}
           purgedCount={allLogs.purgedCount}
           focusChatter={this.focusChatter}
-          quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
           focusEmote={this.focusEmote}
@@ -902,13 +901,6 @@ class Channel extends Component<Props, State> {
     this.setState(() => ({ focusedEmote: undefined }))
 
     this.focusChatInput()
-  }
-
-  /**
-   * Quotes a message.
-   */
-  private quoteMessage = (message: SerializedMessage) => {
-    this.appendToInputValue(`“${message.text}”`)
   }
 
   /**

@@ -175,7 +175,6 @@ export default class Input extends React.Component<Props, State> {
       toasts.push({
         dismissable: true,
         key: 'reply',
-        hideable: true,
         className: 'replyNotice',
         icon: 'inheritance',
         intent: Intent.SUCCESS,

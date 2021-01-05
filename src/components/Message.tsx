@@ -377,12 +377,12 @@ export default class Message extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onClick = (event: React.MouseEvent<HTMLElement>) => {
-    const { message, onClick, quoteMessage } = this.props
+    const { message, onClick, reply } = this.props
 
     onClick(message.id)
 
-    if (event.altKey) {
-      quoteMessage(message)
+    if (event.altKey && !message.historical && !message.user.isSelf) {
+      reply(message)
     }
   }
 
@@ -555,7 +555,6 @@ interface Props {
   onClick: (id: string) => void
   onToggleContextMenu: (open: boolean) => void
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
-  quoteMessage: (message: SerializedMessage) => void
   reply: (message: SerializedMessage) => void
   showContextMenu: boolean
   showUnbanContextMenuItem: boolean

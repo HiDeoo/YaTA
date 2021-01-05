@@ -206,7 +206,6 @@ export class Logs extends Component<Props> {
       markNewAsUnread,
       markRejectedMessageAsHandled,
       openTwitchViewerCard,
-      quoteMessage,
       reply,
       showContextMenu,
       timeout,
@@ -235,7 +234,6 @@ export class Logs extends Component<Props> {
           deleteMessage={deleteMessage}
           onClick={this.onClickMessage}
           focusChatter={focusChatter}
-          quoteMessage={quoteMessage}
           useAlternate={useAlternate}
           canModerate={canModerate}
           focusEmote={focusEmote}
@@ -313,7 +311,6 @@ interface Props extends ThemeProps {
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   pauseAutoScroll: (pause: boolean) => void
   purgedCount: number
-  quoteMessage: (message: SerializedMessage) => void
   reply: (message: SerializedMessage) => void
   scrollToNewestLog: () => void
   showContextMenu: boolean
