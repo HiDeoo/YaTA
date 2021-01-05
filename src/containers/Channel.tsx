@@ -121,7 +121,7 @@ const initialState = {
   focusedEmote: undefined as Optional<FocusedEmote>,
   inputValue: '',
   isUploadingFile: false,
-  replyReference: undefined as Optional<SerializedMessage>,
+  reply: undefined as Optional<{ reference: SerializedMessage; sent: boolean }>,
   shouldQuickOpenPlayer: false,
   viewerCount: undefined as Optional<number>,
   [ToggleableUI.Chatters]: false,
@@ -249,7 +249,7 @@ class Channel extends Component<Props, State> {
       focusedChatter,
       focusedEmote,
       isUploadingFile,
-      replyReference,
+      reply,
       [ToggleableUI.Chatters]: showChatters,
       [ToggleableUI.CommandsHelp]: showCommandsHelp,
       [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
@@ -281,7 +281,14 @@ class Channel extends Component<Props, State> {
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
         <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
-        <Chat ref={this.chatClient} key={channel} banned={banned} markUserAsBanned={this.markUserAsBanned} />
+        <Chat
+          markUserAsBanned={this.markUserAsBanned}
+          replyReference={reply?.reference}
+          clearReply={this.clearReply}
+          ref={this.chatClient}
+          banned={banned}
+          key={channel}
+        />
         <DropOverlay
           onSuccess={this.onUploadSuccess}
           onInvalid={this.onUploadInvalid}
@@ -336,7 +343,7 @@ class Channel extends Component<Props, State> {
           getCompletions={this.getCompletions}
           onChange={this.onChangeInputValue}
           isUploadingFile={isUploadingFile}
-          replyReference={replyReference}
+          replyReference={reply?.reference}
           cancelReply={this.clearReply}
           value={this.state.inputValue}
           getHistory={this.getHistory}
@@ -1122,15 +1129,15 @@ class Channel extends Component<Props, State> {
    * @param ignoreHistory - Defines if the message should not be added to the history.
    */
   private async say(message: string, ignoreHistory: boolean = false) {
-    const { replyReference } = this.state
+    const { reply } = this.state
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
-      if (!_.isNil(replyReference)) {
-        await client.say(channel, message, `@reply-parent-msg-id=${replyReference.id}`)
+      if (!_.isNil(reply) && !reply.sent) {
+        await client.say(channel, message, `@reply-parent-msg-id=${reply.reference.id}`)
 
-        this.clearReply()
+        this.markReplyAsSent()
       } else {
         await client.say(channel, message)
       }
@@ -1299,16 +1306,29 @@ class Channel extends Component<Props, State> {
    * @param message - The reply reference.
    */
   private prepareReply = (message: SerializedMessage) => {
-    this.setState(() => ({ replyReference: message }))
+    this.setState(() => ({ reply: { reference: message, sent: false } }))
 
     this.focusChatInput()
+  }
+
+  /**
+   * Marks a reply reference as sent.
+   */
+  private markReplyAsSent = () => {
+    this.setState((state) => {
+      if (_.isNil(state.reply)) {
+        return { reply: state.reply }
+      }
+
+      return { reply: { ...state.reply, sent: true } }
+    })
   }
 
   /**
    * Clears any reply reference.
    */
   private clearReply = () => {
-    this.setState(() => ({ replyReference: undefined }))
+    this.setState(() => ({ reply: undefined }))
 
     this.focusChatInput()
   }
