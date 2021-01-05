@@ -27,8 +27,11 @@ const Wrapper = styled.div`
  */
 const InputToast = styled(Toast)`
   &.${Classes.TOAST} {
-    margin-bottom: 60px;
     max-height: 40px;
+
+    &:first-child {
+      margin-bottom: 60px;
+    }
 
     &,
     & > .${Classes.ICON}, & > .${Classes.TOAST_MESSAGE} {
@@ -157,7 +160,24 @@ export default class Input extends React.Component<Props, State> {
 
         intent = Classes.INTENT_SUCCESS
       }
-    } else if (value.length > Message.Max) {
+    } else if (!_.isNil(replyReference)) {
+      toasts.push({
+        dismissable: true,
+        key: 'reply',
+        hideable: true,
+        icon: 'inheritance',
+        intent: Intent.SUCCESS,
+        message: (
+          <>
+            Replying to @{replyReference.user.displayName}: <em>“{replyReference.text}”</em>
+          </>
+        ),
+      })
+
+      intent = Classes.INTENT_SUCCESS
+    }
+
+    if (value.length > Message.Max) {
       toasts.push({
         key: 'message_length_error',
         className: 'messageLengthError',
@@ -177,21 +197,6 @@ export default class Input extends React.Component<Props, State> {
       })
 
       intent = Classes.INTENT_WARNING
-    } else if (!_.isNil(replyReference)) {
-      toasts.push({
-        dismissable: true,
-        key: 'reply',
-        hideable: true,
-        icon: 'inheritance',
-        intent: Intent.SUCCESS,
-        message: (
-          <>
-            Replying to @{replyReference.user.displayName}: <em>“{replyReference.text}”</em>
-          </>
-        ),
-      })
-
-      intent = Classes.INTENT_SUCCESS
     }
 
     return { intent, toasts }
