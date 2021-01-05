@@ -24,7 +24,7 @@ import Status from 'constants/status'
 import Bttv from 'libs/Bttv'
 import Chatter from 'libs/Chatter'
 import EmotesProvider, { Emote, EmoteProviderPrefix } from 'libs/EmotesProvider'
-import Message from 'libs/Message'
+import Message, { SerializedMessage } from 'libs/Message'
 import Notice from 'libs/Notice'
 import Notification, { NotificationEvent } from 'libs/Notification'
 import RejectedMessage from 'libs/RejectedMessage'
@@ -489,6 +489,15 @@ export class ChatClient extends Component<Props, State> {
     self: boolean,
     msgId: string | null
   ) => {
+    if (self && !_.isNil(this.props.replyReference)) {
+      this.setSelfReplyReference(userstate)
+
+      // Add the reference user mention to match Twitch reply style.
+      message = `@${this.props.replyReference.user.displayName} ${message}`
+
+      this.props.clearReply()
+    }
+
     const parsedMessage = this.parseRawMessage(message, { ...userstate, 'msg-id': msgId }, self)
 
     if (!_.isNil(parsedMessage)) {
@@ -1386,6 +1395,24 @@ export class ChatClient extends Component<Props, State> {
 
     return parsedMessage
   }
+
+  /**
+   * Sets the reply reference for a message sent by the current user.
+   * @param userstate - The associated userstate.
+   */
+  private setSelfReplyReference(userstate: UserState) {
+    const { replyReference } = this.props
+
+    if (_.isNil(replyReference)) {
+      return
+    }
+
+    userstate['reply-parent-display-name'] = replyReference.user.displayName
+    userstate['reply-parent-msg-body'] = replyReference.text
+    userstate['reply-parent-msg-id'] = replyReference.id
+    userstate['reply-parent-user-id'] = replyReference.user.id
+    userstate['reply-parent-user-login'] = replyReference.user.userName
+  }
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
@@ -1482,7 +1509,9 @@ interface DispatchProps {
  */
 interface OwnProps {
   banned: boolean
+  clearReply: () => void
   markUserAsBanned: () => void
+  replyReference?: SerializedMessage
 }
 
 /**

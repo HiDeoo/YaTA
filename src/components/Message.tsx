@@ -303,6 +303,7 @@ export default class Message extends React.Component<Props, State> {
         {!message.user.isSelf && (
           <>
             <Menu.Item icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
+            <Menu.Item icon="inheritance" text="Reply" onClick={this.onClickReply} />
             <Menu.Divider />
           </>
         )}
@@ -376,12 +377,12 @@ export default class Message extends React.Component<Props, State> {
    * @param event - The associated event.
    */
   private onClick = (event: React.MouseEvent<HTMLElement>) => {
-    const { message, onClick, quoteMessage } = this.props
+    const { message, onClick, reply } = this.props
 
     onClick(message.id)
 
-    if (event.altKey) {
-      quoteMessage(message)
+    if (event.altKey && !message.historical && !message.user.isSelf) {
+      reply(message)
     }
   }
 
@@ -523,6 +524,15 @@ export default class Message extends React.Component<Props, State> {
 
     whisper(message.user.userName)
   }
+
+  /**
+   * Triggered when the reply menu item is clicked.
+   */
+  private onClickReply = () => {
+    const { message, reply } = this.props
+
+    reply(message)
+  }
 }
 
 /**
@@ -545,7 +555,7 @@ interface Props {
   onClick: (id: string) => void
   onToggleContextMenu: (open: boolean) => void
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
-  quoteMessage: (message: SerializedMessage) => void
+  reply: (message: SerializedMessage) => void
   showContextMenu: boolean
   showUnbanContextMenuItem: boolean
   style: React.CSSProperties

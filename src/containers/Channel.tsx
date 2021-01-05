@@ -121,6 +121,7 @@ const initialState = {
   focusedEmote: undefined as Optional<FocusedEmote>,
   inputValue: '',
   isUploadingFile: false,
+  reply: undefined as Optional<{ reference: SerializedMessage; sent: boolean }>,
   shouldQuickOpenPlayer: false,
   viewerCount: undefined as Optional<number>,
   [ToggleableUI.Chatters]: false,
@@ -248,6 +249,7 @@ class Channel extends Component<Props, State> {
       focusedChatter,
       focusedEmote,
       isUploadingFile,
+      reply,
       [ToggleableUI.Chatters]: showChatters,
       [ToggleableUI.CommandsHelp]: showCommandsHelp,
       [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
@@ -279,7 +281,14 @@ class Channel extends Component<Props, State> {
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
         <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
-        <Chat ref={this.chatClient} key={channel} banned={banned} markUserAsBanned={this.markUserAsBanned} />
+        <Chat
+          markUserAsBanned={this.markUserAsBanned}
+          replyReference={reply?.reference}
+          clearReply={this.clearReply}
+          ref={this.chatClient}
+          banned={banned}
+          key={channel}
+        />
         <DropOverlay
           onSuccess={this.onUploadSuccess}
           onInvalid={this.onUploadInvalid}
@@ -315,10 +324,10 @@ class Channel extends Component<Props, State> {
           actionHandler={this.handleAction}
           purgedCount={allLogs.purgedCount}
           focusChatter={this.focusChatter}
-          quoteMessage={this.quoteMessage}
           canModerate={this.canModerate}
           whisper={this.prepareWhisper}
           focusEmote={this.focusEmote}
+          reply={this.prepareReply}
           ref={this.logsComponent}
           lastReadId={lastReadId}
           timeout={this.timeout}
@@ -333,6 +342,8 @@ class Channel extends Component<Props, State> {
           getCompletions={this.getCompletions}
           onChange={this.onChangeInputValue}
           isUploadingFile={isUploadingFile}
+          replyReference={reply?.reference}
+          cancelReply={this.clearReply}
           value={this.state.inputValue}
           getHistory={this.getHistory}
           onSubmit={this.sendMessage}
@@ -893,13 +904,6 @@ class Channel extends Component<Props, State> {
   }
 
   /**
-   * Quotes a message.
-   */
-  private quoteMessage = (message: SerializedMessage) => {
-    this.appendToInputValue(`“${message.text}”`)
-  }
-
-  /**
    * Copy message(s) to the clipboard.
    * @param messages - The message(s) to copy.
    */
@@ -1114,15 +1118,21 @@ class Channel extends Component<Props, State> {
   /**
    * Sends a message.
    * @param message - The message to send.
-   * @param ignoreHistory - Defines if the message should not be added to the
-   * history.
+   * @param ignoreHistory - Defines if the message should not be added to the history.
    */
   private async say(message: string, ignoreHistory: boolean = false) {
+    const { reply } = this.state
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
-      await client.say(channel, message)
+      if (!_.isNil(reply) && !reply.sent) {
+        await client.say(channel, message, `@reply-parent-msg-id=${reply.reference.id}`)
+
+        this.markReplyAsSent()
+      } else {
+        await client.say(channel, message)
+      }
 
       if (!ignoreHistory) {
         this.props.addToHistory(message)
@@ -1274,11 +1284,43 @@ class Channel extends Component<Props, State> {
   }
 
   /**
-   * Prepare a whisper by setting the input to the whisper command.
+   * Prepares a whisper by setting the input to the whisper command.
    * @param username - The username to whisper.
    */
   private prepareWhisper = (username: string) => {
     this.setState(() => ({ inputValue: `/w ${username} ` }))
+
+    this.focusChatInput()
+  }
+
+  /**
+   * Prepares a reply by storing the reply reference.
+   * @param message - The reply reference.
+   */
+  private prepareReply = (message: SerializedMessage) => {
+    this.setState(() => ({ reply: { reference: message, sent: false } }))
+
+    this.focusChatInput()
+  }
+
+  /**
+   * Marks a reply reference as sent.
+   */
+  private markReplyAsSent = () => {
+    this.setState((state) => {
+      if (_.isNil(state.reply)) {
+        return { reply: state.reply }
+      }
+
+      return { reply: { ...state.reply, sent: true } }
+    })
+  }
+
+  /**
+   * Clears any reply reference.
+   */
+  private clearReply = () => {
+    this.setState(() => ({ reply: undefined }))
 
     this.focusChatInput()
   }

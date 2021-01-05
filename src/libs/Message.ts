@@ -458,7 +458,8 @@ export default class Message implements Serializable<SerializedMessage> {
    */
   private parseReplyReference(userstate: UserState, currentUsername: string): Optional<ReplyReference> {
     const id = userstate['reply-parent-msg-id']
-    const message = userstate['reply-parent-msg-body']
+    // We need to ensure the message is a string as some messages like 'true' may be returned as a boolean.
+    const message = userstate['reply-parent-msg-body']?.toString()
     const userDisplayName = userstate['reply-parent-display-name']
     const userId = userstate['reply-parent-user-id']
     const userLogin = userstate['reply-parent-user-login']
