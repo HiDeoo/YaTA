@@ -94,7 +94,7 @@ class BroadcasterMenuItems extends React.Component<Props> {
    * Opens the Twitch status page.
    */
   private openTwitchStatus = () => {
-    window.open('https://devstatus.twitch.tv')
+    window.open('https://status.twitch.tv')
   }
 
   /**
