@@ -5,12 +5,16 @@
 - Revamp the broadcaster tools which is now a menu to quickly edit the stream title, category and tags, run commercials, access your Twitch activity feed, channel points reward queue and various others tools.
 - Add support for the Twitch Reply feature:
   - You can now reply to a message by using its associated context menu or by `Alt` clicking it.
-  - Replies to messages are now properly handled and have a new *inline* custom UI.
+  - Replies to messages are now properly handled and have a new _inline_ custom UI.
 
 ### 🐛 Bug Fix
 
 - After login with Twitch, you are now properly redirected to the page you were browsing before.
 - Rename Twitch Prime to [Prime Gaming](https://blog.twitch.tv/en/2020/08/10/introducing-prime-gaming-more-of-what-you-love/).
+
+### ⚙️ Internal
+
+- Improve errors & bugs reporting.
 
 # 1.15.0
 
