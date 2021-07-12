@@ -1,0 +1,64 @@
+name: Automated bug report
+description: Report a bug with YaTA. Please provide as much details as possible, including screenshots if necessary.
+body:
+  - type: markdown
+    value: Thanks for filing an issue 😄 !
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+  - type: dropdown
+    attributes:
+      label: How often does this bug happen?
+      description: How easily can you reproduce this bug?
+      options:
+        - Every time
+        - Often
+        - Sometimes
+        - Only once
+    validations:
+      required: true
+  - type: input
+    id: yata_version
+    attributes:
+      label: YaTA version (automated)
+      description: Please do not edit this field.
+    validations:
+      required: true
+  - type: input
+    id: browser_version
+    attributes:
+      label: Browser version (automated)
+      description: Please do not edit this field.
+    validations:
+      required: true
+  - type: input
+    id: os_version
+    attributes:
+      label: Operating System version (automated)
+      description: Please do not edit this field.
+    validations:
+      required: true
