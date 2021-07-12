@@ -2,7 +2,8 @@ name: Automated bug report
 description: Report a bug with YaTA. Please provide as much details as possible, including screenshots if necessary.
 body:
   - type: markdown
-    value: Thanks for filing an issue 😄 !
+    attributes:
+      value: Thanks for filing an issue 😄 !
   - type: textarea
     attributes:
       label: Describe the bug

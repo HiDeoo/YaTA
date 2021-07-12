@@ -2,7 +2,8 @@ name: Feature request
 description: Suggest an idea for YaTA. Please provide as much details as possible, including screenshots if necessary.
 body:
   - type: markdown
-    value: Thanks for filing a feature request 😄 !
+    attributes:
+      value: Thanks for filing a feature request 😄 !
   - type: textarea
     attributes:
       label: Is your feature request related to a problem?
