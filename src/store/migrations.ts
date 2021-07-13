@@ -122,7 +122,7 @@ export default {
       return state
     }
 
-    const oldActions = (_.get(state.settings, 'actions') as any) as SerializedActions
+    const oldActions = _.get(state.settings, 'actions') as any as SerializedActions
     const allIds = _.map(oldActions, (action) => action.id)
 
     return {

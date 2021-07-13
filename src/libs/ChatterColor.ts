@@ -151,7 +151,7 @@ export default class ChatterColor {
    * @return The contrast.
    */
   private getContrast(color = this.foreground, bgColor = this.background) {
-    return (tinycolor.readability(color, bgColor) as any) as number
+    return tinycolor.readability(color, bgColor) as any as number
   }
 }
 
