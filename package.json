@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "prepare": "patch-package",
+    "prepare": "patch-package && husky install",
     "prestart": "yarn run changelog",
     "start": "react-scripts start",
     "prebuild": "yarn run changelog",
@@ -17,7 +17,6 @@
     "preanalyze": "yarn run build",
     "analyze": "source-map-explorer build/static/js/main.*",
     "changelog": "cp CHANGELOG.md src",
-    "precommit": "lint-staged",
     "deploy": "vercel"
   },
   "dependencies": {
@@ -76,8 +75,8 @@
     "@types/tinycolor2": "1.4.3",
     "@types/webpack-env": "1.16.2",
     "eslint-plugin-prettier": "3.4.0",
-    "husky": "4.3.6",
-    "lint-staged": "10.5.3",
+    "husky": "7.0.1",
+    "lint-staged": "11.0.1",
     "patch-package": "6.4.7",
     "postinstall-prepare": "2.0.0",
     "prettier": "2.3.2",
@@ -93,10 +92,7 @@
     "@types/react": "17.0.14"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,md,json,css}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{ts,tsx,md,json,css}": "prettier --write"
   },
   "eslintConfig": {
     "extends": "react-app",
