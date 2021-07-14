@@ -1,4 +1,14 @@
-import { Button, Classes, Intent, Menu, NavbarDivider, Popover, Position } from '@blueprintjs/core'
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuDivider,
+  MenuItem,
+  NavbarDivider,
+  Popover,
+  Position,
+} from '@blueprintjs/core'
 import { HotkeysTarget } from '@blueprintjs/core/lib/esnext/components/hotkeys/hotkeysTarget'
 import copy from 'copy-to-clipboard'
 import _ from 'lodash'
@@ -444,11 +454,11 @@ class Channel extends Component<Props, State> {
             <Button icon="wrench" minimal disabled={banned} />
           </HeaderTooltip>
           <Menu>
-            <Menu.Divider title="Tools" />
-            {connected && <Menu.Item onClick={this.clip} icon="film" text="Create clip" />}
-            <Menu.Item onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
-            {connected && <Menu.Item onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
-            {connected && <Menu.Item onClick={this.toggleLogsExporter} icon="archive" text="Export logs" />}
+            <MenuDivider title="Tools" />
+            {connected && <MenuItem onClick={this.clip} icon="film" text="Create clip" />}
+            <MenuItem onClick={this.togglePollEditor} icon="horizontal-bar-chart" text="Create Straw Poll" />
+            {connected && <MenuItem onClick={this.props.addMarker} icon="bookmark" text="Add marker" />}
+            {connected && <MenuItem onClick={this.toggleLogsExporter} icon="archive" text="Export logs" />}
             <ModerationMenuItems
               toggleFollowersOnly={this.toggleFollowersOnly}
               toggleEmoteOnly={this.toggleEmoteOnly}

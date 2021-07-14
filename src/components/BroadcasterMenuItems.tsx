@@ -1,4 +1,4 @@
-import { Icon, Intent, Menu } from '@blueprintjs/core'
+import { Icon, Intent, MenuDivider, MenuItem } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -31,10 +31,10 @@ class BroadcasterMenuItems extends React.Component<Props> {
   public render() {
     return (
       <>
-        <Menu.Divider title="Broadcaster Tools" />
-        <Menu.Item onClick={this.openStreamInfos} icon="edit" text="Edit stream infos" />
-        <Menu.Item icon="satellite" text="Run commercial">
-          <Menu.Divider
+        <MenuDivider title="Broadcaster Tools" />
+        <MenuItem onClick={this.openStreamInfos} icon="edit" text="Edit stream infos" />
+        <MenuItem icon="satellite" text="Run commercial">
+          <MenuDivider
             title={
               <>
                 <Icon icon="time" /> &nbsp;Duration
@@ -42,22 +42,22 @@ class BroadcasterMenuItems extends React.Component<Props> {
             }
           />
           {_.map(CommercialDurations, (label: string, duration: CommercialDuration) => (
-            <Menu.Item
+            <MenuItem
               onClick={(event: React.MouseEvent) => this.onClickCommercial(event, duration)}
               key={duration}
               text={label}
             />
           ))}
-        </Menu.Item>
-        <Menu.Divider title="Twitch" />
-        <Menu.Item onClick={this.openActivityFeed} icon="feed" text="Activity Feed" />
-        <Menu.Item onClick={this.openRewardsQueue} icon="stopwatch" text="Rewards Queue" />
-        <Menu.Item onClick={this.openStreamManager} icon="dashboard" text="Stream Manager" />
-        <Menu.Item onClick={this.openStreamSummary} icon="chart" text="Stream Summary" />
-        <Menu.Divider title="Others" />
-        <Menu.Item onClick={this.openTwitchStatus} icon="power" text="Twitch Status" />
-        <Menu.Item onClick={this.openTwitchSupport} icon="headset" text="Twitch Support" />
-        <Menu.Item onClick={this.openSullyGnome} icon="timeline-area-chart" text="SullyGnome Stats" />
+        </MenuItem>
+        <MenuDivider title="Twitch" />
+        <MenuItem onClick={this.openActivityFeed} icon="feed" text="Activity Feed" />
+        <MenuItem onClick={this.openRewardsQueue} icon="stopwatch" text="Rewards Queue" />
+        <MenuItem onClick={this.openStreamManager} icon="dashboard" text="Stream Manager" />
+        <MenuItem onClick={this.openStreamSummary} icon="chart" text="Stream Summary" />
+        <MenuDivider title="Others" />
+        <MenuItem onClick={this.openTwitchStatus} icon="power" text="Twitch Status" />
+        <MenuItem onClick={this.openTwitchSupport} icon="headset" text="Twitch Support" />
+        <MenuItem onClick={this.openSullyGnome} icon="timeline-area-chart" text="SullyGnome Stats" />
       </>
     )
   }

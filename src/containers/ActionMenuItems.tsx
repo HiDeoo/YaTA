@@ -1,4 +1,4 @@
-import { Menu } from '@blueprintjs/core'
+import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core'
 import _ from 'lodash'
 import { Component } from 'react'
 import { connect } from 'react-redux'
@@ -24,7 +24,7 @@ class ActionMenuItems extends Component<Props> {
       if (wrap) {
         return (
           <Menu>
-            <Menu.Item disabled text="No action configured yet!" />
+            <MenuItem disabled text="No action configured yet!" />
           </Menu>
         )
       }
@@ -35,7 +35,7 @@ class ActionMenuItems extends Component<Props> {
     const items: JSX.Element[] = []
 
     if (startDivider) {
-      items.push(<Menu.Divider key="actionMenuDivider-start" />)
+      items.push(<MenuDivider key="actionMenuDivider-start" />)
     }
 
     items.push(
@@ -45,7 +45,7 @@ class ActionMenuItems extends Component<Props> {
     )
 
     if (endDivider) {
-      items.push(<Menu.Divider key="actionMenuDivider-end" />)
+      items.push(<MenuDivider key="actionMenuDivider-end" />)
     }
 
     return wrap ? <Menu>{items}</Menu> : items

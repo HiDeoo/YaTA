@@ -7,6 +7,7 @@ import {
   Icon,
   Intent,
   Menu,
+  MenuItem,
   Popover,
   Spinner,
   Tooltip,
@@ -354,7 +355,7 @@ class ChatterDetails extends Component<Props, State> {
 
     const banMenu = (
       <Menu>
-        <Menu.Item text="Ban with reason" icon="disable" onClick={this.toggleReasonAlert} />
+        <MenuItem text="Ban with reason" icon="disable" onClick={this.toggleReasonAlert} />
       </Menu>
     )
 

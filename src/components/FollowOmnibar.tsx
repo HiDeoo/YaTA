@@ -1,4 +1,4 @@
-import { Colors, Icon, Menu } from '@blueprintjs/core'
+import { Colors, Icon, MenuItem } from '@blueprintjs/core'
 import { ItemPredicate, ItemRenderer, Omnibar } from '@blueprintjs/select'
 import _ from 'lodash'
 import { Component } from 'react'
@@ -75,7 +75,7 @@ class FollowOmnibar extends Component<Props, State> {
     const label = Twitch.isStream(follow) ? <Icon icon="record" color={Colors.RED3} /> : undefined
 
     return (
-      <Menu.Item
+      <MenuItem
         disabled={modifiers.disabled}
         active={modifiers.active}
         onClick={handleClick}
@@ -91,7 +91,7 @@ class FollowOmnibar extends Component<Props, State> {
    * @return Element to render.
    */
   private renderInitialContent() {
-    return this.state.isReady ? null : <Menu.Item disabled text="Loading…" />
+    return this.state.isReady ? null : <MenuItem disabled text="Loading…" />
   }
 
   /**
@@ -99,7 +99,7 @@ class FollowOmnibar extends Component<Props, State> {
    * @return Element to render.
    */
   private renderNoResults() {
-    return <Menu.Item disabled text="No matches found…" />
+    return <MenuItem disabled text="No matches found…" />
   }
 
   /**
