@@ -10,6 +10,7 @@ import styled, { theme, ThemeProps, withTheme } from 'styled'
  */
 const Content = styled.div`
   margin-bottom: 20px;
+  overflow: hidden;
   text-align: center;
 
   p {
