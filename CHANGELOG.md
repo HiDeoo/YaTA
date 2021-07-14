@@ -7,6 +7,10 @@
   - You can now reply to a message by using its associated context menu or by `Alt` clicking it.
   - Replies to messages are now properly handled and have a new _inline_ custom UI.
 
+### 😢 Removed Feature
+
+- Clicking on an emote no longer list other emotes from the same channel as the previously used third-party API for this feature has been shutdown and Twitch does not provide a proper API to do this.
+
 ### 🐛 Bug Fix
 
 - After login with Twitch, you are now properly redirected to the page you were browsing before.
