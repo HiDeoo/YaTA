@@ -1,4 +1,4 @@
-import { Button, Classes, Colors, Intent, Menu, Popover } from '@blueprintjs/core'
+import { Button, Classes, Colors, Intent, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 
@@ -296,21 +296,21 @@ export default class Message extends React.Component<Props, State> {
 
     const menu = (
       <ContextMenu>
-        <Menu.Divider
+        <MenuDivider
           title={`${message.user.displayName}${message.user.showUserName ? ` (${message.user.userName})` : ''}`}
         />
-        <Menu.Item text="" disabled />
+        <MenuItem text="" disabled />
         {!message.user.isSelf && (
           <>
-            <Menu.Item icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
-            <Menu.Item icon="inheritance" text="Reply" onClick={this.onClickReply} />
-            <Menu.Divider />
+            <MenuItem icon="envelope" text="Whisper" onClick={this.onClickWhisper} />
+            <MenuItem icon="inheritance" text="Reply" onClick={this.onClickReply} />
+            <MenuDivider />
           </>
         )}
-        <Menu.Item icon="clipboard" text="Copy message" onClick={this.copyMessage} />
-        <Menu.Item icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
+        <MenuItem icon="clipboard" text="Copy message" onClick={this.copyMessage} />
+        <MenuItem icon="clipboard" text="Copy username" onClick={this.onCopyUsername} />
         {isHighlighted && (
-          <Menu.Item
+          <MenuItem
             text={`Stop highlighting ${message.user.displayName}`}
             onClick={this.onClickStopHighlights}
             icon="delete"
@@ -319,18 +319,18 @@ export default class Message extends React.Component<Props, State> {
         <ActionMenuItems startDivider actionHandler={actionHandler} chatter={message.user} />
         {canModerate(message.user) && (
           <>
-            <Menu.Divider />
-            <Menu.Item icon="remove" text="Delete message" onClick={this.onClickDelete} />
-            <Menu.Item icon="trash" text="Purge" onClick={this.onClickPurge} />
-            <Menu.Item icon="time" text="Timeout">
-              <Menu.Item text="10m" onClick={this.onClickTimeout10M} />
-              <Menu.Item text="1h" onClick={this.onClickTimeout1H} />
-              <Menu.Item text="6h" onClick={this.onClickTimeout6H} />
-              <Menu.Item text="24h" onClick={this.onClickTimeout24H} />
-            </Menu.Item>
-            <Menu.Item icon="disable" text="Ban" intent={Intent.DANGER} onClick={this.onClickBan} />
+            <MenuDivider />
+            <MenuItem icon="remove" text="Delete message" onClick={this.onClickDelete} />
+            <MenuItem icon="trash" text="Purge" onClick={this.onClickPurge} />
+            <MenuItem icon="time" text="Timeout">
+              <MenuItem text="10m" onClick={this.onClickTimeout10M} />
+              <MenuItem text="1h" onClick={this.onClickTimeout1H} />
+              <MenuItem text="6h" onClick={this.onClickTimeout6H} />
+              <MenuItem text="24h" onClick={this.onClickTimeout24H} />
+            </MenuItem>
+            <MenuItem icon="disable" text="Ban" intent={Intent.DANGER} onClick={this.onClickBan} />
             {showUnbanContextMenuItem && (
-              <Menu.Item icon="unlock" text="Unban" intent={Intent.DANGER} onClick={this.onClickUnban} />
+              <MenuItem icon="unlock" text="Unban" intent={Intent.DANGER} onClick={this.onClickUnban} />
             )}
           </>
         )}

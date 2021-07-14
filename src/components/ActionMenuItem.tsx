@@ -1,4 +1,4 @@
-import { Menu } from '@blueprintjs/core'
+import { MenuItem } from '@blueprintjs/core'
 import { Component } from 'react'
 
 import ActionIconMap from 'constants/actionIconMap'
@@ -16,7 +16,7 @@ export default class ActionMenuItem extends Component<Props> {
   public render() {
     const { action } = this.props
 
-    return <Menu.Item icon={ActionIconMap[action.type]} text={action.name} onClick={this.onClick} />
+    return <MenuItem icon={ActionIconMap[action.type]} text={action.name} onClick={this.onClick} />
   }
 
   /**

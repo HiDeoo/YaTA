@@ -1,4 +1,4 @@
-import { Icon, Menu } from '@blueprintjs/core'
+import { Icon, MenuDivider, MenuItem } from '@blueprintjs/core'
 import _ from 'lodash'
 import pluralize from 'pluralize'
 import * as React from 'react'
@@ -36,15 +36,15 @@ export default class ModerationMenuItems extends React.Component<Props> {
 
     return (
       <>
-        <Menu.Divider title="Mode" />
-        <Menu.Item
+        <MenuDivider title="Mode" />
+        <MenuItem
           icon={this.getStateMenuIcon('r9k')}
           text="Unique chat"
           labelElement={<Icon icon="multi-select" />}
           onClick={toggleR9k}
         />
-        <Menu.Item icon={this.getStateMenuIcon('slow')} text="Slow mode" onClick={this.toggleSlowMode}>
-          <Menu.Divider
+        <MenuItem icon={this.getStateMenuIcon('slow')} text="Slow mode" onClick={this.toggleSlowMode}>
+          <MenuDivider
             title={
               <>
                 <Icon icon="outdated" /> &nbsp;Slow mode
@@ -52,35 +52,35 @@ export default class ModerationMenuItems extends React.Component<Props> {
             }
           />
           {_.map(SlowModeDurations, (slowModeDuration) => (
-            <Menu.Item
+            <MenuItem
               onClick={(event: React.MouseEvent) => this.toggleSlowMode(event, slowModeDuration)}
               text={`${slowModeDuration} ${pluralize('second', slowModeDuration)}`}
               icon={this.getSlowModeMenuIcon(slowModeDuration)}
               key={slowModeDuration}
             />
           ))}
-        </Menu.Item>
-        <Menu.Item
+        </MenuItem>
+        <MenuItem
           icon={this.getStateMenuIcon('followersOnly')}
           text="Follower-only"
           labelElement={<Icon icon="follower" />}
           onClick={toggleFollowersOnly}
         />
-        <Menu.Item
+        <MenuItem
           icon={this.getStateMenuIcon('subsOnly')}
           text="Subscribers-only"
           labelElement={<Icon icon="dollar" />}
           onClick={toggleSubsOnly}
         />
-        <Menu.Item
+        <MenuItem
           icon={this.getStateMenuIcon('emoteOnly')}
           text="Emote-only"
           labelElement={<Icon icon="media" />}
           onClick={toggleEmoteOnly}
         />
-        <Menu.Divider title="Moderation" />
-        <Menu.Item icon="eraser" text="Clear chat" onClick={clearChat} />
-        <Menu.Item onClick={openModView} icon="take-action" text="Open Mod View" />
+        <MenuDivider title="Moderation" />
+        <MenuItem icon="eraser" text="Clear chat" onClick={clearChat} />
+        <MenuItem onClick={openModView} icon="take-action" text="Open Mod View" />
       </>
     )
   }

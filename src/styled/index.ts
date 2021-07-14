@@ -17,7 +17,14 @@ declare module 'styled-components' {
 /**
  * Themed styled-components.
  */
-const { default: styled, createGlobalStyle, css, keyframes, ThemeProvider, withTheme } = {
+const {
+  default: styled,
+  createGlobalStyle,
+  css,
+  keyframes,
+  ThemeProvider,
+  withTheme,
+} = {
   default: styledComponents,
   createGlobalStyle: styledCreateGlobalStyle,
   css: styledCss,

@@ -295,14 +295,8 @@ class LogsExporter extends Component<Props, State> {
    */
   private getExportableLogs() {
     const { logs } = this.props.allLogs
-    const {
-      includeMarker,
-      includeMessage,
-      includeNotice,
-      includeNotification,
-      includePurged,
-      includeWhisper,
-    } = this.state
+    const { includeMarker, includeMessage, includeNotice, includeNotification, includePurged, includeWhisper } =
+      this.state
 
     let exportableLogs = this.getLogsHeader()
 
