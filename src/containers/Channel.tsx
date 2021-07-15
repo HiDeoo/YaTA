@@ -828,7 +828,7 @@ class Channel extends Component<Props, State> {
    * @param action - The action to execute.
    * @param [chatter=this.state.focusedChatter] - The chatter on who the action is triggered.
    */
-  private handleAction = async (
+  private handleAction = (
     action: SerializedAction,
     chatter: Optional<SerializedChatter> = this.state.focusedChatter
   ) => {
@@ -847,9 +847,9 @@ class Channel extends Component<Props, State> {
       const text = Action.parse(action, placeholders)
 
       if (action.type === ActionType.Say) {
-        await this.say(text)
+        this.say(text)
       } else if (action.type === ActionType.Whisper && !_.isNil(action.recipient)) {
-        await this.whisper(action.recipient, text)
+        this.whisper(action.recipient, text)
       } else if (action.type === ActionType.Prepare) {
         this.setState(() => ({ inputValue: text }))
 
@@ -1115,7 +1115,7 @@ class Channel extends Component<Props, State> {
           const command = new Command(message, this.onCommandHandlerAction, this.onCommandHandlerDataRequest)
           await command.handle()
         } else {
-          await this.say(message)
+          this.say(message)
         }
       } catch {
         //
@@ -1128,18 +1128,18 @@ class Channel extends Component<Props, State> {
    * @param message - The message to send.
    * @param ignoreHistory - Defines if the message should not be added to the history.
    */
-  private async say(message: string, ignoreHistory: boolean = false) {
+  private say(message: string, ignoreHistory: boolean = false) {
     const { reply } = this.state
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       if (!_.isNil(reply) && !reply.sent) {
-        await client.say(channel, message, `@reply-parent-msg-id=${reply.reference.id}`)
+        client.say(channel, message, `@reply-parent-msg-id=${reply.reference.id}`)
 
         this.markReplyAsSent()
       } else {
-        await client.say(channel, message)
+        client.say(channel, message)
       }
 
       if (!ignoreHistory) {
@@ -1154,7 +1154,7 @@ class Channel extends Component<Props, State> {
    * @param whisper - The whisper to send.
    * @param [command] - The command used to send the whisper.
    */
-  private async whisper(username: string, whisper: string, command?: string) {
+  private whisper(username: string, whisper: string, command?: string) {
     const { addWhispersToHistory, channel } = this.props
     const client = this.getTwitchClient()
 
@@ -1162,7 +1162,7 @@ class Channel extends Component<Props, State> {
       const chatClient = this.chatClient.current as ChatClient
       chatClient.nextWhisperRecipient = username
 
-      await client.whisper(username, whisper)
+      client.whisper(username, whisper)
 
       if (!_.isNil(command) && addWhispersToHistory) {
         this.props.addToHistory(command)
@@ -1174,9 +1174,9 @@ class Channel extends Component<Props, State> {
    * Deletes a single message.
    * @param id - The message id.
    */
-  private deleteMessage = async (id: string) => {
+  private deleteMessage = (id: string) => {
     try {
-      await this.say(`/delete ${id}`)
+      this.say(`/delete ${id}`)
     } catch {
       Toaster.show({
         icon: 'error',
@@ -1191,13 +1191,13 @@ class Channel extends Component<Props, State> {
    * @param username - The name of the user to timeout.
    * @param duration - The duration of the timeout in seconds.
    */
-  private timeout = async (username: string, duration: number) => {
+  private timeout = (username: string, duration: number) => {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        await client.timeout(channel, username, duration)
+        client.timeout(channel, username, duration)
       } catch {
         //
       }
@@ -1209,13 +1209,13 @@ class Channel extends Component<Props, State> {
    * @param username - The name of the user to ban.
    * @param [reason] - The ban reason.
    */
-  private ban = async (username: string, reason?: string) => {
+  private ban = (username: string, reason?: string) => {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        await client.ban(channel, username, reason)
+        client.ban(channel, username, reason)
       } catch {
         //
       }
@@ -1226,13 +1226,13 @@ class Channel extends Component<Props, State> {
    * Unbans a user.
    * @param username - The name of the user to unban.
    */
-  private unban = async (username: string) => {
+  private unban = (username: string) => {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        await client.unban(channel, username)
+        client.unban(channel, username)
       } catch {
         //
       }
@@ -1312,13 +1312,13 @@ class Channel extends Component<Props, State> {
   /**
    * Clears the chat.
    */
-  private clearChat = async () => {
+  private clearChat = () => {
     const { channel } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel)) {
       try {
-        await client.clear(channel)
+        client.clear(channel)
       } catch {
         //
       }
@@ -1328,16 +1328,16 @@ class Channel extends Component<Props, State> {
   /**
    * Toggles the R9K mode.
    */
-  private toggleR9k = async () => {
+  private toggleR9k = () => {
     const { channel, roomState } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
       try {
         if (roomState.r9k) {
-          await client.r9kbetaoff(channel)
+          client.r9kbetaoff(channel)
         } else {
-          await client.r9kbeta(channel)
+          client.r9kbeta(channel)
         }
       } catch {
         //
@@ -1349,18 +1349,18 @@ class Channel extends Component<Props, State> {
    * Toggles the slow mode.
    * @param duration - The optional duration.
    */
-  private toggleSlowMode = async (duration?: SlowModeDuration) => {
+  private toggleSlowMode = (duration?: SlowModeDuration) => {
     const { channel, roomState } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
       try {
         if (roomState.slowDuration === duration || (_.isNil(duration) && roomState.slow)) {
-          await client.slowoff(channel)
+          client.slowoff(channel)
         } else {
           // Don't use the default twitch-js value, use the default from Twitch.
           const durationWithDefault = duration || 30
-          await client.slow(channel, durationWithDefault)
+          client.slow(channel, durationWithDefault)
         }
       } catch {
         //
@@ -1371,16 +1371,16 @@ class Channel extends Component<Props, State> {
   /**
    * Toggles the followers-only mode.
    */
-  private toggleFollowersOnly = async () => {
+  private toggleFollowersOnly = () => {
     const { channel, roomState } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
       try {
         if (roomState.followersOnly) {
-          await client.followersonlyoff(channel)
+          client.followersonlyoff(channel)
         } else {
-          await client.followersonly(channel)
+          client.followersonly(channel)
         }
       } catch {
         //
@@ -1391,16 +1391,16 @@ class Channel extends Component<Props, State> {
   /**
    * Toggles the subscribers-only mode.
    */
-  private toggleSubsOnly = async () => {
+  private toggleSubsOnly = () => {
     const { channel, roomState } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
       try {
         if (roomState.subsOnly) {
-          await client.subscribersoff(channel)
+          client.subscribersoff(channel)
         } else {
-          await client.subscribers(channel)
+          client.subscribers(channel)
         }
       } catch {
         //
@@ -1411,16 +1411,16 @@ class Channel extends Component<Props, State> {
   /**
    * Toggles the emote-only mode.
    */
-  private toggleEmoteOnly = async () => {
+  private toggleEmoteOnly = () => {
     const { channel, roomState } = this.props
     const client = this.getTwitchClient()
 
     if (!_.isNil(client) && !_.isNil(channel) && !_.isNil(roomState)) {
       try {
         if (roomState.emoteOnly) {
-          await client.emoteonlyoff(channel)
+          client.emoteonlyoff(channel)
         } else {
-          await client.emoteonly(channel)
+          client.emoteonly(channel)
         }
       } catch {
         //
