@@ -616,15 +616,10 @@ class ChatterDetails extends Component<Props, State> {
    * Triggered when the follow or unfollow button is clicked.
    */
   private onClickFollowUnfollow = () => {
-    const { chatter, follow, unfocus, unfollow } = this.props
-    const { relationship } = this.state
+    const { channel, unfocus } = this.props
 
-    if (!_.isNil(chatter)) {
-      if (!_.isNil(relationship)) {
-        unfollow(chatter.id)
-      } else {
-        follow(chatter.id)
-      }
+    if (channel) {
+      Twitch.openChannel(channel)
     }
 
     unfocus()
@@ -714,13 +709,11 @@ interface OwnProps {
   chatter?: SerializedChatter
   copyMessageOnDoubleClick: boolean
   copyMessageToClipboard: (message: SerializedMessage | SerializedMessage[]) => void
-  follow: (targetId: string) => void
   openTwitchViewerCard: (user: Optional<SerializedChatter>) => void
   timeout: (username: string, duration: number) => void
   unban: (username: string) => void
   unblock: (targetId: string) => void
   unfocus: () => void
-  unfollow: (targetId: string) => void
   whisper: (username: string) => void
 }
 

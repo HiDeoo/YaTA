@@ -211,6 +211,14 @@ export default class Twitch {
   }
 
   /**
+   * Opens a specific Twitch channel.
+   * @param channel - The channel.
+   */
+  public static openChannel(channel: string) {
+    window.open(`https://www.twitch.tv/${channel}`)
+  }
+
+  /**
    * Opens the viewer card of a specific user.
    * @param channel - The channel.
    * @param username - The user.
@@ -750,50 +758,6 @@ export default class Twitch {
       TwitchApi.Kraken,
       `/users/${Twitch.userId}/blocks/${targetId}`,
       undefined,
-      true,
-      RequestMethod.Delete
-    )
-  }
-
-  /**
-   * Follows a channel.
-   * @param  targetId - The id of the channel to follow.
-   * @param  withNotifications - `true` to get notifications when the channel goes live.
-   */
-  public static async followChannel(targetId: string, withNotifications = true) {
-    if (_.isNil(Twitch.userId)) {
-      throw new Error('Missing user id to follow channel.')
-    }
-
-    return Twitch.fetch(
-      TwitchApi.Helix,
-      '/users/follows',
-      {
-        allow_notifications: withNotifications ? 'true' : 'false',
-        from_id: Twitch.userId,
-        to_id: targetId,
-      },
-      true,
-      RequestMethod.Post
-    )
-  }
-
-  /**
-   * Unfollows a channel.
-   * @param  targetId - The id of the channel to unfollow.
-   */
-  public static async unfollowChannel(targetId: string) {
-    if (_.isNil(Twitch.userId)) {
-      throw new Error('Missing user id to unfollow channel.')
-    }
-
-    return Twitch.fetch(
-      TwitchApi.Helix,
-      '/users/follows',
-      {
-        from_id: Twitch.userId,
-        to_id: targetId,
-      },
       true,
       RequestMethod.Delete
     )
