@@ -190,7 +190,7 @@ export default class Twitch {
    * @return The parent parameter.
    */
   public static getTwitchEmbedUrl(url: string): string {
-    return url.concat('&parent=yata.now.sh')
+    return url.concat('&parent=yata.vercel.app')
   }
 
   /**

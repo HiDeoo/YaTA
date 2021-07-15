@@ -27,7 +27,7 @@
 
 ## Usage
 
-**[Go to the website!](https://yata.now.sh)**
+**[Go to the website!](https://yata.vercel.app)**
 
 ## Contribute
 
