@@ -14,7 +14,6 @@ enum TwitchApi {
   Badges = 'https://badges.twitch.tv/v1/badges',
   Helix = 'https://api.twitch.tv/helix',
   Kraken = 'https://api.twitch.tv/kraken',
-  Status = 'https://devstatus.twitch.tv',
   Tmi = 'https://tmi.twitch.tv',
 }
 
