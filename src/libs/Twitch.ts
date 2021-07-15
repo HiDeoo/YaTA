@@ -344,17 +344,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches details about a channel.
-   * @param  channelId - The channel id.
-   * @return The channel details.
-   */
-  public static async fetchChannel(channelId: string): Promise<RawChannel> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}`)
-
-    return response.json()
-  }
-
-  /**
    * Fetches informations about a channel.
    * @param  channelId - The channel id.
    * @return The channel informations.
@@ -676,6 +665,18 @@ export default class Twitch {
   }
 
   /**
+   * Fetches the total number of followers of a specific user.
+   * @param  targetId - The target user id.
+   * @return The total number of followers.
+   */
+  public static async fetchFollowersCount(targetId: string) {
+    const response = await Twitch.fetch(TwitchApi.Helix, '/users/follows', { to_id: targetId })
+    const relationships = (await response.json()) as RawRelationships
+
+    return relationships.total
+  }
+
+  /**
    * Fetches all follows for the current authenticated user.
    * @param  [offset=0] - The offset to use while fetching follows.
    * @param  [limit=100] - The number of follows to fetch per query.
@@ -942,6 +943,7 @@ export type RawBadge = {
  */
 export type RawHelixUser = {
   broadcaster_type: 'partner' | 'affiliate' | ''
+  created_at: string
   description: string
   display_name: string
   email?: string

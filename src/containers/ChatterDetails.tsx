@@ -26,7 +26,7 @@ import Dialog from 'containers/Dialog'
 import { ActionHandler, SerializedAction } from 'libs/Action'
 import { SerializedChatter, WithNameColorProps } from 'libs/Chatter'
 import { SerializedMessage } from 'libs/Message'
-import Twitch, { RawChannel, RawRelationship } from 'libs/Twitch'
+import Twitch, { RawHelixUser, RawRelationship } from 'libs/Twitch'
 import { isMessage } from 'store/ducks/logs'
 import { updateNote } from 'store/ducks/notes'
 import { ApplicationState } from 'store/reducers'
@@ -201,10 +201,11 @@ const ErrorIcon = styled(Icon)`
  * React State.
  */
 const initialState = {
-  details: undefined as Optional<RawChannel>,
   error: undefined as Optional<Error>,
+  followersCount: undefined as Optional<number>,
   isEditingNote: false,
   relationship: undefined as Optional<RawRelationship> | null,
+  user: undefined as Optional<RawHelixUser>,
   [ToggleableUI.Reason]: false,
 }
 type State = Readonly<typeof initialState>
@@ -232,14 +233,19 @@ class ChatterDetails extends Component<Props, State> {
           id = chatter.id
         }
 
-        const response = await Promise.all([Twitch.fetchChannel(id), Twitch.fetchRelationship(id)])
+        const response = await Promise.all([
+          Twitch.fetchUserByName(chatter.userName),
+          Twitch.fetchRelationship(id),
+          Twitch.fetchFollowersCount(id),
+        ])
 
-        const [details, relationship] = response
+        const [user, relationship, followersCount] = response
 
         this.setState(() => ({
-          details: details || undefined,
+          followersCount,
           error: undefined,
           relationship,
+          user,
         }))
       } catch (error) {
         this.setState(() => ({ error }))
@@ -255,7 +261,7 @@ class ChatterDetails extends Component<Props, State> {
    */
   public render() {
     const { chatter, logs } = this.props
-    const { details, isEditingNote, [ToggleableUI.Reason]: showReasonDialog } = this.state
+    const { isEditingNote, [ToggleableUI.Reason]: showReasonDialog, user } = this.state
 
     if (_.isNil(chatter)) {
       return null
@@ -270,7 +276,11 @@ class ChatterDetails extends Component<Props, State> {
     const header = (
       <Header>
         <Avatar>
-          {_.isNil(details) ? <Icon icon="person" /> : <img src={details.logo} alt={`${chatter.displayName} avatar`} />}
+          {_.isNil(user) ? (
+            <Icon icon="person" />
+          ) : (
+            <img src={user.profile_image_url} alt={`${chatter.displayName} avatar`} />
+          )}
         </Avatar>
         <Name color={usernameColor}>{`${chatter.displayName}${showUsername ? ` (${chatter.userName})` : ''}`}</Name>
         {!_.isNil(badges) && <Badges dangerouslySetInnerHTML={{ __html: badges }} />}
@@ -394,7 +404,7 @@ class ChatterDetails extends Component<Props, State> {
    * @return Element to render.
    */
   private renderDetails() {
-    const { details, error, relationship } = this.state
+    const { error, followersCount, relationship, user } = this.state
     const { chatter } = this.props
 
     if (_.isNil(chatter)) {
@@ -408,7 +418,7 @@ class ChatterDetails extends Component<Props, State> {
       )
     }
 
-    if (_.isNil(details) || _.isUndefined(relationship)) {
+    if (_.isUndefined(followersCount) || _.isUndefined(relationship) || _.isUndefined(user)) {
       return (
         <DetailsRow open>
           <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} /> Fetching user details…
@@ -417,18 +427,19 @@ class ChatterDetails extends Component<Props, State> {
     }
 
     const followed = !_.isNil(relationship)
+    const channelUrl = `https://www.twitch.tv/${user.login}`
 
     return (
       <>
         <DetailsRow>
           <DetailsCell>
-            <strong>{new Date(details.created_at).toLocaleDateString()}</strong> Creation date
+            <strong>{new Date(user.created_at).toLocaleDateString()}</strong> Creation date
           </DetailsCell>
           <DetailsCell>
-            <strong>{details.views.toLocaleString()}</strong> Views
+            <strong>{user.view_count.toLocaleString()}</strong> Views
           </DetailsCell>
           <DetailsCell>
-            <strong>{details.followers.toLocaleString()}</strong> Followers
+            <strong>{followersCount.toLocaleString()}</strong> Followers
           </DetailsCell>
         </DetailsRow>
         {!chatter.isSelf && (
@@ -446,11 +457,11 @@ class ChatterDetails extends Component<Props, State> {
               onClick={this.onClickBlockUnblock}
               text={chatter.blocked ? 'Unblock' : 'Block'}
             />
-            <ExternalButton intent={Intent.DANGER} text="Report" icon="badge" href={`${details.url}/report`} />
+            <ExternalButton intent={Intent.DANGER} text="Report" icon="badge" href={`${channelUrl}/report`} />
           </Tools>
         )}
         <Tools>
-          <ExternalButton text="Open Channel" icon="document-open" href={details.url} />
+          <ExternalButton text="Open Channel" icon="document-open" href={channelUrl} />
           <Popover content={<ActionMenuItems actionHandler={this.actionHandler} wrap />} usePortal={false}>
             <Button icon="caret-down" />
           </Popover>
