@@ -110,7 +110,7 @@ class ErrorBoundary extends React.Component<Props, State> {
    * Reloads the application.
    */
   private reload = () => {
-    window.location.reload(true)
+    window.location.reload()
   }
 }
 
