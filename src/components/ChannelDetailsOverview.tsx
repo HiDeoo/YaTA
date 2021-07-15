@@ -125,7 +125,6 @@ const ChannelDetailsPanels = {
  */
 const initialState = {
   didFail: false,
-  isFollowingOrUnfollowing: false,
   relationship: undefined as Optional<RawRelationship> | null,
   stream: undefined as Optional<RawStream> | null,
 }
@@ -160,7 +159,7 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { didFail, isFollowingOrUnfollowing, relationship, stream } = this.state
+    const { didFail, relationship, stream } = this.state
     const { channel, loginDetails } = this.props
 
     if (didFail) {
@@ -183,10 +182,9 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
             {!hideFollowButton && (
               <ChannelDetailsButton
                 buttonProps={{
-                  disabled: isFollowingOrUnfollowing,
+                  className: Classes.POPOVER_DISMISS,
                   icon: followed ? 'follower' : 'following',
                   intent: followed ? Intent.DANGER : Intent.PRIMARY,
-                  loading: isFollowingOrUnfollowing,
                 }}
                 onClick={this.onClickFollowUnfollow}
                 tooltip={followedTooltip}
@@ -260,24 +258,10 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
    * Triggered when the follow or unfollow button is clicked.
    */
   private onClickFollowUnfollow = async () => {
-    const { id } = this.props
+    const { channel } = this.props
 
-    try {
-      this.setState(() => ({ isFollowingOrUnfollowing: true }))
-
-      let relationship: RawRelationship | null
-
-      if (!_.isNil(this.state.relationship)) {
-        await Twitch.unfollowChannel(id)
-        relationship = null
-      } else {
-        await Twitch.followChannel(id)
-        relationship = { from_id: '', to_id: id, followed_at: new Date().toString() }
-      }
-
-      this.setState(() => ({ isFollowingOrUnfollowing: false, relationship }))
-    } catch {
-      this.setState(() => ({ isFollowingOrUnfollowing: false }))
+    if (channel) {
+      Twitch.openChannel(channel)
     }
   }
 

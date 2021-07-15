@@ -368,10 +368,8 @@ class Channel extends Component<Props, State> {
           unfocus={this.unfocusChatter}
           whisper={this.prepareWhisper}
           chatter={focusedChatter}
-          unfollow={this.unfollow}
           unblock={this.unblock}
           timeout={this.timeout}
-          follow={this.follow}
           block={this.block}
           unban={this.unban}
           ban={this.ban}
@@ -1264,30 +1262,6 @@ class Channel extends Component<Props, State> {
       await Twitch.unblockUser(targetId)
 
       this.props.markChatterAsUnblocked(targetId)
-    } catch {
-      //
-    }
-  }
-
-  /**
-   * Follows a channel.
-   * @param targetId - The id of the channel to follow.
-   */
-  private follow = (targetId: string) => {
-    try {
-      Twitch.followChannel(targetId)
-    } catch {
-      //
-    }
-  }
-
-  /**
-   * Unfollows a channel.
-   * @param targetId - The id of the channel to unfollow.
-   */
-  private unfollow = (targetId: string) => {
-    try {
-      Twitch.unfollowChannel(targetId)
     } catch {
       //
     }
