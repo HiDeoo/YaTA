@@ -738,32 +738,23 @@ export default class Twitch {
   /**
    * Blocks a user.
    * @param  targetId - The id of the user to block.
-   * @return The blocked user.
    */
-  public static async blockUser(targetId: string): Promise<RawBlockedUser> {
-    const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/blocks/${targetId}`,
-      undefined,
+  public static blockUser(targetId: string) {
+    return Twitch.fetch(
+      TwitchApi.Helix,
+      '/users/blocks',
+      { target_user_id: targetId, source_context: 'chat' },
       true,
       RequestMethod.Put
     )
-
-    return response.json()
   }
 
   /**
    * Unblocks a user.
    * @param  targetId - The id of the user to unblock.
    */
-  public static async unblockUser(targetId: string) {
-    return Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/blocks/${targetId}`,
-      undefined,
-      true,
-      RequestMethod.Delete
-    )
+  public static unblockUser(targetId: string) {
+    return Twitch.fetch(TwitchApi.Helix, '/users/blocks', { target_user_id: targetId }, true, RequestMethod.Delete)
   }
 
   /**
@@ -1037,22 +1028,6 @@ export type RawClip = {
   url: string
   video_id: string
   view_count: number
-}
-
-/**
- * Blocked user.
- */
-type RawBlockedUser = {
-  user: {
-    _id: string
-    bio: string | null
-    created_at: string
-    display_name: string
-    logo: string | null
-    name: string
-    type: string
-    updated_at: string
-  }
 }
 
 /**

@@ -1245,9 +1245,9 @@ class Channel extends Component<Props, State> {
    */
   private block = async (targetId: string) => {
     try {
-      const blockedUser = await Twitch.blockUser(targetId)
+      await Twitch.blockUser(targetId)
 
-      this.props.markChatterAsBlocked(blockedUser.user._id)
+      this.props.markChatterAsBlocked(targetId)
     } catch {
       //
     }
