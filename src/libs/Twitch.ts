@@ -95,7 +95,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions moderator:manage:automod',
       state: encodeURIComponent(JSON.stringify(state)),
     }
 
@@ -427,23 +427,26 @@ export default class Twitch {
   }
 
   /**
-   * Approves a message rejected by AutoMod.
+   * Approves or denies a message rejected by AutoMod.
    * @param messageId - The ID of the rejected message.
+   * @param action - The action to either allow or deny the rejected message.
    */
-  public static async allowAutoModMessage(messageId: string) {
-    return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/approve', undefined, true, RequestMethod.Post, {
-      msg_id: messageId,
-    })
-  }
+  public static manageAutoModMessage(messageId: string, action: 'allow' | 'deny') {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing source user id for relationship fetching.')
+    }
 
-  /**
-   * Denies a message rejected by AutoMod.
-   * @param messageId - The ID of the rejected message.
-   */
-  public static async denyAutoModMessage(messageId: string) {
-    return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/deny', undefined, true, RequestMethod.Post, {
-      msg_id: messageId,
-    })
+    return Twitch.fetch(
+      TwitchApi.Helix,
+      '/moderation/automod/message',
+      {
+        action: action.toUpperCase(),
+        msg_id: messageId,
+        user_id: Twitch.userId,
+      },
+      true,
+      RequestMethod.Post
+    )
   }
 
   /**

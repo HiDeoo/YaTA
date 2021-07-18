@@ -345,4 +345,10 @@ export default {
       user: UserInitialState,
     }
   },
+  43: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      user: UserInitialState,
+    }
+  },
 }
