@@ -54,7 +54,7 @@ export type CommercialDuration = 30 | 60 | 90 | 120 | 150 | 180
 /**
  * CORS proxy URL.
  */
-const ProxyURL = 'https://cors-anywhere.herokuapp.com/'
+const ProxyURL = 'https://cors.bridged.cc/'
 
 /**
  * The key used to persist a state used while authenticating with Twitch.
@@ -599,7 +599,11 @@ export default class Twitch {
    * @return The chatter.
    */
   public static async fetchChatters(channel: string): Promise<RawChattersDetails> {
-    const response = await fetch(Twitch.getUrl(TwitchApi.Tmi, `/group/user/${channel}/chatters`, undefined, true))
+    const response = await fetch(Twitch.getUrl(TwitchApi.Tmi, `/group/user/${channel}/chatters`, undefined, true), {
+      headers: {
+        'X-Requested-With': '',
+      },
+    })
 
     return response.json()
   }
