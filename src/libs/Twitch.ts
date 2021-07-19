@@ -1204,7 +1204,7 @@ export type RawSchedule = {
 /**
  * Twitch schedule segment.
  */
-type RawScheduleSegment = {
+export type RawScheduleSegment = {
   id: string
   start_time: string
   end_time: string

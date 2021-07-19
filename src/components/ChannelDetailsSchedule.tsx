@@ -1,12 +1,16 @@
 import { H6, Tag } from '@blueprintjs/core'
 import _ from 'lodash'
 import { Component, Fragment } from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'recompose'
 
 import { ChannelDetailsProps } from 'components/ChannelDetails'
 import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
 import NonIdealState from 'components/NonIdealState'
 import Spinner from 'components/Spinner'
-import Twitch, { RawSchedule } from 'libs/Twitch'
+import Twitch, { RawSchedule, RawScheduleSegment } from 'libs/Twitch'
+import { ApplicationState } from 'store/reducers'
+import { getChannel } from 'store/selectors/app'
 import styled, { ThemeProps, withTheme } from 'styled'
 import { isSameDay, isSameWeek } from 'utils/date'
 
@@ -38,7 +42,7 @@ type State = Readonly<typeof initialState>
 /**
  * ChannelDetailsSchedule Component.
  */
-class ChannelDetailsSchedule extends Component<ChannelDetailsProps & ThemeProps, State> {
+class ChannelDetailsSchedule extends Component<Props, State> {
   public state: State = initialState
 
   /**
@@ -100,9 +104,7 @@ class ChannelDetailsSchedule extends Component<ChannelDetailsProps & ThemeProps,
           return (
             <Fragment key={segment.id}>
               {showDate && <H6>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</H6>}
-              <Segment fill interactive multiline>
-                {segment.title}
-              </Segment>
+              <ScheduleSegment segment={segment} startDate={startDate} channel={this.props.channel} />
             </Fragment>
           )
         })}
@@ -111,4 +113,59 @@ class ChannelDetailsSchedule extends Component<ChannelDetailsProps & ThemeProps,
   }
 }
 
-export default withTheme(ChannelDetailsSchedule)
+/**
+ * ScheduleSegment Component.
+ */
+class ScheduleSegment extends Component<ScheduleSegmentProps> {
+  /**
+   * Renders the component.
+   * @return Element to render.
+   */
+  public render() {
+    return (
+      <Segment fill interactive multiline onClick={this.onClick}>
+        {this.props.segment.title}
+      </Segment>
+    )
+  }
+
+  /**
+   * Triggered when the segment is clicked.
+   */
+  private onClick = () => {
+    window.open(`https://www.twitch.tv/${this.props.channel}/schedule`)
+  }
+}
+
+/**
+ * Component enhancer.
+ */
+const enhance = compose<Props, ChannelDetailsProps>(
+  connect<StateProps, {}, ChannelDetailsProps, ApplicationState>((state) => ({
+    channel: getChannel(state),
+  })),
+  withTheme
+)
+
+export default enhance(ChannelDetailsSchedule)
+
+/**
+ * React Props.
+ */
+interface StateProps {
+  channel: ReturnType<typeof getChannel>
+}
+
+/**
+ * React Props.
+ */
+type Props = StateProps & ChannelDetailsProps & ThemeProps
+
+/**
+ * React Props.
+ */
+interface ScheduleSegmentProps {
+  channel: ReturnType<typeof getChannel>
+  segment: RawScheduleSegment
+  startDate: Date
+}
