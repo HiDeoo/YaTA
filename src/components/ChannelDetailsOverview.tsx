@@ -7,6 +7,7 @@ import TimeAgo from 'react-timeago'
 import { ChannelDetailsProps } from 'components/ChannelDetails'
 import ChannelDetailsButton from 'components/ChannelDetailsButton'
 import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
+import ChannelDetailsSchedule from './ChannelDetailsSchedule'
 import ChannelDetailsVideos from 'components/ChannelDetailsVideos'
 import ExternalLink from 'components/ExternalLink'
 import NonIdealState from 'components/NonIdealState'
@@ -109,6 +110,7 @@ export enum ChannelDetailsType {
   LastVods = 'Last Vods',
   RecentClips = 'Recent Clips',
   TopClips = 'Top Clips',
+  Schedule = 'Schedule',
 }
 
 /**
@@ -118,6 +120,7 @@ const ChannelDetailsPanels = {
   [ChannelDetailsType.LastVods]: { component: ChannelDetailsVideos, icon: 'video' },
   [ChannelDetailsType.RecentClips]: { component: ChannelDetailsVideos, icon: 'film' },
   [ChannelDetailsType.TopClips]: { component: ChannelDetailsVideos, icon: 'crown' },
+  [ChannelDetailsType.Schedule]: { component: ChannelDetailsSchedule, icon: 'timeline-events' },
 } as Record<ChannelDetailsType, ChannelDetailsPanelConfiguration>
 
 /**

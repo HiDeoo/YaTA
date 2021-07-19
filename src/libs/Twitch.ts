@@ -762,6 +762,23 @@ export default class Twitch {
   }
 
   /**
+   * Fetches the schedule of a specific channel.
+   * @param channelId - The id of the channel.
+   * @return The schedule of a channel if any.
+   */
+  public static async fetchSchedule(channelId: string) {
+    const response = await Twitch.fetch(TwitchApi.Helix, '/schedule', {
+      broadcaster_id: channelId,
+      first: '25',
+      // TODO(HiDeoo)
+      // utc_offset: XXXXXX,
+    })
+    const schedule = (await response.json()) as RawSchedule
+
+    return schedule.data
+  }
+
+  /**
    * Defines if an object is either a stream or a channel.
    * @param  streamOrChannel - The stream or channel to identify.
    * @return `true` of the parameter is a stream.
@@ -1166,6 +1183,38 @@ export type RawHost = {
   target_login: string
   host_display_name: string
   target_display_name: string
+}
+
+/**
+ * Twitch schedule.
+ */
+export type RawSchedule = {
+  data: {
+    segments: RawScheduleSegment[]
+    broadcaster_id: string
+    broadcaster_name: String
+    broadcaster_login: string
+    vacation: null | { start_time: string; end_time: string }
+  }
+  pagination: {
+    cursor: string
+  }
+}
+
+/**
+ * Twitch schedule segment.
+ */
+type RawScheduleSegment = {
+  id: string
+  start_time: string
+  end_time: string
+  title: string
+  canceled_until: string | null
+  category: null | {
+    id: string
+    name: string
+  }
+  is_recurring: boolean
 }
 
 /**
