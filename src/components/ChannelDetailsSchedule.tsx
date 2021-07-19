@@ -1,12 +1,33 @@
+import { H6, Tag } from '@blueprintjs/core'
 import _ from 'lodash'
-import { Component } from 'react'
+import { Component, Fragment } from 'react'
 
 import { ChannelDetailsProps } from 'components/ChannelDetails'
 import ChannelDetailsPanel from 'components/ChannelDetailsPanel'
 import NonIdealState from 'components/NonIdealState'
 import Spinner from 'components/Spinner'
 import Twitch, { RawSchedule } from 'libs/Twitch'
-import { ThemeProps, withTheme } from 'styled'
+import styled, { ThemeProps, withTheme } from 'styled'
+import { isSameDay, isSameWeek } from 'utils/date'
+
+/**
+ * Wrapper component.
+ */
+const Wrapper = styled(ChannelDetailsPanel)`
+  padding: 10px;
+`
+
+/**
+ * Segment component.
+ */
+const Segment = styled(Tag)`
+  font-weight: bold;
+  margin-bottom: 8px;
+
+  & + h6 {
+    margin-top: 8px;
+  }
+`
 
 /**
  * React State.
@@ -60,14 +81,32 @@ class ChannelDetailsSchedule extends Component<ChannelDetailsProps & ThemeProps,
       return <NonIdealState small title="No schedule yet!" />
     }
 
-    console.log('schedule ', schedule)
+    const now = new Date()
+    let lastDate: Optional<Date>
 
     return (
-      <ChannelDetailsPanel minimal>
-        {
-          // TODO(HiDeoo)
-        }
-      </ChannelDetailsPanel>
+      <Wrapper minimal>
+        {schedule.segments.map((segment) => {
+          const startDate = new Date(Date.parse(segment.start_time))
+          const showDate = _.isNil(lastDate) || !isSameDay(lastDate, startDate)
+          const isCurrentWeek = isSameWeek(now, startDate)
+
+          if (!isCurrentWeek) {
+            return null
+          }
+
+          lastDate = startDate
+
+          return (
+            <Fragment key={segment.id}>
+              {showDate && <H6>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</H6>}
+              <Segment fill interactive multiline>
+                {segment.title}
+              </Segment>
+            </Fragment>
+          )
+        })}
+      </Wrapper>
     )
   }
 }
