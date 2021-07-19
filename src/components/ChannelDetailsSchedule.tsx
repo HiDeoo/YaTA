@@ -1,4 +1,4 @@
-import { Classes, Colors, H6, Tag } from '@blueprintjs/core'
+import { Classes, Colors, H6, Intent, Tag } from '@blueprintjs/core'
 import _ from 'lodash'
 import { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
@@ -103,9 +103,11 @@ class ChannelDetailsSchedule extends Component<Props, State> {
       <Wrapper minimal>
         {schedule.segments.map((segment) => {
           const startDate = new Date(Date.parse(segment.start_time))
+          const endDate = new Date(Date.parse(segment.end_time))
           const showDate = _.isNil(lastDate) || !isSameDay(lastDate, startDate)
           const isToday = isSameDay(now, startDate)
           const isCurrentWeek = isSameWeek(now, startDate)
+          const isLive = startDate < now && now < endDate
 
           if (!isCurrentWeek) {
             return null
@@ -118,7 +120,7 @@ class ChannelDetailsSchedule extends Component<Props, State> {
               {showDate && (
                 <Day $highlighted={isToday}>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</Day>
               )}
-              <ScheduleSegment segment={segment} channel={this.props.channel} />
+              <ScheduleSegment segment={segment} channel={this.props.channel} live={isLive} />
             </Fragment>
           )
         })}
@@ -136,9 +138,11 @@ class ScheduleSegment extends Component<ScheduleSegmentProps> {
    * @return Element to render.
    */
   public render() {
+    const { live, segment } = this.props
+
     return (
-      <Segment fill interactive multiline onClick={this.onClick}>
-        {this.props.segment.title}
+      <Segment fill interactive multiline onClick={this.onClick} intent={live ? Intent.PRIMARY : Intent.NONE}>
+        {segment.title}
       </Segment>
     )
   }
@@ -180,6 +184,7 @@ type Props = StateProps & ChannelDetailsProps & ThemeProps
  */
 interface ScheduleSegmentProps {
   channel: ReturnType<typeof getChannel>
+  live: boolean
   segment: RawScheduleSegment
 }
 
