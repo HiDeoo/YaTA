@@ -27,7 +27,7 @@ const Wrapper = styled(ChannelDetailsPanel)`
 const Day = styled(H6)<DayProps>`
   &,
   .${Classes.DARK} & {
-    color: ${ifProp('highlighted', Colors.BLUE5, 'inherit')};
+    color: ${ifProp('$highlighted', Colors.BLUE5, 'inherit')};
   }
 `
 
@@ -64,11 +64,12 @@ class ChannelDetailsSchedule extends Component<Props, State> {
     try {
       const schedule = await Twitch.fetchSchedule(id)
 
-      console.log('schedule ', schedule)
-
       this.setState(() => ({ didFail: false, schedule }))
     } catch (error) {
-      if (error instanceof Error && error.message === 'schedule was not found') {
+      if (
+        error instanceof Error &&
+        (error.message === 'schedule was not found' || error.message === 'segments were not found')
+      ) {
         this.setState(() => ({ didFail: false, schedule: null }))
       } else {
         this.setState(() => ({ didFail: true, schedule: undefined }))
@@ -115,7 +116,7 @@ class ChannelDetailsSchedule extends Component<Props, State> {
           return (
             <Fragment key={segment.id}>
               {showDate && (
-                <Day highlighted={isToday}>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</Day>
+                <Day $highlighted={isToday}>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</Day>
               )}
               <ScheduleSegment segment={segment} channel={this.props.channel} />
             </Fragment>
@@ -186,5 +187,5 @@ interface ScheduleSegmentProps {
  * React Props.
  */
 interface DayProps {
-  highlighted?: boolean
+  $highlighted?: boolean
 }
