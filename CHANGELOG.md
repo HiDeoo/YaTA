@@ -21,6 +21,7 @@
 ### ⚙️ Internal
 
 - Improve errors & bugs reporting.
+- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained).
 
 # 1.15.0
 
