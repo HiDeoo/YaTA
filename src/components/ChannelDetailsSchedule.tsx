@@ -1,4 +1,4 @@
-import { H6, Tag } from '@blueprintjs/core'
+import { Classes, Colors, H6, Tag } from '@blueprintjs/core'
 import _ from 'lodash'
 import { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
@@ -11,7 +11,7 @@ import Spinner from 'components/Spinner'
 import Twitch, { RawSchedule, RawScheduleSegment } from 'libs/Twitch'
 import { ApplicationState } from 'store/reducers'
 import { getChannel } from 'store/selectors/app'
-import styled, { ThemeProps, withTheme } from 'styled'
+import styled, { ifProp, ThemeProps, withTheme } from 'styled'
 import { isSameDay, isSameWeek } from 'utils/date'
 
 /**
@@ -19,6 +19,16 @@ import { isSameDay, isSameWeek } from 'utils/date'
  */
 const Wrapper = styled(ChannelDetailsPanel)`
   padding: 10px;
+`
+
+/**
+ * Day component.
+ */
+const Day = styled(H6)<DayProps>`
+  &,
+  .${Classes.DARK} & {
+    color: ${ifProp('highlighted', Colors.BLUE5, 'inherit')};
+  }
 `
 
 /**
@@ -93,6 +103,7 @@ class ChannelDetailsSchedule extends Component<Props, State> {
         {schedule.segments.map((segment) => {
           const startDate = new Date(Date.parse(segment.start_time))
           const showDate = _.isNil(lastDate) || !isSameDay(lastDate, startDate)
+          const isToday = isSameDay(now, startDate)
           const isCurrentWeek = isSameWeek(now, startDate)
 
           if (!isCurrentWeek) {
@@ -103,8 +114,10 @@ class ChannelDetailsSchedule extends Component<Props, State> {
 
           return (
             <Fragment key={segment.id}>
-              {showDate && <H6>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</H6>}
-              <ScheduleSegment segment={segment} startDate={startDate} channel={this.props.channel} />
+              {showDate && (
+                <Day highlighted={isToday}>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</Day>
+              )}
+              <ScheduleSegment segment={segment} channel={this.props.channel} />
             </Fragment>
           )
         })}
@@ -167,5 +180,11 @@ type Props = StateProps & ChannelDetailsProps & ThemeProps
 interface ScheduleSegmentProps {
   channel: ReturnType<typeof getChannel>
   segment: RawScheduleSegment
-  startDate: Date
+}
+
+/**
+ * React Props.
+ */
+interface DayProps {
+  highlighted?: boolean
 }
