@@ -14,12 +14,14 @@
 
 ### 🐛 Bug Fix
 
+- Fix an issue with AutoMod where moderators were not prompted to allow or deny a rejected message.
 - After login with Twitch, you are now properly redirected to the page you were browsing before.
 - Rename Twitch Prime to [Prime Gaming](https://blog.twitch.tv/en/2020/08/10/introducing-prime-gaming-more-of-what-you-love/).
 
 ### ⚙️ Internal
 
 - Improve errors & bugs reporting.
+- Migrate various features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained).
 
 # 1.15.0
 

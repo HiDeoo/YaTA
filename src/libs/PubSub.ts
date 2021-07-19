@@ -14,6 +14,7 @@ export enum PubSubEvent {
   AutomodRejected,
   Ban,
   DeniedAutomodMessage,
+  ExpiredAutomodMessage,
   Timeout,
   Unban,
   Untimeout,
@@ -36,7 +37,7 @@ enum MessageType {
  *  - channelId: The current channel ID.
  *  - userId - The user ID of the connected user.
  */
-const Topics = ['chat_moderator_actions.{userId}.{channelId}']
+const Topics = ['chat_moderator_actions.{userId}.{channelId}', 'automod-queue.{userId}.{channelId}']
 
 /**
  * Maximum number of attempts when trying to reconnect to the Twitch PubSub.
@@ -86,6 +87,7 @@ class PubSub {
   public addHandler(type: PubSubEvent.AutomodRejected, handler: AutomodRejectedHandler): void
   public addHandler(type: PubSubEvent.Ban, handler: BanHandler): void
   public addHandler(type: PubSubEvent.DeniedAutomodMessage, handler: DeniedAutomodMessageHandler): void
+  public addHandler(type: PubSubEvent.ExpiredAutomodMessage, handler: ExpiredAutomodMessageHandler): void
   public addHandler(type: PubSubEvent.Timeout, handler: TimeoutHandler): void
   public addHandler(type: PubSubEvent.Unban, handler: UnbanHandler): void
   public addHandler(type: PubSubEvent.Untimeout, handler: UntimeoutHandler): void
@@ -140,7 +142,7 @@ class PubSub {
    * Triggered when the websocket connection is opened.
    * @param event - The associated event.
    */
-  private onWSOpen = (event: Event) => {
+  private onWSOpen = (_event: Event) => {
     if (this.channelId) {
       this.listen(this.getTopics(this.channelId, Twitch.getAuthenticatedUserId()))
     }
@@ -164,7 +166,7 @@ class PubSub {
    * Triggered when the websocket connection is close.
    * @param event - The associated event.
    */
-  private onWSClose = (event: CloseEvent) => {
+  private onWSClose = (_event: CloseEvent) => {
     if (this.retries >= RECONNECT_MAX_RETRIES) {
       return
     }
@@ -289,6 +291,8 @@ class PubSub {
 
       if (dataTopic.startsWith('chat_moderator_actions.')) {
         this.handleModeratorActions(dataMessage.data as ModerationMessage)
+      } else if (dataTopic.startsWith('automod-queue.')) {
+        this.handleAutoModQueue(dataMessage.data as AutoModMessage)
       }
     }
   }
@@ -325,34 +329,44 @@ class PubSub {
       )
     } else if (message.moderation_action === 'untimeout') {
       this.callHandler<UnbanHandler>(PubSubEvent.Untimeout, message.created_by, message.args[0])
-    } else if (message.moderation_action === 'automod_rejected') {
-      this.callHandler<AutomodRejectedHandler>(
-        PubSubEvent.AutomodRejected,
-        message.args[0],
-        message.msg_id,
-        message.args[1],
-        message.args[2]
-      )
     } else if (message.moderation_action === 'automod_message_rejected') {
       this.callHandler<AutomodMessageRejectedHandler>(PubSubEvent.AutomodMessageRejected, message.args[0])
     } else if (message.moderation_action === 'automod_message_approved') {
       this.callHandler<AutomodMessageApprovedHandler>(PubSubEvent.AutomodMessageApproved, message.args[0])
     } else if (message.moderation_action === 'automod_message_denied') {
       this.callHandler<AutomodMessageDeniedHandler>(PubSubEvent.AutomodMessageDenied, message.args[0])
-    } else if (message.moderation_action === 'approved_automod_message') {
-      this.callHandler<ApprovedAutomodMessageHandler>(
-        PubSubEvent.ApprovedAutomodMessage,
-        message.msg_id,
-        message.args[0],
-        message.created_by
+    }
+  }
+
+  /**
+   * Handles AutoMod queue.
+   * @param message - The message describing the AutoMod queue message.
+   */
+  private handleAutoModQueue(message: AutoModMessage) {
+    if (message.status === 'PENDING') {
+      this.callHandler<AutomodRejectedHandler>(
+        PubSubEvent.AutomodRejected,
+        message.message.sender.display_name,
+        message.message.id,
+        message.message.content.text,
+        message.content_classification.category
       )
-    } else if (message.moderation_action === 'denied_automod_message') {
+    } else if (message.status === 'DENIED') {
       this.callHandler<DeniedAutomodMessageHandler>(
         PubSubEvent.DeniedAutomodMessage,
-        message.msg_id,
-        message.args[0],
-        message.created_by
+        message.message.id,
+        message.message.sender.display_name,
+        message.resolver_login
       )
+    } else if (message.status === 'ALLOWED') {
+      this.callHandler<ApprovedAutomodMessageHandler>(
+        PubSubEvent.ApprovedAutomodMessage,
+        message.message.id,
+        message.message.sender.display_name,
+        message.resolver_login
+      )
+    } else if (message.status === 'EXPIRED') {
+      this.callHandler<ExpiredAutomodMessageHandler>(PubSubEvent.ExpiredAutomodMessage, message.message.id)
     }
   }
 }
@@ -388,6 +402,39 @@ interface ModerationMessage {
 }
 
 /**
+ * A message describing an AutoMod related action.
+ */
+interface AutoModMessage {
+  content_classification: {
+    category: string
+    level: number
+  }
+  message: {
+    content: {
+      text: string
+      fragments: {
+        text: string
+        automod?: {
+          topics: Record<string, number>
+        }
+      }[]
+    }
+    id: string
+    sender: {
+      user_id: string
+      login: string
+      display_name: string
+      chat_color: string
+    }
+    sent_at: string
+  }
+  reason_code: string
+  resolver_id: string
+  resolver_login: string
+  status: 'PENDING' | 'ALLOWED' | 'DENIED' | 'EXPIRED'
+}
+
+/**
  * Event handlers definitions.
  */
 type ApprovedAutomodMessageHandler = (messageId: string, username: string, moderator: string) => void
@@ -397,6 +444,7 @@ type AutomodMessageRejectedHandler = (username: string) => void
 type AutomodRejectedHandler = (username: string, messageId: string, message: string, reason: string) => void
 type BanHandler = (author: string, username: string, reason: string) => void
 type DeniedAutomodMessageHandler = (messageId: string, username: string, moderator: string) => void
+type ExpiredAutomodMessageHandler = (messageId: string) => void
 type TimeoutHandler = (author: string, username: string, duration: number, reason: Optional<string>) => void
 type UnbanHandler = (author: string, username: string) => void
 type UntimeoutHandler = (author: string, username: string) => void

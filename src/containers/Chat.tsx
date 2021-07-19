@@ -164,6 +164,7 @@ export class ChatClient extends Component<Props, State> {
     PubSub.addHandler(PubSubEvent.AutomodMessageDenied, this.onAutomodMessageDenied)
     PubSub.addHandler(PubSubEvent.ApprovedAutomodMessage, this.onApprovedAutomodMessage)
     PubSub.addHandler(PubSubEvent.DeniedAutomodMessage, this.onDeniedAutomodMessage)
+    PubSub.addHandler(PubSubEvent.ExpiredAutomodMessage, this.onExpiredAutomodMessage)
 
     try {
       await this.client.connect()
@@ -947,6 +948,14 @@ export class ChatClient extends Component<Props, State> {
       this.props.addLog(notice.serialize())
     }
 
+    this.props.markRejectedMessageAsHandled(RejectedMessage.getRejectedMessageInternalId(messageId))
+  }
+
+  /**
+   * Triggered when a message rejected by AutoMod is expired.
+   * @param messageId - The message ID.
+   */
+  private onExpiredAutomodMessage = (messageId: string) => {
     this.props.markRejectedMessageAsHandled(RejectedMessage.getRejectedMessageInternalId(messageId))
   }
 

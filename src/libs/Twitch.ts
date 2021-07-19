@@ -14,7 +14,6 @@ enum TwitchApi {
   Badges = 'https://badges.twitch.tv/v1/badges',
   Helix = 'https://api.twitch.tv/helix',
   Kraken = 'https://api.twitch.tv/kraken',
-  Status = 'https://devstatus.twitch.tv',
   Tmi = 'https://tmi.twitch.tv',
 }
 
@@ -96,7 +95,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions moderator:manage:automod',
       state: encodeURIComponent(JSON.stringify(state)),
     }
 
@@ -345,17 +344,6 @@ export default class Twitch {
   }
 
   /**
-   * Fetches details about a channel.
-   * @param  channelId - The channel id.
-   * @return The channel details.
-   */
-  public static async fetchChannel(channelId: string): Promise<RawChannel> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/channels/${channelId}`)
-
-    return response.json()
-  }
-
-  /**
    * Fetches informations about a channel.
    * @param  channelId - The channel id.
    * @return The channel informations.
@@ -439,23 +427,26 @@ export default class Twitch {
   }
 
   /**
-   * Approves a message rejected by AutoMod.
+   * Approves or denies a message rejected by AutoMod.
    * @param messageId - The ID of the rejected message.
+   * @param action - The action to either allow or deny the rejected message.
    */
-  public static async allowAutoModMessage(messageId: string) {
-    return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/approve', undefined, true, RequestMethod.Post, {
-      msg_id: messageId,
-    })
-  }
+  public static manageAutoModMessage(messageId: string, action: 'allow' | 'deny') {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing source user id for relationship fetching.')
+    }
 
-  /**
-   * Denies a message rejected by AutoMod.
-   * @param messageId - The ID of the rejected message.
-   */
-  public static async denyAutoModMessage(messageId: string) {
-    return Twitch.fetch(TwitchApi.Kraken, '/chat/twitchbot/deny', undefined, true, RequestMethod.Post, {
-      msg_id: messageId,
-    })
+    return Twitch.fetch(
+      TwitchApi.Helix,
+      '/moderation/automod/message',
+      {
+        action: action.toUpperCase(),
+        msg_id: messageId,
+        user_id: Twitch.userId,
+      },
+      true,
+      RequestMethod.Post
+    )
   }
 
   /**
@@ -677,6 +668,18 @@ export default class Twitch {
   }
 
   /**
+   * Fetches the total number of followers of a specific user.
+   * @param  targetId - The target user id.
+   * @return The total number of followers.
+   */
+  public static async fetchFollowersCount(targetId: string) {
+    const response = await Twitch.fetch(TwitchApi.Helix, '/users/follows', { to_id: targetId })
+    const relationships = (await response.json()) as RawRelationships
+
+    return relationships.total
+  }
+
+  /**
    * Fetches all follows for the current authenticated user.
    * @param  [offset=0] - The offset to use while fetching follows.
    * @param  [limit=100] - The number of follows to fetch per query.
@@ -735,32 +738,23 @@ export default class Twitch {
   /**
    * Blocks a user.
    * @param  targetId - The id of the user to block.
-   * @return The blocked user.
    */
-  public static async blockUser(targetId: string): Promise<RawBlockedUser> {
-    const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/blocks/${targetId}`,
-      undefined,
+  public static blockUser(targetId: string) {
+    return Twitch.fetch(
+      TwitchApi.Helix,
+      '/users/blocks',
+      { target_user_id: targetId, source_context: 'chat' },
       true,
       RequestMethod.Put
     )
-
-    return response.json()
   }
 
   /**
    * Unblocks a user.
    * @param  targetId - The id of the user to unblock.
    */
-  public static async unblockUser(targetId: string) {
-    return Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/blocks/${targetId}`,
-      undefined,
-      true,
-      RequestMethod.Delete
-    )
+  public static unblockUser(targetId: string) {
+    return Twitch.fetch(TwitchApi.Helix, '/users/blocks', { target_user_id: targetId }, true, RequestMethod.Delete)
   }
 
   /**
@@ -943,6 +937,7 @@ export type RawBadge = {
  */
 export type RawHelixUser = {
   broadcaster_type: 'partner' | 'affiliate' | ''
+  created_at: string
   description: string
   display_name: string
   email?: string
@@ -1033,22 +1028,6 @@ export type RawClip = {
   url: string
   video_id: string
   view_count: number
-}
-
-/**
- * Blocked user.
- */
-type RawBlockedUser = {
-  user: {
-    _id: string
-    bio: string | null
-    created_at: string
-    display_name: string
-    logo: string | null
-    name: string
-    type: string
-    updated_at: string
-  }
 }
 
 /**

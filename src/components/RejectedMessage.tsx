@@ -181,7 +181,7 @@ export default class RejectedMessage extends React.Component<Props, State> {
     try {
       this.setState(() => ({ pendingAllow: true }))
 
-      await Twitch.allowAutoModMessage(rejectedMessage.messageId)
+      await Twitch.manageAutoModMessage(rejectedMessage.messageId, 'allow')
 
       markRejectedMessageAsHandled(rejectedMessage.id)
     } catch (error) {
@@ -200,7 +200,7 @@ export default class RejectedMessage extends React.Component<Props, State> {
     try {
       this.setState(() => ({ pendingDeny: true }))
 
-      await Twitch.denyAutoModMessage(rejectedMessage.messageId)
+      await Twitch.manageAutoModMessage(rejectedMessage.messageId, 'deny')
 
       markRejectedMessageAsHandled(rejectedMessage.id)
     } catch (error) {
