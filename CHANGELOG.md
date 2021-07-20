@@ -6,6 +6,7 @@
 - Add support for the Twitch Reply feature:
   - You can now reply to a message by using its associated context menu or by `Alt` clicking it.
   - Replies to messages are now properly handled and have a new _inline_ custom UI.
+- Add support for [animated emotes](https://help.twitch.tv/s/article/animated-emotes).
 - You can now check [the schedule](https://help.twitch.tv/s/article/channel-page-setup#Schedule) (if any) of the current channel from the channel details menu.
 
 ### 😢 Removed Feature

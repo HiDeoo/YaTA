@@ -1190,7 +1190,7 @@ export class ChatClient extends Component<Props, State> {
     const provider = new EmotesProvider(
       EmoteProviderPrefix.Twitch,
       emotes,
-      'https://static-cdn.jtvnw.net/emoticons/v1/{{id}}/{{image}}',
+      'https://static-cdn.jtvnw.net/emoticons/v2/{{id}}/default/dark/{{image}}',
       '.0'
     )
 
