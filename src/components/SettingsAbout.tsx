@@ -97,7 +97,7 @@ const SettingsAbout: React.FunctionComponent<ThemeProps> = (props) => (
         <ExternalLink href="https://freesound.org/people/kwahmah_02/sounds/268822/">kwahmah_02</ExternalLink>
       </p>
       <p>
-        Emotes data provided by <ExternalLink href="https://ivr.fi/">IVR</ExternalLink>
+        Emotes & follow/sub data provided by <ExternalLink href="https://ivr.fi/">IVR</ExternalLink>
       </p>
     </Content>
   </SettingsView>

@@ -10,9 +10,11 @@ import {
   MenuItem,
   Popover,
   Spinner,
+  Text,
   Tooltip,
 } from '@blueprintjs/core'
 import _ from 'lodash'
+import pluralize from 'pluralize'
 import { Component } from 'react'
 import { connect } from 'react-redux'
 
@@ -35,6 +37,7 @@ import { makeGetChatterLogs } from 'store/selectors/chatters'
 import { getLogsByIds } from 'store/selectors/logs'
 import { makeGetChatterNote } from 'store/selectors/notes'
 import styled, { ifProp, prop, size, theme } from 'styled'
+import Ivr, { IvrSubscriptionStatus } from 'libs/Ivr'
 
 /**
  * DetailsRow component.
@@ -67,7 +70,8 @@ const DetailsCell = styled.div`
     border-right: 0;
   }
 
-  & > strong {
+  & > strong,
+  & > .${Classes.TEXT_OVERFLOW_ELLIPSIS} {
     color: ${theme('chatter.details.strong')};
     display: block;
     font-weight: 600;
@@ -205,6 +209,7 @@ const initialState = {
   followersCount: undefined as Optional<number>,
   isEditingNote: false,
   relationship: undefined as Optional<RawRelationship> | null,
+  subscriptionStatus: undefined as Optional<IvrSubscriptionStatus> | null,
   user: undefined as Optional<RawHelixUser>,
   [ToggleableUI.Reason]: false,
 }
@@ -221,7 +226,7 @@ class ChatterDetails extends Component<Props, State> {
    * @param prevProps - The previous props.
    */
   public async componentDidUpdate(prevProps: Props) {
-    const { chatter } = this.props
+    const { channel, chatter } = this.props
 
     if (!_.isNil(chatter) && prevProps.chatter !== chatter) {
       try {
@@ -241,10 +246,21 @@ class ChatterDetails extends Component<Props, State> {
 
         const [user, relationship, followersCount] = response
 
+        let subscriptionStatus: IvrSubscriptionStatus | null = null
+
+        if (!_.isNil(channel)) {
+          try {
+            subscriptionStatus = await Ivr.fetchSubscriptionStatus(chatter.userName, channel)
+          } catch (error) {
+            //
+          }
+        }
+
         this.setState(() => ({
           followersCount,
           error: undefined,
           relationship,
+          subscriptionStatus,
           user,
         }))
       } catch (error) {
@@ -432,9 +448,11 @@ class ChatterDetails extends Component<Props, State> {
     return (
       <>
         <DetailsRow>
+          {this.renderSubAge()}
           <DetailsCell>
-            <strong>{new Date(user.created_at).toLocaleDateString()}</strong> Creation date
+            <strong>{new Date(user.created_at).toLocaleDateString()}</strong> Creation
           </DetailsCell>
+          {this.renderFollowAge()}
           <DetailsCell>
             <strong>{user.view_count.toLocaleString()}</strong> Views
           </DetailsCell>
@@ -487,6 +505,52 @@ class ChatterDetails extends Component<Props, State> {
         copyMessageToClipboard={copyMessageToClipboard}
         logs={logs}
       />
+    )
+  }
+
+  /**
+   * Renders the subscription age.
+   * @return Element to render.
+   */
+  private renderSubAge() {
+    const { subscriptionStatus } = this.state
+
+    if (
+      !subscriptionStatus ||
+      subscriptionStatus.hidden ||
+      !subscriptionStatus.cumulative.months ||
+      subscriptionStatus.cumulative.months === 0
+    ) {
+      return null
+    }
+
+    const title = subscriptionStatus.subscribed ? 'Sub' : 'Past sub'
+
+    return (
+      <DetailsCell>
+        <Text ellipsize>
+          {subscriptionStatus.cumulative.months} {pluralize('months', subscriptionStatus.cumulative.months)}
+        </Text>
+        {title}
+      </DetailsCell>
+    )
+  }
+
+  /**
+   * Renders the follow age.
+   * @return Element to render.
+   */
+  private renderFollowAge() {
+    const { subscriptionStatus } = this.state
+
+    if (!subscriptionStatus || !subscriptionStatus.followedAt) {
+      return null
+    }
+
+    return (
+      <DetailsCell>
+        <strong>{new Date(subscriptionStatus.followedAt).toLocaleDateString()}</strong> Follow
+      </DetailsCell>
     )
   }
 
