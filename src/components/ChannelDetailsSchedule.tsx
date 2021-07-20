@@ -12,7 +12,7 @@ import Twitch, { RawSchedule, RawScheduleSegment } from 'libs/Twitch'
 import { ApplicationState } from 'store/reducers'
 import { getChannel } from 'store/selectors/app'
 import styled, { ifProp, ThemeProps, withTheme } from 'styled'
-import { isSameDay, isSameWeek } from 'utils/date'
+import { getDaysBetween, isSameDay } from 'utils/date'
 
 /**
  * Wrapper component.
@@ -106,10 +106,10 @@ class ChannelDetailsSchedule extends Component<Props, State> {
           const endDate = new Date(Date.parse(segment.end_time))
           const showDate = _.isNil(lastDate) || !isSameDay(lastDate, startDate)
           const isToday = isSameDay(now, startDate)
-          const isCurrentWeek = isSameWeek(now, startDate)
           const isLive = startDate < now && now < endDate
+          const daysBeforeSegment = getDaysBetween(now, startDate)
 
-          if (!isCurrentWeek) {
+          if (daysBeforeSegment >= 7) {
             return null
           }
 

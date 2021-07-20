@@ -47,13 +47,13 @@ export function isSameDay(lDate: Date, rDate: Date) {
 }
 
 /**
- * Checks if 2 dates are in the same week.
+ * Gets the absolute number of days between two dates.
  * @param lDate - The first date.
  * @param rDate - The second date.
- * @returns `true` is the dates are in the same week.
+ * @returns The number of days.
  */
-export function isSameWeek(lDate: Date, rDate: Date) {
-  return getStartOfWeek(lDate).getTime() === getStartOfWeek(rDate).getTime()
+export function getDaysBetween(lDate: Date, rDate: Date) {
+  return Math.abs(Math.floor((getNormalizedUTCDate(lDate) - getNormalizedUTCDate(rDate)) / (1000 * 60 * 60 * 24)))
 }
 
 /**
@@ -69,19 +69,10 @@ function getStartOfDay(date: Date) {
 }
 
 /**
- * Returns the start of the week for a date.
- * @param date - The date.
- * @param weekStart - The day of the week (0 represents Sunday).
- * @returns A new date at the start of the week.
+ * Normalizes a date by removing the time and timezone informations.
+ * @param date - The date to normalize.
+ * @returns The normalized date.
  */
-function getStartOfWeek(date: Date, weekStart = 1) {
-  const startOfWeek = cloneDate(date)
-
-  const day = startOfWeek.getDay()
-  const diff = day - weekStart + (day < weekStart ? 7 : 0)
-
-  startOfWeek.setDate(startOfWeek.getDate() - diff)
-  startOfWeek.setHours(0, 0, 0, 0)
-
-  return startOfWeek
+function getNormalizedUTCDate(date: Date) {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
 }
