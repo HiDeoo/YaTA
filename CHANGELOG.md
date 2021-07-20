@@ -6,6 +6,7 @@
 - Add support for the Twitch Reply feature:
   - You can now reply to a message by using its associated context menu or by `Alt` clicking it.
   - Replies to messages are now properly handled and have a new _inline_ custom UI.
+- The chatter details modal opened when clicking a username now displays (if applicable) when the user followed the channel or for how long the user has been subbed (even for past subscriptions).
 - Add support for [animated emotes](https://help.twitch.tv/s/article/animated-emotes).
 - You can now check [the schedule](https://help.twitch.tv/s/article/channel-page-setup#Schedule) (if any) of the current channel from the channel details menu.
 

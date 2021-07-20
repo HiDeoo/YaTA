@@ -24,11 +24,23 @@ export default class Ivr {
   }
 
   /**
+   * Fetches subscription status for a channel of a specific user.
+   * @param  username - The username.
+   * @param  channel - The channel.
+   * @return The subscription status.
+   */
+  public static async fetchSubscriptionStatus(username: string, channel: string): Promise<IvrSubscriptionStatus> {
+    const response = await Ivr.fetch(`/twitch/subage/${username}/${channel}`, {}, RequestMethod.Get)
+
+    return response.json()
+  }
+
+  /**
    * Fetches emote data.
    * @param  emoteId - The emote id.
    * @return The emote data.
    */
-  public static async fetchEmoteData(emoteId: string): Promise<IvrEmoteData> {
+  private static async fetchEmoteData(emoteId: string): Promise<IvrEmoteData> {
     const response = await Ivr.fetch(`/twitch/emotes/${emoteId}`, { id: 1 }, RequestMethod.Get)
 
     return response.json()
@@ -39,7 +51,7 @@ export default class Ivr {
    * @param  emoteId - The emote id.
    * @return The emote set data.
    */
-  public static async fetchEmoteSetData(emoteSetId: number): Promise<IvrEmoteSetData> {
+  private static async fetchEmoteSetData(emoteSetId: number): Promise<IvrEmoteSetData> {
     const response = await Ivr.fetch(`/twitch/emoteset/${emoteSetId}`, {}, RequestMethod.Get)
 
     return response.json()
@@ -127,4 +139,37 @@ export type IvrEmoteSetData = {
 export type IvrEmoteDetails = {
   emote: IvrEmoteData
   emoteSet: IvrEmoteSetData
+}
+
+/**
+ * Subscription status returned by the Ivr API.
+ */
+export type IvrSubscriptionStatus = {
+  user: string
+  userid: number
+  channel: string
+  channelid: number
+  hidden: boolean
+  subscribed: boolean
+  followedAt: string | null
+  meta: {
+    type?: 'paid' | 'gift' | 'prime'
+    tier?: string
+    dnr?: boolean
+    endsAt?: string | null
+    renewsAt?: string | null
+  }
+  cumulative: IvrSubscriptionDetails
+  streak: IvrSubscriptionDetails
+}
+
+/**
+ * Subscription details returned by the Ivr API.
+ */
+type IvrSubscriptionDetails = {
+  months?: number
+  elapsed?: number
+  remaining?: number
+  end?: string
+  start?: string
 }
