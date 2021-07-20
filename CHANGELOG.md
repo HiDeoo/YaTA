@@ -11,7 +11,6 @@
 
 ### 😢 Removed Feature
 
-- Clicking on an emote no longer list other emotes from the same channel as the previously used third-party API for this feature has been shutdown and Twitch does not provide a proper API to do this.
 - Following or unfollowing a channel is no longer possible from YaTA due to [Twitch removing the relevant API endpoints](https://blog.twitch.tv/en/2021/06/28/deprecation-of-create-and-delete-follows-api-endpoints/). Clicking a follow or unfollow button in YaTA will now open the Twitch channel in a new tab.
 
 ### 🐛 Bug Fix
