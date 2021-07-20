@@ -140,9 +140,11 @@ class ScheduleSegment extends Component<ScheduleSegmentProps> {
   public render() {
     const { live, segment } = this.props
 
+    const isUntitled = segment.title.length === 0
+
     return (
       <Segment fill interactive multiline onClick={this.onClick} intent={live ? Intent.PRIMARY : Intent.NONE}>
-        {segment.title}
+        {isUntitled ? 'Untitled stream' : segment.title}
       </Segment>
     )
   }
