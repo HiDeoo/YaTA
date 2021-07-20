@@ -709,7 +709,7 @@ export class ChatClient extends Component<Props, State> {
    * @param reason - The ban reason if specified.
    */
   private onIrcBan = (channel: string, username: string, reason: string | null) => {
-    if (!PubSub.isConnected()) {
+    if (!PubSub.isConnected() || !this.props.isMod) {
       this.onBan(channel, username, reason)
     }
   }
@@ -782,7 +782,7 @@ export class ChatClient extends Component<Props, State> {
    * @param duration - The timeout duration in seconds.
    */
   private onIrcTimeout = (channel: string, username: string, reason: string | null, duration: number) => {
-    if (!PubSub.isConnected()) {
+    if (!PubSub.isConnected() || !this.props.isMod) {
       this.onTimeout(channel, username, reason, duration)
     }
   }

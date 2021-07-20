@@ -17,6 +17,7 @@
 ### 🐛 Bug Fix
 
 - Fix an issue with AutoMod where moderators were not prompted to allow or deny a rejected message.
+- Fix an issue when marking some messages as deleted after a timeout or ban.
 - After login with Twitch, you are now properly redirected to the page you were browsing before.
 - Fix an issue preventing to use the chatters list.
 - Rename Twitch Prime to [Prime Gaming](https://blog.twitch.tv/en/2020/08/10/introducing-prime-gaming-more-of-what-you-love/).
