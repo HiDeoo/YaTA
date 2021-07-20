@@ -1,4 +1,3 @@
-import { IPanelProps } from '@blueprintjs/core'
 import _ from 'lodash'
 import pluralize from 'pluralize'
 import { Component } from 'react'
@@ -30,7 +29,7 @@ type State = Readonly<typeof initialState>
 /**
  * ChannelDetailsVideos Component.
  */
-class ChannelDetailsVideos extends Component<IPanelProps & ChannelDetailsProps & Props & ThemeProps, State> {
+class ChannelDetailsVideos extends Component<ChannelDetailsProps & Props & ThemeProps, State> {
   public state: State = initialState
 
   /**
