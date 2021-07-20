@@ -44,6 +44,23 @@ const Segment = styled(Tag)`
 `
 
 /**
+ * Time component.
+ */
+const Time = styled.div`
+  color: ${Colors.DARK_GRAY3};
+  font-size: 11px;
+
+  .${Classes.INTENT_PRIMARY} & {
+    color: ${Colors.LIGHT_GRAY3};
+  }
+`
+
+/**
+ * Time format used in segment.
+ */
+const segmentTimeFormat: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' }
+
+/**
  * React State.
  */
 const initialState = { didFail: false, schedule: undefined as Optional<RawSchedule['data'] | null> }
@@ -120,7 +137,13 @@ class ChannelDetailsSchedule extends Component<Props, State> {
               {showDate && (
                 <Day $highlighted={isToday}>{startDate.toLocaleDateString('en-US', { weekday: 'long' })}</Day>
               )}
-              <ScheduleSegment segment={segment} channel={this.props.channel} live={isLive} />
+              <ScheduleSegment
+                live={isLive}
+                endDate={endDate}
+                segment={segment}
+                startDate={startDate}
+                channel={this.props.channel}
+              />
             </Fragment>
           )
         })}
@@ -138,13 +161,20 @@ class ScheduleSegment extends Component<ScheduleSegmentProps> {
    * @return Element to render.
    */
   public render() {
-    const { live, segment } = this.props
+    const { endDate, live, segment, startDate } = this.props
 
     const isUntitled = segment.title.length === 0
+    const isCategorized = !_.isNil(segment.category)
 
     return (
       <Segment fill interactive multiline onClick={this.onClick} intent={live ? Intent.PRIMARY : Intent.NONE}>
-        {isUntitled ? 'Untitled stream' : segment.title}
+        <Time>
+          {startDate.toLocaleTimeString([], segmentTimeFormat)} - {endDate.toLocaleTimeString([], segmentTimeFormat)}
+        </Time>
+        <div>
+          {isUntitled ? 'Untitled stream' : segment.title}
+          {isCategorized ? ` - ${segment.category?.name}` : ''}
+        </div>
       </Segment>
     )
   }
@@ -186,8 +216,10 @@ type Props = StateProps & ChannelDetailsProps & ThemeProps
  */
 interface ScheduleSegmentProps {
   channel: ReturnType<typeof getChannel>
+  endDate: Date
   live: boolean
   segment: RawScheduleSegment
+  startDate: Date
 }
 
 /**
