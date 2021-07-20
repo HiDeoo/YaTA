@@ -770,8 +770,7 @@ export default class Twitch {
     const response = await Twitch.fetch(TwitchApi.Helix, '/schedule', {
       broadcaster_id: channelId,
       first: '25',
-      // TODO(HiDeoo)
-      // utc_offset: XXXXXX,
+      utc_offset: new Date().getTimezoneOffset().toString(),
     })
     const schedule = (await response.json()) as RawSchedule
 
