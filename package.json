@@ -17,7 +17,7 @@
     "preanalyze": "yarn run build",
     "analyze": "source-map-explorer build/static/js/main.*",
     "changelog": "cp CHANGELOG.md src",
-    "deploy": "vercel"
+    "vercel": "vercel"
   },
   "dependencies": {
     "@blueprintjs/core": "3.46.0",
