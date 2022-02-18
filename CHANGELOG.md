@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🐛 Bug Fix
+
+- Fix an issue with the header visibility shortcut no longer working.
+
 ### 😢 Removed Feature
 
 - The Kraken is dead: finish migrating remaining features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained). Even if we waited until the last minute in hope that the new Twitch API would get at least a feature parity with the old one, this was in vain:
