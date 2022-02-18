@@ -19,6 +19,7 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 
 import ExternalButton from 'components/ExternalButton'
+import ExternalLink from 'components/ExternalLink'
 import FlexLayout from 'components/FlexLayout'
 import History from 'components/History'
 import ReasonDialog from 'components/ReasonDialog'
@@ -38,6 +39,7 @@ import { getLogsByIds } from 'store/selectors/logs'
 import { makeGetChatterNote } from 'store/selectors/notes'
 import styled, { ifProp, prop, size, theme } from 'styled'
 import Ivr, { IvrSubscriptionStatus } from 'libs/Ivr'
+import Pronouns from 'libs/Pronouns'
 
 /**
  * DetailsRow component.
@@ -202,6 +204,27 @@ const ErrorIcon = styled(Icon)`
 `
 
 /**
+ * Pronoun component.
+ */
+const Pronoun = styled(ExternalLink)`
+  background-color: ${Colors.GRAY1};
+  border-radius: 4px;
+  font-size: 0.77rem;
+  margin-left: 5px;
+  padding: 3px 6px;
+
+  .${Classes.DARK} & {
+    color: ${Colors.WHITE};
+    text-decoration: none;
+
+    &:hover {
+      color: ${Colors.WHITE};
+      text-decoration: underline;
+    }
+  }
+`
+
+/**
  * React State.
  */
 const initialState = {
@@ -209,6 +232,7 @@ const initialState = {
   followersCount: undefined as Optional<number>,
   isEditingNote: false,
   relationship: undefined as Optional<RawRelationship> | null,
+  pronoun: undefined as string | undefined,
   subscriptionStatus: undefined as Optional<IvrSubscriptionStatus> | null,
   user: undefined as Optional<RawHelixUser>,
   [ToggleableUI.Reason]: false,
@@ -266,6 +290,14 @@ class ChatterDetails extends Component<Props, State> {
       } catch (error) {
         this.setState(() => ({ error }))
       }
+
+      try {
+        const pronoun = await Pronouns.fetchPronoun(chatter.userName)
+
+        this.setState(() => ({ pronoun }))
+      } catch (error) {
+        //
+      }
     } else if (_.isNil(chatter) && prevProps.chatter !== chatter) {
       this.setState(initialState)
     }
@@ -277,7 +309,7 @@ class ChatterDetails extends Component<Props, State> {
    */
   public render() {
     const { chatter, logs } = this.props
-    const { isEditingNote, [ToggleableUI.Reason]: showReasonDialog, user } = this.state
+    const { isEditingNote, pronoun, [ToggleableUI.Reason]: showReasonDialog, user } = this.state
 
     if (_.isNil(chatter)) {
       return null
@@ -300,6 +332,7 @@ class ChatterDetails extends Component<Props, State> {
         </Avatar>
         <Name color={usernameColor}>{`${chatter.displayName}${showUsername ? ` (${chatter.userName})` : ''}`}</Name>
         {!_.isNil(badges) && <Badges dangerouslySetInnerHTML={{ __html: badges }} />}
+        {!_.isNil(pronoun) && <Pronoun href="https://pronouns.alejo.io">{pronoun}</Pronoun>}
       </Header>
     )
 
