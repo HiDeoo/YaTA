@@ -17,15 +17,15 @@ import HeaderTooltip from 'components/HeaderTooltip'
 import Page from 'constants/page'
 import Status from 'constants/status'
 import { AppState } from 'store/ducks/app'
-import styled from 'styled'
+import styled, { ifProp } from 'styled'
 import { enumIncludes } from 'utils/typescript'
 
 /**
  * NavBar component.
  */
-const HeaderNavbar = styled(Navbar)`
+const HeaderNavbar = styled(Navbar)<HeaderNavbarProps>`
   align-items: center;
-  display: flex;
+  display: ${ifProp('hidden', 'flex', 'none')};
 `
 
 /**
@@ -260,4 +260,11 @@ type HeaderConfiguration = {
   setRightComponent: (component: JSX.Element | null) => void
   setTitleComponent: (component: JSX.Element | null) => void
   titleComponent: JSX.Element | null
+}
+
+/**
+ * React Props.
+ */
+interface HeaderNavbarProps {
+  hidden?: boolean
 }

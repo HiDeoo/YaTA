@@ -277,7 +277,11 @@ export class ChatClient extends Component<Props, State> {
    */
   private onNotices = (_channel: string, id: string, message: string) => {
     if (_.includes(Notices.Extra, id)) {
-      const notice = new Notice(message, Event.Notice)
+      const notice = new Notice(
+        message,
+        Event.Notice,
+        id === 'msg_requires_verified_phone_number' || id === 'msg_verified_email'
+      )
 
       this.props.addLog(notice.serialize())
     }

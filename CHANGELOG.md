@@ -1,5 +1,10 @@
 # Unreleased
 
+### 🐛 Bug Fix
+
+- Fix an issue with the header visibility shortcut no longer working.
+- Add proper warnings when trying to chat in a [phone or email verified channel](https://help.twitch.tv/s/article/chat-verification-settings?language=en_US) without a verified account.
+
 ### 😢 Removed Feature
 
 - The Kraken is dead: finish migrating remaining features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained). Even if we waited until the last minute in hope that the new Twitch API would get at least a feature parity with the old one, this was in vain:
