@@ -1,5 +1,9 @@
 # Unreleased
 
+### 🚀 New Feature
+
+- The chatter details modal opened when clicking a username now displays (if applicable) the [user pronoun](https://pronouns.alejo.io).
+
 ### 🐛 Bug Fix
 
 - Fix an issue with the header visibility shortcut no longer working.
