@@ -996,8 +996,8 @@ class Channel extends Component<Props, State> {
 
     if (!excludeEmotes) {
       emoteCompletions = _.filter(emotes, (emote) => {
-        return emote.code.toLowerCase().startsWith(sanitizedWord)
-      }).map((emote) => emote.code)
+        return emote.name.toLowerCase().startsWith(sanitizedWord)
+      }).map((emote) => emote.name)
 
       // order emotes matching the case first, then typical ordering
       emoteCompletions.sort((a: string, b: string) => {

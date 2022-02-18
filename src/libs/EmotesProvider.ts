@@ -73,17 +73,21 @@ const nextWordLookUpTriggers = [';', '<', '>', '(', ':', 'B', 'D', 'R']
  */
 export default class EmotesProvider<ExternalEmote extends Emote> {
   /**
-   * Sanitizes Twitch emotes by removing RegExp emotes code.
+   * Sanitizes Twitch emotes by removing smilies.
    * @param  emotes - The emotes to sanitize.
    * @return The sanitized emotes.
    */
-  public static sanitizeTwitchEmotes(emotes: Emote[]): Emote[] {
-    return _.map(emotes, (emote) => {
-      if (EmotesProvider.isTwitchRegExpEmote(emote.code)) {
-        return { ...emote, code: TwitchRegExpEmotesMap[emote.code] }
+  public static sanitizeTwitchEmotes(emotes: TwitchEmote[]): TwitchEmote[] {
+    return _.filter(emotes, (emote) => {
+      if (
+        emote.emote_type === 'smilies' ||
+        // Emoticons sets unlocked with a Twitch Prime subscription are not marked as smilies :/
+        (emote.emote_type === 'subscriptions' && (emote.emote_set_id === '42' || emote.emote_set_id === '33'))
+      ) {
+        return false
       }
 
-      return emote
+      return true
     })
   }
 
@@ -103,15 +107,6 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
    */
   public static isTwitchPrefix(prefix: string): prefix is EmoteProviderPrefix.Twitch {
     return prefix === EmoteProviderPrefix.Twitch
-  }
-
-  /**
-   * Defines if an emote code matches a Twitch RegExp emote.
-   * @param code - The emote code.
-   * @return `true` when the code matches a Twitch RegExp emote.
-   */
-  private static isTwitchRegExpEmote(code: string): code is keyof typeof TwitchRegExpEmotesMap {
-    return code in TwitchRegExpEmotesMap
   }
 
   /**
@@ -165,17 +160,17 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
       (emotes, emote) => {
         const wordsMatchingEmote = _.filter(words, (word, index) => {
           if (_.includes(nextWordLookUpTriggers, word.text)) {
-            return this.getPotentialNextWord(words, index) === emote.code
+            return this.getPotentialNextWord(words, index) === emote.name
           }
 
-          return word.text === emote.code
+          return word.text === emote.name
         })
 
         if (wordsMatchingEmote.length === 0) {
           return emotes
         }
 
-        const ranges = _.map(wordsMatchingEmote, (word) => [word.index, word.index + emote.code.length - 1].join('-'))
+        const ranges = _.map(wordsMatchingEmote, (word) => [word.index, word.index + emote.name.length - 1].join('-'))
 
         emotes[`${this.prefix}-${emote.id}`] = ranges
 
@@ -311,11 +306,29 @@ export default class EmotesProvider<ExternalEmote extends Emote> {
 }
 
 /**
- * Base Twitch emote.
+ * Base emote.
  */
 export type Emote = {
   id: string
-  code: string
+  name: string
+}
+
+/**
+ * Twitch emote.
+ */
+export interface TwitchEmote extends Emote {
+  images: {
+    url_1x: string
+    url_2x: string
+    url_4x: string
+  }
+  emote_type: string
+  emote_set_id: string
+  owner_id: string
+  format: string[]
+  scale: string[]
+  theme_mode: string[]
+  template: string
 }
 
 /**

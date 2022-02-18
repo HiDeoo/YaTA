@@ -39,7 +39,6 @@ export default class Resources {
   private highlightAllMentions: boolean = false
   private emoticonsSetId = 0
   private emoticonsMap: EmoticonsMap = {}
-  private emoticonsList = _.flatten(_.map(Emoticons, (set) => _.map(set, (id) => id)))
   private previewProviders: Record<string, PreviewProvider>
 
   /**
@@ -90,8 +89,8 @@ export default class Resources {
 
     this.emoticonsMap = _.reduce(
       TwitchRegExpEmotesMap,
-      (map, code, regex) => {
-        map[regex] = { code, id: Emoticons[this.emoticonsSetId][regex].toString() }
+      (map, name, regex) => {
+        map[regex] = { name, id: Emoticons[this.emoticonsSetId][regex].toString() }
 
         return map
       },
@@ -105,15 +104,6 @@ export default class Resources {
    */
   public getEmoticonsMap() {
     return this.emoticonsMap
-  }
-
-  /**
-   * Checks if an emote id corresponds to an emoticon.
-   * @param  id - The emote id.
-   * @return `true` if the emote is an emoticon.
-   */
-  public isEmoticon(id: string | number) {
-    return _.includes(this.emoticonsList, id)
   }
 
   /**
@@ -234,4 +224,4 @@ export default class Resources {
 /**
  * Emoticons map.
  */
-type EmoticonsMap = Record<string, { code: string; id: string }>
+type EmoticonsMap = Record<string, { name: string; id: string }>

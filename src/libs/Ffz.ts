@@ -31,7 +31,7 @@ export default class Ffz {
 
         return acc
       },
-      [] as FfzRawEmote[]
+      [] as FfzEmote[]
     )
 
     const isChannelRegistered = !_.has(channelResponse, 'error') && _.has(channelResponse, 'sets')
@@ -50,10 +50,10 @@ export default class Ffz {
    * @param  rawEmotes - The emotes returned by the API.
    * @return The sanitized emotes.
    */
-  private static sanitizeRawEmotes(rawEmotes: FfzRawEmote[]): FfzEmote[] {
+  private static sanitizeRawEmotes(rawEmotes: FfzEmote[]): FfzEmote[] {
     return _.map(rawEmotes, ({ id, name, urls, width }) => {
       return {
-        code: name,
+        name,
         id: id.toString(),
         urls,
         width,
@@ -90,16 +90,6 @@ interface FfzEmoteUrls {
  * Ffz emote.
  */
 export interface FfzEmote extends Emote {
-  urls: FfzEmoteUrls
-  width: number
-}
-
-/**
- * Ffz raw emote returned by the API.
- */
-interface FfzRawEmote {
-  id: number
-  name: string
   urls: FfzEmoteUrls
   width: number
 }

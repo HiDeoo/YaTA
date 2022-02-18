@@ -87,25 +87,51 @@ patch-package
 
        var emotes = {};
 
-@@ -1209,9 +1229,15 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
-       'Client-ID': this.clientId
-     }
-   }, function (err, res, body) {
+@@ -1202,21 +1222,29 @@ client.prototype._updateEmoteset = function _updateEmoteset(sets) {
+
+   this.emotes = sets;
+
+-  this.api({
+-    url: '/chat/emoticon_images?emotesets=' + sets,
+-    headers: {
+-      Authorization: 'OAuth ' + _.password(_.get(this.opts.identity.password, '')).replace('oauth:', ''),
+-      'Client-ID': this.clientId
+-    }
+-  }, function (err, res, body) {
 -    if (!err) {
 -      _this8.emotesets = body.emoticon_sets || {};
 -      return _this8.emit('emotesets', sets, _this8.emotesets);
-+    try {
-+      if (!err) {
-+        _this8.emotesets = body.emoticon_sets || {};
-+        return _this8.emit('emotesets', sets, _this8.emotesets);
-+      } else {
-+        return _this8.emit('emotesets', sets, {});
-+      }
-+    } catch (error) {
-+      return _this8.emit('emotesets', sets, {});
-     }
-     setTimeout(function () {
-       _this8._updateEmoteset(sets);
+-    }
+-    setTimeout(function () {
+-      _this8._updateEmoteset(sets);
+-    }, 60000);
+-  });
++  return _this8.emit('emotesets', sets, {});
++
++  // this.api({
++  //   url: '/chat/emoticon_images?emotesets=' + sets,
++  //   headers: {
++  //     Authorization: 'OAuth ' + _.password(_.get(this.opts.identity.password, '')).replace('oauth:', ''),
++  //     'Client-ID': this.clientId
++  //   }
++  // }, function (err, res, body) {
++  //   try {
++  //     if (!err) {
++  //       _this8.emotesets = body.emoticon_sets || {};
++  //       return _this8.emit('emotesets', sets, _this8.emotesets);
++  //     } else {
++  //       return _this8.emit('emotesets', sets, {});
++  //     }
++  //   } catch (error) {
++  //     return _this8.emit('emotesets', sets, {});
++  //   }
++  //   setTimeout(function () {
++  //     _this8._updateEmoteset(sets);
++  //   }, 60000);
++  // });
+ };
+
+ // Get current username..
 patch-package
 --- a/node_modules/twitch-js/lib/commands.js
 +++ b/node_modules/twitch-js/lib/commands.js

@@ -84,7 +84,7 @@ export const getEmotesSets = createSelector([getAppState], (app) => {
   return _.reduce(
     app.emotes,
     (emotes, setEmotes, setPrefix) => {
-      emotes[setPrefix] = _.sortBy(setEmotes, (emote) => emote.code.toLowerCase())
+      emotes[setPrefix] = _.sortBy(setEmotes, (emote) => emote.name.toLowerCase())
 
       return emotes
     },

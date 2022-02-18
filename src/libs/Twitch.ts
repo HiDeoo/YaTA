@@ -1,10 +1,10 @@
 import * as storage from 'localforage'
 import _ from 'lodash'
-import { EmoteSets } from 'twitch-js'
 
 import RequestMethod from 'constants/requestMethod'
 import { getRandomString } from 'utils/crypto'
 import { subDays, subMonths } from 'utils/date'
+import type { TwitchEmote } from './EmotesProvider'
 
 /**
  * Twitch various APIs.
@@ -406,24 +406,24 @@ export default class Twitch {
   }
 
   /**
-   * Fetches user emotes.
-   * @param  channelId - The id of the channel.
-   * @return The channel live notification.
+   * Fetches emote sets.
+   * @param  emoteSetIds - The list of emote set ids to fetch.
+   * @return The associated emotes.
    */
-  public static async fetchUserEmotes(): Promise<{ emoticon_sets: EmoteSets }> {
+  public static async fetchEmoteSets(emoteSetIds: string[]): Promise<TwitchEmote[]> {
     if (_.isNil(Twitch.userId)) {
       throw new Error('Missing user id for emotes fetching.')
     }
 
     const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/emotes`,
-      undefined,
+      TwitchApi.Helix,
+      '/chat/emotes/set',
+      { emote_set_id: emoteSetIds },
       true,
       RequestMethod.Get
     )
 
-    return response.json()
+    return (await response.json()).data
   }
 
   /**
@@ -821,10 +821,21 @@ export default class Twitch {
    * @param  [proxy=false] - `true` to use a CORS proxy.
    * @return The URL.
    */
-  private static getUrl(api: TwitchApi, endpoint: string, searchParams: Record<string, string> = {}, proxy = false) {
+  private static getUrl(
+    api: TwitchApi,
+    endpoint: string,
+    searchParams: Record<string, string | string[]> = {},
+    proxy = false
+  ) {
     const url = new URL(`${proxy ? ProxyURL : ''}${api}${endpoint}`)
 
-    _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
+    _.forEach(searchParams, (value, key) => {
+      if (_.isString(value)) {
+        url.searchParams.set(key, value)
+      } else {
+        _.forEach(value, (v) => url.searchParams.append(key, v))
+      }
+    })
 
     return url.toString()
   }
@@ -843,7 +854,7 @@ export default class Twitch {
   private static async fetch(
     api: TwitchApi,
     endpoint: string,
-    searchParams: Record<string, string> = {},
+    searchParams: Record<string, string | string[]> = {},
     authenticated = false,
     method = RequestMethod.Get,
     body?: object,

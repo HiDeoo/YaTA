@@ -264,9 +264,9 @@ class EmotePicker extends React.Component<Props, State> {
     return (
       <Preview>
         <PreviewImage>
-          <img src={provider.getEmoteUrlWithSize(hovered.id, '2x')} alt={hovered.code} />
+          <img src={provider.getEmoteUrlWithSize(hovered.id, '2x')} alt={hovered.name} />
         </PreviewImage>
-        {hovered.code}
+        {hovered.name}
       </Preview>
     )
   }
@@ -380,7 +380,7 @@ class EmotePicker extends React.Component<Props, State> {
   private getFilteredEmotesSet(set: Emote[], filter: string) {
     const sanitizedFilter = filter.toLowerCase()
 
-    return _.filter(set, (emote) => emote.code.toLowerCase().includes(sanitizedFilter))
+    return _.filter(set, (emote) => emote.name.toLowerCase().includes(sanitizedFilter))
   }
 
   /**
@@ -419,7 +419,7 @@ class EmotePicker extends React.Component<Props, State> {
    */
   private onMouseLeaveEmote = (emote: Emote) => {
     this.setState(({ hovered }) => ({
-      hovered: !_.isNil(hovered) && hovered.code === emote.code ? undefined : hovered,
+      hovered: !_.isNil(hovered) && hovered.name === emote.name ? undefined : hovered,
     }))
   }
 
