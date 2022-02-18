@@ -1,3 +1,11 @@
+# Unreleased
+
+### 😢 Removed Feature
+
+- The Kraken is dead: finish migrating remaining features to the new Twitch API (this requires login and accepting permissions again - requested permissions are the same, just more fine-grained). Even if we waited until the last minute in hope that the new Twitch API would get at least a feature parity with the old one, this was in vain:
+  - Some event-specific emote sets may not be usable (like the [HAHAHAlidays](https://blog.twitch.tv/en/2019/12/03/happy-hahahalidays-unlock-holiday-emotes-this-season) one) due to a known Twitch issue for multiple years that can no longer be workaround with the new Twitch API.
+  - The homepage now only lists online streams and no longer displays offline follows due to Twitch not providing a new API to fetch all these informations in a reasonable number of requests.
+
 # 1.16.0
 
 ### 🚀 New Feature
