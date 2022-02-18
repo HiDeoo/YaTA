@@ -3,6 +3,7 @@
 ### 🐛 Bug Fix
 
 - Fix an issue with the header visibility shortcut no longer working.
+- Add proper warnings when trying to chat in a [phone or email verified channel](https://help.twitch.tv/s/article/chat-verification-settings?language=en_US) without a verified account.
 
 ### 😢 Removed Feature
 

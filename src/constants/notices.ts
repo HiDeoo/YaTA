@@ -36,6 +36,8 @@ export default {
     'raid_notice_mature',
     'unraid_error_unexpected',
     'unraid_success',
+    'msg_verified_email',
+    'msg_requires_verified_phone_number',
   ],
 
   /**
