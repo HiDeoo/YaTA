@@ -1,10 +1,10 @@
 import * as storage from 'localforage'
 import _ from 'lodash'
-import { EmoteSets } from 'twitch-js'
 
 import RequestMethod from 'constants/requestMethod'
 import { getRandomString } from 'utils/crypto'
 import { subDays, subMonths } from 'utils/date'
+import type { TwitchEmote } from './EmotesProvider'
 
 /**
  * Twitch various APIs.
@@ -13,7 +13,6 @@ enum TwitchApi {
   Auth = 'https://id.twitch.tv/oauth2',
   Badges = 'https://badges.twitch.tv/v1/badges',
   Helix = 'https://api.twitch.tv/helix',
-  Kraken = 'https://api.twitch.tv/kraken',
   Tmi = 'https://tmi.twitch.tv',
 }
 
@@ -95,7 +94,7 @@ export default class Twitch {
       redirect_uri: REACT_APP_TWITCH_REDIRECT_URI,
       response_type: 'token id_token',
       scope:
-        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions moderator:manage:automod',
+        'openid chat:read chat:edit channel:moderate whispers:read whispers:edit user_blocks_edit clips:edit user:edit:follows user:edit:broadcast channel:edit:commercial user_subscriptions moderator:manage:automod user:read:follows',
       state: encodeURIComponent(JSON.stringify(state)),
     }
 
@@ -406,24 +405,24 @@ export default class Twitch {
   }
 
   /**
-   * Fetches user emotes.
-   * @param  channelId - The id of the channel.
-   * @return The channel live notification.
+   * Fetches emote sets.
+   * @param  emoteSetIds - The list of emote set ids to fetch.
+   * @return The associated emotes.
    */
-  public static async fetchUserEmotes(): Promise<{ emoticon_sets: EmoteSets }> {
+  public static async fetchEmoteSets(emoteSetIds: string[]): Promise<TwitchEmote[]> {
     if (_.isNil(Twitch.userId)) {
       throw new Error('Missing user id for emotes fetching.')
     }
 
     const response = await Twitch.fetch(
-      TwitchApi.Kraken,
-      `/users/${Twitch.userId}/emotes`,
-      undefined,
+      TwitchApi.Helix,
+      '/chat/emotes/set',
+      { emote_set_id: emoteSetIds },
       true,
       RequestMethod.Get
     )
 
-    return response.json()
+    return (await response.json()).data
   }
 
   /**
@@ -486,10 +485,17 @@ export default class Twitch {
    * @param  channelId - The channel id.
    * @return The stream details.
    */
-  public static async fetchStream(channelId: string): Promise<{ stream: RawStream | null }> {
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/streams/${channelId}`)
+  public static async fetchStream(channelId: string): Promise<RawStream | null> {
+    const response = await Twitch.fetch(
+      TwitchApi.Helix,
+      `/streams`,
+      {
+        user_id: channelId,
+      },
+      true
+    )
 
-    return response.json()
+    return (await response.json()).data[0]
   }
 
   /**
@@ -609,37 +615,23 @@ export default class Twitch {
   }
 
   /**
-   * Fetches follows for the current user which consist of online streams, offline channels and its own online stream if
-   * streaming.
-   * @return The streams and channels.
+   * Fetches streams for the current user which consist of online streams and its own online stream if streaming.
+   * @return The streams.
    */
-  public static async fetchFollows(): Promise<Followers> {
-    const follows = await Twitch.fetchAuthenticatedUserFollows()
+  public static async fetchStreams(): Promise<Streams> {
     const streams = await Twitch.fetchAuthenticatedUserStreams()
-
-    const offline = _.reduce(
-      follows,
-      (offlines, follow) => {
-        if (_.isNil(_.find(streams, ['channel.name', follow.channel.name]))) {
-          offlines.push(follow.channel)
-        }
-
-        return offlines
-      },
-      [] as RawChannel[]
-    )
 
     let own: RawStream | null = null
 
     if (!_.isNil(this.userId)) {
-      const { stream } = await Twitch.fetchStream(this.userId)
+      const stream = await Twitch.fetchStream(this.userId)
 
       if (!_.isNil(stream)) {
         own = stream
       }
     }
 
-    return { offline, online: streams, own }
+    return { online: streams, own }
   }
 
   /**
@@ -684,54 +676,30 @@ export default class Twitch {
   }
 
   /**
-   * Fetches all follows for the current authenticated user.
-   * @param  [offset=0] - The offset to use while fetching follows.
-   * @param  [limit=100] - The number of follows to fetch per query.
-   * @return The follows.
-   */
-  public static async fetchAuthenticatedUserFollows(offset = 0, limit = 100): Promise<RawFollow[]> {
-    const params = {
-      limit: limit.toString(),
-      offset: offset.toString(),
-      sortby: 'last_broadcast',
-    }
-
-    const response = await Twitch.fetch(TwitchApi.Kraken, `/users/${Twitch.userId}/follows/channels`, params, true)
-
-    const { follows } = (await response.json()) as RawFollows
-
-    let allFollows = [...follows]
-
-    if (follows.length === limit) {
-      const nextFollows = await Twitch.fetchAuthenticatedUserFollows(offset + limit, limit)
-
-      allFollows = [...allFollows, ...nextFollows]
-    }
-
-    return allFollows
-  }
-
-  /**
    * Fetches all online followed streams for the current authenticated user.
    * @param  [offset=0] - The offset to use while fetching streams.
    * @param  [limit=100] - The number of streams to fetch per query.
    * @return The streams.
    */
-  public static async fetchAuthenticatedUserStreams(offset = 0, limit = 100): Promise<RawStream[]> {
-    const params = {
-      limit: limit.toString(),
-      offset: offset.toString(),
-      stream_type: 'live',
+  public static async fetchAuthenticatedUserStreams(limit = 100, offset?: string): Promise<RawStream[]> {
+    if (_.isNil(Twitch.userId)) {
+      throw new Error('Missing user id to fetch user streams.')
     }
 
-    const response = await Twitch.fetch(TwitchApi.Kraken, '/streams/followed', params, true)
+    const params: { user_id: string; first: string; after?: string } = {
+      user_id: Twitch.userId,
+      first: limit.toString(),
+      after: offset?.toString(),
+    }
 
-    const { streams } = (await response.json()) as RawStreams
+    const response = await Twitch.fetch(TwitchApi.Helix, '/streams/followed', params, true)
 
-    let allStreams = [...streams]
+    const { data, pagination } = (await response.json()) as RawStreams
+
+    let allStreams = [...data]
 
     if (allStreams.length === limit) {
-      const nextStreams = await Twitch.fetchAuthenticatedUserStreams(offset + limit, limit)
+      const nextStreams = await Twitch.fetchAuthenticatedUserStreams(limit, pagination.cursor)
 
       allStreams = [...allStreams, ...nextStreams]
     }
@@ -778,12 +746,12 @@ export default class Twitch {
   }
 
   /**
-   * Defines if an object is either a stream or a channel.
-   * @param  streamOrChannel - The stream or channel to identify.
+   * Defines if an object is either a stream or a follow.
+   * @param  streamOrFollow - The stream or follow to identify.
    * @return `true` of the parameter is a stream.
    */
-  public static isStream(streamOrChannel: RawStream | RawChannel): streamOrChannel is RawStream {
-    return !_.isNil(_.get(streamOrChannel, 'stream_type'))
+  public static isStream(streamOrFollow: RawStream | RawFollow): streamOrFollow is RawStream {
+    return !_.isNil(_.get(streamOrFollow, 'started_at'))
   }
 
   private static token: string | null
@@ -821,10 +789,21 @@ export default class Twitch {
    * @param  [proxy=false] - `true` to use a CORS proxy.
    * @return The URL.
    */
-  private static getUrl(api: TwitchApi, endpoint: string, searchParams: Record<string, string> = {}, proxy = false) {
+  private static getUrl(
+    api: TwitchApi,
+    endpoint: string,
+    searchParams: Record<string, string | string[]> = {},
+    proxy = false
+  ) {
     const url = new URL(`${proxy ? ProxyURL : ''}${api}${endpoint}`)
 
-    _.forEach(searchParams, (value, key) => url.searchParams.set(key, value))
+    _.forEach(searchParams, (value, key) => {
+      if (_.isString(value)) {
+        url.searchParams.set(key, value)
+      } else {
+        _.forEach(value, (v) => url.searchParams.append(key, v))
+      }
+    })
 
     return url.toString()
   }
@@ -843,7 +822,7 @@ export default class Twitch {
   private static async fetch(
     api: TwitchApi,
     endpoint: string,
-    searchParams: Record<string, string> = {},
+    searchParams: Record<string, string | string[]> = {},
     authenticated = false,
     method = RequestMethod.Get,
     body?: object,
@@ -1054,41 +1033,54 @@ export type RawClip = {
  * Twitch follows.
  */
 export type RawFollows = {
-  follows: RawFollow[]
-  _total: number
+  data: RawFollow[]
+  pagination: {
+    cursor: string
+  }
 }
 
 /**
  * Twitch follow.
  */
-export type RawFollow = { created_at: string; notifications: true; channel: RawChannel }
+export type RawFollow = {
+  followed_at: string
+  from_id: string
+  from_login: string
+  from_name: string
+  to_id: string
+  to_login: string
+  to_name: string
+  notifications: true
+  channel: RawChannel
+}
 
 /**
  * Twitch streams.
  */
 export type RawStreams = {
-  streams: RawStream[]
-  _total: number
+  data: RawStream[]
+  pagination: {
+    cursor: string
+  }
 }
 
 /**
  * Twitch stream.
  */
 export type RawStream = {
-  average_fps: number
-  broadcast_platform: string
-  channel: RawChannel
-  community_id: string
-  community_ids: string[]
-  created_at: string
-  delay: number
-  game: number
-  is_playlist: boolean
-  preview: RawPreview
-  stream_type: string
-  video_height: number
-  viewers: number
-  _id: string
+  game_id: string
+  game_name: string
+  id: string
+  language: string
+  started_at: string
+  tag_ids: string
+  thumbnail_url: string
+  title: string
+  type: string
+  user_id: string
+  user_login: string
+  user_name: string
+  viewer_count: number
 }
 
 /**
@@ -1133,16 +1125,6 @@ export type RawVideo = {
   language: string
   type: Exclude<BroadcastType, BroadcastType.All>
   duration: string
-}
-
-/**
- * Twitch preview.
- */
-type RawPreview = {
-  large: string
-  medium: string
-  small: string
-  template: string
 }
 
 /**
@@ -1234,18 +1216,12 @@ type CheermoteImageType = 'static' | 'animated'
 type CheermoteImageScales = '1' | '1.5' | '2' | '3' | '4'
 
 /**
- * Online stream, offline channel and own stream if online.
+ * Online streams and own stream if online.
  */
-export type Followers = {
-  offline: RawChannel[]
+export type Streams = {
   online: RawStream[]
   own: RawStream | null
 }
-
-/**
- * Online stream or offline channel.
- */
-export type Follower = RawStream | RawChannel
 
 /**
  * State send to Twitch while authenticating.

@@ -41,7 +41,7 @@ const SearchInput = styled(InputGroup)`
  * Wrapper component.
  */
 const Wrapper = styled.div`
-  border-top: 1px solid ${theme('follows.border')};
+  border-top: 1px solid ${theme('streams.border')};
   height: 100%;
   line-height: 1.4rem;
   overflow-x: hidden;

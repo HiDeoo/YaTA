@@ -24,7 +24,7 @@ import Chatters from 'components/Chatters'
 import CommandsHelp from 'components/CommandsHelp'
 import DropOverlay from 'components/DropOverlay'
 import FlexLayout from 'components/FlexLayout'
-import FollowOmnibar from 'components/FollowOmnibar'
+import StreamOmnibar from 'components/StreamOmnibar'
 import { withHeader, WithHeaderProps } from 'components/Header'
 import HeaderChannelState from 'components/HeaderChannelState'
 import HeaderTooltip from 'components/HeaderTooltip'
@@ -136,7 +136,7 @@ const initialState = {
   viewerCount: undefined as Optional<number>,
   [ToggleableUI.Chatters]: false,
   [ToggleableUI.CommandsHelp]: false,
-  [ToggleableUI.FollowOmnibar]: false,
+  [ToggleableUI.StreamOmnibar]: false,
   [ToggleableUI.LogsExporter]: false,
   [ToggleableUI.PollEditor]: false,
   [ToggleableUI.Search]: false,
@@ -166,7 +166,7 @@ class Channel extends Component<Props, State> {
     this.shortcuts = [
       { type: ShortcutType.CreateClip, action: this.clip },
       { type: ShortcutType.ToggleSearch, action: this.toggleSearch },
-      { type: ShortcutType.ToggleOmnibar, action: this.toggleFollowOmnibar },
+      { type: ShortcutType.ToggleOmnibar, action: this.toggleStreamOmnibar },
       { type: ShortcutType.TogglePollEditor, action: this.togglePollEditor },
       { type: ShortcutType.FocusChatInput, action: this.focusChatInput },
       { type: ShortcutType.AddMarker, action: this.props.addMarker },
@@ -262,7 +262,7 @@ class Channel extends Component<Props, State> {
       reply,
       [ToggleableUI.Chatters]: showChatters,
       [ToggleableUI.CommandsHelp]: showCommandsHelp,
-      [ToggleableUI.FollowOmnibar]: showFollowOmnibar,
+      [ToggleableUI.StreamOmnibar]: showStreamOmnibar,
       [ToggleableUI.LogsExporter]: showLogsExporter,
       [ToggleableUI.PollEditor]: showPollEditor,
       [ToggleableUI.Search]: showSearch,
@@ -290,7 +290,7 @@ class Channel extends Component<Props, State> {
           <title>{channel} - YaTA</title>
         </Helmet>
         <ReactTooltip html effect="solid" getContent={this.getTooltipContent} className="channelTooltip" />
-        <FollowOmnibar visible={showFollowOmnibar} toggle={this.toggleFollowOmnibar} />
+        <StreamOmnibar visible={showStreamOmnibar} toggle={this.toggleStreamOmnibar} />
         <Chat
           markUserAsBanned={this.markUserAsBanned}
           replyReference={reply?.reference}
@@ -703,10 +703,10 @@ class Channel extends Component<Props, State> {
       const channelId = this.getChannelId()
 
       if (!_.isNil(channelId)) {
-        const { stream } = await Twitch.fetchStream(channelId)
+        const stream = await Twitch.fetchStream(channelId)
 
         if (!_.isNil(stream)) {
-          viewers = stream.viewers
+          viewers = stream.viewer_count
         }
       }
     }
@@ -803,10 +803,10 @@ class Channel extends Component<Props, State> {
   }
 
   /**
-   * Toggles the channel omnibar.
+   * Toggles the stream omnibar.
    */
-  private toggleFollowOmnibar = () => {
-    this.toggleUI(ToggleableUI.FollowOmnibar)
+  private toggleStreamOmnibar = () => {
+    this.toggleUI(ToggleableUI.StreamOmnibar)
   }
 
   /**
@@ -996,8 +996,8 @@ class Channel extends Component<Props, State> {
 
     if (!excludeEmotes) {
       emoteCompletions = _.filter(emotes, (emote) => {
-        return emote.code.toLowerCase().startsWith(sanitizedWord)
-      }).map((emote) => emote.code)
+        return emote.name.toLowerCase().startsWith(sanitizedWord)
+      }).map((emote) => emote.name)
 
       // order emotes matching the case first, then typical ordering
       emoteCompletions.sort((a: string, b: string) => {

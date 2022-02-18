@@ -26,7 +26,7 @@ export default class Bttv {
 
     const isChannelRegistered = channelResponse.message !== 'user not found'
 
-    let rawEmotes: BttvEmote[] = isChannelRegistered
+    let rawEmotes: BttvRawEmote[] = isChannelRegistered
       ? [...globalResponse, ...channelResponse.sharedEmotes, ...channelResponse.channelEmotes]
       : globalResponse
 
@@ -34,7 +34,7 @@ export default class Bttv {
 
     const emotes = new EmotesProvider(
       EmoteProviderPrefix.Bttv,
-      rawEmotes,
+      Bttv.sanitizeRawEmotes(rawEmotes),
       'https://cdn.betterttv.net/emote/{{id}}/{{image}}',
       'x'
     )
@@ -43,6 +43,21 @@ export default class Bttv {
       bots,
       emotes,
     }
+  }
+
+  /**
+   * Sanitizes emotes returned by the Ffz API.
+   * @param  rawEmotes - The emotes returned by the API.
+   * @return The sanitized emotes.
+   */
+  private static sanitizeRawEmotes(rawEmotes: BttvRawEmote[]): BttvEmote[] {
+    return _.map(rawEmotes, ({ code, id, imageType }) => {
+      return {
+        name: code,
+        id: id.toString(),
+        imageType,
+      }
+    })
   }
 
   /**
@@ -72,6 +87,15 @@ export default class Bttv {
  * Bttv emote.
  */
 interface BttvEmote extends Emote {
+  imageType: string
+}
+
+/**
+ * Bttv raw emote returned by the API.
+ */
+interface BttvRawEmote {
+  id: number
+  code: string
   imageType: string
 }
 

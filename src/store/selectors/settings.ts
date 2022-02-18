@@ -169,18 +169,11 @@ export const getHostThreshold = createSelector([getSettingsState], (settings) =>
 export const getAutoHostThreshold = createSelector([getSettingsState], (settings) => settings.autoHostThreshold)
 
 /**
- * Returns the 'Follows sort order' setting.
+ * Returns the 'Streams sort order' setting.
  * @param  state - The Redux state.
- * @return The 'Follows sort order' setting.
+ * @return The 'Streams sort order' setting.
  */
-export const getFollowsSortOrder = createSelector([getSettingsState], (settings) => settings.followsSortOrder)
-
-/**
- * Returns the 'Hide offline follows' setting.
- * @param  state - The Redux state.
- * @return The 'Hide offline follows' setting.
- */
-export const getHideOfflineFollows = createSelector([getSettingsState], (settings) => settings.hideOfflineFollows)
+export const getStreamsSortOrder = createSelector([getSettingsState], (settings) => settings.streamsSortOrder)
 
 /**
  * Returns all shortcuts.

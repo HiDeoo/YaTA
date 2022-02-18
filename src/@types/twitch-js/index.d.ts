@@ -180,7 +180,7 @@ declare module 'twitch-js' {
     on(event: Event.Ritual, listener: (ritual: Ritual) => void): void
     on(event: Event.Raid, listener: (raid: Raid) => void): void
     on(event: Event.Cheer, listener: (channel: string, userstate: UserState, message: string) => void): void
-    on(event: Event.EmoteSets, listener: (setsList: string, sets: EmoteSets) => void): void
+    on(event: Event.EmoteSets, listener: (setsList: string) => void): void
     on(event: Event.Notices, listener: (channel: string, noticeId: string, message: string) => void): void
     on(
       event: Event.MessageDeleted,

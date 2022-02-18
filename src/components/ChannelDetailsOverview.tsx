@@ -17,6 +17,7 @@ import { ApplicationState } from 'store/reducers'
 import { getChannel } from 'store/selectors/app'
 import { getChatLoginDetails } from 'store/selectors/user'
 import styled, { theme } from 'styled'
+import base from 'styled/base'
 
 /**
  * Detail component.
@@ -148,8 +149,7 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
     try {
       const response = await Promise.all([Twitch.fetchStream(id), Twitch.fetchRelationship(id)])
 
-      const [streamResponse, relationship] = response
-      const stream = streamResponse?.stream
+      const [stream, relationship] = response
 
       this.setState(() => ({ didFail: false, stream, relationship }))
     } catch {
@@ -221,12 +221,12 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
     return (
       <>
         <Title>
-          <ExternalLink href={stream.channel.url}>{stream.channel.status}</ExternalLink>
+          <ExternalLink href={stream.user_login}>{stream.title}</ExternalLink>
         </Title>
-        <Game>{stream.channel.game}</Game>
-        <Meta>{stream.viewers.toLocaleString()} viewers</Meta>
+        <Game>{stream.game_name}</Game>
+        <Meta>{stream.viewer_count.toLocaleString()} viewers</Meta>
         <Meta>
-          Started <TimeAgo date={new Date(stream.created_at)} />.
+          Started <TimeAgo date={new Date(stream.started_at)} />.
         </Meta>
         <Meta>
           {_.isNil(relationship)
@@ -234,7 +234,13 @@ export class ChannelDetailsOverview extends React.Component<Props, State> {
             : `Followed since ${new Date(relationship.followed_at).toLocaleDateString()}.`}
         </Meta>
         <PreviewWrapper>
-          <Preview className={Classes.POPOVER_DISMISS} src={stream.preview.medium} onClick={this.onClickPreview} />
+          <Preview
+            onClick={this.onClickPreview}
+            className={Classes.POPOVER_DISMISS}
+            src={stream.thumbnail_url
+              .replace('{width}', base.channel.thumbnail.width.toString())
+              .replace('{height}', base.channel.thumbnail.height.toString())}
+          />
           <PlayIcon icon="play" />
         </PreviewWrapper>
       </>

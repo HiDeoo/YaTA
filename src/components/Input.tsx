@@ -317,7 +317,7 @@ export default class Input extends React.Component<Props, State> {
     let newValue = value
 
     if (_.isNil(lastKnownCursor)) {
-      newValue = `${newValue}${!endWithWhiteSpace(newValue) && newValue.length !== 0 ? ' ' : ''}${emote.code} `
+      newValue = `${newValue}${!endWithWhiteSpace(newValue) && newValue.length !== 0 ? ' ' : ''}${emote.name} `
 
       this.newCursor = newValue.length + 1
     } else {
@@ -326,14 +326,14 @@ export default class Input extends React.Component<Props, State> {
       const before = newValue.substring(0, selectionStart)
       const after = newValue.substring(selectionEnd)
 
-      newValue = `${before}${!endWithWhiteSpace(before) && before.length !== 0 ? ' ' : ''}${emote.code}${
+      newValue = `${before}${!endWithWhiteSpace(before) && before.length !== 0 ? ' ' : ''}${emote.name}${
         !startWithWhiteSpace(after) ? ' ' : ''
       }${after}`
 
-      this.newCursor = selectionStart + emote.code.length + 1
+      this.newCursor = selectionStart + emote.name.length + 1
 
       const newSelectionStart = this.newCursor
-      const newSelectionEnd = selectionEnd + emote.code.length + 1
+      const newSelectionEnd = selectionEnd + emote.name.length + 1
 
       this.setState(() => ({ lastKnownCursor: { selectionStart: newSelectionStart, selectionEnd: newSelectionEnd } }))
     }

@@ -8,23 +8,24 @@ import TimeAgo, { Formatter } from 'react-timeago'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'
-import Twitch, { Follower, RawChannel, RawStream } from 'libs/Twitch'
+import type { RawStream } from 'libs/Twitch'
 import styled, { ifProp, size, theme, ThemeProps, withTheme } from 'styled'
+import base from 'styled/base'
 
 /**
  * Wrapper component.
  */
 const Wrapper = styled(FlexLayout)`
-  background-color: ${theme('follows.background')};
+  background-color: ${theme('streams.background')};
   border-radius: 4px;
-  box-shadow: 0 0 0 1px ${theme('follows.shadow')};
+  box-shadow: 0 0 0 1px ${theme('streams.shadow')};
   cursor: pointer;
-  height: ${size('follows.height')};
+  height: ${size('streams.height')};
   position: relative;
   transition: box-shadow 0.25s cubic-bezier(0.4, 1, 0.75, 0.9);
 
   &:hover {
-    box-shadow: 0 0 0 1px ${theme('follows.hover.shadow1')}, 0 0 0 3px ${theme('follows.hover.shadow2')};
+    box-shadow: 0 0 0 1px ${theme('streams.hover.shadow1')}, 0 0 0 3px ${theme('streams.hover.shadow2')};
   }
 `
 
@@ -32,8 +33,8 @@ const Wrapper = styled(FlexLayout)`
  * ThumbnailWrapper component.
  */
 const ThumbnailWrapper = styled.div`
-  background-color: ${theme('follows.thumbnail')};
-  border-right: 1px solid ${theme('follows.shadow')};
+  background-color: ${theme('streams.thumbnail')};
+  border-right: 1px solid ${theme('streams.shadow')};
   border-bottom-left-radius: 4px;
   border-top-left-radius: 4px;
   overflow: hidden;
@@ -43,11 +44,11 @@ const ThumbnailWrapper = styled.div`
  * Thumbnail component.
  */
 const Thumbnail = styled.img`
-  height: ${size('follows.height')};
+  height: ${size('streams.height')};
   object-fit: cover;
   position: relative;
   transition: transform 0.2s cubic-bezier(0.4, 1, 0.75, 0.9);
-  width: 120px;
+  width: ${size('streams.thumbnail_width')};
 
   ${/* sc-selector */ Wrapper}:hover & {
     transform: scale(1.15);
@@ -58,7 +59,7 @@ const Thumbnail = styled.img`
  * LiveIconBackground component.
  */
 const LiveIconBackground = styled(Icon)`
-  color: ${theme('follows.liveBackground')};
+  color: ${theme('streams.liveBackground')};
   position: absolute;
   right: -5px;
   top: -5px;
@@ -76,36 +77,15 @@ const LiveIcon = styled(Icon)`
 `
 
 /**
- * AvatarBackground component.
- */
-const AvatarBackground = styled(Icon)`
-  bottom: -8px;
-  color: ${theme('follows.liveBackground')};
-  left: -8px;
-  position: absolute;
-`
-
-/**
- * Avatar component.
- */
-const Avatar = styled.img`
-  border-radius: 50%;
-  bottom: -5px;
-  left: -5px;
-  position: absolute;
-  width: 24px;
-`
-
-/**
  * Details component.
  */
 const Details = styled(FlexContent)`
-  color: ${theme('follows.details')};
+  color: ${theme('streams.details')};
   font-size: 0.8rem;
   padding: 8px;
 
   ${/* sc-selector */ Wrapper}:hover & {
-    color: ${theme('follows.hover.details')};
+    color: ${theme('streams.hover.details')};
   }
 
   & > div {
@@ -123,13 +103,13 @@ const Details = styled(FlexContent)`
 const Title = styled(Text).attrs({
   ellipsize: true,
 })<TitleProps>`
-  color: ${ifProp('stream', theme('follows.titleStream'), theme('follows.titleChannel'))};
+  color: ${ifProp('stream', theme('streams.titleStream'), theme('streams.titleChannel'))};
   font-size: 0.88rem;
   font-weight: bold;
   position: relative;
 
   ${/* sc-selector */ Wrapper}:hover & {
-    color: ${theme('follows.hover.title')};
+    color: ${theme('streams.hover.title')};
   }
 `
 
@@ -139,31 +119,29 @@ const Title = styled(Text).attrs({
 const Meta = styled(Text).attrs({
   ellipsize: true,
 })`
-  color: ${theme('follows.meta')};
+  color: ${theme('streams.meta')};
   font-size: 0.76rem;
 
   ${/* sc-selector */ Wrapper}:hover & {
-    color: ${theme('follows.hover.meta')};
+    color: ${theme('streams.hover.meta')};
   }
 `
 
 /**
- * Follow Component.
+ * Stream Component.
  */
-class Follow extends Component<Props> {
+class Stream extends Component<Props> {
   /**
    * Renders the component.
    * @return Element to render.
    */
   public render() {
-    const { follow } = this.props
+    const { stream } = this.props
 
     return (
-      <Flipped flipId={follow._id.toString()} onAppear={this.onAppear} onExit={this.onExit}>
+      <Flipped flipId={stream.id} onAppear={this.onAppear} onExit={this.onExit}>
         <div>
-          <Wrapper onClick={this.onClick}>
-            {Twitch.isStream(follow) ? this.renderStream(follow) : this.renderChannel(follow)}
-          </Wrapper>
+          <Wrapper onClick={this.onClick}>{this.renderStream(stream)}</Wrapper>
         </div>
       </Flipped>
     )
@@ -177,40 +155,23 @@ class Follow extends Component<Props> {
     return (
       <>
         <ThumbnailWrapper>
-          <Thumbnail src={stream.preview.medium} />
+          <Thumbnail
+            src={stream.thumbnail_url
+              .replace('{width}', base.streams.thumbnail_width.toString())
+              .replace('{height}', base.streams.height.toString())}
+          />
         </ThumbnailWrapper>
         <LiveIconBackground icon="full-circle" iconSize={16} />
         <LiveIcon icon="full-circle" iconSize={10} />
-        <AvatarBackground icon="full-circle" iconSize={30} />
-        <Avatar src={stream.channel.logo} />
         <Details>
-          <Title stream>{stream.channel.status || ''}</Title>
+          <Title stream>{stream.title || ''}</Title>
           <Text ellipsize>
-            {stream.channel.display_name} - {stream.game}
+            {stream.user_name} - {stream.game_name}
           </Text>
           <Meta>
-            {stream.viewers.toLocaleString()} viewers -{' '}
-            <TimeAgo date={new Date(stream.created_at)} formatter={this.uptimeRenderer} />
+            {stream.viewer_count.toLocaleString()} viewers -{' '}
+            <TimeAgo date={new Date(stream.started_at)} formatter={this.uptimeRenderer} />
           </Meta>
-        </Details>
-      </>
-    )
-  }
-
-  /**
-   * Renders a channel.
-   * @return Element to render.
-   */
-  private renderChannel(channel: RawChannel) {
-    return (
-      <>
-        <ThumbnailWrapper>
-          <Thumbnail src={channel.logo} />
-        </ThumbnailWrapper>
-        <Details>
-          <Title>{channel.display_name}</Title>
-          {!_.isNil(channel.game) && <Meta>{channel.game}</Meta>}
-          <Meta>Last seen {new Date(channel.updated_at).toLocaleDateString()}</Meta>
         </Details>
       </>
     )
@@ -228,9 +189,9 @@ class Follow extends Component<Props> {
    * Triggered when the channel is clicked.
    */
   private onClick = () => {
-    const { follow, goToChannel } = this.props
+    const { goToChannel, stream } = this.props
 
-    goToChannel(Twitch.isStream(follow) ? follow.channel.name : follow.name)
+    goToChannel(stream.user_login)
   }
 
   /**
@@ -239,7 +200,7 @@ class Follow extends Component<Props> {
    */
   private onAppear = (element: HTMLElement) => {
     anime({
-      duration: this.props.theme.follows.flip,
+      duration: this.props.theme.streams.flip,
       easing: 'easeOutSine',
       opacity: [0, 1],
       targets: element,
@@ -256,7 +217,7 @@ class Follow extends Component<Props> {
     anime({
       complete: removeElement,
       delay: index,
-      duration: this.props.theme.follows.flip,
+      duration: this.props.theme.streams.flip,
       easing: 'easeOutSine',
       opacity: 0,
       targets: element,
@@ -264,13 +225,13 @@ class Follow extends Component<Props> {
   }
 }
 
-export default withTheme(Follow)
+export default withTheme(Stream)
 
 /**
  * React Props.
  */
 interface Props extends ThemeProps {
-  follow: Follower
+  stream: RawStream
   goToChannel: (channel: string) => void
 }
 

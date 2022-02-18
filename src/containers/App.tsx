@@ -20,7 +20,7 @@ import Theme from 'constants/theme'
 import { ToggleableUI } from 'constants/toggleable'
 import Auth from 'containers/Auth'
 import Channel from 'containers/Channel'
-import Follows from 'containers/Follows'
+import StreamList from 'containers/StreamList'
 import Twitch from 'libs/Twitch'
 import { setShouldReadChangelog } from 'store/ducks/app'
 import { setVersion, toggleHideHeader } from 'store/ducks/settings'
@@ -162,7 +162,7 @@ class App extends React.Component<Props, State> {
             />
             <FlexContent>
               <Switch>
-                <Route exact path={Page.Home} component={Follows} />
+                <Route exact path={Page.Home} component={StreamList} />
                 <Route path={Page.Auth} component={Auth} />
                 <Route path={Page.Login} component={Login} />
                 <Route path={Page.Channel} component={Channel} />
