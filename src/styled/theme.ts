@@ -25,6 +25,10 @@ export default interface ITheme {
     background: string
     border: string
     lightBorder: string
+    thumbnail: {
+      height: number
+      width: number
+    }
   }
   chatInput: {
     background: string
@@ -70,28 +74,6 @@ export default interface ITheme {
     border: string
     meta: string
     strong: string
-  }
-  follows: {
-    background: string
-    border: string
-    details: string
-    flip: number
-    height: number
-    hover: {
-      details: string
-      meta: string
-      shadow1: string
-      shadow2: string
-      title: string
-    }
-    liveBackground: string
-    margin: number
-    meta: string
-    shadow: string
-    thumbnail: string
-    titleChannel: string
-    titleStream: string
-    width: number
   }
   help: {
     minHeight: number
@@ -193,6 +175,29 @@ export default interface ITheme {
       background: string
       border: string
     }
+  }
+  streams: {
+    background: string
+    border: string
+    details: string
+    flip: number
+    height: number
+    hover: {
+      details: string
+      meta: string
+      shadow1: string
+      shadow2: string
+      title: string
+    }
+    liveBackground: string
+    margin: number
+    meta: string
+    shadow: string
+    thumbnail: string
+    titleChannel: string
+    titleStream: string
+    width: number
+    thumbnail_width: number
   }
   tooltip: {
     background: string

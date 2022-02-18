@@ -10,9 +10,9 @@ import { SoundId } from 'libs/Sound'
 import { createAction, RehydrateAction } from 'utils/redux'
 
 /**
- * Follows sort order.
+ * Streams sort order.
  */
-export enum FollowsSortOrder {
+export enum StreamsSortOrder {
   ViewersDesc,
   ViewersAsc,
   UptimeDesc,
@@ -48,8 +48,7 @@ export enum Actions {
   TOGGLE_PRIORITIZE_USERNAMES = 'settings/TOGGLE_PRIORITIZE_USERNAMES',
   UPDATE_HOST_THRESHOLD = 'settings/UPDATE_HOST_THRESHOLD',
   UPDATE_AUTO_HOST_THRESHOLD = 'settings/UPDATE_AUTO_HOST_THRESHOLD',
-  SET_FOLLOWS_SORT_ORDER = 'settings/SET_FOLLOWS_SORT_ORDER',
-  TOGGLE_HIDE_OFFLINE_FOLLOWS = 'settings/TOGGLE_HIDE_OFFLINE_FOLLOWS',
+  SET_STREAMS_SORT_ORDER = 'settings/SET_STREAMS_SORT_ORDER',
   SET_SHORTCUT = 'settings/SET_SHORTCUT',
   TOGGLE_HIDE_VIP_BADGES = 'settings/TOGGLE_HIDE_VIP_BADGES',
   TOGGLE_ADD_WHISPERS_TO_HISTORY = 'settings/TOGGLE_ADD_WHISPERS_TO_HISTORY',
@@ -78,7 +77,6 @@ export const initialState = {
   copyMessageOnDoubleClick: true,
   delayBetweenThrottledSounds: 10,
   disableDialogAnimations: false,
-  followsSortOrder: FollowsSortOrder.ViewersDesc,
   hideHeader: false,
   hideOfflineFollows: false,
   hideVIPBadges: true,
@@ -122,6 +120,7 @@ export const initialState = {
       volume: 0.5,
     },
   },
+  streamsSortOrder: StreamsSortOrder.ViewersDesc,
   theme: Theme.Dark as SettingsState['theme'],
 }
 
@@ -343,16 +342,10 @@ const settingsReducer: Reducer<SettingsState, SettingsActions> = (state = initia
         autoHostThreshold: action.payload.threshold,
       }
     }
-    case Actions.SET_FOLLOWS_SORT_ORDER: {
+    case Actions.SET_STREAMS_SORT_ORDER: {
       return {
         ...state,
-        followsSortOrder: action.payload.order,
-      }
-    }
-    case Actions.TOGGLE_HIDE_OFFLINE_FOLLOWS: {
-      return {
-        ...state,
-        hideOfflineFollows: !state.hideOfflineFollows,
+        streamsSortOrder: action.payload.order,
       }
     }
     case Actions.SET_SHORTCUT: {
@@ -673,20 +666,14 @@ export const updateAutoHostThreshold = (threshold: number) =>
   })
 
 /**
- * Sets the follows sort order.
+ * Sets the streams sort order.
  * @param  order - The new sort order.
  * @return The action.
  */
-export const setFollowsSortOrder = (order: FollowsSortOrder) =>
-  createAction(Actions.SET_FOLLOWS_SORT_ORDER, {
+export const setStreamsSortOrder = (order: StreamsSortOrder) =>
+  createAction(Actions.SET_STREAMS_SORT_ORDER, {
     order,
   })
-
-/**
- * Toggle the 'Hide offline follows' setting.
- * @return The action.
- */
-export const toggleHideOfflineFollows = () => createAction(Actions.TOGGLE_HIDE_OFFLINE_FOLLOWS)
 
 /**
  * Sets the combo of a specific shortcut type.
@@ -800,8 +787,7 @@ export type SettingsActions =
   | ReturnType<typeof moveAction>
   | ReturnType<typeof updateHostThreshold>
   | ReturnType<typeof updateAutoHostThreshold>
-  | ReturnType<typeof setFollowsSortOrder>
-  | ReturnType<typeof toggleHideOfflineFollows>
+  | ReturnType<typeof setStreamsSortOrder>
   | ReturnType<typeof setShortcut>
   | ReturnType<typeof toggleHideVIPBadges>
   | ReturnType<typeof toggleAddWhispersToHistory>
@@ -913,14 +899,9 @@ export type SettingsState = {
   autoHostThreshold: number
 
   /**
-   * Follows sort order.
+   * Streams sort order.
    */
-  followsSortOrder: FollowsSortOrder
-
-  /**
-   * Hide offline follows.
-   */
-  hideOfflineFollows: boolean
+  streamsSortOrder: StreamsSortOrder
 
   /**
    * Shortcuts.

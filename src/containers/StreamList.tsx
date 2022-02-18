@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Classes, InputGroup, Position, Tooltip } from '@blueprintjs/core'
+import { Button, ButtonGroup, InputGroup, Position, Tooltip } from '@blueprintjs/core'
 import _ from 'lodash'
 import * as React from 'react'
 import { Flipper } from 'react-flip-toolkit'
@@ -8,20 +8,20 @@ import { compose } from 'recompose'
 
 import FlexContent from 'components/FlexContent'
 import FlexLayout from 'components/FlexLayout'
-import Follow from 'components/Follow'
 import NonIdealState from 'components/NonIdealState'
 import Spinner from 'components/Spinner'
-import Twitch, { Follower, Followers } from 'libs/Twitch'
-import { FollowsSortOrder, setFollowsSortOrder, toggleHideOfflineFollows } from 'store/ducks/settings'
+import Stream from 'components/Stream'
+import Twitch, { RawStream, Streams } from 'libs/Twitch'
+import { StreamsSortOrder, setStreamsSortOrder } from 'store/ducks/settings'
 import { ApplicationState } from 'store/reducers'
-import { getFollowsSortOrder, getHideOfflineFollows } from 'store/selectors/settings'
+import { getStreamsSortOrder } from 'store/selectors/settings'
 import styled, { size, theme } from 'styled'
 
 /**
  * Toolbar component.
  */
 const Toolbar = styled(FlexLayout)`
-  border-bottom: 1px solid ${theme('follows.border')};
+  border-bottom: 1px solid ${theme('streams.border')};
   display: flex;
   align-items: center;
   padding-right: 10px;
@@ -32,15 +32,6 @@ const Toolbar = styled(FlexLayout)`
  */
 const SortGroup = styled(ButtonGroup)`
   margin-right: 10px;
-`
-
-/**
- * OfflineButton component.
- */
-const OfflineButton = styled(Button)`
-  &.${Classes.BUTTON} {
-    padding: 5px 15px;
-  }
 `
 
 /**
@@ -57,11 +48,11 @@ const Wrapper = styled.div`
  */
 const Grid = styled.div`
   display: grid;
-  grid-auto-rows: ${size('follows.height')};
-  grid-column-gap: ${size('follows.margin')};
-  grid-row-gap: ${size('follows.margin')};
-  grid-template-columns: repeat(auto-fit, minmax(${size('follows.width')}, 1fr));
-  padding: ${size('follows.margin')};
+  grid-auto-rows: ${size('streams.height')};
+  grid-column-gap: ${size('streams.margin')};
+  grid-row-gap: ${size('streams.margin')};
+  grid-template-columns: repeat(auto-fit, minmax(${size('streams.width')}, 1fr));
+  padding: ${size('streams.margin')};
   padding-right: 10px;
 `
 
@@ -86,18 +77,17 @@ enum SortType {
 const initialState = {
   error: undefined as Optional<Error>,
   filter: '',
-  filteredFollows: undefined as Optional<FilterableFollower[]>,
-  followers: undefined as Optional<Followers>,
-  follows: undefined as Optional<FilterableFollower[]>,
-  prevPropsFollowsSortOrder: FollowsSortOrder.ViewersDesc,
-  prevPropsHideOfflineFollows: false,
+  filteredStreams: undefined as Optional<FilterableStream[]>,
+  filterableStreams: undefined as Optional<FilterableStream[]>,
+  prevPropsStreamsSortOrder: StreamsSortOrder.ViewersDesc,
+  streams: undefined as Optional<Streams>,
 }
 type State = Readonly<typeof initialState>
 
 /**
- * Follows Component.
+ * StreamList Component.
  */
-class Follows extends React.Component<Props, State> {
+class StreamList extends React.Component<Props, State> {
   /**
    * Lifecycle: getDerivedStateFromProps.
    * @param  nextProps - The next props.
@@ -105,20 +95,16 @@ class Follows extends React.Component<Props, State> {
    * @return An object to update the state or `null` to update nothing.
    */
   public static getDerivedStateFromProps(
-    { followsSortOrder, hideOfflineFollows }: Props,
-    { filter, followers, prevPropsFollowsSortOrder, prevPropsHideOfflineFollows }: State
+    { streamsSortOrder }: Props,
+    { filter, streams, prevPropsStreamsSortOrder }: State
   ) {
-    if (
-      !_.isNil(followers) &&
-      (followsSortOrder !== prevPropsFollowsSortOrder || hideOfflineFollows !== prevPropsHideOfflineFollows)
-    ) {
-      const follows = Follows.getSortedFollows(followers, followsSortOrder, hideOfflineFollows)
+    if (!_.isNil(streams) && streamsSortOrder !== prevPropsStreamsSortOrder) {
+      const sortedStreams = StreamList.getSortedStreams(streams, streamsSortOrder)
 
       return {
-        filteredFollows: Follows.getFilteredFollows(follows, filter),
-        follows,
-        prevPropsFollowsSortOrder: followsSortOrder,
-        prevPropsHideOfflineFollows: hideOfflineFollows,
+        filteredStreams: StreamList.getFilteredStreams(sortedStreams, filter),
+        filterableStreams: sortedStreams,
+        prevPropsStreamsSortOrder: streamsSortOrder,
       }
     }
 
@@ -126,60 +112,45 @@ class Follows extends React.Component<Props, State> {
   }
 
   /**
-   * Returns the sorted follows.
-   * @param  followers - The followers to sort.
+   * Returns the sorted streams.
+   * @param  streams - The streams to sort.
    * @param  sortOrder- The sort order.
    * @param  hideOffline - Defines if offline channels should be included or not.
-   * @return The sorted follows.
+   * @return The sorted streams.
    */
-  private static getSortedFollows(
-    { offline, online, own }: Followers,
-    sortOrder: FollowsSortOrder,
-    hideOffline: boolean
-  ) {
+  private static getSortedStreams({ online, own }: Streams, sortOrder: StreamsSortOrder) {
     const isSortingByViewers = this.isSortingByViewers(sortOrder)
     const isSortingDesc = this.isSortingDesc(sortOrder)
 
-    const type = isSortingByViewers ? 'viewers' : 'created_at'
+    const type = isSortingByViewers ? 'viewer_count' : 'started_at'
     const direction = isSortingByViewers ? (isSortingDesc ? 'desc' : 'asc') : isSortingDesc ? 'asc' : 'desc'
 
     const streams = _.orderBy(online, [type], [direction])
 
-    let followers: Follower[] = !_.isNil(own) ? [own, ...streams] : [...streams]
-    followers = hideOffline ? followers : [...followers, ...offline]
+    let allStreams: RawStream[] = !_.isNil(own) ? [own, ...streams] : [...streams]
 
-    return _.map(followers, (follower) => {
-      let name: string
-      let title: string
-
-      if (Twitch.isStream(follower)) {
-        name = follower.channel.name
-        title = follower.channel.status || ''
-      } else {
-        name = follower.name
-        title = follower.status || ''
-      }
-
-      return { ...follower, content: `${name} ${title.toLowerCase()}` }
-    })
+    return _.map(allStreams, (stream) => ({
+      ...stream,
+      content: `${stream.user_name.toLowerCase()} ${stream.title.toLowerCase()} ${stream.game_name.toLowerCase()}`,
+    }))
   }
 
   /**
-   * Returns the filtered follows.
-   * @param  followers - The followers to filter.
+   * Returns the filtered streams.
+   * @param  streams - The streams to filter.
    * @param  filter- The filter to use.
-   * @return The filtered follows.
+   * @return The filtered streams.
    */
-  private static getFilteredFollows(follows: Optional<FilterableFollower[]>, filter: string) {
-    let filteredFollows: Optional<FilterableFollower[]>
+  private static getFilteredStreams(streams: Optional<FilterableStream[]>, filter: string) {
+    let filteredStreams: Optional<FilterableStream[]>
 
-    if (!_.isNil(follows) && filter.length > 0) {
+    if (!_.isNil(streams) && filter.length > 0) {
       const sanitizedFilter = filter.toLowerCase()
 
-      filteredFollows = _.filter(follows, (follow) => follow.content.includes(sanitizedFilter))
+      filteredStreams = _.filter(streams, (stream) => stream.content.includes(sanitizedFilter))
     }
 
-    return filteredFollows
+    return filteredStreams
   }
 
   /**
@@ -187,8 +158,8 @@ class Follows extends React.Component<Props, State> {
    * @param  sortOrder - The current sort order.
    * @return `true` when sorting by viewers.
    */
-  private static isSortingByViewers(sortOrder: FollowsSortOrder) {
-    return sortOrder === FollowsSortOrder.ViewersAsc || sortOrder === FollowsSortOrder.ViewersDesc
+  private static isSortingByViewers(sortOrder: StreamsSortOrder) {
+    return sortOrder === StreamsSortOrder.ViewersAsc || sortOrder === StreamsSortOrder.ViewersDesc
   }
 
   /**
@@ -196,8 +167,8 @@ class Follows extends React.Component<Props, State> {
    * @param  sortOrder - The current sort order.
    * @return `true` when sorting in descending order.
    */
-  private static isSortingDesc(sortOrder: FollowsSortOrder) {
-    return sortOrder === FollowsSortOrder.ViewersDesc || sortOrder === FollowsSortOrder.UptimeDesc
+  private static isSortingDesc(sortOrder: StreamsSortOrder) {
+    return sortOrder === StreamsSortOrder.ViewersDesc || sortOrder === StreamsSortOrder.UptimeDesc
   }
 
   public state: State = initialState
@@ -208,12 +179,12 @@ class Follows extends React.Component<Props, State> {
    */
   public async componentDidMount() {
     try {
-      const { followsSortOrder, hideOfflineFollows } = this.props
+      const { streamsSortOrder } = this.props
 
-      const followers = await Twitch.fetchFollows()
+      const streams = await Twitch.fetchStreams()
 
       this.setState(
-        () => ({ follows: Follows.getSortedFollows(followers, followsSortOrder, hideOfflineFollows), followers }),
+        () => ({ filterableStreams: StreamList.getSortedStreams(streams, streamsSortOrder), streams }),
         () => {
           this.focusFilterInput()
         }
@@ -228,18 +199,18 @@ class Follows extends React.Component<Props, State> {
    * @return Element to render.
    */
   public render() {
-    const { error, filter, filteredFollows, follows } = this.state
-    const { followsSortOrder, hideOfflineFollows } = this.props
+    const { error, filter, filteredStreams, filterableStreams } = this.state
+    const { streamsSortOrder } = this.props
 
     if (!_.isNil(error)) {
       throw error
     }
 
-    if (_.isNil(follows)) {
+    if (_.isNil(filterableStreams)) {
       return <Spinner large />
     }
 
-    if (follows.length === 0) {
+    if (filterableStreams.length === 0) {
       return (
         <NonIdealState
           title="Looks like you're alone!"
@@ -252,7 +223,7 @@ class Follows extends React.Component<Props, State> {
       )
     }
 
-    const followsToRender = filter.length > 0 && !_.isNil(filteredFollows) ? filteredFollows : follows
+    const streamsToRender = filter.length > 0 && !_.isNil(filteredStreams) ? filteredStreams : filterableStreams
 
     return (
       <>
@@ -270,11 +241,11 @@ class Follows extends React.Component<Props, State> {
           {this.renderContols()}
         </Toolbar>
         <Wrapper>
-          {followsToRender.length > 0 ? (
-            <Flipper flipKey={`${filter}-${followsSortOrder}-${hideOfflineFollows}`} spring="veryGentle">
+          {streamsToRender.length > 0 ? (
+            <Flipper flipKey={`${filter}-${streamsSortOrder}`} spring="veryGentle">
               <Grid>
-                {_.map(followsToRender, (follow) => (
-                  <Follow key={follow._id} follow={follow} goToChannel={this.goToChannel} />
+                {_.map(streamsToRender, (stream) => (
+                  <Stream key={stream.id} stream={stream} goToChannel={this.goToChannel} />
                 ))}
               </Grid>
             </Flipper>
@@ -291,15 +262,13 @@ class Follows extends React.Component<Props, State> {
    * @return Element to render.
    */
   private renderContols() {
-    const { followsSortOrder, hideOfflineFollows } = this.props
+    const { streamsSortOrder } = this.props
 
-    const byViewers = Follows.isSortingByViewers(followsSortOrder)
-    const byDesc = Follows.isSortingDesc(followsSortOrder)
+    const byViewers = StreamList.isSortingByViewers(streamsSortOrder)
+    const byDesc = StreamList.isSortingDesc(streamsSortOrder)
 
     const byViewersIcon = byViewers ? (byDesc ? 'sort-desc' : 'sort-asc') : 'sort-desc'
     const byUptimeIcon = !byViewers ? (byDesc ? 'sort-desc' : 'sort-asc') : 'sort-desc'
-
-    const hideOfflineIcon = hideOfflineFollows ? 'eye-off' : 'eye-open'
 
     return (
       <FlexLayout>
@@ -311,24 +280,8 @@ class Follows extends React.Component<Props, State> {
             <Button icon="time" rightIcon={byUptimeIcon} active={!byViewers} onClick={this.onClickSortByUptime} />
           </Tooltip>
         </SortGroup>
-        <Tooltip content="Toggle offline channels" position={Position.BOTTOM}>
-          <OfflineButton
-            onClick={this.onClickToggleOfflineChannels}
-            active={!hideOfflineFollows}
-            icon={hideOfflineIcon}
-          />
-        </Tooltip>
       </FlexLayout>
     )
-  }
-
-  /**
-   * Triggered when the toggle offline channels button is clicked.
-   */
-  private onClickToggleOfflineChannels = () => {
-    this.props.toggleHideOfflineFollows()
-
-    this.focusFilterInput()
   }
 
   /**
@@ -352,7 +305,10 @@ class Follows extends React.Component<Props, State> {
   private onChangeFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const filter = event.currentTarget.value
 
-    this.setState(({ follows }) => ({ filter, filteredFollows: Follows.getFilteredFollows(follows, filter) }))
+    this.setState(({ filterableStreams }) => ({
+      filter,
+      filteredStreams: StreamList.getFilteredStreams(filterableStreams, filter),
+    }))
   }
 
   /**
@@ -376,27 +332,27 @@ class Follows extends React.Component<Props, State> {
    * @param type - The new sort type.
    */
   private sortBy(type: SortType) {
-    const { followsSortOrder } = this.props
+    const { streamsSortOrder } = this.props
 
-    let sortOrder: FollowsSortOrder
+    let sortOrder: StreamsSortOrder
 
-    if (Follows.isSortingByViewers(followsSortOrder)) {
+    if (StreamList.isSortingByViewers(streamsSortOrder)) {
       if (type === SortType.Viewers) {
         sortOrder =
-          followsSortOrder === FollowsSortOrder.ViewersDesc ? FollowsSortOrder.ViewersAsc : FollowsSortOrder.ViewersDesc
+          streamsSortOrder === StreamsSortOrder.ViewersDesc ? StreamsSortOrder.ViewersAsc : StreamsSortOrder.ViewersDesc
       } else {
-        sortOrder = FollowsSortOrder.UptimeDesc
+        sortOrder = StreamsSortOrder.UptimeDesc
       }
     } else {
       if (type === SortType.Viewers) {
-        sortOrder = FollowsSortOrder.ViewersDesc
+        sortOrder = StreamsSortOrder.ViewersDesc
       } else {
         sortOrder =
-          followsSortOrder === FollowsSortOrder.UptimeDesc ? FollowsSortOrder.UptimeAsc : FollowsSortOrder.UptimeDesc
+          streamsSortOrder === StreamsSortOrder.UptimeDesc ? StreamsSortOrder.UptimeAsc : StreamsSortOrder.UptimeDesc
       }
     }
 
-    this.props.setFollowsSortOrder(sortOrder)
+    this.props.setStreamsSortOrder(sortOrder)
 
     this.focusFilterInput()
   }
@@ -416,30 +372,27 @@ class Follows extends React.Component<Props, State> {
 const enhance = compose<Props, {}>(
   connect<StateProps, DispatchProps, {}, ApplicationState>(
     (state) => ({
-      followsSortOrder: getFollowsSortOrder(state),
-      hideOfflineFollows: getHideOfflineFollows(state),
+      streamsSortOrder: getStreamsSortOrder(state),
     }),
-    { setFollowsSortOrder, toggleHideOfflineFollows }
+    { setStreamsSortOrder }
   ),
   withRouter
 )
 
-export default enhance(Follows)
+export default enhance(StreamList)
 
 /**
  * React Props.
  */
 interface StateProps {
-  followsSortOrder: ReturnType<typeof getFollowsSortOrder>
-  hideOfflineFollows: ReturnType<typeof getHideOfflineFollows>
+  streamsSortOrder: ReturnType<typeof getStreamsSortOrder>
 }
 
 /**
  * React Props.
  */
 interface DispatchProps {
-  setFollowsSortOrder: typeof setFollowsSortOrder
-  toggleHideOfflineFollows: typeof toggleHideOfflineFollows
+  setStreamsSortOrder: typeof setStreamsSortOrder
 }
 
 /**
@@ -448,6 +401,6 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & RouteComponentProps<{}>
 
 /**
- * Follower optimized for filtering by computing ahead of time filterable content.
+ * Stream optimized for filtering by computing ahead of time filterable content.
  */
-type FilterableFollower = Follower & { content: string }
+type FilterableStream = RawStream & { content: string }

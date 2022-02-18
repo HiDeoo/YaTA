@@ -19,6 +19,12 @@ export default {
     dark: 'rgba(16, 22, 26, 0.3)',
     shadow: 'rgba(16, 22, 26, 0.4)',
   },
+  channel: {
+    thumbnail: {
+      height: 158,
+      width: 280,
+    },
+  },
   chatter: {
     avatar: {
       margin: '7px 10px 7px 0',
@@ -69,12 +75,6 @@ export default {
   follow: {
     background: 'rgba(219, 55, 55, 0.05)',
     border: 'rgba(219, 55, 55, 0.4)',
-  },
-  follows: {
-    flip: 150,
-    height: 78,
-    margin: 14,
-    width: 350,
   },
   help: {
     minHeight: 57,
@@ -133,6 +133,13 @@ export default {
   },
   settings: {
     height: 550,
+  },
+  streams: {
+    flip: 150,
+    height: 78,
+    margin: 14,
+    width: 350,
+    thumbnail_width: 120,
   },
   tooltip: {
     background: Colors.DARK_GRAY1,

@@ -193,13 +193,13 @@ export default {
   25: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, followsSortOrder: SettingsInitialState.followsSortOrder },
+      settings: { ...state.settings, streamsSortOrder: SettingsInitialState.streamsSortOrder },
     }
   },
   26: (state: ApplicationState): ApplicationState => {
     return {
       ...state,
-      settings: { ...state.settings, hideOfflineFollows: SettingsInitialState.hideOfflineFollows },
+      settings: { ...state.settings },
     }
   },
   27: (state: ApplicationState): ApplicationState => {
@@ -349,6 +349,26 @@ export default {
     return {
       ...state,
       user: UserInitialState,
+    }
+  },
+  44: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      user: UserInitialState,
+    }
+  },
+  45: (state: ApplicationState): ApplicationState => {
+    return {
+      ...state,
+      settings: {
+        ...state.settings,
+        followsSortOrder: undefined,
+        hideOfflineFollows: undefined,
+        streamsSortOrder: SettingsInitialState.streamsSortOrder,
+      } as ApplicationState['settings'] & {
+        followsSortOrder: undefined
+        hideOfflineFollows: undefined
+      },
     }
   },
 }
