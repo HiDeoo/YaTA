@@ -414,15 +414,23 @@ export default class Twitch {
       throw new Error('Missing user id for emotes fetching.')
     }
 
-    const response = await Twitch.fetch(
-      TwitchApi.Helix,
-      '/chat/emotes/set',
-      { emote_set_id: emoteSetIds },
-      true,
-      RequestMethod.Get
+    const emoteSetIdChunks = _.chunk(emoteSetIds, 25)
+
+    const emoteSets: TwitchEmote[][] = await Promise.all(
+      emoteSetIdChunks.map(async (chunk) => {
+        const response = await Twitch.fetch(
+          TwitchApi.Helix,
+          '/chat/emotes/set',
+          { emote_set_id: chunk },
+          true,
+          RequestMethod.Get
+        )
+
+        return (await response.json()).data
+      })
     )
 
-    return (await response.json()).data
+    return emoteSets.flat()
   }
 
   /**

@@ -1,3 +1,9 @@
+# 1.17.1
+
+### 🐛 Bug Fix
+
+- Fix an issue introduced in the previous version preventing to load emotes when the user was subscribed to more than 25 emote sets.
+
 # 1.17.0
 
 ### 🚀 New Feature
