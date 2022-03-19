@@ -301,10 +301,16 @@ export default class Message implements Serializable<SerializedMessage> {
    * @param emotes - The message emotes.
    */
   private parseEmotes(parsedMessage: string[], emotes: Emotes) {
+    const parsedRanges = new Set<string>()
+
     _.forEach(emotes, (ranges, id) => {
       const [providerPrefix, emoteId] = id.split('-')
 
       _.forEach(ranges, (range) => {
+        if (parsedRanges.has(range)) {
+          return
+        }
+
         const strIndexes = range.split('-')
         const indexes = [parseInt(strIndexes[0], 10), parseInt(strIndexes[1], 10)]
         const name = []
@@ -324,6 +330,8 @@ export default class Message implements Serializable<SerializedMessage> {
 
         if (!_.isNil(provider)) {
           parsedMessage[indexes[0]] = provider.getEmoteTag(isTwitchEmote ? id : emoteId, emoteName)
+
+          parsedRanges.add(range)
         }
       })
     })
