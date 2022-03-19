@@ -1,3 +1,9 @@
+# 1.17.2
+
+### 🐛 Bug Fix
+
+- Fix a rendering issue with some third-party emotes.
+
 # 1.17.1
 
 ### 🐛 Bug Fix
