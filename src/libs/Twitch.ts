@@ -653,14 +653,14 @@ export default class Twitch {
     }
 
     const params = {
-      from_id: Twitch.userId,
-      to_id: targetId,
+      user_id: Twitch.userId,
+      broadcaster_id: targetId,
     }
 
-    const response = await Twitch.fetch(TwitchApi.Helix, '/users/follows', params)
+    const response = await Twitch.fetch(TwitchApi.Helix, '/channels/followed', params)
     const relationships = (await response.json()) as RawRelationships
 
-    if (relationships.total === 1) {
+    if (relationships.data.length === 1) {
       const relationship = _.head(relationships.data)
 
       if (!_.isNil(relationship)) {
