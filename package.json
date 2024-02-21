@@ -123,7 +123,7 @@
     ]
   },
   "engines": {
-    "node": ">=12.x"
+    "node": ">=16.x <18"
   },
   "repository": {
     "type": "git",
