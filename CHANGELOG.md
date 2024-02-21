@@ -1,3 +1,10 @@
+# 1.17.3
+
+### 🐛 Bug Fix
+
+- Fix an issue when fetching data in the chatter details modal.
+- Fix an issue when fetching data in the channel details menu.
+
 # 1.17.2
 
 ### 🐛 Bug Fix
