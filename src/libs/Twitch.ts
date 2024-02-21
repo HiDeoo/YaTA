@@ -677,7 +677,7 @@ export default class Twitch {
    * @return The total number of followers.
    */
   public static async fetchFollowersCount(targetId: string) {
-    const response = await Twitch.fetch(TwitchApi.Helix, '/users/follows', { to_id: targetId })
+    const response = await Twitch.fetch(TwitchApi.Helix, '/channels/followers', { broadcaster_id: targetId })
     const relationships = (await response.json()) as RawRelationships
 
     return relationships.total
