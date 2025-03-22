@@ -51,11 +51,12 @@ class ErrorBoundary extends React.Component<Props, State> {
    */
   public componentDidCatch(error: Error) {
     const { message } = error
+    const messageNormalized = message.toLowerCase()
 
     if (
-      message.includes('invalid oauth token') ||
-      message.includes('Missing token for authenticated request') ||
-      message.includes('Login authentication failed')
+      messageNormalized.includes('invalid oauth token') ||
+      messageNormalized.includes('missing token for authenticated request') ||
+      messageNormalized.includes('login authentication failed')
     ) {
       this.props.resetUser()
 
