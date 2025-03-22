@@ -1,6 +1,6 @@
 {
   "name": "yata",
-  "version": "1.17.2",
+  "version": "1.17.3",
   "description": "Twitch chat client",
   "author": "HiDeoo",
   "license": "MIT",
@@ -123,7 +123,7 @@
     ]
   },
   "engines": {
-    "node": ">=12.x"
+    "node": ">=16.x <18"
   },
   "repository": {
     "type": "git",
