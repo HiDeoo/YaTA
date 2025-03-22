@@ -10,7 +10,7 @@
     "prestart": "yarn run changelog",
     "start": "react-scripts start",
     "prebuild": "yarn run changelog",
-    "build": "react-scripts build",
+    "build": "react-scripts --openssl-legacy-provider build",
     "lint": "yarn run lint:ts && yarn run lint:css",
     "lint:ts": "eslint --max-warnings=0 --ext ts,tsx src && tsc --noEmit",
     "lint:css": "stylelint 'src/**/*.tsx'",
@@ -60,6 +60,7 @@
   "devDependencies": {
     "@types/animejs": "3.1.4",
     "@types/file-saver": "2.0.3",
+    "@types/history": "4.7.11",
     "@types/lodash": "4.14.171",
     "@types/marked": "2.0.4",
     "@types/node": "16.3.2",
@@ -89,7 +90,8 @@
     "vercel": "23.0.1"
   },
   "resolutions": {
-    "@types/react": "17.0.14"
+    "@types/react": "17.0.14",
+    "caniuse-lite": "1.0.30001632"
   },
   "lint-staged": {
     "*.{ts,tsx,md,json,css}": "prettier --write"
@@ -123,7 +125,7 @@
     ]
   },
   "engines": {
-    "node": ">=16.x <18"
+    "node": "18.x"
   },
   "repository": {
     "type": "git",

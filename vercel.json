@@ -1,16 +1,6 @@
 {
   "version": 2,
   "alias": "yata",
-  "build": {
-    "env": {
-      "REACT_APP_VERSION": "@react_app_version",
-      "REACT_APP_BUGS_URL": "@react_app_bugs_url",
-      "REACT_APP_TWITCH_CLIENT_ID": "@react_app_twitch_client_id",
-      "REACT_APP_TWITCH_REDIRECT_URI": "@react_app_twitch_redirect_uri",
-      "REACT_APP_YOUTUBE_API_KEY": "@react_app_youtube_api_key",
-      "REACT_APP_IMGUR_CLIENT_ID": "@react_app_imgur_client_id"
-    }
-  },
   "builds": [{ "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "build" } }],
   "rewrites": [
     { "source": "^/static/(.*)", "destination": "/build/static/$1" },
