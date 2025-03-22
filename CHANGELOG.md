@@ -1,3 +1,9 @@
+# 1.17.4
+
+### 🐛 Bug Fix
+
+- Fix an issue where the user was not properly reset after an authentication error.
+
 # 1.17.3
 
 ### 🐛 Bug Fix
